@@ -1,0 +1,18 @@
+{
+  "name": "thekla",
+  "version": "1.0.0",
+  "description": "test project on how to work with webdriverjs",
+  "scripts": {
+    "test": "tsc & jasmine"
+  },
+  "dependencies": {
+    "@types/node": "^10.12.0",
+    "@types/selenium-webdriver": "^3.0.12",
+    "log4js": "^3.0.6",
+    "selenium-webdriver": "^4.0.0-alpha.1"
+  },
+  "devDependencies": {
+    "@types/jasmine": "^2.8.9",
+    "jasmine": "^3.3.0"
+  }
+}

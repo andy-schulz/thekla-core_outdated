@@ -1,0 +1,20 @@
+{
+  "appenders": {
+    "file": {
+      "type": "dateFile",
+      "category": "stream",
+      "filename": "logs/process.log",
+      "pattern": "-yyyy-MM-dd",
+      "maxLogSize": 10485760,
+      "numBackups": 3
+    },
+    "output": {
+      "type": "stdout"
+    }
+  },
+  "categories": {
+    "default": {
+      "appenders": [ "file", "output"],
+      "level": "TRACE" }
+  }
+}
