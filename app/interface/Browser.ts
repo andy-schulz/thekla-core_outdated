@@ -3,5 +3,7 @@ import {WebElement} from "./WebElement";
 
 export interface Browser {
 
-    element(locator: Locator): WebElement
+    element(locator: Locator): WebElement;
+    get(url: string): Promise<any>;
+    quit(): Promise<void>;
 }
