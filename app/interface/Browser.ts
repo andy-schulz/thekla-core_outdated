@@ -1,9 +1,7 @@
 import {Locator} from "./Locator";
-import {WebElement} from "./WebElement";
+import {WebFinder} from "./WebElements";
 
-export interface Browser {
-
-    element(locator: Locator): WebElement;
+export interface Browser extends WebFinder{
     get(url: string): Promise<any>;
     quit(): Promise<void>;
 }

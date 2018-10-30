@@ -1,17 +1,12 @@
-import {BrowserWdjs} from "./BrowserWdjs";
-import {WebElement} from "../../interface/WebElement";
+import {WebElementFinder, WebElementListFinder} from "../../interface/WebElements";
 
-export class WebElementWdjs implements WebElement{
+export class WebElementWdjs implements WebElementFinder{
 
-    constructor(browser: BrowserWdjs) {
+    constructor(private elementList: WebElementListFinder) {
 
     }
 
     sendKeys() {
 
     }
-
-
-
-
 }

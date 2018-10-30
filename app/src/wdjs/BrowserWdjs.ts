@@ -1,12 +1,14 @@
 import {Browser} from "../../interface/Browser";
-import {WebElement} from "../../interface/WebElement";
-import {WebElementWdjs} from "./WebElementWdjs";
-import {LocatorWdjs} from "./LocatorWdjs";
 import {Config} from "../../interface/Config";
 
 import {Builder, By, until, Key, ThenableWebDriver} from "selenium-webdriver";
 
 import {configure, getLogger, Logger} from "log4js";
+import {Locator} from "../../interface/Locator";
+import {WdElement, WebElementFinder, WebElementListFinder} from "../../interface/WebElements";
+import {WebElementWdjs} from "./WebElementWdjs";
+import {WebElementListWdjs} from "./WebElementListWdjs";
+
 configure('config/log4js.json');
 
 export class BrowserWdjs implements Browser{
@@ -45,11 +47,7 @@ export class BrowserWdjs implements Browser{
         )
     }
 
-    element(locator: LocatorWdjs): WebElement{
-        return new WebElementWdjs(this);
-    }
-
-    get(destination: string): Promise<any> {
+    public get(destination: string): Promise<any> {
         return new Promise((fullfill, reject) => {
             this.driver.get(destination).then((res: any) => {
                 fullfill(res);
@@ -59,7 +57,7 @@ export class BrowserWdjs implements Browser{
         })
     }
 
-    quit():Promise<void> {
+    public quit():Promise<void> {
         return new Promise((fulfill, reject) => {
             this.driver.quit().then(() => {
                 fulfill();
@@ -67,17 +65,26 @@ export class BrowserWdjs implements Browser{
         })
     }
 
-    element(): WebElement {
-        return new ElementArrayFinder(this).all(locator).toElementFinder_();
+
+
+    public element(locator: Locator): WebElementFinder {
+        return (<WebElementListWdjs>this.all(locator)).toWebElement();
     }
 
-    let element = ((locator: Locator) => {
+    public all(locator: Locator): WebElementListFinder {
+        // wrap it in WebElems
+        let getElements = () => {
+            return this.findElements(locator)
+        };
 
-    }) as ElementHelper;
+        // should return a single element
+        return new WebElementListWdjs(getElements);
+    }
 
-    element.all = (locator: Locator) => {
-        return new ElementArrayFinder(browser).all(locator);
-    };
-
-    return element;
+    private findElements(locator: Locator): Promise<WdElement[]> {
+        return new Promise(async (fulfill, reject) => {
+            let elements = await this.driver.findElements(locator);
+            fulfill(elements);
+        })
+    }
 }

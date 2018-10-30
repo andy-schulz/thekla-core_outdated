@@ -1,5 +1,5 @@
-import {WebElement} from "../interface/WebElement";
+import {WebElementFinder} from "../interface/WebElements";
 
-export interface WebElementArray extends WebElement {
+export interface WebElementArray extends WebElementFinder {
 
 }
