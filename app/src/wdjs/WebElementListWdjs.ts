@@ -1,39 +1,64 @@
-import {LocatorWdjs} from "./LocatorWdjs";
 import {WdElement, WebElementFinder, WebElementListFinder} from "../../interface/WebElements";
-import {Locator} from "../../interface/Locator";
+import {By} from "../../interface/Locator";
 import {WebElementWdjs} from "./WebElementWdjs";
+import {WebElement} from "selenium-webdriver";
 
 
-export class WebElementListWdjs implements WebElementFinder{
+export class WebElementListWdjs implements WebElementListFinder{
 
-    constructor(public getElements: () => Promise<WdElement[]>) {
+    constructor(
+        public getElements: () => Promise<WebElement[]>,
+        public getDescription: () => string
+    ) {
     }
 
     /**
      * Send
      */
-    sendKeys(keySequence: string) {
-        return this.getElements();
+    // sendKeys(keySequence: string): Promise<void> {
+    //     return new Promise((fulfill) => {
+    //         this.getElements().then(() => {
+    //             fulfill()
+    //         });
+    //
+    //     })
+    // }
+
+    element(
+        locator: By,
+        description: string = `Element without description`): WebElementFinder {
+        const desc = `'${description}' selected by: ${locator.toString()}`;
+        return <WebElementFinder>(<WebElementListWdjs>this.all(locator,desc)).toWebElement();
     }
 
-    element(locator: Locator): WebElementFinder {
-        return <WebElementFinder>(<WebElementListWdjs>this.all(locator)).toWebElement();
-    }
+    all(
+        locator: By,
+        description: string = `Element without description`): WebElementListFinder {
 
-    all(locator: LocatorWdjs): WebElementListFinder {
-        // let getElements = (): Promise<WebElem[]> => {
         let getElements = async (): Promise<WdElement[]> => {
             // can be removed when done
             return await this.getElements();
 
-
             const elements = await this.getElements();
+            const els = [];
+            const loc = locator.getSelector("wdjs");
+            for (const elem of elements) {
+                const elemsPromises = elem.findElements(loc);
+                els.push(elemsPromises);
+            }
 
+            await Promise.all(els);
         };
-        return new WebElementListWdjs(getElements);
+
+        let getDescription = () => {
+            const desc = `'${description}' selected by: >>${locator.toString()}<<`;
+            return desc;
+        };
+
+        return new WebElementListWdjs(getElements, getDescription);
     }
 
     public toWebElement(): WebElementWdjs {
-        return new WebElementWdjs(this);
+        return new WebElementWdjs(this, () => this.getDescription());
     }
 }

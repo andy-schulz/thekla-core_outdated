@@ -1,4 +1,3 @@
-import {Locator} from "./Locator";
 import {WebFinder} from "./WebElements";
 
 export interface Browser extends WebFinder{

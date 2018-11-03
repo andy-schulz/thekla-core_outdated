@@ -1,12 +1,11 @@
 import {Browser} from "../../interface/Browser";
 import {Config} from "../../interface/Config";
 
-import {Builder, By, until, Key, ThenableWebDriver} from "selenium-webdriver";
+import {Builder, until, Key, ThenableWebDriver} from "selenium-webdriver";
 
 import {configure, getLogger, Logger} from "log4js";
-import {Locator} from "../../interface/Locator";
+import {Selector, By} from "../../interface/Locator";
 import {WdElement, WebElementFinder, WebElementListFinder} from "../../interface/WebElements";
-import {WebElementWdjs} from "./WebElementWdjs";
 import {WebElementListWdjs} from "./WebElementListWdjs";
 
 configure('config/log4js.json');
@@ -67,24 +66,27 @@ export class BrowserWdjs implements Browser{
 
 
 
-    public element(locator: Locator): WebElementFinder {
-        return (<WebElementListWdjs>this.all(locator)).toWebElement();
+    public element(
+        locator: By,
+        description: string = `Element without description`): WebElementFinder {
+        return (<WebElementListWdjs>this.all(locator,description)).toWebElement();
     }
 
-    public all(locator: Locator): WebElementListFinder {
+    public all(
+        locator: By,
+        description: string = `Element without description`): WebElementListFinder {
         // wrap it in WebElems
-        let getElements = () => {
-            return this.findElements(locator)
+        const loc = locator.getSelector("wdjs");
+        let getElements = async () => {
+            return await this.driver.findElements(loc);
+        };
+
+        let getDescription = () => {
+            const desc = `'${description}' selected by: >>${locator.toString()}<<`;
+            return desc;
         };
 
         // should return a single element
-        return new WebElementListWdjs(getElements);
-    }
-
-    private findElements(locator: Locator): Promise<WdElement[]> {
-        return new Promise(async (fulfill, reject) => {
-            let elements = await this.driver.findElements(locator);
-            fulfill(elements);
-        })
+        return new WebElementListWdjs(getElements, getDescription);
     }
 }
