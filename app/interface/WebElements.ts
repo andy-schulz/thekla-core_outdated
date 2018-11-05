@@ -10,9 +10,10 @@ export interface WebElementFinder {
     click(): Promise<void>;
     sendKeys(keySequence: string): Promise<void>;
     getDescription(): string;
+    getText(): Promise<string | null>;
+    getAttribute(attribute: string): Promise<string>;
 }
 
-export interface WebElementListFinder extends WebFinder{
-}
+export interface WebElementListFinder extends WebFinder{}
 
 export interface WdElement extends  WebElement {}

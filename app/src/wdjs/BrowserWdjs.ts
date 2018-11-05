@@ -1,5 +1,5 @@
 import {Browser} from "../../interface/Browser";
-import {Config} from "../../interface/Config";
+import {Config, FirefoxOptions} from "../../interface/Config";
 
 import {Builder, until, Key, ThenableWebDriver} from "selenium-webdriver";
 
@@ -8,10 +8,13 @@ import {Selector, By} from "../../interface/Locator";
 import {WdElement, WebElementFinder, WebElementListFinder} from "../../interface/WebElements";
 import {WebElementListWdjs} from "./WebElementListWdjs";
 
+import {Options as FFOptions} from "selenium-webdriver/firefox";
+
 configure('config/log4js.json');
 
 export class BrowserWdjs implements Browser{
     private driver: ThenableWebDriver;
+
     private logger: Logger = getLogger("BrowserWdjs");
     private static bowserMap: Map<string,Browser> = new Map<string,Browser>();
 
@@ -20,13 +23,16 @@ export class BrowserWdjs implements Browser{
     }
 
     public static create(config: Config): Promise<Browser> {
-        return new Promise((fulfill, reject) => {
+        let builder: Builder;
+        return new Promise(async (fulfill, reject) => {
             try {
-                let driver = new Builder().
+                builder = new Builder().
                 usingServer(config.serverUrl).
-                withCapabilities(config).
-                build();
+                withCapabilities(config);
 
+                this.applyFirefoxOptions(builder,config.firefoxOptions);
+
+                let driver = builder.build();
                 let browser = new BrowserWdjs(driver);
                 this.bowserMap.set(`browser${this.bowserMap.size + 1}`,browser);
                 fulfill(browser);
@@ -36,6 +42,16 @@ export class BrowserWdjs implements Browser{
             }
 
         })
+    }
+
+    private static applyFirefoxOptions(builder: Builder, options: FirefoxOptions | undefined): void  {
+        if(options) {
+            const  firefoxOptions = new FFOptions();
+            if(options.binary) {
+                firefoxOptions.setBinary(options.binary);
+                builder.setFirefoxOptions(firefoxOptions);
+            }
+        }
     }
 
     public static cleanup():Promise<any[]> {

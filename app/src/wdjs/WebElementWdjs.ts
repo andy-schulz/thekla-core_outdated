@@ -33,9 +33,29 @@ export class WebElementWdjs implements WebElementFinder{
         })
     }
 
-    public sendKeys(): Promise<void> {
-        return new Promise((fulfill) => {
-
+    public sendKeys(keySequence: string): Promise<void> {
+        return this.getWebElement().then((element: WebElement) => {
+            return element.sendKeys(keySequence).then(() => {
+                console.log("String send");
+            });
         })
+    }
+
+    public getText(): Promise<string> {
+        return this.getWebElement()
+            .then((element: WebElement) => {
+                return element.getText()
+            }).then((text: string) => {
+                return text;
+            });
+    }
+
+    public getAttribute(attribute: string): Promise<string> {
+        return this.getWebElement()
+            .then((element: WebElement) => {
+                return element.getAttribute(attribute)
+            }).then((text: string) => {
+                return text;
+            });
     }
 }

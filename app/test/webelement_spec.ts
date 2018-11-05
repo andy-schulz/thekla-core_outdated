@@ -11,6 +11,9 @@ describe('When using the Browser object', () => {
     const conf: Config = {
         browserName: "firefox",
         serverUrl: "http://localhost:4444/wd/hub",
+        firefoxOptions: {
+            binary: "C:\\PProgramme\\FirefoxPortable\\App\\Firefox\\firefox.exe"
+        }
         // chromeOptions: {
         //     binary: "C:\\PProgramme\\GoogleChromePortable64\\App\\Chrome-bin\\chrome.exe"
         // }
@@ -60,9 +63,8 @@ describe('When using the Browser object', () => {
         beforeAll(async () => {
             browser = await BrowserWdjs.create(conf);
             optionList = browser.element(By.css("[data-test-id='buttonDropDown']"));
-
             await browser.get(testurl);
-        }, 10000);
+        }, 100000);
 
         it('the optionList should be found and opened - (test case id: )', async () => {
             await optionList.click();
@@ -80,12 +82,38 @@ describe('When using the Browser object', () => {
 
         }, 20000);
 
-        fit('an error should be thrown when no element is found - (test case id: )', async () => {
-            const optionListDelayed = browser.element(By.css("[data-test-id='DelayedButtonBy5000']"));
+        it('an error should be thrown when no element is found - (test case id: )', async () => {
+            // const optionListDelayed = browser.element(By.css("[data-test-id='DelayedButtonBy5000']"));
+            const optionListDelayed = browser.element(By.css("[data-test-id='buttonDropDown']"));
 
-            optionListDelayed.click();
+            await optionListDelayed.click();
 
         }, 10000);
+    });
+
+    fdescribe('and try to enter a String to an element', async () => {
+        let browser: Browser;
+        let emailInput: WebElementFinder;
+
+
+        beforeAll(async () => {
+            browser = await BrowserWdjs.create(conf);
+            emailInput = browser.element(By.css("[data-test-id='exampleEmail']"));
+            await browser.get(testurl);
+        }, 100000);
+
+        it('the string should be found on the value attribute - (test case id: )', async () => {
+            const emailString = "a.b@c.de";
+            await emailInput.sendKeys(emailString);
+            expect(await emailInput.getAttribute("value")).toEqual(emailString);
+        }, 20000);
+
+        it('the string should not be found with the getText() Method - (test case id: )', async () => {
+            const emailString = "a.b@c.de";
+            await emailInput.sendKeys(emailString);
+            expect(await emailInput.getText()).toEqual("");
+            await Utils.wait(2000);
+        }, 20000);
     });
 
     afterAll(async () => {
