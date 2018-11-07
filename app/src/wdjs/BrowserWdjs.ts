@@ -1,14 +1,17 @@
 import {Browser} from "../../interface/Browser";
 import {Config, FirefoxOptions} from "../../interface/Config";
 
-import {Builder, until, Key, ThenableWebDriver} from "selenium-webdriver";
+import {Builder, ThenableWebDriver} from "selenium-webdriver";
 
 import {configure, getLogger, Logger} from "log4js";
-import {Selector, By} from "../../interface/Locator";
-import {WdElement, WebElementFinder, WebElementListFinder} from "../../interface/WebElements";
+import {By} from "../../interface/Locator";
+import { WebElementFinder, WebElementListFinder} from "../../interface/WebElements";
 import {WebElementListWdjs} from "./WebElementListWdjs";
 
 import {Options as FFOptions} from "selenium-webdriver/firefox";
+import {Condition} from "../../interface/Condition";
+
+
 
 configure('config/log4js.json');
 
@@ -49,8 +52,13 @@ export class BrowserWdjs implements Browser{
             const  firefoxOptions = new FFOptions();
             if(options.binary) {
                 firefoxOptions.setBinary(options.binary);
-                builder.setFirefoxOptions(firefoxOptions);
             }
+
+            if(options.proxy) {
+                builder.setProxy(options.proxy)
+            }
+
+            builder.setFirefoxOptions(firefoxOptions);
         }
     }
 
@@ -63,20 +71,54 @@ export class BrowserWdjs implements Browser{
     }
 
     public get(destination: string): Promise<any> {
-        return new Promise((fullfill, reject) => {
-            this.driver.get(destination).then((res: any) => {
-                fullfill(res);
-            }).catch((e) => {
-                reject(e)
-            })
+        return new Promise((fulfill, reject) => {
+            this.driver.get(destination)
+                .then(fulfill)
+                .catch(reject)
         })
     }
 
     public quit():Promise<void> {
         return new Promise((fulfill, reject) => {
-            this.driver.quit().then(() => {
-                fulfill();
-            })
+            this.driver.quit()
+                .then(fulfill)
+                .catch(reject)
+        })
+    }
+
+    public wait(
+        condition: Condition,
+        timeout: number = 5000,
+        waitMessage: string = `` ): Promise<string> {
+        const timeoutMessage = `Wait timed out after ${timeout} ms${waitMessage ? " -> (" + waitMessage + ")." : "."}`;
+
+        return new Promise((fulfill,reject) => {
+            const start = Date.now();
+            const check = () => {
+
+                const worker = (workerState: boolean, error?: String) => {
+                    const timeSpendWaiting = Date.now() - start;
+                    if(timeSpendWaiting > timeout) {
+                        const message = error ? error : timeoutMessage;
+                        this.logger.error(`Waiting${waitMessage ? " -> (" + waitMessage + ")" : ""} failed after ${timeSpendWaiting} ms with the following Error: ${message}`);
+                        reject(message);
+                        return;
+                    }
+                    if(workerState) {
+                        const message = `Wait successful${waitMessage ? " -> (" + waitMessage + ")" : ""} after ${timeSpendWaiting} ms.`;
+                        this.logger.info(message);
+                        fulfill(message);
+                        return;
+                    } else {
+                        setTimeout(check,0);
+                    }
+                };
+
+                condition.check()
+                    .then(worker)
+                    .catch((e: any) => worker(false, e + Error().stack))
+            };
+            setTimeout(check,0);
         })
     }
 
@@ -98,8 +140,7 @@ export class BrowserWdjs implements Browser{
         };
 
         let getDescription = () => {
-            const desc = `'${description}' selected by: >>${locator.toString()}<<`;
-            return desc;
+            return `'${description}' selected by: >>${locator.toString()}<<`;
         };
 
         // should return a single element
