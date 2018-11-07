@@ -2,9 +2,21 @@
   "name": "thekla",
   "version": "1.0.0",
   "description": "test project on how to work with webdriverjs",
+  "main": "dist/index.js",
+  "types" : "dist/index.d.ts",
   "scripts": {
     "test": "tsc & jasmine"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andy-schulz/thekla.git"
+  },
+  "author": "Andy Schulz <andy.schulz@test-steps.de>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andy-schulz/thekla/issues"
+  },
+  "homepage": "https://github.com/andy-schulz/thekla#readme",
   "dependencies": {
     "@types/node": "^10.12.0",
     "@types/selenium-webdriver": "^3.0.12",
