@@ -12,6 +12,8 @@ export interface WebElementFinder {
     getDescription(): string;
     getText(): Promise<string | null>;
     getAttribute(attribute: string): Promise<string>;
+
+    isVisible(): Promise<boolean>;
 }
 
 export interface WebElementListFinder extends WebFinder{}

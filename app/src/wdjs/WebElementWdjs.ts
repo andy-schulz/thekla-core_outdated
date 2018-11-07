@@ -28,34 +28,29 @@ export class WebElementWdjs implements WebElementFinder{
     }
 
     public click(): Promise<void> {
-        return this.getWebElement().then((element: WebElement) => {
-            return element.click();
-        })
+        return this.getWebElement().then(element => element.click())
     }
 
     public sendKeys(keySequence: string): Promise<void> {
-        return this.getWebElement().then((element: WebElement) => {
-            return element.sendKeys(keySequence).then(() => {
-                console.log("String send");
-            });
-        })
+        return this.getWebElement().then(element => element.sendKeys(keySequence))
     }
 
     public getText(): Promise<string> {
         return this.getWebElement()
-            .then((element: WebElement) => {
-                return element.getText()
-            }).then((text: string) => {
-                return text;
-            });
+            .then(element => element.getText())
+            .then(text => text);
     }
 
     public getAttribute(attribute: string): Promise<string> {
         return this.getWebElement()
-            .then((element: WebElement) => {
-                return element.getAttribute(attribute)
-            }).then((text: string) => {
-                return text;
-            });
+            .then(element => element.getAttribute(attribute))
+            .then(text => text);
+    }
+
+    public isVisible() {
+        return this.getWebElement()
+            .then(element => element.isDisplayed())
+            .then(state => state)
+            .catch(() => false)
     }
 }
