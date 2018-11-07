@@ -10,4 +10,17 @@ export interface ChromeOptions {
 }
 export interface FirefoxOptions {
     binary?: string;
+    proxy?: ProxyConfig;
+}
+
+export interface ProxyConfig {
+    proxyType: string;
+    proxyAutoconfigUrl?: string;
+    ftpProxy?: string;
+    httpProxy?: string;
+    sslProxy?: string;
+    noProxy?: string;
+    socksProxy?: string;
+    socksUsername?: string;
+    socksPassword?: string;
 }
