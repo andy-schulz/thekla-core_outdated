@@ -1,14 +1,13 @@
-import {Browser} from "../../interface/Browser";
-import {Config, FirefoxOptions} from "../../interface/Config";
+import {configure, getLogger, Logger} from "log4js";
 
+import {Options as FFOptions} from "selenium-webdriver/firefox";
 import {Builder, ThenableWebDriver} from "selenium-webdriver";
 
-import {configure, getLogger, Logger} from "log4js";
+import {Browser} from "../../interface/Browser";
+import {Config, FirefoxOptions} from "../../interface/Config";
 import {By} from "../lib/Locator";
 import { WebElementFinder, WebElementListFinder} from "../../interface/WebElements";
 import {WebElementListWdjs} from "./WebElementListWdjs";
-
-import {Options as FFOptions} from "selenium-webdriver/firefox";
 import {Condition} from "../lib/Condition";
 
 
