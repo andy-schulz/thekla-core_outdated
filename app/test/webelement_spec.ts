@@ -201,6 +201,33 @@ describe('When using the Browser object', () => {
 
     });
 
+    fdescribe('and work with the title', async () => {
+        let browser: Browser;
+
+
+        beforeAll(async () => {
+            browser = await BrowserWdjs.create(conf);
+        });
+
+        beforeEach(async () => {
+            await browser.get(testurl);
+        },11000);
+
+        it('the getTitle method should get the correct title', async () => {
+            expect(await browser.getTitle()).toEqual("React App");
+        }, 5000);
+
+        it('the hasTitle method should test for the correct title', async () => {
+            expect(await browser.hasTitle("React App")).toEqual(true);
+        }, 5000);
+
+        it('the hasTitle method should return false when the given title is not correct.', async () => {
+            expect(await browser.hasTitle("ReactApp")).toEqual(false);
+        }, 5000);
+
+
+    });
+
     afterAll(async () => {
         await BrowserWdjs.cleanup();
     }, 21000)

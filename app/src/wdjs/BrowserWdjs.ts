@@ -93,7 +93,7 @@ export class BrowserWdjs implements Browser{
     public hasTitle(expectedTitle: string): Promise<boolean> {
         return new Promise((fulfill,reject) => {
             this.driver.getTitle()
-                .then(title => title === expectedTitle)
+                .then(title => fulfill(title === expectedTitle))
                 .catch(reject);
         })
     }
