@@ -1,4 +1,4 @@
-import {configure, getLogger, Logger} from "log4js";
+import {getLogger, Logger} from "@log4js-node/log4js-api";
 
 import {Options as FFOptions} from "selenium-webdriver/firefox";
 import {Builder, ThenableWebDriver} from "selenium-webdriver";
@@ -10,9 +10,6 @@ import { WebElementFinder, WebElementListFinder} from "../../interface/WebElemen
 import {WebElementListWdjs} from "./WebElementListWdjs";
 import {Condition} from "../lib/Condition";
 
-
-
-configure('config/log4js.json');
 
 export class BrowserWdjs implements Browser{
     private driver: ThenableWebDriver;
