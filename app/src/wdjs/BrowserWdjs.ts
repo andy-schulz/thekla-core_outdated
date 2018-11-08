@@ -86,6 +86,22 @@ export class BrowserWdjs implements Browser{
         })
     }
 
+    public getTitle(): Promise<string> {
+        return new Promise((fulfill, reject) => {
+            this.driver.getTitle()
+                .then(fulfill)
+                .catch(reject)
+        })
+    }
+
+    public hasTitle(expectedTitle: string): Promise<boolean> {
+        return new Promise((fulfill,reject) => {
+            this.driver.getTitle()
+                .then(title => title === expectedTitle)
+                .catch(reject);
+        })
+    }
+
     public wait(
         condition: Condition,
         timeout: number = 5000,
