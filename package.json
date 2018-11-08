@@ -4,8 +4,11 @@
   "description": "test project on how to work with webdriverjs",
   "main": "dist/index.js",
   "types" : "dist/index.d.ts",
+
   "scripts": {
-    "test": "tsc & jasmine"
+    "prepare" : "npm run build",
+    "test": "tsc & jasmine",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
