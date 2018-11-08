@@ -224,8 +224,6 @@ describe('When using the Browser object', () => {
         it('the hasTitle method should return false when the given title is not correct.', async () => {
             expect(await browser.hasTitle("ReactApp")).toEqual(false);
         }, 5000);
-
-
     });
 
     afterAll(async () => {
