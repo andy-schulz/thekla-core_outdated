@@ -10,9 +10,8 @@ export interface WebElementFinder {
     click(): Promise<void>;
     sendKeys(keySequence: string): Promise<void>;
     getDescription(): string;
-    getText(): Promise<string | null>;
+    getText(): Promise<string>;
     getAttribute(attribute: string): Promise<string>;
-
     isVisible(): Promise<boolean>;
 }
 
