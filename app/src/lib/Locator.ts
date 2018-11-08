@@ -1,9 +1,5 @@
 import {By as ByWd} from "selenium-webdriver"
 
-export interface Selector{
-    css: (selector: string) => Selector;
-    // getSelector: (framework: string) => any;
-}
 
 export class By{
 
@@ -26,7 +22,7 @@ export class By{
             case "wdjs":
                 switch (this.selectorType) {
                     case "byCss":
-                        return ByWd.css(this.selector)
+                        return ByWd.css(this.selector);
                     default:
                         throw Error(`Selector ${this.selector} not found for framework ${framework}`);
                 }

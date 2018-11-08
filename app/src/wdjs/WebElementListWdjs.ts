@@ -1,5 +1,5 @@
 import {WdElement, WebElementFinder, WebElementListFinder} from "../../interface/WebElements";
-import {By} from "../../interface/Locator";
+import {By} from "../lib/Locator";
 import {WebElementWdjs} from "./WebElementWdjs";
 import {WebElement} from "selenium-webdriver";
 

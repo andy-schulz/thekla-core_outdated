@@ -4,12 +4,12 @@ import {Config, FirefoxOptions} from "../../interface/Config";
 import {Builder, ThenableWebDriver} from "selenium-webdriver";
 
 import {configure, getLogger, Logger} from "log4js";
-import {By} from "../../interface/Locator";
+import {By} from "../lib/Locator";
 import { WebElementFinder, WebElementListFinder} from "../../interface/WebElements";
 import {WebElementListWdjs} from "./WebElementListWdjs";
 
 import {Options as FFOptions} from "selenium-webdriver/firefox";
-import {Condition} from "../../interface/Condition";
+import {Condition} from "../lib/Condition";
 
 
 
