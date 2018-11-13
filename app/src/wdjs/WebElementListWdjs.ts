@@ -5,11 +5,9 @@ import {WebElement} from "selenium-webdriver";
 
 
 export class WebElementListWdjs implements WebElementListFinder{
-
+    private _description: string = "";
     constructor(
-        public getElements: () => Promise<WebElement[]>,
-        public getDescription: () => string
-    ) {
+        public getElements: () => Promise<WebElement[]>) {
     }
 
     /**
@@ -25,18 +23,18 @@ export class WebElementListWdjs implements WebElementListFinder{
     // }
 
     element(
-        locator: By,
-        description: string = `Element without description`): WebElementFinder {
-        const desc = `'${description}' selected by: ${locator.toString()}`;
-        return <WebElementFinder>(<WebElementListWdjs>this.all(locator,desc)).toWebElement();
+        locator: By): WebElementFinder {
+        const desc = `'${this.description.replace("'Elements'","'Element'")}' -> selected by: ${locator.toString()}`;
+        return <WebElementFinder>(<WebElementListWdjs>this.all(locator)).toWebElement().is(desc);
     }
 
     all(
-        locator: By,
-        description: string = `Element without description`): WebElementListFinder {
+        locator: By): WebElementListFinder {
 
         let getElements = async (): Promise<WdElement[]> => {
             // can be removed when done
+            // TODO: Für jedes Element muss noch findElements aufgerufen werden um alle Elemente in der Chain zu finden
+            // Lösung über [].reduce.
             return await this.getElements();
 
             const elements = await this.getElements();
@@ -50,15 +48,25 @@ export class WebElementListWdjs implements WebElementListFinder{
             await Promise.all(els);
         };
 
-        let getDescription = () => {
-            const desc = `'${description}' selected by: >>${locator.toString()}<<`;
-            return desc;
-        };
-
-        return new WebElementListWdjs(getElements, getDescription);
+        let desc: string = "";
+        if(this.description) {
+            desc = `'${this.description.replace("'Element'","'Elements'")}' selected by: >>${locator.toString()}<<`
+        } else {
+            desc = `'Elements' selected by: >>${locator.toString()}<<`
+        }
+        return new WebElementListWdjs(getElements).is(desc);
     }
 
     public toWebElement(): WebElementWdjs {
-        return new WebElementWdjs(this, () => this.getDescription());
+        return new WebElementWdjs(this);
+    }
+
+    public is(description: string): WebElementListFinder {
+        this._description = description;
+        return this;
+    }
+
+    get description(): string {
+        return this._description;
     }
 }

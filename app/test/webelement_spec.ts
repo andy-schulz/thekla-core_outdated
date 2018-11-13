@@ -14,6 +14,7 @@ describe('When using the Browser object', () => {
         browserName: "firefox",
         serverUrl: "http://localhost:4444/wd/hub",
         firefoxOptions: {
+            // binary: "C:\\PProgramme\\FirefoxPortable64\\App\\Firefox\\firefox.exe",
             binary: "C:\\PProgramme\\FirefoxPortable\\App\\Firefox\\firefox.exe",
             proxy: {
                 proxyType: "direct"
@@ -23,6 +24,7 @@ describe('When using the Browser object', () => {
         //     binary: "C:\\PProgramme\\GoogleChromePortable64\\App\\Chrome-bin\\chrome.exe"
         // }
     };
+
     const testurl = "http://localhost:3000/";
 
 
@@ -53,9 +55,9 @@ describe('When using the Browser object', () => {
         }, 10000);
 
         it('with a description it should be printable - (test case id: )', () => {
-            const element = browser.element(By.css(".doesNotExist"), `My personal description`);
+            const element = browser.element(By.css(".doesNotExist"));
 
-            const desc = element.getDescription();
+            const desc = element.description;
             expect(desc).toContain(`My personal description`);
             expect(desc).toContain(`.doesNotExist`);
         });
@@ -213,7 +215,7 @@ describe('When using the Browser object', () => {
             await browser.get(testurl);
         },11000);
 
-        it('the getTitle method should get the correct title', async () => {
+        fit('the getTitle method should get the correct title', async () => {
             expect(await browser.getTitle()).toEqual("React App");
         }, 5000);
 

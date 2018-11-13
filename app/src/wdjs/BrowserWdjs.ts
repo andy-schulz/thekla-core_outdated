@@ -134,28 +134,20 @@ export class BrowserWdjs implements Browser{
         })
     }
 
-
-
     public element(
-        locator: By,
-        description: string = `Element without description`): WebElementFinder {
-        return (<WebElementListWdjs>this.all(locator,description)).toWebElement();
+        locator: By): WebElementFinder {
+
+        return (<WebElementListWdjs>this.all(locator)).toWebElement().is(`'Element' selected by: >>${locator.toString()}<<`);
     }
 
     public all(
-        locator: By,
-        description: string = `Element without description`): WebElementListFinder {
-        // wrap it in WebElems
+        locator: By): WebElementListFinder {
+
         const loc = locator.getSelector("wdjs");
         let getElements = async () => {
             return await this.driver.findElements(loc);
         };
 
-        let getDescription = () => {
-            return `'${description}' selected by: >>${locator.toString()}<<`;
-        };
-
-        // should return a single element
-        return new WebElementListWdjs(getElements, getDescription);
+        return new WebElementListWdjs(getElements).is(`'Elements' selected by: >>${locator.toString()}<<`);
     }
 }
