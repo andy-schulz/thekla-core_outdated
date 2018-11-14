@@ -1,4 +1,4 @@
-import {SppWebElementFinder} from "../WebElementSpp";
+import {SppWebElementFinder} from "../SppWebElements";
 import {Activity, Interaction} from "./Activities";
 import {Actor} from "../Actor";
 import {BrowseTheWeb} from "../abilities/BrowseTheWeb";

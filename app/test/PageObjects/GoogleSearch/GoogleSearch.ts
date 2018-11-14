@@ -1,4 +1,4 @@
-import {element, SppWebElementFinder} from "../../../screenplay/WebElementSpp";
+import {element, SppWebElementFinder} from "../../../screenplay/SppWebElements";
 import {By} from "../../../index";
 
 export class GoogleSearch {

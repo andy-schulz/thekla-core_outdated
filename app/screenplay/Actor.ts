@@ -13,7 +13,7 @@
  *
  * each relationship has its own interface
  */
-import {Ability, AbilityClass} from "./abilities/Abilitiy";
+import {Ability, AbilityClass} from "./abilities/Ability";
 import {Activity} from "./actions/Activities";
 
 

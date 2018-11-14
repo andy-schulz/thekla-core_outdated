@@ -1,7 +1,4 @@
-import {element, SppWebElementFinder} from "../../../screenplay/WebElementSpp";
-import {Task, Activity} from "../../../screenplay/actions/Activities";
-import {PerformsTask} from "../../../screenplay/Actor";
-import {Click} from "../../../screenplay/actions/Click";
+import {element, SppWebElementFinder} from "../../../screenplay/SppWebElements";
 import {By} from "../../..";
 
 export class GoogleCalculator {
