@@ -1,5 +1,4 @@
 /**
- *
  * WebDriver Wrapper
  */
 
@@ -14,7 +13,6 @@ export {until}          from "./src/lib/Condition";
 
 /**
  * Screenplay Elements
- *
  */
 export {element}                from "./screenplay/SppWebElements";
 export {SppWebElementFinder}    from "./screenplay/SppWebElements";
