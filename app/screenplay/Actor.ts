@@ -13,8 +13,8 @@
  *
  * each relationship has its own interface
  */
-import {Activity} from "./Activity";
 import {Ability, AbilityClass} from "./abilities/Abilitiy";
+import {Activity} from "./actions/Activities";
 
 
 export interface AnswersQuestions {

@@ -1,8 +1,7 @@
-import {SppWebElementFinder, SppWebElementListFinder} from "../WebElementSpp";
-import {Interaction} from "./Activities";
+import {SppWebElementFinder} from "../WebElementSpp";
+import {Activity, Interaction} from "./Activities";
 import {Actor} from "../Actor";
 import {BrowseTheWeb} from "../abilities/BrowseTheWeb";
-import {Activity} from "../Activity";
 
 export class Enter implements Interaction {
     private inputField: SppWebElementFinder;

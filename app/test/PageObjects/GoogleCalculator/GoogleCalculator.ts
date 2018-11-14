@@ -1,7 +1,10 @@
 import {element, SppWebElementFinder} from "../../../screenplay/WebElementSpp";
-import {By} from "../../../index";
+import {Task, Activity} from "../../../screenplay/actions/Activities";
+import {PerformsTask} from "../../../screenplay/Actor";
+import {Click} from "../../../screenplay/actions/Click";
+import {By} from "../../..";
 
-class GoogleCalculator {
+export class GoogleCalculator {
     public static input: SppWebElementFinder = element(By.css("[id='cwtltblr']"));
     public static minus: SppWebElementFinder = element(By.css("#cwbt36"));
     public static plus: SppWebElementFinder = element(By.css("#cwbt46"));
@@ -18,44 +21,5 @@ class GoogleCalculator {
     public static nine: SppWebElementFinder = element(By.css("#cwbt15"));
     public static res: SppWebElementFinder = element(By.css("#cwbt45"));
 }
-// public enterNumber = async (number: number): Promise<void> => {
-//     if(number < 0) {
-//         this.minus.click();
-//     }
-//
-//     for (let char of number.toString()) {
-//         switch(char) {
-//             case '1':
-//                 await this.one.click();
-//                 break;
-//             case '2':
-//                 await this.two.click();
-//                 break;
-//             case '3':
-//                 await this.three.click();
-//                 break;
-//             case '4':
-//                 await this.four.click();
-//                 break;
-//             case '5':
-//                 await this.five.click();
-//                 break;
-//             case '6':
-//                 await this.six.click();
-//                 break;
-//             case '7':
-//                 await this.seven.click();
-//                 break;
-//             case '8':
-//                 await this.eight.click();
-//                 break;
-//             case '9':
-//                 await this.nine.click();
-//                 break;
-//             case '0':
-//                 await this.zero.click();
-//                 break;
-//         }
-//     }
-//     return Promise.resolve();
-// };
+
+
