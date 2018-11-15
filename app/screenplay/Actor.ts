@@ -16,9 +16,11 @@
 import {Ability, AbilityClass} from "./abilities/Ability";
 import {Activity} from "./actions/Activities";
 import {NoSuchAbilityError} from "./errors/NoSuchAbilityError";
+import {Question} from "./matcher/questions/Question";
 
 
 export interface AnswersQuestions {
+    toAnswer<T>(question: Question<T>): Promise<T>;
 }
 
 export interface PerformsTask {
@@ -26,7 +28,8 @@ export interface PerformsTask {
 }
 
 export interface UsesAbilities {
-    abilityTo(Ability: AbilityClass): Ability;
+    // abilityTo(Ability: AbilityClass): Ability;
+    withAbilityTo(Ability: AbilityClass): Ability;
     can(ability: Ability): void;
 }
 
@@ -79,11 +82,16 @@ export class Actor implements AnswersQuestions, PerformsTask, UsesAbilities{
      *
      * @param Ability the type of Ability the actor should be able to use
      */
-    abilityTo(Ability: AbilityClass): Ability {
+    withAbilityTo(Ability: AbilityClass): Ability {
 
         if(!this.abilityMap.has(Ability.name)) {
             throw new NoSuchAbilityError(`The Actor '${this.name}' does not have the Ability ${Ability.name}`);
         }
         return <Ability>this.abilityMap.get(Ability.name);
     }
+
+    toAnswer<T>(question: Question<T>): Promise<T> {
+        return question.answeredBy(this);
+    }
+
 }
