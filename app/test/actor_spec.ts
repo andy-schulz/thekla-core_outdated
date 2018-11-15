@@ -1,14 +1,14 @@
-import {Actor} from "../screenplay/Actor";
-import {Navigate} from "../screenplay/actions/Navigate";
-import {BrowseTheWeb} from "../screenplay/abilities/BrowseTheWeb";
+import {Actor}                       from "../screenplay/Actor";
+import {Navigate}                    from "../screenplay/web/actions/Navigate";
+import {BrowseTheWeb}                from "../screenplay/web/abilities/BrowseTheWeb";
 import {BrowserFactory, Config, Key} from "..";
-import {Enter} from "../screenplay/actions/Enter";
-import {Wait} from "../screenplay/actions/Wait";
-import {GoogleSearch} from "./PageObjects/GoogleSearch/GoogleSearch";
-import {Add} from "./PageObjects/GoogleCalculator/Add";
-import {See} from "../screenplay/matcher/See";
-import {Text} from "../screenplay/matcher/questions/Text";
-import {GoogleCalculator} from "./PageObjects/GoogleCalculator/GoogleCalculator";
+import {Enter}                       from "../screenplay/web/actions/Enter";
+import {Wait}                        from "../screenplay/web/actions/Wait";
+import {GoogleSearch}                from "./PageObjects/GoogleSearch/GoogleSearch";
+import {Add}                         from "./PageObjects/GoogleCalculator/Add";
+import {See}                         from "../screenplay/lib/matcher/See";
+import {Text}                        from "../screenplay/web/matcher/questions/Text";
+import {GoogleCalculator}            from "./PageObjects/GoogleCalculator/GoogleCalculator";
 
 let config: Config = {
     browserName: "chrome",

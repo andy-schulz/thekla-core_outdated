@@ -13,10 +13,10 @@
  *
  * each relationship has its own interface
  */
-import {Ability, AbilityClass} from "./abilities/Ability";
-import {Activity} from "./actions/Activities";
-import {NoSuchAbilityError} from "./errors/NoSuchAbilityError";
-import {Question} from "./matcher/questions/Question";
+import {Ability, AbilityClass} from "./lib/abilities/Ability";
+import {Activity}              from "./lib/actions/Activities";
+import {NoSuchAbilityError}    from "./errors/NoSuchAbilityError";
+import {Question}              from "./lib/matcher/questions/Question";
 
 
 export interface AnswersQuestions {

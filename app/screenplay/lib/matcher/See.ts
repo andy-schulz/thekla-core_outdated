@@ -1,6 +1,6 @@
-import {AnswersQuestions} from "../Actor";
-import {Question} from "./questions/Question";
-import {Matcher} from "../actions/Activities";
+import {AnswersQuestions} from "../../Actor";
+import {Question}         from "./questions/Question";
+import {Matcher}          from "../actions/Activities";
 
 export class See<U> implements Matcher {
     matcher: (value: U) => any;

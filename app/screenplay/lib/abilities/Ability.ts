@@ -1,4 +1,4 @@
-import {UsesAbilities} from "../Actor";
+import {UsesAbilities} from "../../Actor";
 
 /**
  * AbilityClass type to pass an ability class as parameter

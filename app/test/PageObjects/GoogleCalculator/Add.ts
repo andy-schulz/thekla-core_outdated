@@ -1,6 +1,6 @@
-import {Activity, Task} from "../../../screenplay/actions/Activities";
-import {Click} from "../../../screenplay/actions/Click";
-import {PerformsTask} from "../../../screenplay/Actor";
+import {Activity, Task}   from "../../../screenplay/lib/actions/Activities";
+import {Click}            from "../../../screenplay/web/actions/Click";
+import {PerformsTask}     from "../../../screenplay/Actor";
 import {GoogleCalculator} from "./GoogleCalculator";
 
 export class Add extends Task {

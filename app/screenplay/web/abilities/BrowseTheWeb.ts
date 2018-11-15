@@ -1,6 +1,6 @@
-import {Ability} from "./Ability";
-import {Browser, WebElementFinder} from "../..";
-import {UsesAbilities} from "../Actor";
+import {Ability}                                           from "../../lib/abilities/Ability";
+import {Browser, WebElementFinder}                         from "../../../index";
+import {UsesAbilities}                                     from "../../Actor";
 import {FinderLocator, SppFinderRoot, SppWebElementFinder} from "../SppWebElements";
 
 export class BrowseTheWeb implements Ability {

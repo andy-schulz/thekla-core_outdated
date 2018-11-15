@@ -1,4 +1,4 @@
-import {By} from "../src/lib/Locator"
+import {By} from "../../src/lib/Locator"
 
 export interface FinderLocator {
     type: string;

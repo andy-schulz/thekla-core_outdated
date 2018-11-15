@@ -1,5 +1,5 @@
-import {BrowseTheWeb, Interaction} from "../../";
-import {UsesAbilities}             from "../Actor";
+import {BrowseTheWeb, Interaction} from "../../../index";
+import {UsesAbilities}             from "../../Actor";
 
 export class Navigate implements Interaction {
 

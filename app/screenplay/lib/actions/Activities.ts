@@ -1,4 +1,4 @@
-import {AnswersQuestions, PerformsTask, UsesAbilities} from "../Actor";
+import {AnswersQuestions, PerformsTask, UsesAbilities} from "../../Actor";
 
 /**
  *       Task = a Workflow composed of Tasks or Interactions or both

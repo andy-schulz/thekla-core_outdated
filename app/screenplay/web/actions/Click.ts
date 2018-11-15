@@ -1,6 +1,6 @@
-import {BrowseTheWeb, Interaction, SppWebElementFinder} from "../../";
+import {BrowseTheWeb, Interaction, SppWebElementFinder} from "../../../index";
 import {SppWebElementListFinder}                        from "../SppWebElements";
-import {UsesAbilities}                                  from "../Actor";
+import {UsesAbilities}                                  from "../../Actor";
 
 export class Click implements Interaction {
 

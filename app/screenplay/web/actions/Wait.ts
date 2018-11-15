@@ -1,8 +1,8 @@
 import {SppWebElementFinder} from "../SppWebElements";
-import {Interaction} from "./Activities";
-import {Actor} from "../Actor";
-import {Utils} from "../../src/utils/Utils";
-import {getLogger} from "@log4js-node/log4js-api"
+import {Interaction}         from "../../lib/actions/Activities";
+import {Actor}               from "../../Actor";
+import {Utils}               from "../../../src/utils/Utils";
+import {getLogger}           from "@log4js-node/log4js-api"
 
 export class Wait implements Interaction {
     private logger = getLogger("Wait");

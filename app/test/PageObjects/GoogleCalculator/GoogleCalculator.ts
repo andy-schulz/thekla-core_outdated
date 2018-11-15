@@ -1,5 +1,5 @@
-import {element, SppWebElementFinder} from "../../../screenplay/SppWebElements";
-import {By} from "../../..";
+import {element, SppWebElementFinder} from "../../../screenplay/web/SppWebElements";
+import {By}                           from "../../..";
 
 export class GoogleCalculator {
     public static input: SppWebElementFinder = element(By.css("[id='cwtltblr']"));
