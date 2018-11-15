@@ -30,5 +30,12 @@ export {Enter}                          from "./screenplay/web/actions/Enter";
 export {Navigate}                       from "./screenplay/web/actions/Navigate";
 export {Wait}                           from "./screenplay/web/actions/Wait";
 
+// Matcher
+export {See} from "./screenplay/lib/matcher/See";
+
+// Questions
+export {Text}     from "./screenplay/web/matcher/questions/Text";
+export {Response} from "./screenplay/rest/questions/Response";
+
 // Custom Errors
 export {NoSuchAbilityError} from "./screenplay/errors/NoSuchAbilityError";
