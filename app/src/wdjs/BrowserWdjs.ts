@@ -21,9 +21,9 @@ export class BrowserWdjs implements Browser{
         this.driver = browser;
     }
 
-    public static create(config: Config): Promise<Browser> {
+    public static create(config: Config): Browser {
         let builder: Builder;
-        return new Promise(async (fulfill, reject) => {
+        // return new Promise(async (fulfill, reject) => {
             try {
                 builder = new Builder().
                 usingServer(config.serverUrl).
@@ -34,13 +34,15 @@ export class BrowserWdjs implements Browser{
                 let driver = builder.build();
                 let browser = new BrowserWdjs(driver);
                 this.bowserMap.set(`browser${this.bowserMap.size + 1}`,browser);
-                fulfill(browser);
+                return browser;
+                // fulfill(browser);
             } catch (e) {
                 const message = ` ${e} ${Error().stack}`;
-                return reject(message)
+                throw new Error(message)
+                // return reject(message)
             }
 
-        })
+        // })
     }
 
     private static applyFirefoxOptions(builder: Builder, options: FirefoxOptions | undefined): void  {

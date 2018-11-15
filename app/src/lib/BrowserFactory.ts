@@ -3,11 +3,11 @@ import {BrowserWdjs} from "../wdjs/BrowserWdjs";
 
 export class BrowserFactory {
 
-    public static create(config: Config, framework: string = "wdjs"): Promise<Browser> {
+    public static create(config: Config, framework: string = "wdjs"): Browser {
         if(framework == "wdjs") {
             return BrowserWdjs.create(config);
         } else {
-            throw Promise.reject(`Error: Framework '${framework}' not implemented`);
+            throw Error(`Error: Framework '${framework}' not implemented`);
         }
     }
 

@@ -25,7 +25,7 @@ let config: Config = {
 describe('Searching on Google', () => {
     it('for calculator should show the Google calculator', async () => {
         let andy = Actor.named("Andy");
-        andy.whoCan(BrowseTheWeb.using(await BrowserFactory.create(config)));
+        andy.whoCan(BrowseTheWeb.using(BrowserFactory.create(config)));
 
         let matcher: (text: string) => boolean = (test: string ) => expect(test).toEqual("6");
 
