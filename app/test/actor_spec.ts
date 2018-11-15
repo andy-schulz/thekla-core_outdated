@@ -6,6 +6,9 @@ import {Enter} from "../screenplay/actions/Enter";
 import {Wait} from "../screenplay/actions/Wait";
 import {GoogleSearch} from "./PageObjects/GoogleSearch/GoogleSearch";
 import {Add} from "./PageObjects/GoogleCalculator/Add";
+import {See} from "../screenplay/matcher/See";
+import {Text} from "../screenplay/matcher/questions/Text";
+import {GoogleCalculator} from "./PageObjects/GoogleCalculator/GoogleCalculator";
 
 let config: Config = {
     browserName: "chrome",
@@ -24,13 +27,16 @@ describe('Searching on Google', () => {
         let andy = Actor.named("Andy");
         andy.whoCan(BrowseTheWeb.using(await BrowserFactory.create(config)));
 
+        let matcher: (text: string) => boolean = (test: string ) => expect(test).toEqual("6");
+
         await andy.attemptsTo(
             Navigate.to("https://www.google.de"),
             Enter.value("calculator").into(GoogleSearch.searchField),
             Enter.value(Key.ENTER).into(GoogleSearch.searchField),
-            Wait.for(5000),
+            Wait.for(500),
             Add.number(1).to(5),
-            Wait.for(5000),
+            See.if(Text.of(GoogleCalculator.input)).fulfills(matcher),
+            Wait.for(500),
         );
 
         await BrowserFactory.cleanup();
