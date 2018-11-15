@@ -2,8 +2,6 @@ import {Ability} from "./Ability";
 import {Browser, WebElementFinder} from "../..";
 import {UsesAbilities} from "../Actor";
 import {FinderLocator, SppFinderRoot, SppWebElementFinder} from "../SppWebElements";
-import {WebFinder} from "../../interface/WebElements";
-import {Utils} from "../../src/utils/Utils";
 
 export class BrowseTheWeb implements Ability {
 
