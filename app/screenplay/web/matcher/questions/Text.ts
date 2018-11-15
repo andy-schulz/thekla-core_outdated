@@ -1,4 +1,4 @@
-import {Question}                                     from "../../../lib/matcher/questions/Question";
+import {Question}                                     from "../../../lib/matcher/Question";
 import {UsesAbilities}                                from "../../../Actor";
 import {SppWebElementFinder, SppWebElementListFinder} from "../../SppWebElements";
 import {BrowseTheWeb}                                 from "../../../../index";

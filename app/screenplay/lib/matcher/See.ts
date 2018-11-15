@@ -1,5 +1,5 @@
 import {AnswersQuestions} from "../../Actor";
-import {Question}         from "./questions/Question";
+import {Question}         from "./Question";
 import {Matcher}          from "../actions/Activities";
 
 export class See<U> implements Matcher {

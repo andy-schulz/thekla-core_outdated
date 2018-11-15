@@ -16,7 +16,7 @@
 import {Ability, AbilityClass} from "./lib/abilities/Ability";
 import {Activity}              from "./lib/actions/Activities";
 import {NoSuchAbilityError}    from "./errors/NoSuchAbilityError";
-import {Question}              from "./lib/matcher/questions/Question";
+import {Question}              from "./lib/matcher/Question";
 
 
 export interface AnswersQuestions {

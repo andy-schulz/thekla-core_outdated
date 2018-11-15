@@ -1,5 +1,5 @@
 import {AxiosResponse} from "axios";
-import {Question}      from "../../lib/matcher/questions/Question";
+import {Question}      from "../../lib/matcher/Question";
 import {UseTheRestApi} from "../abilities/UseTheRestApi";
 import {UsesAbilities} from "../../Actor";
 

@@ -1,8 +1,11 @@
 import {Ability}       from "../../lib/abilities/Ability";
 import {UsesAbilities} from "../../Actor";
-import axios, {AxiosInstance, AxiosResponse} from "axios";
+import {AxiosInstance, AxiosResponse} from "axios";
 
-
+/**
+ * Ability to use the Axios Rest Module
+ *
+ */
 export class UseTheRestApi implements Ability {
 
     static using(restClient: AxiosInstance) {
