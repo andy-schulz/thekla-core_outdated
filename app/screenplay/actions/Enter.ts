@@ -1,7 +1,6 @@
-import {SppWebElementFinder} from "../SppWebElements";
-import {Activity, Interaction} from "./Activities";
-import {Actor} from "../Actor";
-import {BrowseTheWeb} from "../abilities/BrowseTheWeb";
+import {BrowseTheWeb, Activity, Interaction} from "../../";
+import {SppWebElementFinder}                 from "../SppWebElements";
+import {UsesAbilities}                       from "../Actor";
 
 export class Enter implements Interaction {
     private inputField: SppWebElementFinder;
@@ -10,14 +9,15 @@ export class Enter implements Interaction {
         return new Enter(inputString);
     }
 
-    constructor(private keySequence: string) {}
+    constructor(private keySequence: string) {
+    }
 
-    public into(element: SppWebElementFinder) : Activity {
+    public into(element: SppWebElementFinder): Activity {
         this.inputField = element;
         return this;
     }
 
-    performAs(actor: Actor): Promise<void> {
+    performAs(actor: UsesAbilities): Promise<void> {
         return BrowseTheWeb.as(actor).find(this.inputField).sendKeys(this.keySequence);
     }
 }

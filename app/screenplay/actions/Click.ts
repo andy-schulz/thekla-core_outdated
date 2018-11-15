@@ -1,17 +1,16 @@
-import {SppWebElementFinder, SppWebElementListFinder} from "../SppWebElements";
-import {Interaction} from "./Activities";
-import {Actor} from "../Actor";
-import {BrowseTheWeb} from "../abilities/BrowseTheWeb";
+import {BrowseTheWeb, Interaction, SppWebElementFinder} from "../../";
+import {SppWebElementListFinder}                        from "../SppWebElements";
+import {UsesAbilities}                                  from "../Actor";
 
 export class Click implements Interaction {
 
-    public static on(element: SppWebElementFinder | SppWebElementListFinder) {
+    public static on(element: SppWebElementFinder | SppWebElementListFinder): Click {
         return new Click(element);
     }
 
     constructor(private element: SppWebElementFinder) {}
 
-    performAs(actor: Actor): Promise<void> {
+    performAs(actor: UsesAbilities): Promise<void> {
         return BrowseTheWeb.as(actor).find(this.element).click();
     }
 }
