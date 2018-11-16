@@ -21,6 +21,7 @@ export {Actor}                  from "./screenplay/Actor";
 // Abilities
 export {Ability}       from "./screenplay/lib/abilities/Ability";
 export {BrowseTheWeb}  from "./screenplay/web/abilities/BrowseTheWeb";
+export {UseTheRestApi}  from "./screenplay/rest/abilities/UseTheRestApi";
 
 
 // Activities
