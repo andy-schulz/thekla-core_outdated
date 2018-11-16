@@ -1,17 +1,20 @@
-import * as yargs                     from "yargs";
 import {Ability}                      from "../../lib/abilities/Ability";
 import {UsesAbilities}                from "../../Actor";
-import {AxiosInstance, AxiosResponse} from "axios";
 import * as rp                        from "request-promise-native"
-import request, {Request}             from "request"
 import {SppRequest}                   from "../interfaces/requests";
+
+export interface RestAbilityOptions {
+    restClient: "request"
+    proxy?: string;
+}
+
 /**
- * Ability to use the Axios Rest Module
+ * Ability to use a REST Module
  *
  */
 export class UseTheRestApi implements Ability {
 
-    static using(restClient: string) {
+    static using(restClient: RestAbilityOptions) {
         return new UseTheRestApi(restClient);
     }
 
@@ -19,13 +22,12 @@ export class UseTheRestApi implements Ability {
         return <UseTheRestApi>actor.withAbilityTo(UseTheRestApi);
     }
 
-    constructor(private restClient: string) {}
+    constructor(private restAbilityOptions: RestAbilityOptions) {}
 
     get(url: string): Promise<SppRequest> {
-        let config:{ [index:string] : {message: string} | object } = {};
-        const args = yargs.argv;
-        if (args.proxy) {
-            config.proxy = args.proxy
+        let config:{ [index:string] : string | object } = {};
+        if (this.restAbilityOptions.proxy) {
+            config.proxy = this.restAbilityOptions.proxy
         }
 
         return new Promise((fulfill, reject) => {
