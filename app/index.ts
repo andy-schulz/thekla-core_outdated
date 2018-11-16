@@ -19,9 +19,9 @@ export {SppWebElementFinder}    from "./screenplay/web/SppWebElements";
 export {Actor}                  from "./screenplay/Actor";
 
 // Abilities
-export {Ability}       from "./screenplay/lib/abilities/Ability";
-export {BrowseTheWeb}  from "./screenplay/web/abilities/BrowseTheWeb";
-export {UseTheRestApi}  from "./screenplay/rest/abilities/UseTheRestApi";
+export {Ability}                            from "./screenplay/lib/abilities/Ability";
+export {BrowseTheWeb}                       from "./screenplay/web/abilities/BrowseTheWeb";
+export {UseTheRestApi, RestAbilityOptions}  from "./screenplay/rest/abilities/UseTheRestApi";
 
 
 // Activities
@@ -37,6 +37,7 @@ export {See} from "./screenplay/lib/matcher/See";
 // Questions
 export {Text}     from "./screenplay/web/matcher/questions/Text";
 export {Response} from "./screenplay/rest/questions/Response";
+export {SppRequest} from "./screenplay/rest/interfaces/requests";
 
 // Custom Errors
 export {NoSuchAbilityError} from "./screenplay/errors/NoSuchAbilityError";
