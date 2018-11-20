@@ -4,12 +4,22 @@
 
 export {Browser}            from "./interface/Browser";
 export {Config}             from "./interface/Config";
-export {WebElementFinder}   from  "./interface/WebElements";
+export {WebElementFinder}   from "./interface/WebElements";
 
 export {BrowserFactory} from "./src/lib/BrowserFactory";
 export {By}             from "./src/lib/Locator";
-export {Key}            from  "./src/lib/Key";
+export {Key}            from "./src/lib/Key";
 export {until}          from "./src/lib/Condition";
+
+/**
+ *
+ * Request Wrapper
+ *
+ */
+
+export {Get}                    from "./screenplay/rest/actions/Get"
+export {Post}                   from "./screenplay/rest/actions/Post"
+export {Delete}                 from "./screenplay/rest/actions/Delete"
 
 /**
  * Screenplay Elements
@@ -32,12 +42,13 @@ export {Navigate}                       from "./screenplay/web/actions/Navigate"
 export {Wait}                           from "./screenplay/web/actions/Wait";
 
 // Matcher
-export {See} from "./screenplay/lib/matcher/See";
+export {See}     from "./screenplay/lib/matcher/See";
+export {Extract} from "./screenplay/lib/matcher/Extract";
 
 // Questions
-export {Text}     from "./screenplay/web/matcher/questions/Text";
-export {Response} from "./screenplay/rest/questions/Response";
-export {SppRequestResult} from "./screenplay/rest/interfaces/requests";
+export {Text}                         from "./screenplay/web/matcher/questions/Text";
+export {Response}                     from "./screenplay/rest/questions/Response";
+export {SppRequestResult, SppRequest} from "./screenplay/rest/interfaces/requests";
 
 // Custom Errors
 export {NoSuchAbilityError} from "./screenplay/errors/NoSuchAbilityError";
