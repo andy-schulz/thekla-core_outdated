@@ -1,31 +1,72 @@
 import * as yargs                          from "yargs";
 import {Actor}                             from "../screenplay/Actor";
+import {Extract}                           from "../screenplay/lib/matcher/Extract";
 import {See}                               from "../screenplay/lib/matcher/See";
 import {RestAbilityOptions, UseTheRestApi} from "../screenplay/rest/abilities/UseTheRestApi";
-import {SppRequest}                        from "../screenplay/rest/interfaces/requests";
+import {Get}                               from "../screenplay/rest/actions/Get";
+import {SppRequestResult}                  from "../screenplay/rest/interfaces/requests";
 import {Response}                          from "../screenplay/rest/questions/Response";
 
 describe('Trying to Add two numbers by the mathjs API', () => {
-    it('simple integers should be added together', async () => {
-        const a = 5;
-        const b = -3;
-        const result = 2;
+    const a = 5;
+    const b = -3;
+    const result = 2;
+    let restConfig: RestAbilityOptions;
+    let statusCode: number | undefined;
+    let extractor: (request: SppRequestResult) => any;
 
-        let restConfig: RestAbilityOptions = {
+    beforeAll(() => {
+
+
+        restConfig = {
             restClient: "request",
+            baseUrl: "http://api.mathjs.org/v4"
         };
 
         if (yargs.argv.proxy) {
             restConfig.proxy = yargs.argv.proxy;
         }
 
-        let matcher: (text: SppRequest) => any
-            = (response: SppRequest) => expect(response.toString()).toEqual(`${result}`);
+        extractor = (request: SppRequestResult) => {
+            statusCode = request.response ? request.response.statusCode: undefined;
+            console.log(`Status: ${JSON.stringify(request)}`);
+        };
+    });
+
+    it('simple integers should be added together', async () => {
+
+
+        let matcher: (response: SppRequestResult) => any
+            = (response: SppRequestResult) => expect(response.toString()).toEqual(`${result}`);
 
         let andy = Actor.named("Andy");
         andy.whoCan(UseTheRestApi.using(restConfig));
         await andy.attemptsTo(
-            See.if(Response.to(`http://api.mathjs.org/v4/?expr=${a}%2B${b}`)).fulfills(matcher),
+            See.if(Response.of(Get.from(`/?expr=${a}%2B${b}`))).fulfills(matcher),
         );
-    })
+    });
+
+    it('simple integers should be added together', async () => {
+
+        let andy = Actor.named("Andy");
+        andy.whoCan(UseTheRestApi.using(restConfig));
+        await andy.attemptsTo(
+            Extract.the(Response.of(Get.from(`/?expr=${a}%2B${b}`))).by(extractor),
+        );
+    });
+
+    it('simple integers should be added together', async () => {
+
+        let conf: RestAbilityOptions =  {
+            resolveWithFullResponse: true,
+            json: true
+        };
+
+        let andy = Actor.named("Andy");
+        andy.whoCan(UseTheRestApi.using(restConfig));
+        await andy.attemptsTo(
+            Extract.the(Response.of(Get.from(`/v4/?expr=${a}%2B${b}`).using(conf))).by(extractor),
+        );
+    });
+
 });

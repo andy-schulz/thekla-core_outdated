@@ -37,7 +37,7 @@ export {See} from "./screenplay/lib/matcher/See";
 // Questions
 export {Text}     from "./screenplay/web/matcher/questions/Text";
 export {Response} from "./screenplay/rest/questions/Response";
-export {SppRequest} from "./screenplay/rest/interfaces/requests";
+export {SppRequestResult} from "./screenplay/rest/interfaces/requests";
 
 // Custom Errors
 export {NoSuchAbilityError} from "./screenplay/errors/NoSuchAbilityError";

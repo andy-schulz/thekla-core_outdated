@@ -1,11 +1,12 @@
+import {CoreOptions}                  from "request";
 import {Ability}                      from "../../lib/abilities/Ability";
 import {UsesAbilities}                from "../../Actor";
-import * as rp                        from "request-promise-native"
-import {SppRequest}                   from "../interfaces/requests";
+import {SppRequest, SppRequestResult} from "../interfaces/requests";
+import merge                          from "deepmerge";
+import {RequestPromiseOptions}        from "request-promise-native";
 
-export interface RestAbilityOptions {
-    restClient: "request"
-    proxy?: string;
+export interface RestAbilityOptions extends RequestPromiseOptions{
+    restClient?: "request"
 }
 
 /**
@@ -14,8 +15,8 @@ export interface RestAbilityOptions {
  */
 export class UseTheRestApi implements Ability {
 
-    static using(restClient: RestAbilityOptions) {
-        return new UseTheRestApi(restClient);
+    static using(standardOptions: RestAbilityOptions = {restClient: "request"}) {
+        return new UseTheRestApi(standardOptions);
     }
 
     static as(actor: UsesAbilities): UseTheRestApi {
@@ -24,22 +25,30 @@ export class UseTheRestApi implements Ability {
 
     constructor(private restAbilityOptions: RestAbilityOptions) {}
 
-    get(url: string): Promise<SppRequest> {
-        let config:{ [index:string] : string | object } = {};
-        if (this.restAbilityOptions.proxy) {
-            config.proxy = this.restAbilityOptions.proxy
-        }
 
-        return new Promise((fulfill, reject) => {
-            rp.get(url, config).then((response: SppRequest) => {
-                fulfill(response);
-            }).catch((e: any) => {
-                reject(e);
-            });
-        });
-
-
-
-
+    send(request: SppRequest): Promise<SppRequestResult> {
+        return request.send(merge(request.options, this.restAbilityOptions));
     }
+
+
+
+    // post(url: string, options: RestAbilityOptions = {}): Promise<SppRequestResult> {
+    //     return new Promise((fulfill, reject) => {
+    //         rp.post(url, merge(this.restAbilityOptions, options)).then((response: SppRequestResult) => {
+    //             fulfill(response);
+    //         }).catch((e: any) => {
+    //             reject(e);
+    //         });
+    //     });
+    // }
+    //
+    // delete(url: string, options: RestAbilityOptions = {}): Promise<SppRequestResult> {
+    //     return new Promise((fulfill, reject) => {
+    //         rp.delete(url, merge(this.restAbilityOptions, options)).then((response: SppRequestResult) => {
+    //             fulfill(response);
+    //         }).catch((e: any) => {
+    //             reject(e);
+    //         });
+    //     });
+    // }
 }
