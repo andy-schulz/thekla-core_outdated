@@ -1,13 +1,14 @@
 import "jasmine"
-import {Config} from "../interface/Config";
-import {BrowserWdjs} from "../src/wdjs/BrowserWdjs";
-import {Browser} from "../interface/Browser";
-import {WebElementWdjs} from "../src/wdjs/WebElementWdjs";
-import {Utils} from "../src/utils/Utils";
+import {Config}           from "../interface/Config";
+import {BrowserWdjs}      from "../src/wdjs/BrowserWdjs";
+import {Browser}          from "../interface/Browser";
+import {WebElementWdjs}   from "../src/wdjs/WebElementWdjs";
+import {Utils}            from "../src/utils/Utils";
 import {WebElementFinder} from "../interface/WebElements";
-import {By} from "../src/lib/Locator";
-import {until} from "../src/lib/Condition";
-import {BrowserFactory} from "../src/lib/BrowserFactory";
+import {By}               from "../src/lib/Locator";
+import {until}            from "../src/lib/Condition";
+import {BrowserFactory}   from "../src/lib/BrowserFactory";
+import {Key} from "../src/lib/Key";
 
 describe('When using the Browser object', () => {
     const conf: Config = {
@@ -62,13 +63,34 @@ describe('When using the Browser object', () => {
             expect(desc).toContain(`.doesNotExist`);
         });
 
-       fit('without a description a standard description should be printed - (test case id: )', () => {
+       it('without a description a standard description should be printed - (test case id: )', () => {
             const element = browser.element(By.css(".doesNotExist")).called("My personal description");
 
             const desc = element.toString();
             expect(desc).toContain(`My personal description`);
             expect(desc).toContain(`.doesNotExist`);
         });
+    });
+
+    describe('and try to use the cssContainingText locator', () => {
+        let browser: Browser;
+
+        beforeAll(async (done) => {
+            browser = await BrowserFactory.create(conf, "wdjs");
+            done();
+        });
+
+        it('the element should be found  - (test case id: )', async () => {
+            const search = browser.element(By.css("[name='q']"));
+            // const list = browser.element(By.css("[class='g']"));
+            const list = browser.element(By.cssContainingText("[class='g']", "Desmos"));
+
+            await browser.get("https://google.de");
+            await search.sendKeys("calculator");
+            await search.sendKeys(Key.ENTER);
+            expect(await list.getText()).toContain("Desmos | Scientific Calculator")
+
+        }, 20000);
     });
 
     describe('and try to click on an element', async () => {
