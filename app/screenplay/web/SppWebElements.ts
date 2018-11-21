@@ -50,8 +50,9 @@ export abstract class SppFinderRoot implements SppFinder{
         return new SppWebElementFinder(locator, this);
     }
 
-    public called(description: string) {
+    public called(description: string): SppFinderRoot {
         this._description = description;
+        return this;
     }
 
     get description() {
