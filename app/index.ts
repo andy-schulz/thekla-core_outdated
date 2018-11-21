@@ -29,9 +29,10 @@ export {SppWebElementFinder}    from "./screenplay/web/SppWebElements";
 export {Actor}                  from "./screenplay/Actor";
 
 // Abilities
-export {Ability}                            from "./screenplay/lib/abilities/Ability";
-export {BrowseTheWeb}                       from "./screenplay/web/abilities/BrowseTheWeb";
-export {UseTheRestApi, RestAbilityOptions}  from "./screenplay/rest/abilities/UseTheRestApi";
+export {Ability}                                                from "./screenplay/lib/abilities/Ability";
+export {BrowseTheWeb}                                           from "./screenplay/web/abilities/BrowseTheWeb";
+export {Authenticate, AuthenticationInfo}                       from "./screenplay/web/abilities/Authenticate";
+export {UseTheRestApi, RestAbilityOptions}                      from "./screenplay/rest/abilities/UseTheRestApi";
 
 
 // Activities
