@@ -24,14 +24,14 @@ export class BrowseTheWeb implements Ability {
         for(let loc of locs) {
             if(element === undefined) {
                 if(loc.type == "element") {
-                    element = this.browser.element(loc.locator);
+                    element = this.browser.element(loc.locator).called(spe.description);
                 }else if (locs[0].type == "element") {
                     // TODO: implement all function
                     // element = this.browser.all(loc.locator);
                 } else throw Error(`Locator type ${loc.type} unknown.`);
             } else {
                 if(loc.type == "element") {
-                    element = element.element(loc.locator);
+                    element = element.element(loc.locator).called(spe.description);
                 }else if (locs[0].type == "element") {
                     // TODO: implement all function
                     // element = element.all(loc.locator);

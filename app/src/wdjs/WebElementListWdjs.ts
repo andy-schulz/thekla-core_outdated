@@ -7,7 +7,8 @@ import {WebElement} from "selenium-webdriver";
 export class WebElementListWdjs implements WebElementListFinder{
     private _description: string = "";
     constructor(
-        public getElements: () => Promise<WebElement[]>) {
+        public getElements: () => Promise<WebElement[]>,
+        private _locator: By) {
     }
 
     /**
@@ -24,8 +25,8 @@ export class WebElementListWdjs implements WebElementListFinder{
 
     element(
         locator: By): WebElementFinder {
-        const desc = `'${this.description.replace("'Elements'","'Element'")}' -> selected by: ${locator.toString()}`;
-        return <WebElementFinder>(<WebElementListWdjs>this.all(locator)).toWebElement().is(desc);
+        const desc = `'${this.description.replace("'Elements'","'Element'")}'`;
+        return <WebElementFinder>(<WebElementListWdjs>this.all(locator)).toWebElement().called(desc);
     }
 
     all(
@@ -48,25 +49,27 @@ export class WebElementListWdjs implements WebElementListFinder{
             await Promise.all(els);
         };
 
-        let desc: string = "";
-        if(this.description) {
-            desc = `'${this.description.replace("'Element'","'Elements'")}' selected by: >>${locator.toString()}<<`
-        } else {
-            desc = `'Elements' selected by: >>${locator.toString()}<<`
-        }
-        return new WebElementListWdjs(getElements).is(desc);
+        return new WebElementListWdjs(getElements,locator);
     }
 
     public toWebElement(): WebElementWdjs {
         return new WebElementWdjs(this);
     }
 
-    public is(description: string): WebElementListFinder {
+    public called(description: string): WebElementListFinder {
         this._description = description;
         return this;
     }
 
     get description(): string {
         return this._description;
+    }
+
+    get locatorDescription() {
+        return this._locator.toString();
+    }
+
+    toString(): string {
+        return `'${this._description ? this._description : "Elements"}' selected by: >>${this._locator.toString()}<<`;
     }
 }

@@ -7,7 +7,7 @@ export interface WebFinder {
 }
 
 export interface FinderDescription<T> {
-    is(description: string): T;
+    called(description: string): T;
     readonly description: string;
 }
 

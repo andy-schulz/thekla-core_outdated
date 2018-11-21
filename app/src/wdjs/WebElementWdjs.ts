@@ -23,11 +23,11 @@ export class WebElementWdjs implements WebElementFinder{
             const elements = await this.elementList.getElements();
 
             if(elements.length === 0) {
-                const message = `No Element found: ${this._description}`;
+                const message = `No Element found: ${this.toString()}`;
                 reject(message);
                 return;
             } else if (elements.length >= 2) {
-                const message = `More than one Element found of: ${this._description}. I am going to select the first one.`;
+                const message = `More than one Element found of: ${this.toString()}. I am going to select the first one.`;
                 fulfill(elements[0]);
                 return;
             } else {
@@ -56,7 +56,7 @@ export class WebElementWdjs implements WebElementFinder{
             .then(text => text);
     }
 
-    public isVisible() {
+    public isVisible(): Promise<boolean> {
         return this.getWebElement()
             .then(element => element.isDisplayed())
             .then(state => state)
@@ -67,9 +67,13 @@ export class WebElementWdjs implements WebElementFinder{
         return this._description;
     }
 
-    public is(description: string): WebElementFinder {
+    public called(description: string): WebElementFinder {
         this._description = description;
         return this;
+    }
+
+    toString(): string {
+        return `'${this._description ? this._description : "Element"}' selected by: >>${this.elementList.locatorDescription}<<`;
     }
 
 }

@@ -29,7 +29,6 @@ describe('Trying to Add two numbers by the mathjs API', () => {
 
         extractor = (request: SppRequestResult) => {
             statusCode = request.response ? request.response.statusCode: undefined;
-            console.log(`Status: ${JSON.stringify(request)}`);
         };
     });
 

@@ -11,15 +11,15 @@ import {BrowserFactory} from "../src/lib/BrowserFactory";
 
 describe('When using the Browser object', () => {
     const conf: Config = {
-        browserName: "firefox",
+        browserName: "chrome",
         serverUrl: "http://localhost:4444/wd/hub",
-        firefoxOptions: {
+        // firefoxOptions: {
             // binary: "C:\\PProgramme\\FirefoxPortable64\\App\\Firefox\\firefox.exe",
-            binary: "C:\\PProgramme\\FirefoxPortable\\App\\Firefox\\firefox.exe",
-            proxy: {
-                proxyType: "direct"
-            }
-        }
+            // binary: "C:\\PProgramme\\FirefoxPortable\\App\\Firefox\\firefox.exe",
+            // proxy: {
+            //     proxyType: "direct"
+            // }
+        // }
         // chromeOptions: {
         //     binary: "C:\\PProgramme\\GoogleChromePortable64\\App\\Chrome-bin\\chrome.exe"
         // }
@@ -54,10 +54,18 @@ describe('When using the Browser object', () => {
             expect(element).toEqual(jasmine.any(WebElementWdjs));
         }, 10000);
 
-        it('with a description it should be printable - (test case id: )', () => {
+        it('without a description a standard description should be printed - (test case id: )', () => {
             const element = browser.element(By.css(".doesNotExist"));
 
-            const desc = element.description;
+            const desc = element.toString();
+            expect(desc).toContain(`'Element' selected by`);
+            expect(desc).toContain(`.doesNotExist`);
+        });
+
+       fit('without a description a standard description should be printed - (test case id: )', () => {
+            const element = browser.element(By.css(".doesNotExist")).called("My personal description");
+
+            const desc = element.toString();
             expect(desc).toContain(`My personal description`);
             expect(desc).toContain(`.doesNotExist`);
         });
@@ -203,7 +211,7 @@ describe('When using the Browser object', () => {
 
     });
 
-    fdescribe('and work with the title', async () => {
+    describe('and work with the title', async () => {
         let browser: Browser;
 
 
@@ -215,7 +223,7 @@ describe('When using the Browser object', () => {
             await browser.get(testurl);
         },11000);
 
-        fit('the getTitle method should get the correct title', async () => {
+        it('the getTitle method should get the correct title', async () => {
             expect(await browser.getTitle()).toEqual("React App");
         }, 5000);
 

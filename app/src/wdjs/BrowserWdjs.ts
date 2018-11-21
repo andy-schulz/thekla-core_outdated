@@ -139,7 +139,7 @@ export class BrowserWdjs implements Browser{
     public element(
         locator: By): WebElementFinder {
 
-        return (<WebElementListWdjs>this.all(locator)).toWebElement().is(`'Element' selected by: >>${locator.toString()}<<`);
+        return (<WebElementListWdjs>this.all(locator)).toWebElement();
     }
 
     public all(
@@ -150,6 +150,6 @@ export class BrowserWdjs implements Browser{
             return await this.driver.findElements(loc);
         };
 
-        return new WebElementListWdjs(getElements).is(`'Elements' selected by: >>${locator.toString()}<<`);
+        return new WebElementListWdjs(getElements,locator);
     }
 }

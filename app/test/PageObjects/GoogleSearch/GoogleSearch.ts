@@ -2,6 +2,6 @@ import {element, SppWebElementFinder} from "../../../screenplay/web/SppWebElemen
 import {By}                           from "../../../index";
 
 export class GoogleSearch {
-    public static searchField: SppWebElementFinder = element(By.css("[name='q'"));
+    public static searchField: SppWebElementFinder = element(By.css("[name='q']"));
 }
 
