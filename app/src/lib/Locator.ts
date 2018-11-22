@@ -1,18 +1,13 @@
-import {By as ByWd} from "selenium-webdriver"
-let clientSideScripts = require('../../../res/clientsidescripts');
-
 export class By{
     public function: string | Function = "";
     public args: any[];
     public searchText: string = "";
 
     constructor(
-        private selectorType: string,
-        private selector: string) {
+        public selectorType: string,
+        public selector: string) {
 
     }
-
-
 
     public static css(selector: string): By {
         return new By(`byCss`, selector);
@@ -33,24 +28,5 @@ export class By{
 
     public toString() {
         return `${this.selectorType}: ${this.selector}`
-    }
-
-    public getSelector(framework: string): any {
-        switch (framework) {
-            case "wdjs":
-                switch (this.selectorType) {
-                    case "byCss":
-                        return ByWd.css(this.selector);
-                    case "byJs":
-                        return ByWd.js(this.function, this.args);
-                    case "byCssContainingText":
-                        return ByWd.js(clientSideScripts.findByCssContainingText, this.selector, this.searchText);
-                    default:
-                        throw Error(`Selector ${this.selector} not found for framework ${framework}`);
-                }
-            default:
-                throw Error(`Framework ${framework} not found`);
-
-        }
     }
 }

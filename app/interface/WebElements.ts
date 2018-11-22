@@ -20,7 +20,9 @@ export interface WebElementFinder extends WebFinder, FinderDescription<WebElemen
 }
 
 export interface WebElementListFinder extends WebFinder, FinderDescription<WebElementListFinder>{
-
+    count(): Promise<number>;
+    getText(): Promise<string[]>;
+    filteredByText(text: string): WebElementListFinder
 }
 
 export interface WdElement extends  WebElement {}

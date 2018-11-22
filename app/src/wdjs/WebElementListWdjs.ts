@@ -1,14 +1,16 @@
 import {WdElement, WebElementFinder, WebElementListFinder} from "../../interface/WebElements";
-import {By} from "../lib/Locator";
-import {WebElementWdjs} from "./WebElementWdjs";
-import {WebElement} from "selenium-webdriver";
+import {By}                                                from "../lib/Locator";
+import {LocatorWdjs}                                       from "./LocatorWdjs";
+import {WebElementWdjs}                                    from "./WebElementWdjs";
+import {ThenableWebDriver, WebElement}                     from "selenium-webdriver";
 
 
 export class WebElementListWdjs implements WebElementListFinder{
     private _description: string = "";
     constructor(
         public getElements: () => Promise<WebElement[]>,
-        private _locator: By) {
+        private _locator: By,
+        private driver: ThenableWebDriver) {
     }
 
     /**
@@ -33,27 +35,70 @@ export class WebElementListWdjs implements WebElementListFinder{
         locator: By): WebElementListFinder {
 
         let getElements = async (): Promise<WdElement[]> => {
-            // can be removed when done
-            // TODO: Für jedes Element muss noch findElements aufgerufen werden um alle Elemente in der Chain zu finden
-            // Lösung über [].reduce.
-            return await this.getElements();
-
             const elements = await this.getElements();
-            const els = [];
-            const loc = locator.getSelector("wdjs");
+
+            let els: WdElement[] = [];
+
+            // TODO: Check if this can be done in parallel
             for (const elem of elements) {
-                const elemsPromises = elem.findElements(loc);
-                els.push(elemsPromises);
+                const elemsList = await LocatorWdjs.executeSelector(locator, elem, this.driver);
+                els = [...els, ...elemsList];
             }
 
-            await Promise.all(els);
+            return Promise.resolve(els);
         };
 
-        return new WebElementListWdjs(getElements,locator);
+        return new WebElementListWdjs(getElements,locator, this.driver);
+    }
+
+    count(): Promise<number> {
+
+        return new Promise((fulfill, reject) => {
+            this.getElements().then((elems: WdElement[]) => {
+                fulfill(elems.length);
+            }).catch((e: any) => {
+                reject(e);
+            });
+        })
+    }
+
+    getText(): Promise<string[]> {
+        return new Promise((fulfill, reject) => {
+            this.getElements()
+                .then((elems: WdElement[]) => {
+                    fulfill(Promise.all(elems.map((elem: WdElement) => elem.getText())))
+                }).catch((e: any) => {
+                    reject(e);
+                })
+        })
     }
 
     public toWebElement(): WebElementWdjs {
         return new WebElementWdjs(this);
+    }
+
+    public filteredByText(searchText: string): WebElementListFinder {
+
+        const oldGetElements = this.getElements;
+
+        const reducer = (acc: Promise<WdElement[]>, element: WdElement) => {
+            return acc.then((arr: WdElement[]) => {
+                return element.getText()
+                    .then((text: string) => {
+                        if(text.includes(searchText)) {
+                            arr.push(element);
+                        }
+                        return arr;
+                    });
+            })
+        };
+
+        let getElements = async (): Promise<WdElement[]> => {
+            const elements = await oldGetElements();
+            return elements.reduce(reducer, Promise.resolve([]));
+        };
+
+        return new WebElementListWdjs(getElements,this._locator, this.driver);
     }
 
     public called(description: string): WebElementListFinder {

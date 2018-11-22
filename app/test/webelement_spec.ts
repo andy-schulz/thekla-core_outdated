@@ -75,22 +75,23 @@ describe('When using the Browser object', () => {
     describe('and try to use the cssContainingText locator', () => {
         let browser: Browser;
 
-        beforeAll(async (done) => {
+        beforeAll(async () => {
             browser = await BrowserFactory.create(conf, "wdjs");
-            done();
-        });
+            await browser.get("http://localhost:3000");
+        }, 10000);
 
-        it('the element should be found  - (test case id: )', async () => {
-            const search = browser.element(By.css("[name='q']"));
-            // const list = browser.element(By.css("[class='g']"));
-            const list = browser.element(By.cssContainingText("[class='g']", "Desmos"));
+        it('the drop down should be slected', async () => {
+            const dropDown = browser.element(By.css("#exampleSelect"));
+            const fourthElement = dropDown.element(By.cssContainingText("option", "4"));
 
-            await browser.get("https://google.de");
-            await search.sendKeys("calculator");
-            await search.sendKeys(Key.ENTER);
-            expect(await list.getText()).toContain("Desmos | Scientific Calculator")
+            // await dropDown.click();
+            await fourthElement.click();
+            await Utils.wait(5000);
 
-        }, 20000);
+            expect(await dropDown.getAttribute("value")).toBe("4");
+
+
+        }, 1000);
     });
 
     describe('and try to click on an element', async () => {

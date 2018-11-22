@@ -3,12 +3,13 @@ import {getLogger, Logger} from "@log4js-node/log4js-api";
 import {Options as FFOptions} from "selenium-webdriver/firefox";
 import {Builder, ThenableWebDriver} from "selenium-webdriver";
 
-import {Browser} from "../../interface/Browser";
-import {Config, FirefoxOptions} from "../../interface/Config";
-import {By} from "../lib/Locator";
+import {Browser}                                 from "../../interface/Browser";
+import {Config, FirefoxOptions}                  from "../../interface/Config";
+import {By}                                      from "../lib/Locator";
 import { WebElementFinder, WebElementListFinder} from "../../interface/WebElements";
-import {WebElementListWdjs} from "./WebElementListWdjs";
-import {Condition} from "../lib/Condition";
+import {LocatorWdjs}                             from "./LocatorWdjs";
+import {WebElementListWdjs}                      from "./WebElementListWdjs";
+import {Condition}                               from "../lib/Condition";
 
 
 export class BrowserWdjs implements Browser{
@@ -145,11 +146,11 @@ export class BrowserWdjs implements Browser{
     public all(
         locator: By): WebElementListFinder {
 
-        const loc = locator.getSelector("wdjs");
+        const loc = LocatorWdjs.getSelector(locator);
         let getElements = async () => {
             return await this.driver.findElements(loc);
         };
 
-        return new WebElementListWdjs(getElements,locator);
+        return new WebElementListWdjs(getElements,locator, this.driver);
     }
 }
