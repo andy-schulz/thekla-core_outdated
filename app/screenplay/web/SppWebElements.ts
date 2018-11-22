@@ -18,7 +18,7 @@ export function element(locator: By) {
 }
 
 export abstract class SppFinderRoot implements SppFinder{
-    private _description: string = "";
+    protected _description: string = "";
 
     protected constructor(
         public locator: By,
@@ -66,6 +66,10 @@ export class SppWebElementFinder extends SppFinderRoot{
         parent: SppFinder | null = null) {
         super(locator,parent)
     }
+
+    toString() {
+        return `${this._description ? this._description : "'SppElement'"} located by >>${this.locator.toString()}<<`;
+    }
 }
 
 
@@ -74,5 +78,9 @@ export class SppWebElementListFinder extends SppFinderRoot{
         locator: By,
         parent: SppFinder | null = null) {
         super(locator,parent)
+    }
+
+    toString() {
+        return `${this._description ? this._description : "'SppElementList'"} located by >>${this.locator.toString()}<<`;
     }
 }
