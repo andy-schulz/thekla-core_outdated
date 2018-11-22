@@ -1,3 +1,4 @@
+import {WebElementListFinder}                              from "../../../interface/WebElements";
 import {Ability}                                           from "../../lib/abilities/Ability";
 import {Browser, WebElementFinder}                         from "../../../index";
 import {UsesAbilities}                                     from "../../Actor";
@@ -17,29 +18,27 @@ export class BrowseTheWeb implements Ability {
 
     }
 
-    find(spe: SppFinderRoot): WebElementFinder {
+    find(spe: SppFinderRoot): WebElementFinder | WebElementListFinder {
         const locs: FinderLocator[] = spe.locators();
-        let element: WebElementFinder | undefined = undefined;
-
+        let elems: WebElementFinder | WebElementListFinder | undefined = undefined;
+        let first = true;
         for(let loc of locs) {
-            if(element === undefined) {
+            if(elems === undefined) {
+                first = false;
                 if(loc.type == "element") {
-                    element = this.browser.element(loc.locator).called(spe.description);
-                }else if (locs[0].type == "element") {
-                    // TODO: implement all function
-                    // element = this.browser.all(loc.locator);
+                    elems = this.browser.element(loc.locator).called(spe.description);
+                }else if (loc.type == "all") {
+                    elems = this.browser.all(loc.locator).called(spe.description);
                 } else throw Error(`Locator type ${loc.type} unknown.`);
             } else {
                 if(loc.type == "element") {
-                    element = element.element(loc.locator).called(spe.description);
-                }else if (locs[0].type == "element") {
-                    // TODO: implement all function
-                    // element = element.all(loc.locator);
+                    elems = elems.element(loc.locator).called(spe.description);
+                }else if (loc.type == "all") {
+                    elems = elems.all(loc.locator).called(spe.description);
                 } else throw Error(`Locator type ${loc.type} unknown.`);
             }
         }
-
-        return <WebElementFinder>element;
+        return <WebElementFinder | WebElementListFinder>elems;
     }
 
     navigate(url: string) {

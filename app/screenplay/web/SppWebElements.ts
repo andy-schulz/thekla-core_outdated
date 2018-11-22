@@ -10,11 +10,16 @@ export interface SppFinder {
      * is used for chainging the element locators
      */
     locators(): FinderLocator[];
-    element(locator: By): SppFinder;
+    element(locator: By): SppWebElementFinder;
+    all(locator: By): SppWebElementListFinder;
 }
 
 export function element(locator: By) {
     return new SppWebElementFinder(locator, null);
+}
+
+export function all(locator: By) {
+    return new SppWebElementListFinder(locator, null);
 }
 
 export abstract class SppFinderRoot implements SppFinder{
@@ -48,6 +53,10 @@ export abstract class SppFinderRoot implements SppFinder{
 
     public element(locator: By): SppWebElementFinder {
         return new SppWebElementFinder(locator, this);
+    }
+
+    all(locator: By): SppWebElementListFinder {
+        return new SppWebElementListFinder(locator, this)
     }
 
     public called(description: string): SppFinderRoot {

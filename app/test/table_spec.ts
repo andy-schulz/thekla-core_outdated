@@ -37,8 +37,5 @@ describe('a simple table', () => {
         await browser.get("http://localhost:3000");
         const tableText = await list.getText();
         console.log(tableText);
-
-
-
     }, 40000);
 });
