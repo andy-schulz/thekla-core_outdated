@@ -1,4 +1,6 @@
-import {By} from "../../src/lib/Locator"
+import {Browser}                                from "../../interface/Browser";
+import {WebElementFinder, WebElementListFinder} from "../../interface/WebElements";
+import {By}                                     from "../../src/lib/Locator"
 
 export interface FinderLocator {
     type: string;
@@ -6,20 +8,22 @@ export interface FinderLocator {
 }
 
 export interface SppFinder {
-    /**
-     * is used for chainging the element locators
-     */
-    locators(): FinderLocator[];
     element(locator: By): SppWebElementFinder;
     all(locator: By): SppWebElementListFinder;
 }
 
 export function element(locator: By) {
-    return new SppWebElementFinder(locator, null);
+    const getElements = (browser: Browser) => {
+        return browser.element(locator);
+    };
+    return new SppWebElementFinder(locator, getElements);
 }
 
 export function all(locator: By) {
-    return new SppWebElementListFinder(locator, null);
+    const getElements = (browser: Browser) => {
+        return browser.all(locator);
+    };
+    return new SppWebElementListFinder(locator, getElements);
 }
 
 export abstract class SppFinderRoot implements SppFinder{
@@ -27,36 +31,21 @@ export abstract class SppFinderRoot implements SppFinder{
 
     protected constructor(
         public locator: By,
-        private parent: SppFinder | null = null) {
-    }
-
-    /**
-     * get the locator chain
-     */
-    public locators(): FinderLocator[] {
-        const finderLoc: FinderLocator = {
-            type: "",
-            locator: this.locator
-        };
-
-        if (this.constructor.name === "SppWebElementFinder") {
-            finderLoc.type = "element";
-        } else if(this.constructor.name === "SppWebElementListFinder") {
-            finderLoc.type = "all";
-        } else {
-            throw new Error("Element is not of type SppWebElementFinder or SppWebElementListFinder");
-        }
-
-        const loc = [finderLoc];
-        return this.parent === null ? loc : loc.concat((<SppFinder>this.parent).locators());
+        public getElements: (browser: Browser) => WebElementFinder | WebElementListFinder) {
     }
 
     public element(locator: By): SppWebElementFinder {
-        return new SppWebElementFinder(locator, this);
+        const getElements = (browser: Browser): WebElementFinder => {
+            return this.getElements(browser).element(locator);
+        };
+        return new SppWebElementFinder(locator, getElements);
     }
 
     all(locator: By): SppWebElementListFinder {
-        return new SppWebElementListFinder(locator, this)
+        const getElements = (browser: Browser): WebElementListFinder => {
+            return this.getElements(browser).all(locator);
+        };
+        return new SppWebElementListFinder(locator, getElements)
     }
 
     public called(description: string): SppFinderRoot {
@@ -72,8 +61,8 @@ export abstract class SppFinderRoot implements SppFinder{
 export class SppWebElementFinder extends SppFinderRoot{
     constructor(
         locator: By,
-        parent: SppFinder | null = null) {
-        super(locator,parent)
+        getElements: (browser: Browser) => WebElementFinder) {
+        super(locator, getElements)
     }
 
     toString() {
@@ -85,9 +74,16 @@ export class SppWebElementFinder extends SppFinderRoot{
 export class SppWebElementListFinder extends SppFinderRoot{
     constructor(
         locator: By,
-        parent: SppFinder | null = null) {
-        super(locator,parent)
+        getElements: (browser: Browser) => WebElementListFinder) {
+        super(locator, getElements)
     }
+
+    filteredByText(text: string): SppWebElementListFinder{
+        const getElements = (browser: Browser): WebElementListFinder => {
+            return (<WebElementListFinder>this.getElements(browser)).filteredByText(text);
+        };
+        return new SppWebElementListFinder(this.locator,getElements);
+    };
 
     toString() {
         return `${this._description ? this._description : "'SppElementList'"} located by >>${this.locator.toString()}<<`;

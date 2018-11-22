@@ -45,8 +45,7 @@ describe('Searching on Google', () => {
             Wait.for(500),
         );
 
-        await BrowserFactory.cleanup();
-    }, 2000000);
+    }, 20000);
 
     it('for calculator with the all method', async () => {
 
