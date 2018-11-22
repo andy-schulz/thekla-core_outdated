@@ -52,7 +52,6 @@ export class WebElementListWdjs implements WebElementListFinder{
     }
 
     count(): Promise<number> {
-
         return new Promise((fulfill, reject) => {
             this.getElements().then((elems: WdElement[]) => {
                 fulfill(elems.length);

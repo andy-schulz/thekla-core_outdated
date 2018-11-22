@@ -5,7 +5,7 @@ let clientSideScripts = require('../../../res/clientsidescripts');
 
 export class LocatorWdjs {
 
-    public static getSelector(locator: By, parentElement?: WdElement): any {
+    public static getSelector(locator: By): any {
         switch (locator.selectorType) {
             case "byCss":
                 return ByWd.css(locator.selector);
@@ -28,7 +28,6 @@ export class LocatorWdjs {
             case "byJs":
                 return parentElement.findElements(ByWd.js(locator.function, locator.args));
             case "byCssContainingText":
-                // return ByWd.js(clientSideScripts.findByCssContainingText, locator.selector, locator.searchText, parentElement);
                 return driver.findElements(
                     ByWd.js(
                         clientSideScripts.findByCssContainingText,

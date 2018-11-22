@@ -11,6 +11,6 @@ export class Click implements Interaction {
     constructor(private element: SppWebElementFinder) {}
 
     performAs(actor: UsesAbilities): Promise<void> {
-        return BrowseTheWeb.as(actor).find(this.element).click();
+        return BrowseTheWeb.as(actor).findElement(this.element).click();
     }
 }

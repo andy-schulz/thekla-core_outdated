@@ -1,9 +1,11 @@
 import {Actor}                       from "../screenplay/Actor";
 import {Navigate}                    from "../screenplay/web/actions/Navigate";
 import {BrowseTheWeb}                from "../screenplay/web/abilities/BrowseTheWeb";
-import {BrowserFactory, Config, Key} from "..";
+import {BrowserFactory, Config, Key, By} from "..";
 import {Enter}                       from "../screenplay/web/actions/Enter";
 import {Wait}                        from "../screenplay/web/actions/Wait";
+import {Count}                       from "../screenplay/web/matcher/questions/Count";
+import {all}                         from "../screenplay/web/SppWebElements";
 import {GoogleSearch}                from "./PageObjects/GoogleSearch/GoogleSearch";
 import {Add}                         from "./PageObjects/GoogleCalculator/Add";
 import {See}                         from "../screenplay/lib/matcher/See";
@@ -23,10 +25,14 @@ let config: Config = {
 
 
 describe('Searching on Google', () => {
-    it('for calculator should show the Google calculator', async () => {
-        let andy = Actor.named("Andy");
-        andy.whoCan(BrowseTheWeb.using(BrowserFactory.create(config)));
+    let andy: Actor;
 
+    beforeAll(() => {
+        andy = Actor.named("Andy");
+        andy.whoCan(BrowseTheWeb.using(BrowserFactory.create(config)));
+    });
+
+    it('for calculator should show the Google calculator', async () => {
         let matcher: (text: string) => boolean = (test: string ) => expect(test).toEqual("6");
 
         await andy.attemptsTo(
@@ -41,4 +47,18 @@ describe('Searching on Google', () => {
 
         await BrowserFactory.cleanup();
     }, 2000000);
+
+    fit('for calculator with the all method', async () => {
+
+        const tableRows = all(By.css("tr"));
+        let matcher: (count: number) => boolean = (count: number ) => expect(count).toEqual(6);
+        await andy.attemptsTo(
+            Navigate.to("http://localhost:3000"),
+            See.if(Count.of(tableRows)).fulfills(matcher),
+        );
+    }, 20000);
+
+    afterAll(() => {
+        BrowserFactory.cleanup();
+    })
 });

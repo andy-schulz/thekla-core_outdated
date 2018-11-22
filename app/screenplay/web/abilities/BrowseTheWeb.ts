@@ -1,8 +1,8 @@
-import {WebElementListFinder}                              from "../../../interface/WebElements";
-import {Ability}                                           from "../../lib/abilities/Ability";
-import {Browser, WebElementFinder}                         from "../../../index";
-import {UsesAbilities}                                     from "../../Actor";
-import {FinderLocator, SppFinderRoot, SppWebElementFinder} from "../SppWebElements";
+import {WebElementListFinder}                                                       from "../../../interface/WebElements";
+import {Ability}                                                                    from "../../lib/abilities/Ability";
+import {Browser, WebElementFinder}                                                  from "../../../index";
+import {UsesAbilities}                                                              from "../../Actor";
+import {FinderLocator, SppFinderRoot, SppWebElementFinder, SppWebElementListFinder} from "../SppWebElements";
 
 export class BrowseTheWeb implements Ability {
 
@@ -16,6 +16,14 @@ export class BrowseTheWeb implements Ability {
 
     constructor(private browser: Browser) {
 
+    }
+
+    findElement(spe: SppWebElementFinder): WebElementFinder {
+        return <WebElementFinder>this.find(spe);
+    }
+
+    findElements(spes: SppWebElementListFinder): WebElementListFinder {
+        return <WebElementListFinder>this.find(spes);
     }
 
     find(spe: SppFinderRoot): WebElementFinder | WebElementListFinder {
