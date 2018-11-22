@@ -48,7 +48,7 @@ describe('Searching on Google', () => {
         await BrowserFactory.cleanup();
     }, 2000000);
 
-    fit('for calculator with the all method', async () => {
+    it('for calculator with the all method', async () => {
 
         const tableRows = all(By.css("tr"));
         let matcher: (count: number) => boolean = (count: number ) => expect(count).toEqual(6);
