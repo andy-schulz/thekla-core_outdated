@@ -17,16 +17,16 @@ export {until}          from "./src/lib/Condition";
  *
  */
 
-export {Get}                    from "./screenplay/rest/actions/Get"
-export {Post}                   from "./screenplay/rest/actions/Post"
-export {Delete}                 from "./screenplay/rest/actions/Delete"
+export {Get}    from "./screenplay/rest/actions/Get"
+export {Post}   from "./screenplay/rest/actions/Post"
+export {Delete} from "./screenplay/rest/actions/Delete"
 
 /**
  * Screenplay Elements
  */
-export {element}                from "./screenplay/web/SppWebElements";
-export {SppWebElementFinder}    from "./screenplay/web/SppWebElements";
-export {Actor}                  from "./screenplay/Actor";
+export {element, all}                                         from "./screenplay/web/SppWebElements";
+export {SppWebElementFinder, SppWebElementListFinder}         from "./screenplay/web/SppWebElements";
+export {Actor}                                                from "./screenplay/Actor";
 
 // Abilities
 export {Ability}                                                from "./screenplay/lib/abilities/Ability";
@@ -48,6 +48,7 @@ export {Extract} from "./screenplay/lib/matcher/Extract";
 
 // Questions
 export {Text}                         from "./screenplay/web/matcher/questions/Text";
+export {Count}                        from "./screenplay/web/matcher/questions/Count";
 export {Response}                     from "./screenplay/rest/questions/Response";
 export {SppRequestResult, SppRequest} from "./screenplay/rest/interfaces/requests";
 
