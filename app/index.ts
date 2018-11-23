@@ -48,6 +48,7 @@ export {Extract} from "./screenplay/lib/matcher/Extract";
 
 // Questions
 export {Text}                         from "./screenplay/web/matcher/questions/Text";
+export {Value}                         from "./screenplay/web/matcher/questions/Value";
 export {Count}                        from "./screenplay/web/matcher/questions/Count";
 export {Response}                     from "./screenplay/rest/questions/Response";
 export {SppRequestResult, SppRequest} from "./screenplay/rest/interfaces/requests";
