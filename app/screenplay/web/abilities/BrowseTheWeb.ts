@@ -27,7 +27,7 @@ export class BrowseTheWeb implements Ability {
     }
 
     find(spe: SppFinderRoot): WebElementFinder | WebElementListFinder {
-        return spe.getElements(this.browser)
+        return spe.getElements(this.browser).called(spe.description)
     }
 
     // find1(spe: SppFinderRoot): WebElementFinder | WebElementListFinder {
