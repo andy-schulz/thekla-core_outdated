@@ -40,7 +40,7 @@ export class Actor implements AnswersQuestions, PerformsTask, UsesAbilities{
         return new Actor(name)
     }
 
-    constructor(private name: string) {
+    constructor(public readonly name: string) {
 
     }
 
