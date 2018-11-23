@@ -13,7 +13,7 @@ export class Delete implements SppRequest {
         this.restAbilityOptions = {};
     }
 
-    public using(options: RestAbilityOptions) {
+    public using(options: RestAbilityOptions): Delete {
         this.restAbilityOptions = options;
         return this;
     }
@@ -29,7 +29,7 @@ export class Delete implements SppRequest {
         });
     }
 
-    get options() {
+    get options(): RestAbilityOptions {
         return this.restAbilityOptions;
     }
 }

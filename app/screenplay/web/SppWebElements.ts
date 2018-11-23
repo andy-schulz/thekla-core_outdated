@@ -12,14 +12,14 @@ export interface SppFinder {
     all(locator: By): SppWebElementListFinder;
 }
 
-export function element(locator: By) {
+export function element(locator: By): SppWebElementFinder {
     const getElements = (browser: Browser) => {
         return browser.element(locator);
     };
     return new SppWebElementFinder(locator, getElements);
 }
 
-export function all(locator: By) {
+export function all(locator: By): SppWebElementListFinder {
     const getElements = (browser: Browser) => {
         return browser.all(locator);
     };

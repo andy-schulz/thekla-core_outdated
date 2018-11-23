@@ -8,7 +8,7 @@ export interface AuthenticationInfo{
 
 export class Authenticate implements Ability {
 
-    static using(authInfo: AuthenticationInfo) {
+    static using(authInfo: AuthenticationInfo): Authenticate {
         return new Authenticate(authInfo);
     }
 
@@ -20,11 +20,11 @@ export class Authenticate implements Ability {
 
     }
 
-    get username() {
+    get username(): string {
         return this.authenticationInfo.username
     }
 
-    get password() {
+    get password(): string {
         return this.authenticationInfo.password
     }
 }

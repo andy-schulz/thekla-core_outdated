@@ -14,7 +14,7 @@ export class Enter implements Interaction {
 
     constructor(private keySequence: string | undefined) {}
 
-    public into(element: SppWebElementFinder): Activity {
+    public into(element: SppWebElementFinder): Enter {
         this.inputField = element;
         return this;
     }

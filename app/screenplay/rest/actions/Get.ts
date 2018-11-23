@@ -13,7 +13,7 @@ export class Get implements SppRequest {
         this.restAbilityOptions = {};
     }
 
-    public using(options: RestAbilityOptions) {
+    public using(options: RestAbilityOptions): Get {
         this.restAbilityOptions = options;
         return this;
     }
@@ -29,7 +29,7 @@ export class Get implements SppRequest {
         });
     }
 
-    get options() {
+    get options(): RestAbilityOptions {
         return this.restAbilityOptions;
     }
 }

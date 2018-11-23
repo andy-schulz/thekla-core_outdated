@@ -7,5 +7,4 @@ export interface SppRequestResult extends request.Request {
 export interface SppRequest {
     options: RestAbilityOptions;
     send(options: RestAbilityOptions): Promise<SppRequestResult>;
-
 }

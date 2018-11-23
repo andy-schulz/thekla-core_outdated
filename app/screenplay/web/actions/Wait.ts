@@ -6,6 +6,7 @@ import {getLogger}           from "@log4js-node/log4js-api"
 
 export class Wait implements Interaction {
     private logger = getLogger("Wait");
+
     public static for(waitCondition: SppWebElementFinder | number) {
         return new Wait(waitCondition);
     }

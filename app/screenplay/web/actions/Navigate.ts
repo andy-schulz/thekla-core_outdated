@@ -3,7 +3,7 @@ import {UsesAbilities}             from "../../Actor";
 
 export class Navigate implements Interaction {
 
-    public static to(url: string) {
+    public static to(url: string): Navigate {
         return new Navigate(url);
     }
 
