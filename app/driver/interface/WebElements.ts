@@ -1,4 +1,4 @@
-import {By} from "../src/lib/Locator";
+import {By}         from "../lib/Locator";
 import {WebElement} from "selenium-webdriver";
 
 export interface WebFinder {

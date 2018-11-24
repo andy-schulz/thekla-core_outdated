@@ -1,7 +1,7 @@
-import {WebElementFinder, WebElementListFinder} from "../../interface/WebElements";
-import {WebElementListWdjs} from "./WebElementListWdjs";
-import {WebElement} from "selenium-webdriver";
-import {By} from "../..";
+import {WebElementFinder, WebElementListFinder} from "../interface/WebElements";
+import {WebElementListWdjs}                     from "./WebElementListWdjs";
+import {WebElement}                             from "selenium-webdriver";
+import {By}                                     from "../..";
 
 export class WebElementWdjs implements WebElementFinder{
     private _description: string = "";

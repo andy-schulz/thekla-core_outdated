@@ -1,14 +1,14 @@
 import "jasmine"
-import {Config}           from "../interface/Config";
-import {BrowserWdjs}      from "../src/wdjs/BrowserWdjs";
-import {Browser}          from "../interface/Browser";
-import {WebElementWdjs}   from "../src/wdjs/WebElementWdjs";
-import {Utils}            from "../src/utils/Utils";
-import {WebElementFinder} from "../interface/WebElements";
-import {By}               from "../src/lib/Locator";
-import {until}            from "../src/lib/Condition";
-import {BrowserFactory}   from "../src/lib/BrowserFactory";
-import {Key} from "../src/lib/Key";
+import {Config}           from "../driver/interface/Config";
+import {BrowserWdjs}      from "../driver/wdjs/BrowserWdjs";
+import {Browser}          from "../driver/interface/Browser";
+import {WebElementWdjs}   from "../driver/wdjs/WebElementWdjs";
+import {Utils}            from "../driver/utils/Utils";
+import {WebElementFinder} from "../driver/interface/WebElements";
+import {By}               from "../driver/lib/Locator";
+import {until}            from "../driver/lib/Condition";
+import {BrowserFactory}   from "../driver/lib/BrowserFactory";
+import {Key}              from "../driver/lib/Key";
 
 describe('When using the Browser object', () => {
     const conf: Config = {

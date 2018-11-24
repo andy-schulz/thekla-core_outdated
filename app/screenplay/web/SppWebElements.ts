@@ -1,6 +1,6 @@
-import {Browser}                                from "../../interface/Browser";
-import {WebElementFinder, WebElementListFinder} from "../../interface/WebElements";
-import {By}                                     from "../../src/lib/Locator"
+import {Browser}                                from "../../driver/interface/Browser";
+import {WebElementFinder, WebElementListFinder} from "../../driver/interface/WebElements";
+import {By}                                     from "../../driver/lib/Locator"
 
 export interface FinderLocator {
     type: string;

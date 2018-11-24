@@ -3,10 +3,10 @@ import {getLogger, Logger} from "@log4js-node/log4js-api";
 import {Options as FFOptions} from "selenium-webdriver/firefox";
 import {Builder, ThenableWebDriver} from "selenium-webdriver";
 
-import {Browser}                                 from "../../interface/Browser";
-import {Config, FirefoxOptions}                  from "../../interface/Config";
+import {Browser}                                 from "../interface/Browser";
+import {Config, FirefoxOptions}                  from "../interface/Config";
 import {By}                                      from "../lib/Locator";
-import { WebElementFinder, WebElementListFinder} from "../../interface/WebElements";
+import { WebElementFinder, WebElementListFinder} from "../interface/WebElements";
 import {LocatorWdjs}                             from "./LocatorWdjs";
 import {WebElementListWdjs}                      from "./WebElementListWdjs";
 import {Condition}                               from "../lib/Condition";

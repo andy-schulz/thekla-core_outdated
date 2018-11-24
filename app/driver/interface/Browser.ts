@@ -1,5 +1,5 @@
 import {WebFinder} from "./WebElements";
-import {Condition} from "../src/lib/Condition";
+import {Condition} from "../lib/Condition";
 
 export interface Browser extends WebFinder{
     get(url: string): Promise<any>;

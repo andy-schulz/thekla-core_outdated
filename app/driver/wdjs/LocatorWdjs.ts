@@ -1,5 +1,5 @@
 import {By as ByWd, ThenableWebDriver} from "selenium-webdriver";
-import {WdElement}                     from "../../interface/WebElements";
+import {WdElement}                     from "../interface/WebElements";
 import {By}                            from "../lib/Locator";
 let clientSideScripts = require('../../../res/clientsidescripts');
 

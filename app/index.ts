@@ -2,14 +2,14 @@
  * WebDriver Wrapper
  */
 
-export {Browser}            from "./interface/Browser";
-export {Config}             from "./interface/Config";
-export {WebElementFinder}   from "./interface/WebElements";
+export {Browser}            from "./driver/interface/Browser";
+export {Config}             from "./driver/interface/Config";
+export {WebElementFinder}   from "./driver/interface/WebElements";
 
-export {BrowserFactory} from "./src/lib/BrowserFactory";
-export {By}             from "./src/lib/Locator";
-export {Key}            from "./src/lib/Key";
-export {until}          from "./src/lib/Condition";
+export {BrowserFactory} from "./driver/lib/BrowserFactory";
+export {By}             from "./driver/lib/Locator";
+export {Key}            from "./driver/lib/Key";
+export {until}          from "./driver/lib/Condition";
 
 /**
  *

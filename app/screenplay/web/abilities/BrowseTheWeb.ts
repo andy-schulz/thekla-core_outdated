@@ -1,4 +1,4 @@
-import {WebElementListFinder}                                        from "../../../interface/WebElements";
+import {WebElementListFinder}                                        from "../../../driver/interface/WebElements";
 import {Ability}                                                     from "../../lib/abilities/Ability";
 import {Browser, WebElementFinder}                                   from "../../../index";
 import {UsesAbilities}                                               from "../../Actor";

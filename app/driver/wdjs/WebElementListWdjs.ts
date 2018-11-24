@@ -1,4 +1,4 @@
-import {WdElement, WebElementFinder, WebElementListFinder} from "../../interface/WebElements";
+import {WdElement, WebElementFinder, WebElementListFinder} from "../interface/WebElements";
 import {By}                                                from "../lib/Locator";
 import {LocatorWdjs}                                       from "./LocatorWdjs";
 import {WebElementWdjs}                                    from "./WebElementWdjs";
