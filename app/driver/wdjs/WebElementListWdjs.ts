@@ -1,8 +1,12 @@
-import {WdElement, WebElementFinder, WebElementListFinder} from "../interface/WebElements";
-import {By}                                                from "../lib/Locator";
-import {LocatorWdjs}                                       from "./LocatorWdjs";
-import {WebElementWdjs}                                    from "./WebElementWdjs";
-import {ThenableWebDriver, WebElement}                     from "selenium-webdriver";
+import {WebElementFinder, WebElementListFinder} from "../interface/WebElements";
+import {until}                                  from "../lib/Condition";
+import {UntilElementCondition}                  from "../lib/ElementConditions";
+import {By}                                     from "../lib/Locator";
+import {BrowserWdjs}                            from "./BrowserWdjs";
+import {LocatorWdjs}                            from "./LocatorWdjs";
+import {WdElement}                              from "./WdElement";
+import {WebElementWdjs}                         from "./WebElementWdjs";
+import {ThenableWebDriver, WebElement}          from "selenium-webdriver";
 
 
 export class WebElementListWdjs implements WebElementListFinder{
@@ -10,7 +14,7 @@ export class WebElementListWdjs implements WebElementListFinder{
     constructor(
         public getElements: () => Promise<WebElement[]>,
         private _locator: By,
-        private driver: ThenableWebDriver) {
+        public readonly browser: BrowserWdjs) {
     }
 
     /**
@@ -41,15 +45,45 @@ export class WebElementListWdjs implements WebElementListFinder{
 
             // TODO: Check if this can be done in parallel
             for (const elem of elements) {
-                const elemsList = await LocatorWdjs.executeSelector(locator, elem, this.driver);
+                const elemsList = await LocatorWdjs.executeSelector(locator, elem, this.browser);
                 els = [...els, ...elemsList];
             }
 
             return Promise.resolve(els);
         };
 
-        return new WebElementListWdjs(getElements,locator, this.driver);
+        return new WebElementListWdjs(getElements,locator, this.browser);
     }
+
+    shallWait(condition: UntilElementCondition): WebElementListFinder {
+        const getElements = async () => {
+
+            const elements: WdElement[] = await this.getElements();
+
+            const loop = (): Promise<boolean> => {
+                if(elements.length == 0) {
+                    return Promise.resolve(false)
+                }
+
+                const mapper = async (elem: WdElement): Promise<boolean> => {
+                    const el = elem.isDisplayed();
+                    return el;
+                };
+
+                const arr: Promise<boolean>[] = elements.map(mapper);
+
+                return Promise.all(arr).then((arr: boolean[]) => {
+                    return Promise.resolve(arr.some(b => b === true))
+                })
+            };
+
+            return this.browser.wait(until(loop),condition.timeout, `${condition.conditionHelpText} ${this.toString()}`)
+                .then(() => this.getElements())
+        };
+
+        return new WebElementListWdjs(getElements,this._locator, this.browser);
+    }
+
 
     count(): Promise<number> {
         return new Promise((fulfill, reject) => {
@@ -97,7 +131,7 @@ export class WebElementListWdjs implements WebElementListFinder{
             return elements.reduce(reducer, Promise.resolve([]));
         };
 
-        return new WebElementListWdjs(getElements,this._locator, this.driver);
+        return new WebElementListWdjs(getElements,this._locator, this.browser);
     }
 
     public called(description: string): WebElementListFinder {

@@ -1,6 +1,8 @@
 import {By as ByWd, ThenableWebDriver} from "selenium-webdriver";
-import {WdElement}                     from "../interface/WebElements";
 import {By}                            from "../lib/Locator";
+import {BrowserWdjs}                   from "./BrowserWdjs";
+import {WdElement}                     from "./WdElement";
+
 let clientSideScripts = require('../../../res/clientsidescripts');
 
 export class LocatorWdjs {
@@ -20,7 +22,7 @@ export class LocatorWdjs {
 
     }
 
-    public static executeSelector(locator: By, parentElement: WdElement, driver: ThenableWebDriver) {
+    public static executeSelector(locator: By, parentElement: WdElement, browser: BrowserWdjs) {
 
         switch (locator.selectorType) {
             case "byCss":
@@ -28,7 +30,7 @@ export class LocatorWdjs {
             case "byJs":
                 return parentElement.findElements(ByWd.js(locator.function, locator.args));
             case "byCssContainingText":
-                return driver.findElements(
+                return browser.driver.findElements(
                     ByWd.js(
                         clientSideScripts.findByCssContainingText,
                         locator.selector,

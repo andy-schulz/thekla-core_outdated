@@ -1,4 +1,5 @@
 import {WebElementFinder, WebElementListFinder} from "../interface/WebElements";
+import {UntilElementCondition}                  from "../lib/ElementConditions";
 import {WebElementListWdjs}                     from "./WebElementListWdjs";
 import {WebElement}                             from "selenium-webdriver";
 import {By}                                     from "../..";
@@ -20,7 +21,13 @@ export class WebElementWdjs implements WebElementFinder{
 
     private getWebElement(): Promise<WebElement> {
         return new Promise(async (fulfill, reject) => {
-            const elements = await this.elementList.getElements();
+            const elements = await this.elementList.getElements()
+                .catch(e => reject(e));
+
+            // if getElements is rejected just leave the function
+            if(!elements) {
+                return;
+            }
 
             if(elements.length === 0) {
                 const message = `No Element found: ${this.toString()}`;
@@ -76,4 +83,8 @@ export class WebElementWdjs implements WebElementFinder{
         return `'${this._description ? this._description : "Element"}' selected by: >>${this.elementList.locatorDescription}<<`;
     }
 
+
+    shallWait(condition: UntilElementCondition): WebElementFinder {
+        return <WebElementFinder>(<WebElementListWdjs>this.elementList.shallWait(condition)).toWebElement();
+    }
 }

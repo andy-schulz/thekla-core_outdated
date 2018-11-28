@@ -1,5 +1,6 @@
 import "jasmine"
 import {Config}           from "../driver/interface/Config";
+import {UntilElement}     from "../driver/lib/ElementConditions";
 import {BrowserWdjs}      from "../driver/wdjs/BrowserWdjs";
 import {Browser}          from "../driver/interface/Browser";
 import {WebElementWdjs}   from "../driver/wdjs/WebElementWdjs";
@@ -8,7 +9,11 @@ import {WebElementFinder} from "../driver/interface/WebElements";
 import {By}               from "../driver/lib/Locator";
 import {until}            from "../driver/lib/Condition";
 import {BrowserFactory}   from "../driver/lib/BrowserFactory";
-import {Key}              from "../driver/lib/Key";
+
+import {configure} from "log4js";
+configure("config/log4js.json");
+
+import {Key}       from "../driver/lib/Key";
 
 describe('When using the Browser object', () => {
     const conf: Config = {
@@ -26,7 +31,7 @@ describe('When using the Browser object', () => {
         // }
     };
 
-    const testurl = "http://localhost:3000/";
+    const testurl = "http://localhost:3000";
 
 
     describe('and calling the get method ', () => {
@@ -86,12 +91,11 @@ describe('When using the Browser object', () => {
 
             // await dropDown.click();
             await fourthElement.click();
-            await Utils.wait(5000);
 
             expect(await dropDown.getAttribute("value")).toBe("4");
 
 
-        }, 1000);
+        }, 10000);
     });
 
     describe('and try to click on an element', async () => {
@@ -173,11 +177,10 @@ describe('When using the Browser object', () => {
             appearButton10000 = browser.element(By.css("[data-test-id='AppearButtonBy10000']"));
             disappearButton10000 = browser.element(By.css("[data-test-id='DisappearButtonBy10000']"));
             buttonNeverExists = browser.element(By.css("[data-test-id='neverExists']"));
-
         });
 
         beforeEach(async () => {
-            await browser.get(testurl);
+            await browser.get(testurl + "/delayed");
         },11000);
 
         it('the system should wait fo 5 Seconds for the element to appear', async () => {
@@ -223,6 +226,7 @@ describe('When using the Browser object', () => {
 
             const callback = {catchfn: (e: any) => {error = e; return e}};
             spyOn(callback, "catchfn").and.callThrough();
+
             await browser.wait(until.not(() => disappearButton10000.isVisible())).catch(callback.catchfn);
             const errorMessage = "Wait timed out after 5000 ms";
 
@@ -230,8 +234,32 @@ describe('When using the Browser object', () => {
             expect(callback.catchfn).toHaveBeenCalledTimes(1);
             expect(error).toContain(errorMessage);
         }, 20000);
+    });
 
+    fdescribe('and try to implicitly wait for an Element', async () => {
+        let browser: Browser;
+        let appearButton5000ShallWait: WebElementFinder;
 
+        beforeAll(async () => {
+            browser = await BrowserWdjs.create(conf);
+
+        },20000);
+
+        it('the system should wait for a second ', async () => {
+            appearButton5000ShallWait = browser.element(By.css("[data-test-id='AppearButtonBy5000']"))
+                .shallWait(UntilElement.isVisible().forAsLongAs(1000));
+
+            await browser.get("http://localhost:3000/delayed");
+            expect(await appearButton5000ShallWait.isVisible()).toEqual(false)
+        }, 20000);
+
+        it('the system should wait for a second ', async () => {
+            appearButton5000ShallWait = browser.element(By.css("[data-test-id='AppearButtonBy5000']"))
+                .shallWait(UntilElement.isVisible().forAsLongAs(5000));
+
+            await browser.get("http://localhost:3000/delayed");
+            expect(await appearButton5000ShallWait.isVisible()).toEqual(true)
+        }, 20000);
     });
 
     describe('and work with the title', async () => {

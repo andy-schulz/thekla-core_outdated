@@ -1,7 +1,7 @@
-import {BrowseTheWeb, Activity, Interaction} from "../../../index";
-import {SppWebElementFinder}                 from "../SppWebElements";
-import {UsesAbilities}                       from "../../Actor";
-import {getLogger, Logger}                           from "@log4js-node/log4js-api";
+import {BrowseTheWeb, Interaction} from "../../../index";
+import {SppWebElementFinder}       from "../SppWebElements";
+import {UsesAbilities}             from "../../Actor";
+import {getLogger, Logger}         from "@log4js-node/log4js-api";
 
 
 export class Enter implements Interaction {

@@ -7,20 +7,27 @@ import {Browser}                                 from "../interface/Browser";
 import {Config, FirefoxOptions}                  from "../interface/Config";
 import {By}                                      from "../lib/Locator";
 import { WebElementFinder, WebElementListFinder} from "../interface/WebElements";
+import {FrameElementWdjs}                        from "./FrameElementWdjs";
 import {LocatorWdjs}                             from "./LocatorWdjs";
 import {WebElementListWdjs}                      from "./WebElementListWdjs";
 import {Condition}                               from "../lib/Condition";
 
 
 export class BrowserWdjs implements Browser{
-    private driver: ThenableWebDriver;
+    private _driver: ThenableWebDriver;
 
     private logger: Logger = getLogger("BrowserWdjs");
     private static bowserMap: Map<string,Browser> = new Map<string,Browser>();
 
     constructor(browser: ThenableWebDriver) {
-        this.driver = browser;
+        this._driver = browser;
     }
+
+    get driver() {
+        return this._driver;
+    }
+
+
 
     public static create(config: Config): Browser {
         let builder: Builder;
@@ -36,7 +43,7 @@ export class BrowserWdjs implements Browser{
                 let browser = new BrowserWdjs(driver);
                 this.bowserMap.set(`browser${this.bowserMap.size + 1}`,browser);
                 return browser;
-                // fulfill(browser);
+                // fulfill(driver);
             } catch (e) {
                 const message = ` ${e} ${Error().stack}`;
                 throw new Error(message)
@@ -69,9 +76,40 @@ export class BrowserWdjs implements Browser{
         )
     }
 
+
+    public element(
+        locator: By): WebElementFinder {
+
+        return (<WebElementListWdjs>this.all(locator)).toWebElement();
+    }
+
+    public all(
+        locator: By): WebElementListFinder {
+
+        const loc = LocatorWdjs.getSelector(locator);
+        let getElements = async () => {
+            // always switch to the main Window
+            // if you want to deal with an element in a frame DO:
+            // frame(By.css("locator")).element(By.css("locator"))
+            await this._driver.switchTo().defaultContent();
+            return await this._driver.findElements(loc);
+        };
+
+        return new WebElementListWdjs(getElements,locator, this);
+    }
+
+    frame(locator: By): FrameElementWdjs {
+        const loc = LocatorWdjs.getSelector(locator);
+        let getElements = async () => {
+            await this._driver.switchTo().defaultContent();
+            return this._driver.switchTo().frame(this._driver.findElement(loc));
+        };
+        return new FrameElementWdjs(getElements,locator, this);
+    }
+
     public get(destination: string): Promise<any> {
         return new Promise((fulfill, reject) => {
-            this.driver.get(destination)
+            this._driver.get(destination)
                 .then(fulfill)
                 .catch(reject)
         })
@@ -79,7 +117,7 @@ export class BrowserWdjs implements Browser{
 
     public quit():Promise<void> {
         return new Promise((fulfill, reject) => {
-            this.driver.quit()
+            this._driver.quit()
                 .then(fulfill)
                 .catch(reject)
         })
@@ -87,7 +125,7 @@ export class BrowserWdjs implements Browser{
 
     public getTitle(): Promise<string> {
         return new Promise((fulfill, reject) => {
-            this.driver.getTitle()
+            this._driver.getTitle()
                 .then(fulfill)
                 .catch(reject)
         })
@@ -95,7 +133,7 @@ export class BrowserWdjs implements Browser{
 
     public hasTitle(expectedTitle: string): Promise<boolean> {
         return new Promise((fulfill,reject) => {
-            this.driver.getTitle()
+            this._driver.getTitle()
                 .then(title => fulfill(title === expectedTitle))
                 .catch(reject);
         })
@@ -105,7 +143,6 @@ export class BrowserWdjs implements Browser{
         condition: Condition,
         timeout: number = 5000,
         waitMessage: string = `` ): Promise<string> {
-        const timeoutMessage = `Wait timed out after ${timeout} ms${waitMessage ? " -> (" + waitMessage + ")." : "."}`;
 
         return new Promise((fulfill,reject) => {
             const start = Date.now();
@@ -114,14 +151,14 @@ export class BrowserWdjs implements Browser{
                 const worker = (workerState: boolean, error?: String) => {
                     const timeSpendWaiting = Date.now() - start;
                     if(timeSpendWaiting > timeout) {
-                        const message = error ? error : timeoutMessage;
-                        this.logger.error(`Waiting${waitMessage ? " -> (" + waitMessage + ")" : ""} failed after ${timeSpendWaiting} ms with the following Error: ${message}`);
+                        const message = `Wait timed out after ${timeout} ms${waitMessage ? " -> (" + waitMessage + ")." : "."}`;
+                        this.logger.trace(message);
                         reject(message);
                         return;
                     }
                     if(workerState) {
                         const message = `Wait successful${waitMessage ? " -> (" + waitMessage + ")" : ""} after ${timeSpendWaiting} ms.`;
-                        this.logger.info(message);
+                        this.logger.trace(message);
                         fulfill(message);
                         return;
                     } else {
@@ -137,20 +174,7 @@ export class BrowserWdjs implements Browser{
         })
     }
 
-    public element(
-        locator: By): WebElementFinder {
 
-        return (<WebElementListWdjs>this.all(locator)).toWebElement();
-    }
 
-    public all(
-        locator: By): WebElementListFinder {
 
-        const loc = LocatorWdjs.getSelector(locator);
-        let getElements = async () => {
-            return await this.driver.findElements(loc);
-        };
-
-        return new WebElementListWdjs(getElements,locator, this.driver);
-    }
 }
