@@ -7,5 +7,5 @@
     "helpers/**/*.js"
   ]
   ,"oneFailurePerSpec": false
-  ,"randomizeTests": false
+  ,"random": true
 }

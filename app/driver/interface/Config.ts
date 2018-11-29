@@ -1,6 +1,7 @@
 export interface Config {
     browserName: string;
     serverUrl: string;
+    baseUrl?: string
     chromeOptions?: ChromeOptions;
     firefoxOptions?: FirefoxOptions;
 }

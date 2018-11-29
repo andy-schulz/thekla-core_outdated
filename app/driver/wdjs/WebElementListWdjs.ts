@@ -4,7 +4,7 @@ import {UntilElementCondition}                  from "../lib/ElementConditions";
 import {By}                                     from "../lib/Locator";
 import {BrowserWdjs}                            from "./BrowserWdjs";
 import {LocatorWdjs}                            from "./LocatorWdjs";
-import {WdElement}                              from "./WdElement";
+import {WdElement}                              from "./interfaces/WdElement";
 import {WebElementWdjs}                         from "./WebElementWdjs";
 import {ThenableWebDriver, WebElement}          from "selenium-webdriver";
 

@@ -1,30 +1,36 @@
 import {getLogger, Logger} from "@log4js-node/log4js-api";
 
-import {Options as FFOptions} from "selenium-webdriver/firefox";
-import {Builder, ThenableWebDriver} from "selenium-webdriver";
+import {Options as FFOptions}                from "selenium-webdriver/firefox";
+import {Builder, promise, ThenableWebDriver} from "selenium-webdriver";
 
-import {Browser}                                 from "../interface/Browser";
-import {Config, FirefoxOptions}                  from "../interface/Config";
-import {By}                                      from "../lib/Locator";
-import { WebElementFinder, WebElementListFinder} from "../interface/WebElements";
-import {FrameElementWdjs}                        from "./FrameElementWdjs";
-import {LocatorWdjs}                             from "./LocatorWdjs";
-import {WebElementListWdjs}                      from "./WebElementListWdjs";
-import {Condition}                               from "../lib/Condition";
+import {Browser}                                from "../interface/Browser";
+import {Config, FirefoxOptions}                 from "../interface/Config";
+import {By}                                     from "../lib/Locator";
+import {WebElementFinder, WebElementListFinder} from "../interface/WebElements";
+import {FrameElementWdjs}                       from "./FrameElementWdjs";
+import {FrameHelper, WdElement}                 from "./interfaces/WdElement";
+import {LocatorWdjs}                            from "./LocatorWdjs";
+import {WebElementListWdjs}                     from "./WebElementListWdjs";
+import {Condition}                              from "../lib/Condition";
 
+promise.USE_PROMISE_MANAGER = false;
 
 export class BrowserWdjs implements Browser{
-    private _driver: ThenableWebDriver;
 
     private logger: Logger = getLogger("BrowserWdjs");
-    private static bowserMap: Map<string,Browser> = new Map<string,Browser>();
+    private static browserMap: Map<string,Browser> = new Map<string,Browser>();
 
-    constructor(browser: ThenableWebDriver) {
-        this._driver = browser;
+    constructor(
+        private _driver: ThenableWebDriver,
+        private _config: Config) {
     }
 
     get driver() {
         return this._driver;
+    }
+
+    get config() {
+        return this._config;
     }
 
 
@@ -40,8 +46,8 @@ export class BrowserWdjs implements Browser{
                 this.applyFirefoxOptions(builder,config.firefoxOptions);
 
                 let driver = builder.build();
-                let browser = new BrowserWdjs(driver);
-                this.bowserMap.set(`browser${this.bowserMap.size + 1}`,browser);
+                let browser = new BrowserWdjs(driver, config);
+                this.browserMap.set(`browser${this.browserMap.size + 1}`,browser);
                 return browser;
                 // fulfill(driver);
             } catch (e) {
@@ -70,7 +76,7 @@ export class BrowserWdjs implements Browser{
 
     public static cleanup():Promise<any[]> {
         return Promise.all(
-            [...this.bowserMap.values()].map((browser) => {
+            [...this.browserMap.values()].map((browser) => {
                 return browser.quit()
             })
         )
@@ -100,16 +106,34 @@ export class BrowserWdjs implements Browser{
 
     frame(locator: By): FrameElementWdjs {
         const loc = LocatorWdjs.getSelector(locator);
-        let getElements = async () => {
-            await this._driver.switchTo().defaultContent();
-            return this._driver.switchTo().frame(this._driver.findElement(loc));
+
+        const createSwitchFrame = () => {
+            let switchFrame = (() => {
+                return new Promise((fulfill, reject) => {
+                    this._driver.switchTo().defaultContent()
+                        .then(() => this._driver.switchTo().frame(this._driver.findElement(loc)))
+                        .then(() => this.logger.debug(`First Level Browser Frame switched.`))
+                        .then(fulfill)
+                        .catch(e => reject(e));
+                });
+            }) as FrameHelper;
+
+            switchFrame.element = () => {
+                return new Promise((fulfill, reject) => {
+                    this._driver.findElement(loc)
+                        .then((element: WdElement) => fulfill(element), e => reject(e));
+                })
+            };
+            return switchFrame;
         };
-        return new FrameElementWdjs(getElements,locator, this);
+
+        return new FrameElementWdjs(createSwitchFrame(),locator, this);
     }
 
     public get(destination: string): Promise<any> {
+        let _destination = this.config.baseUrl && !destination.startsWith("http") ? `${this.config.baseUrl}${destination}` : destination;
         return new Promise((fulfill, reject) => {
-            this._driver.get(destination)
+            this._driver.get(_destination)
                 .then(fulfill)
                 .catch(reject)
         })
@@ -147,7 +171,7 @@ export class BrowserWdjs implements Browser{
         return new Promise((fulfill,reject) => {
             const start = Date.now();
             const check = () => {
-
+                console.log("CHECKING");
                 const worker = (workerState: boolean, error?: String) => {
                     const timeSpendWaiting = Date.now() - start;
                     if(timeSpendWaiting > timeout) {

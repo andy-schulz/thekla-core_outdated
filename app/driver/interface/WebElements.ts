@@ -1,3 +1,4 @@
+import {Condition}             from "../lib/Condition";
 import {UntilElementCondition} from "../lib/ElementConditions";
 import {By}                    from "../lib/Locator";
 
@@ -12,7 +13,9 @@ export interface WebFinder {
     element(locator: By): WebElementFinder;
 }
 
-export interface FrameElementFinder extends FrameFinder, WebFinder, FinderDescription<FrameElementFinder>{}
+export interface FrameElementFinder extends FrameFinder, WebFinder, FinderDescription<FrameElementFinder>{
+    shallWait(condition: UntilElementCondition): FrameElementFinder;
+}
 
 export interface FinderDescription<T> {
     called(description: string): T;
@@ -34,4 +37,6 @@ export interface WebElementListFinder extends WebFinder, FinderDescription<WebEl
     getText(): Promise<string[]>;
     filteredByText(text: string): WebElementListFinder;
 }
+
+
 
