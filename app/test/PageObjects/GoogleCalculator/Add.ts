@@ -15,6 +15,15 @@ export class Add extends Task {
         return this;
     }
 
+    performAs(actor: PerformsTask): Promise<void> {
+        return actor.attemptsTo(
+            ...this.enterNumber(this.firstNumber),
+            Click.on(GoogleCalculator.plus),
+            ...this.enterNumber(this.secondNumber),
+            Click.on(GoogleCalculator.res)
+        )
+    }
+
     constructor(private firstNumber: number) {
         super();
     }
@@ -63,12 +72,5 @@ export class Add extends Task {
         return clickFlow;
     }
 
-    performAs(actor: PerformsTask): Promise<void> {
-        return actor.attemptsTo(
-            ...this.enterNumber(this.firstNumber),
-            Click.on(GoogleCalculator.plus),
-            ...this.enterNumber(this.secondNumber),
-            Click.on(GoogleCalculator.res)
-        )
-    }
+
 }
