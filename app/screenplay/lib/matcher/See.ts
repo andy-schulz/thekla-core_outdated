@@ -1,8 +1,8 @@
 import {AnswersQuestions} from "../../Actor";
 import {Question}         from "./Question";
-import {Matcher}          from "../actions/Activities";
+import {Oracle}           from "../actions/Activities";
 
-export class See<U> implements Matcher {
+export class See<U> implements Oracle {
     matcher: (value: U) => any;
 
     static if <T>(question: Question<T>): See<T> {

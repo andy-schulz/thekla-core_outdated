@@ -3,7 +3,7 @@ import {AnswersQuestions, PerformsTask, UsesAbilities} from "../../Actor";
 /**
  *       Task = a Workflow composed of Tasks or Interactions or both
  *     /
- * Activity
+ * Activity - Oracle = an entity that answers questions
  *    \
  *     Interactions = Low Level Tasks on the Browser
  */
@@ -11,7 +11,7 @@ export interface Activity {
     performAs(actor: PerformsTask | UsesAbilities | AnswersQuestions): Promise<void>;
 }
 
-export interface Matcher extends Activity{
+export interface Oracle extends Activity{
     performAs(actor: AnswersQuestions): Promise<void>;
 }
 

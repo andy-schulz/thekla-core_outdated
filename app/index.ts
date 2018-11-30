@@ -22,9 +22,9 @@ export {Post}   from "./screenplay/rest/actions/Post"
 export {Delete} from "./screenplay/rest/actions/Delete"
 
 /**
- * Screenplay Elements
+ * screenplay Elements
  */
-export {element, all}                                         from "./screenplay/web/SppWebElements";
+export {element, all, frame}                                         from "./screenplay/web/SppWebElements";
 export {SppWebElementFinder, SppWebElementListFinder}         from "./screenplay/web/SppWebElements";
 export {Actor}                                                from "./screenplay/Actor";
 
@@ -42,7 +42,7 @@ export {Enter}                          from "./screenplay/web/actions/Enter";
 export {Navigate}                       from "./screenplay/web/actions/Navigate";
 export {Wait}                           from "./screenplay/web/actions/Wait";
 
-// Matcher
+// Oracle
 export {See}     from "./screenplay/lib/matcher/See";
 export {Extract} from "./screenplay/lib/matcher/Extract";
 

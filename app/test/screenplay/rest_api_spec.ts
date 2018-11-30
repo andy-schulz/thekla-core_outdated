@@ -1,11 +1,11 @@
 import * as yargs                          from "yargs";
-import {Actor}                             from "../screenplay/Actor";
-import {Extract}                           from "../screenplay/lib/matcher/Extract";
-import {See}                               from "../screenplay/lib/matcher/See";
-import {RestAbilityOptions, UseTheRestApi} from "../screenplay/rest/abilities/UseTheRestApi";
-import {Get}                               from "../screenplay/rest/actions/Get";
-import {SppRequestResult}                  from "../screenplay/rest/interfaces/requests";
-import {Response}                          from "../screenplay/rest/questions/Response";
+import {Actor}                             from "../../screenplay/Actor";
+import {Extract}                           from "../../screenplay/lib/matcher/Extract";
+import {See}                               from "../../screenplay/lib/matcher/See";
+import {RestAbilityOptions, UseTheRestApi} from "../../screenplay/rest/abilities/UseTheRestApi";
+import {Get}                               from "../../screenplay/rest/actions/Get";
+import {SppRequestResult}                  from "../../screenplay/rest/interfaces/requests";
+import {Response}                          from "../../screenplay/rest/questions/Response";
 
 describe('Trying to Add two numbers by the mathjs API', () => {
     const a = 5;

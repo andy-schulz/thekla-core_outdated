@@ -1,8 +1,8 @@
-import {Browser}        from "../driver/interface/Browser";
-import {Config}         from "../driver/interface/Config";
-import {BrowserFactory} from "../driver/lib/BrowserFactory";
-import {Key}            from "../driver/lib/Key";
-import {By}             from "../driver/lib/Locator";
+import {Browser}        from "../../driver/interface/Browser";
+import {Config}         from "../../driver/interface/Config";
+import {BrowserFactory} from "../../driver/lib/BrowserFactory";
+import {Key}            from "../../driver/lib/Key";
+import {By}             from "../../driver/lib/Locator";
 
 const conf: Config = {
     browserName: "chrome",

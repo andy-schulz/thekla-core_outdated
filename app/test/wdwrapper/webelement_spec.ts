@@ -1,19 +1,19 @@
 import "jasmine"
-import {Config}           from "../driver/interface/Config";
-import {UntilElement}     from "../driver/lib/ElementConditions";
-import {BrowserWdjs}      from "../driver/wdjs/BrowserWdjs";
-import {Browser}          from "../driver/interface/Browser";
-import {WebElementWdjs}   from "../driver/wdjs/WebElementWdjs";
-import {Utils}            from "../driver/utils/Utils";
-import {WebElementFinder} from "../driver/interface/WebElements";
-import {By}               from "../driver/lib/Locator";
-import {until}            from "../driver/lib/Condition";
-import {BrowserFactory}   from "../driver/lib/BrowserFactory";
+import {Config}           from "../../driver/interface/Config";
+import {UntilElement}     from "../../driver/lib/ElementConditions";
+import {BrowserWdjs}      from "../../driver/wdjs/BrowserWdjs";
+import {Browser}          from "../../driver/interface/Browser";
+import {WebElementWdjs}   from "../../driver/wdjs/WebElementWdjs";
+import {Utils}            from "../../driver/utils/Utils";
+import {WebElementFinder} from "../../driver/interface/WebElements";
+import {By}               from "../../driver/lib/Locator";
+import {until}            from "../../driver/lib/Condition";
+import {BrowserFactory}   from "../../driver/lib/BrowserFactory";
 
 import {configure} from "log4js";
 configure("config/log4js.json");
 
-import {Key}       from "../driver/lib/Key";
+import {Key} from "../../driver/lib/Key";
 
 describe('When using the Browser object', () => {
     const conf: Config = {

@@ -54,6 +54,7 @@ export class FrameElementWdjs implements FrameElementFinder {
                             until.elementIsVisible(element),
                             condition.timeout,
                             `${condition.conditionHelpText} ${this.toString()}`))
+                        // here the frame switch is chained (call current frame switcher)
                         .then(() => this.switchFrame())
                         .then(() => fulfill())
                         .catch(e => reject(e));

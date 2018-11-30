@@ -36,22 +36,18 @@ export class WebElementListWdjs implements WebElementListFinder{
     }
 
     all(
-        locator: By): WebElementListFinder {
-
+        locator: By
+    ): WebElementListFinder {
         let getElements = async (): Promise<WdElement[]> => {
             const elements = await this.getElements();
-
             let els: WdElement[] = [];
-
             // TODO: Check if this can be done in parallel
             for (const elem of elements) {
                 const elemsList = await LocatorWdjs.executeSelector(locator, elem, this.browser);
                 els = [...els, ...elemsList];
             }
-
             return Promise.resolve(els);
         };
-
         return new WebElementListWdjs(getElements,locator, this.browser);
     }
 
