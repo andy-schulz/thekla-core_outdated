@@ -1,11 +1,14 @@
 import {WebElementFinder, WebElementListFinder} from "../interface/WebElements";
 import {UntilElementCondition}                  from "../lib/ElementConditions";
+import {WdElement}                              from "./interfaces/WdElement";
 import {WebElementListWdjs}                     from "./WebElementListWdjs";
-import {WebElement}                             from "selenium-webdriver";
 import {By}                                     from "../..";
+import {getLogger, Logger}                      from "log4js";
+
 
 export class WebElementWdjs implements WebElementFinder{
     private _description: string = "";
+    private logger: Logger = getLogger("WebElementWdjs");
 
     constructor(
         private elementList: WebElementListWdjs) {
@@ -19,7 +22,7 @@ export class WebElementWdjs implements WebElementFinder{
         return this.elementList.element(locator);
     };
 
-    private getWebElement(): Promise<WebElement> {
+    private getWebElement(): Promise<WdElement> {
         return new Promise(async (fulfill, reject) => {
             const elements = await this.elementList.getElements()
                 .catch(e => reject(e));
@@ -71,17 +74,17 @@ export class WebElementWdjs implements WebElementFinder{
     }
 
     get description(): string {
-        return this._description;
+        return this.elementList.description + this._description;
     }
 
     public called(description: string): WebElementFinder {
-
-        this._description = description;
+        this.logger.debug(`Set Description to '${description}'`);
+        this.elementList.called(description);
         return this;
     }
 
     toString(): string {
-        return `'${this._description ? this._description : "Element"}' selected by: >>${this.elementList.locatorDescription}<<`;
+        return `'${this.elementList.description ? this.elementList.description : "Element"}' selected by: >>${this.elementList.locatorDescription}<<`;
     }
 
 
