@@ -15,6 +15,9 @@
   "categories": {
     "default": {
       "appenders": [ "file", "output"],
+      "level": "WARN" },
+    "WebElementWdjs": {
+      "appenders": ["output"],
       "level": "DEBUG" }
   }
 }
