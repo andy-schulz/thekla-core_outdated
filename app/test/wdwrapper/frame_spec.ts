@@ -1,8 +1,6 @@
-import {Browser}        from "../../driver/interface/Browser";
-import {Config}         from "../../driver/interface/Config";
-import {BrowserFactory} from "../../driver/lib/BrowserFactory";
-import {UntilElement}   from "../../driver/lib/ElementConditions";
-import {By}             from "../../driver/lib/Locator";
+import {
+    Browser, Config, BrowserFactory, By, UntilElement
+} from "../..";
 
 const conf: Config = {
     browserName: "chrome",

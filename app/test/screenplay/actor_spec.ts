@@ -1,20 +1,9 @@
-import {Config}                                 from "../../driver/interface/Config";
-import {BrowserFactory}                         from "../../driver/lib/BrowserFactory";
-import {Key}                                    from "../../driver/lib/Key";
-import {By}                                     from "../../driver/lib/Locator";
-import {Actor}                                  from "../../screenplay/Actor";
-import {Navigate}                               from "../../screenplay/web/actions/Navigate";
-import {BrowseTheWeb}                           from "../../screenplay/web/abilities/BrowseTheWeb";
-import {Enter}                                  from "../../screenplay/web/actions/Enter";
-import {Wait}                                   from "../../screenplay/web/actions/Wait";
-import {Count}                                  from "../../screenplay/web/matcher/questions/Count";
-import {Value}                                  from "../../screenplay/web/matcher/questions/Value";
-import {all}                                    from "../../screenplay/web/SppWebElements";
-import {GoogleSearch}                           from "../PageObjects/GoogleSearch/GoogleSearch";
-import {Add}                                    from "../PageObjects/GoogleCalculator/Add";
-import {See}                                    from "../../screenplay/lib/matcher/See";
-import {Text}                                   from "../../screenplay/web/matcher/questions/Text";
-import {GoogleCalculator}                       from "../PageObjects/GoogleCalculator/GoogleCalculator";
+import {
+    Actor, BrowseTheWeb, Config, BrowserFactory, Enter, Wait, Navigate, See, Key, Value, all, By, Count, Text
+} from "../..";
+import {GoogleSearch}     from "../PageObjects/GoogleSearch/GoogleSearch";
+import {Add}              from "../PageObjects/GoogleCalculator/Add";
+import {GoogleCalculator} from "../PageObjects/GoogleCalculator/GoogleCalculator";
 
 let config: Config = {
     browserName: "chrome",

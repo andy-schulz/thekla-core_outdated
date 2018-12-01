@@ -1,8 +1,6 @@
-import {Browser}        from "../../driver/interface/Browser";
-import {Config}         from "../../driver/interface/Config";
-import {BrowserFactory} from "../../driver/lib/BrowserFactory";
-import {Key}            from "../../driver/lib/Key";
-import {By}             from "../../driver/lib/Locator";
+import {
+    Browser, BrowserFactory, Config, By
+} from "../..";
 
 const conf: Config = {
     browserName: "chrome",
@@ -36,5 +34,6 @@ describe('a simple table', () => {
 
         await browser.get("http://localhost:3000");
         const tableText = await list.getText();
+        expect(tableText).toContain("James");
     }, 40000);
 });
