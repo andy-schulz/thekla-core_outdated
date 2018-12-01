@@ -8,6 +8,10 @@ import {By}                                                         from "../../
 //     locator: By;
 // }
 
+export interface SppFinderWaiter<T> {
+    shallWait(condition: UntilElementCondition): T
+}
+
 /**
  * Interface defining the frame creation method
  */
@@ -91,7 +95,7 @@ export abstract class SppFinderRoot implements SppFinder{
 /**
  * class representing a single spp web element
  */
-export class SppWebElementFinder extends SppFinderRoot{
+export class SppWebElementFinder extends SppFinderRoot implements SppFinderWaiter<SppWebElementFinder>{
     constructor(
         locator: By,
         getElements: (browser: Browser) => WebElementFinder) {
@@ -104,6 +108,14 @@ export class SppWebElementFinder extends SppFinderRoot{
         };
         return new SppWebElementFinder(this.locator, desc);
     }
+
+    shallWait(condition: UntilElementCondition): SppWebElementFinder {
+        const waiter = (browser: Browser): WebElementFinder => {
+            return (<WebElementFinder>this.getElements(browser)).shallWait(condition);
+        };
+        return new SppWebElementFinder(this.locator,waiter);
+    }
+
 
     toString() {
         return `${this._description ? this._description : "'SppElement'"} located by >>${this.locator.toString()}<<`;
@@ -127,6 +139,13 @@ export class SppWebElementListFinder extends SppFinderRoot{
         return new SppWebElementListFinder(this.locator,getElements);
     };
 
+    public called(description: string): SppWebElementListFinder {
+        const desc = (browser: Browser): WebElementListFinder => {
+            return <WebElementListFinder>this.getElements(browser).called(description);
+        };
+        return new SppWebElementListFinder(this.locator, desc);
+    }
+
     toString() {
         return `${this._description ? this._description : "'SppElementList'"} located by >>${this.locator.toString()}<<`;
     }
@@ -135,7 +154,7 @@ export class SppWebElementListFinder extends SppFinderRoot{
 /**
  * class representing a frame element
  */
-export class SppFrameElementFinder implements SppFinder, SppFrameFinder{
+export class SppFrameElementFinder implements SppFinder, SppFrameFinder, SppFinderWaiter<SppFrameElementFinder>{
     constructor(
         private locator: By,
         private switchFrame: (browser: Browser) => FrameElementFinder) {
