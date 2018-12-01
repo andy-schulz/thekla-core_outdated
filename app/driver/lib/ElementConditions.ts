@@ -1,24 +1,29 @@
-import {WebElementFinder} from "../interface/WebElements";
-
 export interface UntilElementCondition {
-    readonly checker: (element: WebElementFinder) => Promise<boolean>;
     forAsLongAs(timeout: number): UntilElementCondition;
+    readonly waiter: ElementCondition;
     readonly timeout: number;
     readonly conditionHelpText: string;
+}
+
+abstract class  ElementCondition {
+    public abstract helpText: string;
+}
+
+export class VisibilityCheck extends ElementCondition{
+    constructor(
+        public helpText = "Waiting for visibility of "
+    ) {super()}
 }
 
 export class UntilElement implements UntilElementCondition{
     private _timeout: number = 5000;
 
     public static isVisible() {
-        const fn = (element: WebElementFinder) => element.isVisible();
-        const condition = "Waiting for visibility of ";
-        return new UntilElement(fn, condition)
+        return new UntilElement(new VisibilityCheck())
     }
 
     constructor(
-        public readonly checker: (element: WebElementFinder) => Promise<boolean> = (element: WebElementFinder) => Promise.resolve(true),
-        private readonly _conditionHelpText: string = "") {
+        public  waiter: ElementCondition) {
     }
 
     forAsLongAs(timeout: number): UntilElementCondition {
@@ -31,6 +36,6 @@ export class UntilElement implements UntilElementCondition{
     }
 
     get conditionHelpText() {
-        return this._conditionHelpText
+        return this.waiter.helpText
     }
 }
