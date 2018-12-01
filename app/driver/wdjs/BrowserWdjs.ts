@@ -171,7 +171,6 @@ export class BrowserWdjs implements Browser{
         return new Promise((fulfill,reject) => {
             const start = Date.now();
             const check = () => {
-                console.log("CHECKING");
                 const worker = (workerState: boolean, error?: String) => {
                     const timeSpendWaiting = Date.now() - start;
                     if(timeSpendWaiting > timeout) {
