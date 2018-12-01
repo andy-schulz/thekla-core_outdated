@@ -226,31 +226,6 @@ describe('When using the Browser object', () => {
         }, 20000);
     });
 
-    fdescribe('and try to implicitly wait for an Element', async () => {
-        let browser: Browser;
-        let appearButton5000ShallWait: WebElementFinder;
-
-        beforeAll(async () => {
-            browser = await BrowserFactory.create(conf);
-
-        },20000);
-
-        it('the system should wait for a second ', async () => {
-            appearButton5000ShallWait = browser.element(By.css("[data-test-id='AppearButtonBy5000']"))
-                .shallWait(UntilElement.isVisible().forAsLongAs(1000));
-
-            await browser.get("http://localhost:3000/delayed");
-            expect(await appearButton5000ShallWait.isVisible()).toEqual(false)
-        }, 20000);
-
-        it('the system should wait for a second ', async () => {
-            appearButton5000ShallWait = browser.element(By.css("[data-test-id='AppearButtonBy5000']"))
-                .shallWait(UntilElement.isVisible().forAsLongAs(5000));
-
-            await browser.get("http://localhost:3000/delayed");
-            expect(await appearButton5000ShallWait.isVisible()).toEqual(true)
-        }, 20000);
-    });
 
     describe('and work with the title', async () => {
         let browser: Browser;

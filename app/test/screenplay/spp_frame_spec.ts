@@ -76,19 +76,4 @@ describe('Locating Elements inside Frames', () => {
         );
 
     }, 20000);
-
-    fit('should be possible with wait actions on each frame', async () => {
-        const button = element(By.css(`.doesnotexist`))
-            .called(`Test Element outside Frame whch does not exist`);
-
-        const match = (expected: string) => {
-            return (actual: string) => expect(expected).toEqual(actual);
-        };
-
-        await andy.attemptsTo(
-            Navigate.to(`/nestedFrames`),
-            See.if(Text.of(button)).fulfills(match(`Button outside of Frame`)),
-        );
-
-    }, 20000);
 });

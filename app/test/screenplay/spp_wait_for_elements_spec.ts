@@ -7,8 +7,8 @@ import {
     element,
     See,
     Navigate,
-    Text
-} from "../../..";
+    Text, UntilElement
+} from "../../index";
 
 
 let config: Config = {
@@ -31,16 +31,17 @@ describe('Waiting for Elements', () => {
     });
 
 
-    fit('should be possible with wait actions on each frame', async () => {
+    it('should be possible with wait actions on an element', async () => {
         const button = element(By.css(".AppearButtonBy5000"))
-            .called("Test Element outside Frame");
+            .called("Test Element outside Frame")
+            .shallWait(UntilElement.isVisible().forAsLongAs(6000));
 
         const match = (expected: string) => {
             return (actual: string) => expect(expected).toEqual(actual);
         };
 
         await andy.attemptsTo(
-            Navigate.to(`/nestedFrames`),
+            Navigate.to(`/delayed`),
             See.if(Text.of(button)).fulfills(match("Button outside of Frame")),
         );
 
