@@ -5,10 +5,13 @@ import {By}                                     from "../lib/Locator";
 import {BrowserWdjs}                            from "./BrowserWdjs";
 import {LocatorWdjs}                            from "./LocatorWdjs";
 import {WdElement}                              from "./interfaces/WdElement";
+import {UntilElementWdjs}                       from "./UntilElementWdjs";
 import {WebElementWdjs}                         from "./WebElementWdjs";
 import {ThenableWebDriver, WebElement}          from "selenium-webdriver";
 
-
+/**
+ * List object to wrap the location strategy for finding multiple elements with WebDriverJS
+ */
 export class WebElementListWdjs implements WebElementListFinder{
     private _description: string = "";
     constructor(
@@ -29,12 +32,20 @@ export class WebElementListWdjs implements WebElementListFinder{
     //     })
     // }
 
+    /**
+     * find sub elements relative to this current element
+     * @param locator - selector to find a sub element
+     */
     element(
         locator: By): WebElementFinder {
         const desc = `'${this.description.replace("'Elements'","'Element'")}'`;
-        return <WebElementFinder>(<WebElementListWdjs>this.all(locator)).toWebElement().called(desc);
+        return <WebElementFinder>(<WebElementListWdjs>this.all(locator)).toWebElement().called(this.description);
     }
 
+    /**
+     * find all sub elements relative to this element
+     * @param locator - selector to find all sub elements
+     */
     all(
         locator: By
     ): WebElementListFinder {
@@ -48,9 +59,13 @@ export class WebElementListWdjs implements WebElementListFinder{
             }
             return Promise.resolve(els);
         };
-        return new WebElementListWdjs(getElements,locator, this.browser);
+        return new WebElementListWdjs(getElements,locator, this.browser).called(this.description);
     }
 
+    /**
+     * wait for
+     * @param condition - the element condition to wait for
+     */
     shallWait(condition: UntilElementCondition): WebElementListFinder {
         const getElements = async () => {
 
@@ -62,7 +77,7 @@ export class WebElementListWdjs implements WebElementListFinder{
                 }
 
                 const mapper = async (elem: WdElement): Promise<boolean> => {
-                    const el = elem.isDisplayed();
+                    const el = UntilElementWdjs.execute(condition,elem);
                     return el;
                 };
 
@@ -77,7 +92,7 @@ export class WebElementListWdjs implements WebElementListFinder{
                 .then(() => this.getElements())
         };
 
-        return new WebElementListWdjs(getElements,this._locator, this.browser);
+        return new WebElementListWdjs(getElements,this._locator, this.browser).called(this.description);
     }
 
 
