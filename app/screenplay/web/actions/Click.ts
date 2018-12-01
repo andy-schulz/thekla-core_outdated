@@ -5,7 +5,7 @@ import {UsesAbilities}                                  from "../../Actor";
 export class Click implements Interaction {
 
     public static on(element: SppWebElementFinder | SppWebElementListFinder): Click {
-        return new Click(element);
+        return new Click(<SppWebElementFinder>element);
     }
 
     constructor(private element: SppWebElementFinder) {}
