@@ -130,7 +130,7 @@ describe('Using Google Search to find an online calculator', () => {
 * Chaining elements
   * Basics of element chaining
   * Use separate locator strategies to find elements
-  * How to deal with frames
+  * [How to work with Frames](docs/creating_elements/WORKING_WITH_FRAMES.md)
   * How to wait for an elements appearance
   * Give an element a name
 * Use the screenplay pattern to write your tests

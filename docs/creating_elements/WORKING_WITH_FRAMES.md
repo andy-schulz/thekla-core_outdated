@@ -1,4 +1,4 @@
-# Working with Frames
+# How to work with Frames
 ## Intro
 To interact with elements nested inside frames, selenium offers the possibility to set the browser focus to a frame and access elements inside those frames.
 ````typescript
