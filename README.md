@@ -72,7 +72,7 @@ describe('Using Google Search to find an online calculator', () => {
         browserName: "chrome",
         serverUrl: "http://localhost:4444/wd/hub",
     };
-    describe('with the WebdriverJS wrapper,', () => {
+    describe('with the screenplay pattern implementation,', () => {
         // define your actor
         const philipp = Actor.named("Philipp");
         // and give him the ability to browse the web using a browser of your choice
@@ -131,3 +131,4 @@ If you want to know more about the screenplay pattern, check out the following r
 * [The Screenplay Pattern](https://serenity-js.org/design/screenplay-pattern.html)
   * Serenity is a great an powerfull implementation of the screenplay patter, so check it out in detail
 * [Presentation given by Antony Marcano SeleniumConf 2016](https://www.youtube.com/watch?v=8f8tdZBvAbI)
+  * Gives you short an precise overview what the screenplay pattern really is
