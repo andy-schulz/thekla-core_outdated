@@ -1,9 +1,9 @@
 # thekla
-Thekla started as a pet project to get a grip on the scrennplay pattern and to understand the SOLID principles in more detail. Working with protractor for the last 5 years i got used to ease of element definition and the possibilities of element chaining like:
+Thekla started as a pet project to get a grip on the screenplay pattern and to understand the SOLID principles in more detail. Working with protractor for the last 5 years i got used to ease of element definition and the possibilities of element chaining like:
 
 ```typescript
-const button1 = element(by.xpath("//locateSomething").element(By.css(".locateSomethingElse")
-const button2 = element.all(By.xpath("//locateTableRows").element(By.css(".locateSubElement")
+const button1 = element(by.xpath("//locateSomething").element(By.css(".locateSomethingElse");
+const button2 = element.all(By.xpath("//locateTableRows").element(By.css(".locateSubElement");
 ```
 Here I deviated from the original screenplay pattern and implemented this type of element chaining as I found it more intuitive.
 
@@ -127,8 +127,9 @@ describe('Using Google Search to find an online calculator', () => {
 
 
 ## Further Reads 
-If you want to know more about the screenplay pattern, check out the following ressources:
-* [The Screenplay Pattern](https://serenity-js.org/design/screenplay-pattern.html)
-  * Serenity is a great an powerfull implementation of the screenplay patter, so check it out in detail
+If you want to know more about the screenplay pattern, check out the following resources:
+* [The Screenplay Pattern explained by the Serenity creators](https://serenity-js.org/design/screenplay-pattern.html)
+  * Serenity is a great an powerful implementation of the screenplay patter, so check it out in detail
 * [Presentation given by Antony Marcano SeleniumConf 2016](https://www.youtube.com/watch?v=8f8tdZBvAbI)
   * Gives you short an precise overview what the screenplay pattern really is
+* [The SOLID principles](https://en.wikipedia.org/wiki/SOLID)
