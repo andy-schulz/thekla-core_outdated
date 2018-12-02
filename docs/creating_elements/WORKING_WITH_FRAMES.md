@@ -112,7 +112,7 @@ const inputInsideNestedFrame = frame(By.css(".frame1"))
 const buttonOutsideFrame = element(By.css(".buttonOutsideFrame"));
 
 philipp.attemptsTo(
-    Enter.value("enter text to input field").into(inputInsideFrame),
+    Enter.value("enter text to input field").into(inputInsideNestedFrame),
     Click.on(buttonOutsideFrame)
 )
 ````
