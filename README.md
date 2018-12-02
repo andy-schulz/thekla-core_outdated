@@ -18,7 +18,7 @@ An npm package will follow.
 ## Usage
 You can use thekla in 2 ways:
 * as a WebdriverJS Wrapper or
-* as an screenplay implementation
+* as a screenplay implementation
 
 The following examples are using Jasmine as a testing framework
 

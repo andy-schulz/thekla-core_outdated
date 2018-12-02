@@ -11,23 +11,23 @@ Thekla facilitates this by specifying the frame during element definition.
 ### Working with an Element inside a Frame
 Locating and interacting with an Element inside a Frame is as simple as:
 ````typescript
-import {Browser, By} from "thekla";
+import {BrowserFactory, Browser, By} from "thekla";
+const browser: Browser; //create the browser here
 
-const browser: Browser
 const buttonInsideFrame = browser
                 .frame(By.css(".frame"))
                 .element(By.css(".button"));
 
 buttonInsideFrame.click();
 ````
-A Frame Element can be located as any other element by using the known selectors.
+A Frame Element can be located as any other element by using the known 'By' selectors.
 
 ### Working with Elements inside and outside of a Frame
 To interact with multiple Elements you can define Elements as follows:
 ````typescript
-import {Browser, By} from "thekla";
+import {BrowserFactory, Browser, By} from "thekla";
+const browser: Browser; //create the browser here
 
-const browser: Browser
 const inputInsideFrame = browser
             .frame(By.css(".frame"))
             .element(By.css(".inputInsideFrame"));
@@ -42,9 +42,9 @@ There is no need to switch frames anymore. Just define / locate the frame the el
 ### Working with nested frames
 If you find yourself in a situation where you have to deal with nested frames you can locate the elements as follows:
 ````typescript
-import {Browser, By} from "thekla";
+import {BrowserFactory, Browser, By} from "thekla";
+const browser: Browser; //create the browser here
 
-const browser: Browser
 const inputInsideNestedFrame = browser
             .frame(By.css(".frame1"))
             .frame(By.css(".frame1.1"))
@@ -73,7 +73,7 @@ As with the WebDriver wrapper you define an element inside a frame as follows
 ````typescript
 import {Actor, By, Click, frame, element} from "thekla";
 
-const philipp: Actor
+const philipp: Actor; // instantiate actor and assign ability
 const buttonInsideFrame = frame(By.css(".frame"))
                 .element(By.css(".button"));
 
@@ -87,8 +87,8 @@ philipp.attemptsTo(
 To interact with multiple Elements you can define Elements as follows:
 ````typescript
 import {Actor, By, Click, Enter, frame, element} from "thekla";
+const philipp: Actor; // instantiate actor and assign ability
 
-const philipp: Actor
 const inputInsideFrame = frame(By.css(".frame"))
             .element(By.css(".inputInsideFrame"));
 const buttonOutsideFrame = element(By.css(".buttonOutsideFrame"));
@@ -104,8 +104,8 @@ No frame switching is needed here as well.
 The same principle applys to working with elements in nested frames.
 ````typescript
 import {Actor, By, Click, Enter, frame, element} from "thekla";
+const philipp: Actor; // instantiate actor and assign ability
 
-const philipp: Actor
 const inputInsideNestedFrame = frame(By.css(".frame1"))
             .frame(By.css(".frame1.1"))
             .element(By.css(".inputInsideFrame"));
