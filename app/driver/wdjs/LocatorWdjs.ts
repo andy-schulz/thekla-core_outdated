@@ -11,6 +11,8 @@ export class LocatorWdjs {
         switch (locator.selectorType) {
             case "byCss":
                 return ByWd.css(locator.selector);
+            case "byXpath":
+                return ByWd.xpath(locator.selector);
             case "byJs":
                 return ByWd.js(locator.function, locator.args);
             case "byCssContainingText":

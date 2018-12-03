@@ -13,6 +13,10 @@ export class By{
         return new By(`byCss`, selector);
     }
 
+    public static xpath(selector: string): By {
+        return new By(`byXpath`, selector);
+    }
+
     public static js(script: string | Function, ...var_args: any[]): By {
         let by = new By("byJs", script.toString());
         by.function = script;
