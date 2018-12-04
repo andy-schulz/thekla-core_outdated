@@ -20,16 +20,14 @@ describe('Locating an element', () => {
     describe('by xpath', () => {
         it('a the button name should be found', async () => {
             const button = element(By.xpath("//button[contains(text(),'Danger!')]"));
-
             const match = (expected: string) => (actual: string) => expect(expected).toEqual(actual);
 
             await andy.attemptsTo(
                 Navigate.to(`/`),
                 See.if(Text.of(button)).fulfills(match(`Danger!`)),
             );
-
-        }, 10000);
-    })
+        }, 100000);
+    });
 
     afterAll(async () => {
         await BrowserFactory.cleanup();
