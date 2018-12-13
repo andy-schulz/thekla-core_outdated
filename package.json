@@ -1,5 +1,5 @@
 {
-  "name": "thekla",
+  "name": "thekla-core",
   "version": "1.0.0",
   "description": "test project on how to work with webdriverjs",
   "main": "dist/index.js",
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/andy-schulz/thekla.git"
+    "url": "git+https://github.com/andy-schulz/thekla-core.git"
   },
   "author": "Andy Schulz <andy.schulz@test-steps.de>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/andy-schulz/thekla/issues"
+    "url": "https://github.com/andy-schulz/thekla-core/issues"
   },
-  "homepage": "https://github.com/andy-schulz/thekla#readme",
+  "homepage": "https://github.com/andy-schulz/thekl-corea#readme",
   "dependencies": {
     "@log4js-node/log4js-api": "^1.0.2",
     "@types/node": "^10.12.0",
