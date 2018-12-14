@@ -1,4 +1,9 @@
 /**
+ *
+ */
+export {ProcessedTheklaConfig} from "./config/ProcessedTheklaConfig"
+export {TestInterface} from "./config/ProcessedTheklaConfig"
+/**
  * WebDriver Wrapper
  */
 

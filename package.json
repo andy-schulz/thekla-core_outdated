@@ -18,7 +18,7 @@
   "bugs": {
     "url": "https://github.com/andy-schulz/thekla-core/issues"
   },
-  "homepage": "https://github.com/andy-schulz/thekl-corea#readme",
+  "homepage": "https://github.com/andy-schulz/thekla-corea#readme",
   "dependencies": {
     "@log4js-node/log4js-api": "^1.0.2",
     "@types/node": "^10.12.0",
