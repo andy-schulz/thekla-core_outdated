@@ -2,7 +2,9 @@
  *
  */
 export {ProcessedTheklaConfig} from "./config/ProcessedTheklaConfig"
-export {TestInterface} from "./config/ProcessedTheklaConfig"
+export {SeleniumConfig, RestConfig, Capabilities} from "./config/TheklaConfig"
+
+
 /**
  * WebDriver Wrapper
  */
