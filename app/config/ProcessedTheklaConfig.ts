@@ -1,9 +1,6 @@
-export class ProcessedTheklaConfig {
-    constructor(configPath: string) {
-        console.log(configPath);
-    }
-}
+import {TheklaConfig} from "./TheklaConfig";
 
-export interface TestInterface {
-    test: string;
+export class ProcessedTheklaConfig implements TheklaConfig{
+    constructor(configPath: string) {
+    }
 }
