@@ -3,7 +3,7 @@ import {By}                            from "../lib/Locator";
 import {BrowserWdjs}                   from "./BrowserWdjs";
 import {WdElement}                     from "./interfaces/WdElement";
 
-let clientSideScripts = require('../../../res/clientsidescripts');
+let clientSideScripts = require('../../../res/browser/clientsidescripts');
 
 export class LocatorWdjs {
 
