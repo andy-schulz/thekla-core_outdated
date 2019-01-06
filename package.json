@@ -1,12 +1,12 @@
 {
   "name": "thekla-core",
   "version": "1.0.0",
-  "description": "test project on how to work with webdriverjs",
+  "description": "Thekla is a Screenplay pattern implementation and consists of the two modules, thekla-core (screenplay pattern libs) and thekla (command line interfae)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "prepare": "npm run build",
-    "test": "tsc & jasmine",
+    "test": "tsc & jasmine --config=app/test/support/jasmine.json",
     "build": "tsc"
   },
   "repository": {
@@ -18,7 +18,7 @@
   "bugs": {
     "url": "https://github.com/andy-schulz/thekla-core/issues"
   },
-  "homepage": "https://github.com/andy-schulz/thekla-corea#readme",
+  "homepage": "https://github.com/andy-schulz/thekla-core#readme",
   "dependencies": {
     "@log4js-node/log4js-api": "^1.0.2",
     "@types/node": "^10.12.0",
