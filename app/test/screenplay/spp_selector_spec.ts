@@ -18,7 +18,7 @@ describe('Locating an element', () => {
     });
 
     describe('by xpath', () => {
-        it('a the button name should be found', async () => {
+        it('a the button name should be found - (test case id: 9a383bbf-9db9-41c5-b903-7f8d61bea88a)', async () => {
             const button = element(By.xpath("//button[contains(text(),'Danger!')]"));
             const match = (expected: string) => (actual: string) => expect(expected).toEqual(actual);
 
@@ -30,6 +30,6 @@ describe('Locating an element', () => {
     });
 
     afterAll(async () => {
-        await BrowserFactory.cleanup();
+        return BrowserFactory.cleanup();
     });
 });

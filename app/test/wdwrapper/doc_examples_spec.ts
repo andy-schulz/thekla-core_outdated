@@ -1,4 +1,4 @@
-import {BrowserFactory, By, Config, Key, UntilElement} from "../..";
+import {Browser, BrowserFactory, By, Config, Key, UntilElement, WebElementFinder} from "../..";
 
 describe('Using Google Search to find an online calculator', () => {
     const conf: Config = {
@@ -7,19 +7,26 @@ describe('Using Google Search to find an online calculator', () => {
     };
     describe('with the WebdriverJS wrapper,', () => {
         // define your elements preferably in a separate class like a page object
-        const b = BrowserFactory.create(conf);
-        const searchField = b.element(By.css("[name='q']"))
-            .shallWait(UntilElement.isVisible().forAsLongAs(5000))
-            .called("The Google search field");
+        let b: Browser;
+        let searchField: WebElementFinder;
+        let submitSearch: WebElementFinder;
+        let calculatorInput:WebElementFinder;
 
-        const submitSearch = b.element(By.css(".FPdoLc [name='btnK']"))
-            .called("The Google Submit Search button on the main Page");
+        beforeAll(() => {
+            b = BrowserFactory.create(conf);
+            searchField = b.element(By.css("[name='q']"))
+                .shallWait(UntilElement.isVisible().forAsLongAs(5000))
+                .called("The Google search field (describe)");
 
-        const calculatorInput = b.element(By.css("#cwos"))
-            .called("Google calculator input field")
-            .shallWait(UntilElement.isVisible().forAsLongAs(5000));
+            submitSearch = b.element(By.css(".FPdoLc [name='btnK']"))
+                .called("The Google Submit Search button on the main Page");
 
-        it('the google calculator should be loaded', async () => {
+            calculatorInput = b.element(By.css("#cwos"))
+                .called("Google calculator input field")
+                .shallWait(UntilElement.isVisible().forAsLongAs(5000));
+        });
+
+        it('the google calculator should be loaded - (test case id: 09fb5738-86b1-4f12-8d33-91bcddcde106)', async () => {
             await b.get("http://www.google.com");
             await searchField.sendKeys("calculator");
             await searchField.sendKeys(Key.TAB);
@@ -30,7 +37,7 @@ describe('Using Google Search to find an online calculator', () => {
     });
 
     afterAll(async () => {
-        await BrowserFactory.cleanup();
+        return  BrowserFactory.cleanup();
     })
 });
 

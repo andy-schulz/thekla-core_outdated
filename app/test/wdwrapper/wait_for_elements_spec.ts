@@ -3,7 +3,7 @@ import {
 } from "../..";
 import {configure} from "log4js";
 
-configure("config/log4js.json");
+configure("res/config/log4js.json");
 
 const conf: Config = {
     browserName: "chrome",
@@ -12,7 +12,7 @@ const conf: Config = {
 };
 
 
-describe('Waiting for Elements', () => {
+describe('Waiting for WD Elements', () => {
 
     afterAll(() => {
         return BrowserFactory.cleanup();
@@ -26,7 +26,7 @@ describe('Waiting for Elements', () => {
             browser = await BrowserFactory.create(conf);
         },20000);
 
-        it('the system should wait for a second ', async () => {
+        it('the system should wait for a second - (test case id: d106ba43-542c-44c7-959e-f64dcdc6943d)', async () => {
             appearButton5000ShallWait = browser.element(By.css("[data-test-id='AppearButtonBy5000']"))
                 .shallWait(UntilElement.isVisible().forAsLongAs(1000));
 
@@ -34,7 +34,7 @@ describe('Waiting for Elements', () => {
             expect(await appearButton5000ShallWait.isVisible()).toEqual(false)
         }, 20000);
 
-        it('the system should wait for a second ', async () => {
+        it('the system should wait for a second - (test case id: 2af14d42-6f9d-4532-a151-c4d4390c352e)', async () => {
             appearButton5000ShallWait = browser.element(By.css("[data-test-id='AppearButtonBy5000']"))
                 .shallWait(UntilElement.isVisible().forAsLongAs(5000));
 

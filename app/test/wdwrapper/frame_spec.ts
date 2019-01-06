@@ -18,12 +18,12 @@ describe('trying to access a Frame', () => {
     });
 
     afterAll(async () => {
-        await BrowserFactory.cleanup();
+        return BrowserFactory.cleanup();
     });
 
     describe('on the first Level by', () => {
 
-        it('css -> the frame should be found.', async () => {
+        it('css -> the frame should be found.  - (test case id: 68a541be-2a49-4177-bb1d-251136c3e569)', async () => {
             const frame = browser.frame(By.css(".button-in-single-frame"));
             const button = frame.element(By.css(".btn-secondary"));
 
@@ -32,7 +32,7 @@ describe('trying to access a Frame', () => {
             expect(await button.getText()).toEqual("Button inside single frame");
         }, 20000);
 
-        it('css and explicit waiting -> the frame should be found.', async () => {
+        it('css and explicit waiting -> the frame should be found. - (test case id: 189c9d59-c31a-4e9d-9c4e-e43dc0302868)', async () => {
             const frame = browser.frame(By.css(".button-in-single-frame"))
                 .shallWait(UntilElement.isVisible().forAsLongAs(5000));
             const button = frame.element(By.css(".btn-secondary"));
@@ -45,7 +45,7 @@ describe('trying to access a Frame', () => {
 
     describe(`on the second Level by`, () => {
 
-        it('css -> the button in frame of frame should be found.', async () => {
+        it('css -> the button in frame of frame should be found.  - (test case id: 7baa9c43-563b-4ef1-8cf4-f11d5fc8601b)', async () => {
             const frame1 = browser.frame(By.css(".button-in-single-frame"));
             const frame21 = browser.frame(By.css(".button-in-two-frames"));
             const frame22 = frame21.frame(By.css(".button-in-single-frame"));
@@ -62,7 +62,7 @@ describe('trying to access a Frame', () => {
         }, 20000);
 
 
-        it('css and explicit waiting -> the button in frame of frame should be found.', async () => {
+        it('css and explicit waiting -> the button in frame of frame should be found. - (test case id: 53675bf6-eea9-46f0-b487-b969a7629e27)', async () => {
             const frame1 = browser.frame(By.css(".button-in-single-frame"));
             const frame21 = browser.frame(By.css(".button-in-two-frames"));
             const frame22 = frame21.frame(By.css(".button-in-single-frame"))
@@ -79,7 +79,7 @@ describe('trying to access a Frame', () => {
             expect(await button1.getText()).toEqual("Button inside single frame");
         }, 20000);
 
-        it('css and explicit waiting -> all buttons, inside and outside of frames should be found.', async () => {
+        it('css and explicit waiting -> all buttons, inside and outside of frames should be found. - (test case id: 8a4d4171-0c02-43a7-a635-10688d91298b)', async () => {
             const button = browser.element(By.css(".buttonoutsideframes button"));
 
             const frame1 = browser.frame(By.css(".button-in-single-frame"));

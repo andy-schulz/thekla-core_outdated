@@ -18,10 +18,10 @@ describe('Locating Elements inside Frames', () => {
     });
 
     afterAll(async () => {
-        await BrowserFactory.cleanup();
+        return BrowserFactory.cleanup();
     });
 
-    it('a separate frame change should not be necessary', async () => {
+    it('a separate frame change should not be necessary - (test case id: 68f90a8c-ec6c-445b-8276-14af079fc008)', async () => {
         const button = element(By.css(`.buttonoutsideframes button`));
 
         const frame1 = frame(By.css(`.button-in-single-frame`));
@@ -47,7 +47,7 @@ describe('Locating Elements inside Frames', () => {
     }, 20000);
 
 
-    it('should be possible with wait actions on each frame', async () => {
+    it('should be possible with wait actions on each frame - (test case id: 19b9fce2-c15b-4b52-a9d5-4211b26602da)', async () => {
         const button = element(By.css(".buttonoutsideframes button"));
 
         const frame1 = frame(By.css(".button-in-single-frame"))

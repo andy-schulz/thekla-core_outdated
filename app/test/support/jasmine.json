@@ -1,10 +1,8 @@
 {
   "spec_dir": "dist/test"
   ,"spec_files": [
-    "**/*[sS]pec.js"
-  ]
-  ,"helpers": [
-    "helpers/**/*.js"
+    "screenplay/**/*[sS]pec.js",
+    "wdwrapper/**/*[sS]pec.js"
   ]
   ,"oneFailurePerSpec": false
   ,"random": true

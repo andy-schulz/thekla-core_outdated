@@ -6,7 +6,7 @@ class GooglePgo {
     // define your elements in a page object
     public static searchField = element(By.css("[name='q']"))
         .shallWait(UntilElement.isVisible().forAsLongAs(5000))
-        .called("The Google search field");
+        .called("The Google search field (GPO)");
 
     public static submitSearch = element(By.css(".FPdoLc [name='btnK']"))
         .called("The Google Submit Search button on the main Page");
@@ -16,6 +16,9 @@ class GooglePgo {
         .shallWait(UntilElement.isVisible().forAsLongAs(5000));
 }
 
+import {getLogger, configure} from "log4js";
+const logger = getLogger("DocSppExamples");
+
 describe('Using Google Search to find an online calculator', () => {
     const conf: Config = {
         browserName: "chrome",
@@ -24,13 +27,16 @@ describe('Using Google Search to find an online calculator', () => {
     describe('with the screenplay pattern implementation,', () => {
         // define your actor
         const philipp = Actor.named("Philipp");
-        // and give him the ability to browse the web using a browser of your choice
-        philipp.whoCan(BrowseTheWeb.using(BrowserFactory.create(conf)));
 
         // using the jasmine matcher for our checks on the UI
         const match = (expected: string) => (actual: string) => expect(actual).toEqual(expected);
 
-        it('the google calculator should be loaded', async () => {
+        beforeAll(() => {
+            // and give him the ability to browse the web using a browser of your choice
+            philipp.whoCan(BrowseTheWeb.using(BrowserFactory.create(conf)));
+        });
+
+        it('the google calculator should be loaded - (test case id: ee1fcbb5-eb08-4f0d-979b-601ba9b63d87)', async () => {
             return philipp.attemptsTo(
                 Navigate.to("http://www.google.com"),
                 Enter.value("calculator").into(GooglePgo.searchField),
@@ -43,7 +49,7 @@ describe('Using Google Search to find an online calculator', () => {
 
     afterAll(async () => {
         // close all Browsers which were created during the test
-        await BrowserFactory.cleanup();
+        return BrowserFactory.cleanup();
     })
 });
 
