@@ -77,9 +77,12 @@ export class BrowserWdjs implements Browser{
     public static cleanup():Promise<any[]> {
         return Promise.all(
             [...this.browserMap.values()].map((browser) => {
-                return browser.quit()
+                return browser.quit();
             })
-        )
+        ).then((result: any[]) => {
+            this.browserMap.clear();
+            return result;
+        })
     }
 
 
