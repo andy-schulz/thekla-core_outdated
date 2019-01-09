@@ -1,8 +1,8 @@
 /**
  *
  */
-export {ProcessedTheklaConfig} from "./config/ProcessedTheklaConfig"
-export {SeleniumConfig, RestConfig, Capabilities} from "./config/TheklaConfig"
+export {ProcessedSeleniumConfig} from "./config/ProcessedSeleniumConfig"
+export {SeleniumConfig, RestConfig, Capabilities} from "./config/SeleniumConfig"
 
 
 /**
@@ -10,7 +10,7 @@ export {SeleniumConfig, RestConfig, Capabilities} from "./config/TheklaConfig"
  */
 
 export {Browser}            from "./driver/interface/Browser";
-export {Config}             from "./driver/interface/Config";
+export {CapabilitiesWdjs}   from "./driver/wdjs/interfaces/CapabilitiesWdjs";
 export {WebElementFinder}   from "./driver/interface/WebElements";
 
 export {BrowserFactory} from "./driver/lib/BrowserFactory";

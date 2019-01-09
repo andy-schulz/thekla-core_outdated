@@ -1,8 +1,9 @@
 import {
-    Browser, BrowserFactory, Config, By
-} from "../..";
+    Browser, BrowserFactory, CapabilitiesWdjs, By
+}                    from "../..";
+import {BrowserWdjs} from "../../driver/wdjs/BrowserWdjs";
 
-const conf: Config = {
+const conf: CapabilitiesWdjs = {
     browserName: "chrome",
     serverUrl: "http://localhost:4444/wd/hub",
     // firefoxOptions: {
@@ -21,12 +22,12 @@ describe('a simple table', () => {
     let browser: Browser;
 
     beforeAll(async (done) => {
-        browser = await BrowserFactory.create(conf, "wdjs");
+        browser = await BrowserWdjs.create(conf);
         done();
     });
 
     afterAll(async () => {
-        return BrowserFactory.cleanup()
+        return BrowserWdjs.cleanup()
     });
 
     it('select elements by - (test case id: 48788a13-ade7-4b76-b366-8eae26a1194d)', async () => {

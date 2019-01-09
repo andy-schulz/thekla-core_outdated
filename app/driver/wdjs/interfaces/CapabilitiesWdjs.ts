@@ -1,9 +1,11 @@
-export interface Config {
+
+export interface CapabilitiesWdjs {
     browserName: string;
     serverUrl: string;
     baseUrl?: string
     chromeOptions?: ChromeOptions;
     firefoxOptions?: FirefoxOptions;
+    proxy?: ProxyConfig
 }
 
 export interface ChromeOptions {
@@ -11,17 +13,17 @@ export interface ChromeOptions {
 }
 export interface FirefoxOptions {
     binary?: string;
-    proxy?: ProxyConfig;
 }
 
 export interface ProxyConfig {
-    proxyType: string;
-    proxyAutoconfigUrl?: string;
-    ftpProxy?: string;
-    httpProxy?: string;
-    sslProxy?: string;
-    noProxy?: string;
-    socksProxy?: string;
-    socksUsername?: string;
-    socksPassword?: string;
+    type: "direct" | "system" | "manual";
+    manualConfig?: ManualProxyConfig;
+}
+
+export interface ManualProxyConfig {
+    default?: string;
+    ftp?: string;
+    http?: string;
+    https?: string;
+    bypass?: string[]
 }

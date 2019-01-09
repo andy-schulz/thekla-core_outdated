@@ -1,5 +1,5 @@
 import {
-    Actor, BrowserFactory, BrowseTheWeb, By, Click, Config, element, Enter, Key, Navigate, See, Text, UntilElement
+    Actor, BrowserFactory, BrowseTheWeb, By, Click, Capabilities, element, Enter, Key, Navigate, See, Text, UntilElement
 } from "../..";
 
 class GooglePgo {
@@ -20,7 +20,7 @@ import {getLogger, configure} from "log4js";
 const logger = getLogger("DocSppExamples");
 
 describe('Using Google Search to find an online calculator', () => {
-    const conf: Config = {
+    const conf: Capabilities = {
         browserName: "chrome",
         serverUrl: "http://localhost:4444/wd/hub",
     };

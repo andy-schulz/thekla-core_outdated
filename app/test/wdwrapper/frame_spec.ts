@@ -1,8 +1,9 @@
 import {
-    Browser, Config, BrowserFactory, By, UntilElement
-} from "../..";
+    Browser, CapabilitiesWdjs, By, UntilElement
+}                    from "../..";
+import {BrowserWdjs} from "../../driver/wdjs/BrowserWdjs";
 
-const conf: Config = {
+const conf: CapabilitiesWdjs = {
     browserName: "chrome",
     serverUrl: "http://localhost:4444/wd/hub",
     baseUrl: "http://localhost:3000"
@@ -14,11 +15,11 @@ describe('trying to access a Frame', () => {
     let browser: Browser;
 
     beforeAll(() => {
-        browser = BrowserFactory.create(conf);
+        browser = BrowserWdjs.create(conf);
     });
 
     afterAll(async () => {
-        return BrowserFactory.cleanup();
+        return BrowserWdjs.cleanup();
     });
 
     describe('on the first Level by', () => {

@@ -3,26 +3,28 @@ import {getLogger, Logger} from "@log4js-node/log4js-api";
 import {Options as FFOptions}                from "selenium-webdriver/firefox";
 import {Builder, promise, ThenableWebDriver} from "selenium-webdriver";
 
-import {Browser}                                from "../interface/Browser";
-import {Config, FirefoxOptions}                 from "../interface/Config";
-import {By}                                     from "../lib/Locator";
-import {WebElementFinder, WebElementListFinder} from "../interface/WebElements";
-import {FrameElementWdjs}                       from "./FrameElementWdjs";
-import {FrameHelper, WdElement}                 from "./interfaces/WdElement";
-import {LocatorWdjs}                            from "./LocatorWdjs";
-import {WebElementListWdjs}                     from "./WebElementListWdjs";
-import {Condition}                              from "../lib/Condition";
+import {Browser}                                                          from "../interface/Browser";
+import {CapabilitiesWdjs, FirefoxOptions, ProxyConfig} from "./interfaces/CapabilitiesWdjs";
+import {By}                                                               from "../lib/Locator";
+import {WebElementFinder, WebElementListFinder}                           from "../interface/WebElements";
+import {FrameElementWdjs}                                                 from "./FrameElementWdjs";
+import {FrameHelper, WdElement}                                           from "./interfaces/WdElement";
+import {LocatorWdjs}                                                      from "./LocatorWdjs";
+import {WebElementListWdjs}                                               from "./WebElementListWdjs";
+import {Condition}                                     from "../lib/Condition";
 
 promise.USE_PROMISE_MANAGER = false;
 
 export class BrowserWdjs implements Browser{
 
     private logger: Logger = getLogger("BrowserWdjs");
+    private static logger: Logger = getLogger("BrowserWdjsClass");
+
     private static browserMap: Map<string,Browser> = new Map<string,Browser>();
 
     constructor(
         private _driver: ThenableWebDriver,
-        private _config: Config) {
+        private _capabilities: CapabilitiesWdjs) {
     }
 
     get driver() {
@@ -30,33 +32,46 @@ export class BrowserWdjs implements Browser{
     }
 
     get config() {
-        return this._config;
+        return this._capabilities;
     }
 
+    private static setProxy = (builder: Builder, proxy: ProxyConfig | undefined): any => {
+        if(proxy === undefined) return;
 
+        const proxyWdjs = require("selenium-webdriver/proxy");
 
-    public static create(config: Config): Browser {
-        let builder: Builder;
-        // return new Promise(async (fulfill, reject) => {
-            try {
-                builder = new Builder().
-                usingServer(config.serverUrl).
-                withCapabilities(config);
+        if(proxy.type === "direct") return builder.setProxy(proxyWdjs.direct());
+        if(proxy.type === "system") return builder.setProxy(proxyWdjs.system());
 
-                this.applyFirefoxOptions(builder,config.firefoxOptions);
-
-                let driver = builder.build();
-                let browser = new BrowserWdjs(driver, config);
-                this.browserMap.set(`browser${this.browserMap.size + 1}`,browser);
-                return browser;
-                // fulfill(driver);
-            } catch (e) {
-                const message = ` ${e} ${Error().stack}`;
-                throw new Error(message)
-                // return reject(message)
+        if(proxy.type === "manual") {
+            if(!proxy.manualConfig) {
+                const message = `You specified 'manual' proxy configuration in the capabilities but did not give a manual proxy config.`;
+                BrowserWdjs.logger.info(message);
+                throw new Error(message);
             }
+            return builder.setProxy(proxyWdjs.manual(proxy.manualConfig))
+        }
+    };
 
-        // })
+    public static create(capabilities: CapabilitiesWdjs): Browser {
+        let builder: Builder;
+
+        try {
+            builder = new Builder()
+                .usingServer(capabilities.serverUrl)
+                .withCapabilities(capabilities);
+            this.setProxy(builder, capabilities.proxy);
+
+            this.applyFirefoxOptions(builder,capabilities.firefoxOptions);
+
+            let driver = builder.build();
+            let browser = new BrowserWdjs(driver, capabilities);
+            this.browserMap.set(`browser${this.browserMap.size + 1}`,browser);
+            return browser;
+        } catch (e) {
+            const message = ` ${e} ${Error().stack}`;
+            throw new Error(message)
+        }
     }
 
     private static applyFirefoxOptions(builder: Builder, options: FirefoxOptions | undefined): void  {
@@ -64,10 +79,6 @@ export class BrowserWdjs implements Browser{
             const  firefoxOptions = new FFOptions();
             if(options.binary) {
                 firefoxOptions.setBinary(options.binary);
-            }
-
-            if(options.proxy) {
-                builder.setProxy(options.proxy)
             }
 
             builder.setFirefoxOptions(firefoxOptions);
@@ -199,8 +210,4 @@ export class BrowserWdjs implements Browser{
             setTimeout(check,0);
         })
     }
-
-
-
-
 }

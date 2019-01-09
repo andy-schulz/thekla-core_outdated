@@ -1,8 +1,8 @@
 import {
-    Config, BrowserFactory, Actor, BrowseTheWeb, By, element, See, Navigate, Text, UntilElement, all, SppWebElementFinder
+    Capabilities, BrowserFactory, Actor, BrowseTheWeb, By, element, See, Navigate, Text, UntilElement, all, SppWebElementFinder
 } from "../..";
 
-let config: Config = {
+let config: Capabilities = {
     browserName: "chrome",
     serverUrl: "http://localhost:4444/wd/hub",
     baseUrl: "http://localhost:3000"

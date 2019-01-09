@@ -1,11 +1,11 @@
 import {
-    Actor, BrowseTheWeb, Config, BrowserFactory, Enter, Wait, Navigate, See, Key, Value, all, By, Count, Text
+    Actor, BrowseTheWeb, Capabilities, BrowserFactory, Enter, Wait, Navigate, See, Key, Value, all, By, Count, Text
 } from "../..";
 import {GoogleSearch}     from "../PageObjects/GoogleSearch/GoogleSearch";
 import {Add}              from "../PageObjects/GoogleCalculator/Add";
 import {GoogleCalculator} from "../PageObjects/GoogleCalculator/GoogleCalculator";
 
-let config: Config = {
+let config: Capabilities = {
     browserName: "chrome",
     serverUrl: "http://localhost:4444/wd/hub",
     // firefoxOptions: {

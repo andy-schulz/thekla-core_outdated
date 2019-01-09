@@ -1,13 +1,13 @@
 {
   "name": "thekla-core",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Thekla is a Screenplay pattern implementation and consists of the two modules, thekla-core (screenplay pattern libs) and thekla (command line interfae)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "prepare": "npm run build",
     "test": "tsc & jasmine --config=app/test/support/jasmine.json",
-    "build": "tsc"
+    "build": "./node_modules/.bin/del-cli dist/**/* & tsc"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,7 @@
     "@types/yargs": "^12.0.1",
     "axios": "^0.18.0",
     "deepmerge": "^2.2.1",
+    "del-cli": "^1.1.0",
     "log4js": "^3.0.6",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.5",

@@ -1,12 +1,13 @@
 import "jasmine"
-import {Config, Browser, BrowserFactory, WebElementFinder, By, until, UntilElement, Utils} from "../..";
-import {WebElementWdjs} from "../../driver/wdjs/WebElementWdjs";
+import {CapabilitiesWdjs, Browser, BrowserFactory, WebElementFinder, By, until, UntilElement, Utils} from "../..";
+import {BrowserWdjs}                                                                                 from "../../driver/wdjs/BrowserWdjs";
+import {WebElementWdjs}                                                                              from "../../driver/wdjs/WebElementWdjs";
 
 import {configure} from "log4js";
 configure("res/config/log4js.json");
 
 describe('When using the Browser object', () => {
-    const conf: Config = {
+    const conf: CapabilitiesWdjs = {
         browserName: "chrome",
         serverUrl: "http://localhost:4444/wd/hub",
         // firefoxOptions: {
@@ -28,7 +29,7 @@ describe('When using the Browser object', () => {
         let browser: Browser;
 
         beforeAll(async (done) => {
-            browser = await BrowserFactory.create(conf, "wdjs");
+            browser = await BrowserWdjs.create(conf);
             done();
         });
 
@@ -41,7 +42,7 @@ describe('When using the Browser object', () => {
         let browser: Browser;
 
         beforeAll(async () => {
-            browser = await BrowserFactory.create(conf);
+            browser = await BrowserWdjs.create(conf);
             await browser.get(testurl);
         }, 10000);
 
@@ -74,7 +75,7 @@ describe('When using the Browser object', () => {
         let optionList: WebElementFinder;
 
         beforeAll(async () => {
-            browser = await BrowserFactory.create(conf, "wdjs");
+            browser = await BrowserWdjs.create(conf);
             optionList = browser.element(By.css("[data-test-id='buttonDropDown']"));
             await browser.get(testurl);
         }, 100000);
@@ -109,7 +110,7 @@ describe('When using the Browser object', () => {
 
 
         beforeAll(async () => {
-            browser = await BrowserFactory.create(conf);
+            browser = await BrowserWdjs.create(conf);
             emailInput = browser.element(By.css("[data-test-id='exampleEmail']"));
             await browser.get(testurl);
         }, 100000);
@@ -142,7 +143,7 @@ describe('When using the Browser object', () => {
 
 
         beforeAll(async () => {
-            browser = await BrowserFactory.create(conf);
+            browser = await BrowserWdjs.create(conf);
             appearButton5000 = browser.element(By.css("[data-test-id='AppearButtonBy5000']"));
             disappearButton5000 = browser.element(By.css("[data-test-id='DisappearButtonBy5000']"));
             appearButton10000 = browser.element(By.css("[data-test-id='AppearButtonBy10000']"));
@@ -213,7 +214,7 @@ describe('When using the Browser object', () => {
 
 
         beforeAll(async () => {
-            browser = await BrowserFactory.create(conf);
+            browser = await BrowserWdjs.create(conf);
         });
 
         beforeEach(async () => {

@@ -1,9 +1,10 @@
-import {Browser}        from "../../driver/interface/Browser";
-import {Config}         from "../../driver/interface/Config";
-import {BrowserFactory} from "../../driver/lib/BrowserFactory";
-import {By}             from "../../driver/lib/Locator";
+import {Browser}          from "../../driver/interface/Browser";
+import {BrowserWdjs}      from "../../driver/wdjs/BrowserWdjs";
+import {CapabilitiesWdjs} from "../../driver/wdjs/interfaces/CapabilitiesWdjs";
+import {BrowserFactory}   from "../../driver/lib/BrowserFactory";
+import {By}               from "../../driver/lib/Locator";
 
-const conf: Config = {
+const conf: CapabilitiesWdjs = {
     browserName: "chrome",
     serverUrl: "http://localhost:4444/wd/hub",
     baseUrl: "http://localhost:3000"
@@ -13,7 +14,7 @@ describe('Locating an element', () => {
     let browser: Browser;
 
     beforeAll(async () => {
-        browser = await BrowserFactory.create(conf, "wdjs");
+        browser = await BrowserWdjs.create(conf);
     }, 10000);
 
     describe('by cssContainingText', () => {

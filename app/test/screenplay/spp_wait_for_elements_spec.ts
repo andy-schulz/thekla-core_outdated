@@ -2,7 +2,7 @@ import {
     Actor,
     BrowserFactory,
     BrowseTheWeb,
-    Config,
+    Capabilities,
     By,
     element,
     See,
@@ -11,7 +11,7 @@ import {
 } from "../../index";
 
 
-let config: Config = {
+let config: Capabilities = {
     browserName: "chrome",
     serverUrl: "http://localhost:4444/wd/hub",
     baseUrl: "http://localhost:3000"

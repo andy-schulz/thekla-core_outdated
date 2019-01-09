@@ -1,7 +1,8 @@
-import {Browser, BrowserFactory, By, Config, Key, UntilElement, WebElementFinder} from "../..";
+import {Browser, BrowserFactory, By, CapabilitiesWdjs, Key, UntilElement, WebElementFinder} from "../..";
+import {BrowserWdjs}                                                                        from "../../driver/wdjs/BrowserWdjs";
 
 describe('Using Google Search to find an online calculator', () => {
-    const conf: Config = {
+    const conf: CapabilitiesWdjs = {
         browserName: "chrome",
         serverUrl: "http://localhost:4444/wd/hub",
     };
@@ -13,7 +14,7 @@ describe('Using Google Search to find an online calculator', () => {
         let calculatorInput:WebElementFinder;
 
         beforeAll(() => {
-            b = BrowserFactory.create(conf);
+            b = BrowserWdjs.create(conf);
             searchField = b.element(By.css("[name='q']"))
                 .shallWait(UntilElement.isVisible().forAsLongAs(5000))
                 .called("The Google search field (describe)");

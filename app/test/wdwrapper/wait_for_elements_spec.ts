@@ -1,11 +1,12 @@
 import {
-    Browser, WebElementFinder, BrowserFactory, Config, By, UntilElement
-} from "../..";
-import {configure} from "log4js";
+    Browser, WebElementFinder, BrowserFactory, CapabilitiesWdjs, By, UntilElement
+}                    from "../..";
+import {configure}   from "log4js";
+import {BrowserWdjs} from "../../driver/wdjs/BrowserWdjs";
 
 configure("res/config/log4js.json");
 
-const conf: Config = {
+const conf: CapabilitiesWdjs = {
     browserName: "chrome",
     serverUrl: "http://localhost:4444/wd/hub",
     baseUrl: "http://localhost:3000"
@@ -15,7 +16,7 @@ const conf: Config = {
 describe('Waiting for WD Elements', () => {
 
     afterAll(() => {
-        return BrowserFactory.cleanup();
+        return BrowserWdjs.cleanup();
     });
 
     describe('and try to implicitly wait for an Element', async () => {
@@ -23,7 +24,7 @@ describe('Waiting for WD Elements', () => {
         let appearButton5000ShallWait: WebElementFinder;
 
         beforeAll(async () => {
-            browser = await BrowserFactory.create(conf);
+            browser = await BrowserWdjs.create(conf);
         },20000);
 
         it('the system should wait for a second - (test case id: d106ba43-542c-44c7-959e-f64dcdc6943d)', async () => {

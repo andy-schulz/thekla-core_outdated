@@ -6,7 +6,8 @@ import merge                          from "deepmerge";
 import {RequestPromiseOptions}        from "request-promise-native";
 
 export interface RestAbilityOptions extends RequestPromiseOptions{
-    restClient?: "request"
+    restClient?: "request";
+    baseUrl?: string;
 }
 
 /**
