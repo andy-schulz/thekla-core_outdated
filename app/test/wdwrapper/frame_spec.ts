@@ -1,12 +1,15 @@
 import {
-    Browser, CapabilitiesWdjs, By, UntilElement
-}                    from "../..";
+    Browser, By, UntilElement, SeleniumConfig
+} from "../..";
 import {BrowserWdjs} from "../../driver/wdjs/BrowserWdjs";
 
-const conf: CapabilitiesWdjs = {
-    browserName: "chrome",
-    serverUrl: "http://localhost:4444/wd/hub",
-    baseUrl: "http://localhost:3000"
+const conf: SeleniumConfig = {
+    seleniumServerAddress: "http://localhost:4444/wd/hub",
+    baseUrl: "http://localhost:3000",
+
+    capabilities: {
+        browserName: "chrome",
+    }
 };
 
 

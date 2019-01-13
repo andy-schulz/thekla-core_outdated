@@ -1,10 +1,16 @@
 import {getLogger, Logger} from "@log4js-node/log4js-api";
 
-import {Options as FFOptions}                from "selenium-webdriver/firefox";
-import {Builder, promise, ThenableWebDriver} from "selenium-webdriver";
+import {Options as FFOptions}                                                   from "selenium-webdriver/firefox";
+import {Builder, Capabilities, promise, ThenableWebDriver}                      from "selenium-webdriver";
+import {
+    BrowserCapabilities,
+    CapabilitiesFunction,
+    FirefoxOptions,
+    ProxyConfig,
+    SeleniumConfig
+} from "../../config/SeleniumConfig";
 
 import {Browser}                                                          from "../interface/Browser";
-import {CapabilitiesWdjs, FirefoxOptions, ProxyConfig} from "./interfaces/CapabilitiesWdjs";
 import {By}                                                               from "../lib/Locator";
 import {WebElementFinder, WebElementListFinder}                           from "../interface/WebElements";
 import {FrameElementWdjs}                                                 from "./FrameElementWdjs";
@@ -15,6 +21,10 @@ import {Condition}                                     from "../lib/Condition";
 
 promise.USE_PROMISE_MANAGER = false;
 
+interface CapabilitiesWdjs {
+    browserName?: string;
+}
+
 export class BrowserWdjs implements Browser{
 
     private logger: Logger = getLogger("BrowserWdjs");
@@ -24,7 +34,7 @@ export class BrowserWdjs implements Browser{
 
     constructor(
         private _driver: ThenableWebDriver,
-        private _capabilities: CapabilitiesWdjs) {
+        private _selConfig: SeleniumConfig) {
     }
 
     get driver() {
@@ -32,7 +42,44 @@ export class BrowserWdjs implements Browser{
     }
 
     get config() {
-        return this._capabilities;
+        return this._selConfig;
+    }
+
+
+    public static create(selConf: SeleniumConfig): Browser {
+        let builder: Builder;
+
+        builder = new Builder()
+        try {
+            builder = builder.usingServer(selConf.seleniumServerAddress);
+            this.setCapabilities(builder, selConf.capabilities);
+
+            let driver = builder.build();
+
+            let browser = new BrowserWdjs(driver, selConf);
+            this.browserMap.set(`browser${this.browserMap.size + 1}`,browser);
+            return browser;
+        } catch (e) {
+            const message = ` ${e} ${Error().stack}`;
+            throw new Error(message)
+        }
+    }
+
+    private static  setCapabilities(builder: Builder, capabilities: BrowserCapabilities | CapabilitiesFunction | undefined) {
+        if(!capabilities) return;
+
+        const ca = <BrowserCapabilities>capabilities;
+
+        const capa: CapabilitiesWdjs = {};
+
+        if(ca.browserName) capa.browserName = ca.browserName;
+        this.setProxy(builder, ca.proxy);
+        if(ca.firefoxConfig) this.applyFirefoxOptions(builder,ca.firefoxOptions);
+        if(ca.chromeConfig) this.applyFirefoxOptions(builder,ca.chromeConfig);
+
+
+        return builder.withCapabilities(capa);
+
     }
 
     private static setProxy = (builder: Builder, proxy: ProxyConfig | undefined): any => {
@@ -52,27 +99,6 @@ export class BrowserWdjs implements Browser{
             return builder.setProxy(proxyWdjs.manual(proxy.manualConfig))
         }
     };
-
-    public static create(capabilities: CapabilitiesWdjs): Browser {
-        let builder: Builder;
-
-        try {
-            builder = new Builder()
-                .usingServer(capabilities.serverUrl)
-                .withCapabilities(capabilities);
-            this.setProxy(builder, capabilities.proxy);
-
-            this.applyFirefoxOptions(builder,capabilities.firefoxOptions);
-
-            let driver = builder.build();
-            let browser = new BrowserWdjs(driver, capabilities);
-            this.browserMap.set(`browser${this.browserMap.size + 1}`,browser);
-            return browser;
-        } catch (e) {
-            const message = ` ${e} ${Error().stack}`;
-            throw new Error(message)
-        }
-    }
 
     private static applyFirefoxOptions(builder: Builder, options: FirefoxOptions | undefined): void  {
         if(options) {

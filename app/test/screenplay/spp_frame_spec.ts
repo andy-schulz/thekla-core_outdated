@@ -1,11 +1,25 @@
 import {
-    Actor, BrowserFactory, BrowseTheWeb, By, Capabilities, element, frame, Navigate, See, Text, UntilElement
+    Actor,
+    BrowserFactory,
+    BrowseTheWeb,
+    By,
+    BrowserCapabilities,
+    element,
+    frame,
+    Navigate,
+    See,
+    Text,
+    UntilElement,
+    SeleniumConfig
 } from "../..";
 
-let config: Capabilities = {
-    browserName: `chrome`,
-    serverUrl: `http://localhost:4444/wd/hub`,
-    baseUrl: `http://localhost:3000`
+let config: SeleniumConfig = {
+    seleniumServerAddress: `http://localhost:4444/wd/hub`,
+    baseUrl: `http://localhost:3000`,
+
+    capabilities: {
+        browserName: `chrome`,
+    }
 };
 
 

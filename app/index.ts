@@ -2,7 +2,7 @@
  *
  */
 export {ProcessedSeleniumConfig} from "./config/ProcessedSeleniumConfig"
-export {SeleniumConfig, RestConfig, Capabilities} from "./config/SeleniumConfig"
+export {SeleniumConfig, RestConfig, BrowserCapabilities} from "./config/SeleniumConfig"
 
 
 /**
@@ -10,7 +10,6 @@ export {SeleniumConfig, RestConfig, Capabilities} from "./config/SeleniumConfig"
  */
 
 export {Browser}            from "./driver/interface/Browser";
-export {CapabilitiesWdjs}   from "./driver/wdjs/interfaces/CapabilitiesWdjs";
 export {WebElementFinder}   from "./driver/interface/WebElements";
 
 export {BrowserFactory} from "./driver/lib/BrowserFactory";

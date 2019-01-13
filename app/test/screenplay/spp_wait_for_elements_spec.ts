@@ -2,19 +2,22 @@ import {
     Actor,
     BrowserFactory,
     BrowseTheWeb,
-    Capabilities,
+    BrowserCapabilities,
     By,
     element,
     See,
     Navigate,
-    Text, UntilElement
+    Text, UntilElement, SeleniumConfig
 } from "../../index";
 
 
-let config: Capabilities = {
-    browserName: "chrome",
-    serverUrl: "http://localhost:4444/wd/hub",
-    baseUrl: "http://localhost:3000"
+let config: SeleniumConfig = {
+    seleniumServerAddress: "http://localhost:4444/wd/hub",
+    baseUrl: "http://localhost:3000",
+
+    capabilities: {
+        browserName: "chrome",
+    }
 };
 import {getLogger, configure} from "log4js";
 const logger = getLogger("SppWaitForElements");

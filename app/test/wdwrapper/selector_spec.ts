@@ -1,13 +1,16 @@
+import {SeleniumConfig}   from "../../config/SeleniumConfig";
 import {Browser}          from "../../driver/interface/Browser";
 import {BrowserWdjs}      from "../../driver/wdjs/BrowserWdjs";
-import {CapabilitiesWdjs} from "../../driver/wdjs/interfaces/CapabilitiesWdjs";
 import {BrowserFactory}   from "../../driver/lib/BrowserFactory";
 import {By}               from "../../driver/lib/Locator";
 
-const conf: CapabilitiesWdjs = {
-    browserName: "chrome",
-    serverUrl: "http://localhost:4444/wd/hub",
-    baseUrl: "http://localhost:3000"
+const conf: SeleniumConfig = {
+    seleniumServerAddress: "http://localhost:4444/wd/hub",
+    baseUrl: "http://localhost:3000",
+
+    capabilities:  {
+        browserName: "chrome",
+    }
 };
 
 describe('Locating an element', () => {

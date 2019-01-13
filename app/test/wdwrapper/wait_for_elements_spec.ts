@@ -1,15 +1,18 @@
 import {
-    Browser, WebElementFinder, BrowserFactory, CapabilitiesWdjs, By, UntilElement
-}                    from "../..";
+    Browser, WebElementFinder, By, UntilElement, SeleniumConfig
+} from "../..";
 import {configure}   from "log4js";
 import {BrowserWdjs} from "../../driver/wdjs/BrowserWdjs";
 
 configure("res/config/log4js.json");
 
-const conf: CapabilitiesWdjs = {
-    browserName: "chrome",
-    serverUrl: "http://localhost:4444/wd/hub",
-    baseUrl: "http://localhost:3000"
+const conf: SeleniumConfig = {
+    seleniumServerAddress: "http://localhost:4444/wd/hub",
+    baseUrl: "http://localhost:3000",
+
+    capabilities: {
+        browserName: "chrome",
+    }
 };
 
 

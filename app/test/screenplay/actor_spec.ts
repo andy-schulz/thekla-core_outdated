@@ -1,13 +1,31 @@
 import {
-    Actor, BrowseTheWeb, Capabilities, BrowserFactory, Enter, Wait, Navigate, See, Key, Value, all, By, Count, Text
+    Actor,
+    BrowseTheWeb,
+    BrowserCapabilities,
+    BrowserFactory,
+    Enter,
+    Wait,
+    Navigate,
+    See,
+    Key,
+    Value,
+    all,
+    By,
+    Count,
+    Text,
+    SeleniumConfig
 } from "../..";
 import {GoogleSearch}     from "../PageObjects/GoogleSearch/GoogleSearch";
 import {Add}              from "../PageObjects/GoogleCalculator/Add";
 import {GoogleCalculator} from "../PageObjects/GoogleCalculator/GoogleCalculator";
 
-let config: Capabilities = {
-    browserName: "chrome",
-    serverUrl: "http://localhost:4444/wd/hub",
+let config: SeleniumConfig = {
+    seleniumServerAddress: "http://localhost:4444/wd/hub",
+
+    capabilities: {
+        browserName: "chrome",
+
+    }
     // firefoxOptions: {
     //     binary: "C:\\PProgramme\\FirefoxPortable\\App\\Firefox\\firefox.exe",
         // proxy: {

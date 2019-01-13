@@ -1,30 +1,28 @@
 export interface SeleniumConfig {
+    seleniumServerAddress: string;
+    capabilities: BrowserCapabilities | CapabilitiesFunction;
+
+    baseUrl?: string;
     multiBrowserTest?: boolean;
-    capabilities: Capabilities | Capabilities[] | CapabilitiesFunction;
 }
 
-type CapabilitiesFunction = () => Capabilities[]
+export type CapabilitiesFunction = () => BrowserCapabilities
 
-export interface Capabilities {
+export interface BrowserCapabilities {
     [key: string]: any;
 
     browserName: string;
-    seleniumServerAddress?: string;
-    baseUrl?: string;
+    version?: string;
+
 
     proxy?: ProxyConfig;
 
-    firefoxConfig?: {
-        path: string
-    };
-
-    chromeConfig?: {
-        path: string;
-    };
+    firefoxConfig?: FirefoxOptions;
+    chromeConfig?: ChromeOptions;
 }
 
 export interface ProxyConfig {
-    type: "direkt" | "system" | "manual";
+    type: "direct" | "system" | "manual";
     manualConfig?: ManualProxyConfig;
 }
 export interface ManualProxyConfig {
@@ -36,3 +34,10 @@ export interface ManualProxyConfig {
 }
 
 export interface RestConfig {}
+
+export interface ChromeOptions {
+    binary?: string;
+}
+export interface FirefoxOptions {
+    binary?: string;
+}

@@ -1,15 +1,27 @@
 import "jasmine"
-import {CapabilitiesWdjs, Browser, BrowserFactory, WebElementFinder, By, until, UntilElement, Utils} from "../..";
-import {BrowserWdjs}                                                                                 from "../../driver/wdjs/BrowserWdjs";
-import {WebElementWdjs}                                                                              from "../../driver/wdjs/WebElementWdjs";
+import {
+    Browser,
+    BrowserFactory,
+    WebElementFinder,
+    By,
+    until,
+    UntilElement,
+    Utils,
+    SeleniumConfig
+}                       from "../..";
+import {BrowserWdjs}    from "../../driver/wdjs/BrowserWdjs";
+import {WebElementWdjs} from "../../driver/wdjs/WebElementWdjs";
 
 import {configure} from "log4js";
 configure("res/config/log4js.json");
 
 describe('When using the Browser object', () => {
-    const conf: CapabilitiesWdjs = {
-        browserName: "chrome",
-        serverUrl: "http://localhost:4444/wd/hub",
+    const conf: SeleniumConfig = {
+        seleniumServerAddress: "http://localhost:4444/wd/hub",
+
+        capabilities: {
+            browserName: "chrome",
+        }
         // firefoxOptions: {
             // binary: "C:\\PProgramme\\FirefoxPortable64\\App\\Firefox\\firefox.exe",
             // binary: "C:\\PProgramme\\FirefoxPortable\\App\\Firefox\\firefox.exe",

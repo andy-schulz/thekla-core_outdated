@@ -1,10 +1,13 @@
-import {Browser, BrowserFactory, By, CapabilitiesWdjs, Key, UntilElement, WebElementFinder} from "../..";
-import {BrowserWdjs}                                                                        from "../../driver/wdjs/BrowserWdjs";
+import {Browser, BrowserFactory, By, Key, SeleniumConfig, UntilElement, WebElementFinder} from "../..";
+import {BrowserWdjs}                                                                      from "../../driver/wdjs/BrowserWdjs";
 
 describe('Using Google Search to find an online calculator', () => {
-    const conf: CapabilitiesWdjs = {
-        browserName: "chrome",
-        serverUrl: "http://localhost:4444/wd/hub",
+    const conf: SeleniumConfig = {
+        seleniumServerAddress: "http://localhost:4444/wd/hub",
+
+        capabilities: {
+            browserName: "chrome",
+        }
     };
     describe('with the WebdriverJS wrapper,', () => {
         // define your elements preferably in a separate class like a page object

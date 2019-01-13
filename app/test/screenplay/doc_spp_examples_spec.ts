@@ -1,5 +1,18 @@
 import {
-    Actor, BrowserFactory, BrowseTheWeb, By, Click, Capabilities, element, Enter, Key, Navigate, See, Text, UntilElement
+    Actor,
+    BrowserFactory,
+    BrowseTheWeb,
+    By,
+    Click,
+    BrowserCapabilities,
+    element,
+    Enter,
+    Key,
+    Navigate,
+    See,
+    Text,
+    UntilElement,
+    SeleniumConfig
 } from "../..";
 
 class GooglePgo {
@@ -20,9 +33,11 @@ import {getLogger, configure} from "log4js";
 const logger = getLogger("DocSppExamples");
 
 describe('Using Google Search to find an online calculator', () => {
-    const conf: Capabilities = {
-        browserName: "chrome",
-        serverUrl: "http://localhost:4444/wd/hub",
+    const conf: SeleniumConfig = {
+        seleniumServerAddress: "http://localhost:4444/wd/hub",
+        capabilities: {
+            browserName: "chrome",
+        }
     };
     describe('with the screenplay pattern implementation,', () => {
         // define your actor

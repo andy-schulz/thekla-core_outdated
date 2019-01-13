@@ -1,11 +1,14 @@
 import {
-    Browser, BrowserFactory, CapabilitiesWdjs, By
-}                    from "../..";
+    Browser, BrowserFactory, By, SeleniumConfig
+} from "../..";
 import {BrowserWdjs} from "../../driver/wdjs/BrowserWdjs";
 
-const conf: CapabilitiesWdjs = {
-    browserName: "chrome",
-    serverUrl: "http://localhost:4444/wd/hub",
+const conf: SeleniumConfig = {
+    seleniumServerAddress: "http://localhost:4444/wd/hub",
+
+    capabilities: {
+        browserName: "chrome",
+    }
     // firefoxOptions: {
     // binary: "C:\\PProgramme\\FirefoxPortable64\\App\\Firefox\\firefox.exe",
     // binary: "C:\\PProgramme\\FirefoxPortable\\App\\Firefox\\firefox.exe",

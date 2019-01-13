@@ -1,11 +1,26 @@
 import {
-    Capabilities, BrowserFactory, Actor, BrowseTheWeb, By, element, See, Navigate, Text, UntilElement, all, SppWebElementFinder
+    BrowserFactory,
+    Actor,
+    BrowseTheWeb,
+    By,
+    element,
+    See,
+    Navigate,
+    Text,
+    UntilElement,
+    all,
+    SppWebElementFinder,
+    SeleniumConfig
 } from "../..";
 
-let config: Capabilities = {
-    browserName: "chrome",
-    serverUrl: "http://localhost:4444/wd/hub",
-    baseUrl: "http://localhost:3000"
+
+const config: SeleniumConfig = {
+    seleniumServerAddress: "http://localhost:4444/wd/hub",
+    baseUrl: "http://localhost:3000",
+
+    capabilities: {
+        browserName: "chrome",
+    }
 };
 
 import {getLogger, configure} from "log4js";
