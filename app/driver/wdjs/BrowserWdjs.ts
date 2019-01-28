@@ -1,28 +1,39 @@
 import {getLogger, Logger} from "@log4js-node/log4js-api";
+import {throws}            from "assert";
 
-import {Options as FFOptions}                                                   from "selenium-webdriver/firefox";
-import {Builder, Capabilities, promise, ThenableWebDriver}                      from "selenium-webdriver";
+import {Options as FFOptions}                from "selenium-webdriver/firefox";
+import {Builder, promise, ThenableWebDriver} from "selenium-webdriver";
 import {
     BrowserCapabilities,
     CapabilitiesFunction,
     FirefoxOptions,
     ProxyConfig,
     SeleniumConfig
-} from "../../config/SeleniumConfig";
+}                                            from "../../config/SeleniumConfig";
 
-import {Browser}                                                          from "../interface/Browser";
-import {By}                                                               from "../lib/Locator";
-import {WebElementFinder, WebElementListFinder}                           from "../interface/WebElements";
-import {FrameElementWdjs}                                                 from "./FrameElementWdjs";
-import {FrameHelper, WdElement}                                           from "./interfaces/WdElement";
-import {LocatorWdjs}                                                      from "./LocatorWdjs";
-import {WebElementListWdjs}                                               from "./WebElementListWdjs";
-import {Condition}                                     from "../lib/Condition";
+import {Browser}                                from "../interface/Browser";
+import {By}                                     from "../lib/Locator";
+import {WebElementFinder, WebElementListFinder} from "../interface/WebElements";
+import {FrameElementWdjs}                       from "./FrameElementWdjs";
+import {FrameHelper, WdElement}                 from "./interfaces/WdElement";
+import {LocatorWdjs}                            from "./LocatorWdjs";
+import {WebElementListWdjs}                     from "./WebElementListWdjs";
+import {Condition}                              from "../lib/Condition";
+import * as path                                from "path";
+import * as fs                                  from "fs";
+import fsExtra                                  from "fs-extra";
+import any = jasmine.any;
+
 
 promise.USE_PROMISE_MANAGER = false;
 
 interface CapabilitiesWdjs {
     browserName?: string;
+}
+
+interface BrowserScreenshotData {
+    browserName: string;
+    browserScreenshotData: string;
 }
 
 export class BrowserWdjs implements Browser{
@@ -45,11 +56,29 @@ export class BrowserWdjs implements Browser{
         return this._selConfig;
     }
 
-
-    public static create(selConf: SeleniumConfig): Browser {
+    /**
+     * create a new browser instance for the given Config
+     * @param selConf - the selenium config for which the browser has to be created
+     * @param browserName - a unique browser name
+     *
+     * @returns - browser instance
+     * @throws - Error in case the given browser name is empty or already exists
+     */
+    public static create(selConf: SeleniumConfig, browserName: string = `browser${this.browserMap.size + 1}`): Browser {
         let builder: Builder;
 
-        builder = new Builder()
+        if (!browserName)
+            throw new Error(`invalid browser name '${browserName}'`);
+
+        const regex = /^[a-zA-Z0-9_\-]+$/;
+        if(!browserName.match(regex))
+            throw new Error(`browser name '${browserName}' contains invalid characters. Allowed characters are: [a-z]*[A-Z]*[_-]*[0-9]*`);
+
+        if(this.browserMap.has(browserName)) {
+            throw new Error(`browser name '${browserName}' already exists, choose another one`);
+        }
+
+        builder = new Builder();
         try {
             builder = builder.usingServer(selConf.seleniumServerAddress);
             this.setCapabilities(builder, selConf.capabilities);
@@ -57,7 +86,7 @@ export class BrowserWdjs implements Browser{
             let driver = builder.build();
 
             let browser = new BrowserWdjs(driver, selConf);
-            this.browserMap.set(`browser${this.browserMap.size + 1}`,browser);
+            this.browserMap.set(browserName,browser);
             return browser;
         } catch (e) {
             const message = ` ${e} ${Error().stack}`;
@@ -65,6 +94,11 @@ export class BrowserWdjs implements Browser{
         }
     }
 
+    /**
+     * set the browsers capabilities
+     * @param builder - the builder the capabilities will be set for
+     * @param capabilities - the capabilities to be set
+     */
     private static  setCapabilities(builder: Builder, capabilities: BrowserCapabilities | CapabilitiesFunction | undefined) {
         if(!capabilities) return;
 
@@ -82,6 +116,11 @@ export class BrowserWdjs implements Browser{
 
     }
 
+    /**
+     * set the proxy for the browser
+     * @param builder - the builder the proxy will be set for
+     * @param proxy - the Proxy config which will be set
+     */
     private static setProxy = (builder: Builder, proxy: ProxyConfig | undefined): any => {
         if(proxy === undefined) return;
 
@@ -100,6 +139,11 @@ export class BrowserWdjs implements Browser{
         }
     };
 
+    /**
+     * apply the given firefox options to the builder
+     * @param builder - the builder the firefox options will be set for
+     * @param options - the firefox options to set
+     */
     private static applyFirefoxOptions(builder: Builder, options: FirefoxOptions | undefined): void  {
         if(options) {
             const  firefoxOptions = new FFOptions();
@@ -111,6 +155,11 @@ export class BrowserWdjs implements Browser{
         }
     }
 
+    /**
+     * close all browser created with BrowserWdjs.create method
+     *
+     * @returns - resolved Promise after all browsers are closed
+     */
     public static cleanup():Promise<any[]> {
         return Promise.all(
             [...this.browserMap.values()].map((browser) => {
@@ -122,13 +171,97 @@ export class BrowserWdjs implements Browser{
         })
     }
 
+    /**
+     * create screenshots of all browser created with BrowserWdjs.create
+     *
+     * @returns - and array of BrowserScreenshotData objects, the object contains the browser name and the screenshot data
+     */
+    public static takeScreenshots(): Promise<BrowserScreenshotData[]> {
+        return Promise.all(
+            [...this.browserMap.keys()].map((browsername: string): Promise<BrowserScreenshotData> => {
+                return new Promise((resolve, reject) => {
+                    const browser = this.browserMap.get(browsername);
+                    if(browser) {
+                        browser.takeScreenshot()
+                            .then((data: string) => {
+                                const browserScreenshot: BrowserScreenshotData = {
+                                    browserName: browsername,
+                                    browserScreenshotData: data
+                                };
+                                return resolve(browserScreenshot)
+                            })
+                            .catch(reject)
+                    } else {
+                        reject(`Browser with name '${browser}' not found`);
+                    }
+                })
+            })
+        )}
 
+    /**
+     * save all browser screenshots to the given directory
+     * prefix the given file name (baseFileName) with the browser name
+     * @param filepath - the directory where the files shall be saved
+     * @param baseFileName - the filename which will be prefixed by the browser name
+     *
+     * @returns - array of the screenshots file names
+     */
+    public static saveScreenshots(filepath: string, baseFileName: string): Promise<string[]> {
+        return Promise.all(
+            [...this.browserMap.keys()].map((browsername: string): Promise<string> => {
+                return new Promise((resolve, reject) => {
+                    const browser = this.browserMap.get(browsername);
+                    if(browser) {
+                        browser.saveScreenshot(filepath, `${browsername}_${baseFileName}`)
+                            .then(resolve)
+                            .catch(reject)
+                    } else {
+                        reject(`Browser with name '${browser}' not found`);
+                    }
+                })
+            })
+        )}
+
+    /**
+     * return all names of currently available browser
+     *
+     * @returns - Array of browser names
+     */
+    public static availableBrowser(): string[] {
+        return [...this.browserMap.keys()];
+    }
+
+    /**
+     * return the browser by the given name
+     * @param browserName -  the name of the browser
+     *
+     * @returns  - the browser for the given name
+     *
+     * @throws - an Error in case not browser was found for the given browser name
+     */
+    public static getBrowser(browserName: string): Browser {
+        const browser = this.browserMap.get(browserName);
+        if(browser)
+            return browser;
+        else
+            throw new Error(`cant find name browser with name '${browserName}'`);
+    }
+
+
+    /**
+     * web element finder
+     * @param locator - locator of the web element
+     */
     public element(
         locator: By): WebElementFinder {
 
         return (<WebElementListWdjs>this.all(locator)).toWebElement();
     }
 
+    /**
+     * web element array finder
+     * @param locator - locator of the web element array finder
+     */
     public all(
         locator: By): WebElementListFinder {
 
@@ -170,6 +303,11 @@ export class BrowserWdjs implements Browser{
         return new FrameElementWdjs(createSwitchFrame(),locator, this);
     }
 
+    /**
+     * load the given address
+     * if the url does not start with http*, it will be prefixed with the base url if it exists
+     * @param destination
+     */
     public get(destination: string): Promise<any> {
         let _destination = this.config.baseUrl && !destination.startsWith("http") ? `${this.config.baseUrl}${destination}` : destination;
         return new Promise((fulfill, reject) => {
@@ -179,6 +317,9 @@ export class BrowserWdjs implements Browser{
         })
     }
 
+    /**
+     * close the browser
+     */
     public quit():Promise<void> {
         return new Promise((fulfill, reject) => {
             this._driver.quit()
@@ -187,6 +328,9 @@ export class BrowserWdjs implements Browser{
         })
     }
 
+    /**
+     * return the browsers title
+     */
     public getTitle(): Promise<string> {
         return new Promise((fulfill, reject) => {
             this._driver.getTitle()
@@ -195,6 +339,10 @@ export class BrowserWdjs implements Browser{
         })
     }
 
+    /**
+     * checks if the browser has the given title
+     * @param expectedTitle
+     */
     public hasTitle(expectedTitle: string): Promise<boolean> {
         return new Promise((fulfill,reject) => {
             this._driver.getTitle()
@@ -203,6 +351,61 @@ export class BrowserWdjs implements Browser{
         })
     }
 
+    /**
+     * returns the browsers screenshot as an base64 encoded png file
+     */
+    public takeScreenshot(): Promise<string> {
+        return new Promise((resolve, reject) => {
+            this._driver.takeScreenshot()
+                .then(resolve)
+                .catch(reject);
+        })
+    }
+
+    /**
+     * save the browser screenshot to file
+     * @param filepath - absolute or relative path to file
+     * @param filename - filename
+     *
+     * @returns Promise with path to saved file
+     */
+    public saveScreenshot(filepath: string, filename: string): Promise<string> {
+        let fp: string = filepath;
+        if(!path.isAbsolute(fp)) {
+           fp = `${process.cwd()}/${fp}`;
+        }
+
+        try {
+            if(!fs.existsSync(fp))
+                fsExtra.mkdirsSync(fp);
+        } catch (e) {
+            return Promise.reject(e)
+        }
+
+
+        const fpn = `${fp}/${filename}`;
+
+        return new Promise((resolve, reject) => {
+            this.takeScreenshot()
+                .then((data: string) => {
+                    fs.writeFile(fpn, data, 'base64', (err: any) => {
+                        if (err)
+                            return reject(err);
+                        resolve(fpn);
+                    });
+                });
+
+        });
+    }
+
+    /**
+     * waits for the condition to continue
+     * @param condition - the condition to wait for
+     * @param timeout - stop waiting after the given time in ms
+     * @param waitMessage - the message will be used in returned error and success message
+     *
+     * @returns - a Promise containing the success or error message
+     */
     public wait(
         condition: Condition,
         timeout: number = 5000,
@@ -220,7 +423,7 @@ export class BrowserWdjs implements Browser{
                         return;
                     }
                     if(workerState) {
-                        const message = `Wait successful${waitMessage ? " -> (" + waitMessage + ")" : ""} after ${timeSpendWaiting} ms.`;
+                        const message = `Wait successful ${waitMessage ? " -> (" + waitMessage + ")" : ""} after ${timeSpendWaiting} ms.`;
                         this.logger.trace(message);
                         fulfill(message);
                         return;

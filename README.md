@@ -1,5 +1,5 @@
-# thekla
-Thekla started as a pet project to get a grip on the screenplay pattern and to understand the SOLID principles in more detail. Working with protractor for the last 5 years i got used to the simplicity of element definition and the possibilities of element chaining like:
+# thekla-core
+Thekla-core started as a pet project to get a grip on the screenplay pattern and to understand the SOLID principles in more detail. Working with protractor for the last 5 years i got used to the simplicity of element definition and the possibilities of element chaining like:
 
 ```typescript
 const button1 = element(by.xpath("//locateSomething").element(By.css(".locateSomethingElse");
@@ -11,12 +11,11 @@ As of now thekla not a fully blown testing framework with its own CLI so you can
 
 ## Installation 
 ```sh
-npm install git+https://github.com/andy-schulz/thekla.git --save
+npm install thekla-core --save
 ```
-An npm package will follow.
 
 ## Usage
-You can use thekla in 2 ways:
+You can use thekla-core in 2 ways:
 * as a WebdriverJS Wrapper or
 * as a screenplay implementation
 

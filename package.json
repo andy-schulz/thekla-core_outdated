@@ -21,6 +21,7 @@
   "homepage": "https://github.com/andy-schulz/thekla-core#readme",
   "dependencies": {
     "@log4js-node/log4js-api": "^1.0.2",
+    "@types/fs-extra": "^5.0.4",
     "@types/node": "^10.12.0",
     "@types/request-promise-native": "^1.0.15",
     "@types/selenium-webdriver": "^3.0.12",
@@ -28,6 +29,7 @@
     "axios": "^0.18.0",
     "deepmerge": "^2.2.1",
     "del-cli": "^1.1.0",
+    "fs-extra": "^7.0.1",
     "log4js": "^3.0.6",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.5",
@@ -36,6 +38,8 @@
   },
   "devDependencies": {
     "@types/jasmine": "^2.8.9",
-    "jasmine": "^3.3.0"
+    "@types/uuid": "^3.4.4",
+    "jasmine": "^3.3.0",
+    "uuid": "^3.3.2"
   }
 }

@@ -1,4 +1,4 @@
-import {Browser, BrowserCapabilities, SeleniumConfig} from "../..";
+import {Browser, SeleniumConfig} from "../..";
 import {BrowserWdjs}                                                    from "../wdjs/BrowserWdjs";
 
 export class BrowserFactory {
@@ -14,4 +14,8 @@ export class BrowserFactory {
     public static cleanup(): Promise<any> {
         return Promise.all([BrowserWdjs.cleanup()])
     }
+
+    // public static takeScreenshots(): Promise<string[]> {
+        // return BrowserWdjs.takeScreenshots()
+    // }
 }

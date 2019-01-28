@@ -6,7 +6,9 @@ export interface Browser extends WebFinder, FrameFinder{
     quit(): Promise<void>;
     wait(condition: Condition, timeout?: number, errorMessage?: string): Promise<string>;
     getTitle(): Promise<string>;
-
     hasTitle(expectedTitle: string): Promise<boolean>;
+    takeScreenshot(): Promise<string>;
+    saveScreenshot(filepath: string, filename: string): Promise<string>;
+
 }
 
