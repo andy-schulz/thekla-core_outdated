@@ -1,5 +1,6 @@
 import {Browser, SeleniumConfig} from "../..";
-import {BrowserWdjs}                                                    from "../wdjs/BrowserWdjs";
+import {BrowserScreenshotData}   from "../interface/Browser";
+import {BrowserWdjs}             from "../wdjs/BrowserWdjs";
 
 export class BrowserFactory {
 
@@ -15,7 +16,11 @@ export class BrowserFactory {
         return Promise.all([BrowserWdjs.cleanup()])
     }
 
-    // public static takeScreenshots(): Promise<string[]> {
-        // return BrowserWdjs.takeScreenshots()
-    // }
+    public static takeScreenshots(): Promise<BrowserScreenshotData[]> {
+        return BrowserWdjs.takeScreenshots()
+    }
+
+    public static saveScreenshots(filePath: string, baseFileName: string): Promise<string[]> {
+        return BrowserWdjs.saveScreenshots(filePath, baseFileName);
+    }
 }

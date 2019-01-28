@@ -17,6 +17,9 @@ let config: SeleniumConfig = {
 
     capabilities: {
         browserName: "chrome",
+        proxy: {
+            type: "direct"
+        },
     }
 };
 import {getLogger, configure} from "log4js";

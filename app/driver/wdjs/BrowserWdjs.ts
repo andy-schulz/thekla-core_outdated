@@ -11,7 +11,7 @@ import {
     SeleniumConfig
 }                                            from "../../config/SeleniumConfig";
 
-import {Browser}                                from "../interface/Browser";
+import {Browser, BrowserScreenshotData}         from "../interface/Browser";
 import {By}                                     from "../lib/Locator";
 import {WebElementFinder, WebElementListFinder} from "../interface/WebElements";
 import {FrameElementWdjs}                       from "./FrameElementWdjs";
@@ -31,13 +31,7 @@ interface CapabilitiesWdjs {
     browserName?: string;
 }
 
-interface BrowserScreenshotData {
-    browserName: string;
-    browserScreenshotData: string;
-}
-
 export class BrowserWdjs implements Browser{
-
     private logger: Logger = getLogger("BrowserWdjs");
     private static logger: Logger = getLogger("BrowserWdjsClass");
 
@@ -45,7 +39,8 @@ export class BrowserWdjs implements Browser{
 
     constructor(
         private _driver: ThenableWebDriver,
-        private _selConfig: SeleniumConfig) {
+        private _selConfig: SeleniumConfig,
+        private browserName: string = "") {
     }
 
     get driver() {
@@ -85,7 +80,7 @@ export class BrowserWdjs implements Browser{
 
             let driver = builder.build();
 
-            let browser = new BrowserWdjs(driver, selConf);
+            let browser = new BrowserWdjs(driver, selConf, browserName);
             this.browserMap.set(browserName,browser);
             return browser;
         } catch (e) {
@@ -160,7 +155,24 @@ export class BrowserWdjs implements Browser{
      *
      * @returns - resolved Promise after all browsers are closed
      */
-    public static cleanup():Promise<any[]> {
+    public static cleanup(browserToClean?: Browser[]):Promise<any[]> {
+
+        if(browserToClean) {
+            let browserCleanupPromises: Promise<void>[] = [];
+
+            const entries = [...this.browserMap.entries()];
+            browserToClean.map((browser: Browser) => {
+                entries.map((browserEntry: [string, Browser]) => {
+                    if(browser === browserEntry[1]) {
+                        browserCleanupPromises.push(browser.quit());
+                        this.browserMap.delete(browserEntry[0]);
+                    }
+                });
+            });
+
+            return Promise.all(browserCleanupPromises);
+        }
+
         return Promise.all(
             [...this.browserMap.values()].map((browser) => {
                 return browser.quit();
@@ -183,13 +195,7 @@ export class BrowserWdjs implements Browser{
                     const browser = this.browserMap.get(browsername);
                     if(browser) {
                         browser.takeScreenshot()
-                            .then((data: string) => {
-                                const browserScreenshot: BrowserScreenshotData = {
-                                    browserName: browsername,
-                                    browserScreenshotData: data
-                                };
-                                return resolve(browserScreenshot)
-                            })
+                            .then(resolve)
                             .catch(reject)
                     } else {
                         reject(`Browser with name '${browser}' not found`);
@@ -227,7 +233,7 @@ export class BrowserWdjs implements Browser{
      *
      * @returns - Array of browser names
      */
-    public static availableBrowser(): string[] {
+    public static get availableBrowser(): string[] {
         return [...this.browserMap.keys()];
     }
 
@@ -354,10 +360,16 @@ export class BrowserWdjs implements Browser{
     /**
      * returns the browsers screenshot as an base64 encoded png file
      */
-    public takeScreenshot(): Promise<string> {
+    public takeScreenshot(): Promise<BrowserScreenshotData> {
         return new Promise((resolve, reject) => {
             this._driver.takeScreenshot()
-                .then(resolve)
+                .then((data: string) => {
+                    const screenshotData: BrowserScreenshotData = {
+                        browserName: this.browserName,
+                        browserScreenshotData: data
+                    };
+                    return resolve(screenshotData)
+                })
                 .catch(reject);
         })
     }
@@ -387,8 +399,8 @@ export class BrowserWdjs implements Browser{
 
         return new Promise((resolve, reject) => {
             this.takeScreenshot()
-                .then((data: string) => {
-                    fs.writeFile(fpn, data, 'base64', (err: any) => {
+                .then((data: BrowserScreenshotData) => {
+                    fs.writeFile(fpn, data.browserScreenshotData, 'base64', (err: any) => {
                         if (err)
                             return reject(err);
                         resolve(fpn);

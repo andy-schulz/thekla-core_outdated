@@ -21,6 +21,9 @@ describe('When using the Browser object', () => {
 
         capabilities: {
             browserName: "chrome",
+            proxy: {
+                type: "direct"
+            }
         }
         // firefoxOptions: {
             // binary: "C:\\PProgramme\\FirefoxPortable64\\App\\Firefox\\firefox.exe",

@@ -20,6 +20,9 @@ const config: SeleniumConfig = {
 
     capabilities: {
         browserName: "chrome",
+        proxy: {
+            type: "direct"
+        }
     }
 };
 

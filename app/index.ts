@@ -9,8 +9,9 @@ export {SeleniumConfig, RestConfig, BrowserCapabilities} from "./config/Selenium
  * WebDriver Wrapper
  */
 
-export {Browser}            from "./driver/interface/Browser";
-export {WebElementFinder}   from "./driver/interface/WebElements";
+export {Browser}                          from "./driver/interface/Browser";
+export {BrowserScreenshotData}            from "./driver/interface/Browser";
+export {WebElementFinder}                 from "./driver/interface/WebElements";
 
 export {BrowserFactory} from "./driver/lib/BrowserFactory";
 export {By}             from "./driver/lib/Locator";
