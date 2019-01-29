@@ -56,8 +56,8 @@ export class FrameElementWdjs implements FrameElementFinder {
                             `${condition.conditionHelpText} ${this.toString()}`))
                         // here the frame switch is chained (call current frame switcher)
                         .then(() => this.switchFrame())
-                        .then(() => fulfill())
-                        .catch(e => reject(e));
+                        .then(fulfill)
+                        .catch(reject);
                 });
             }) as FrameHelper;
 
@@ -84,10 +84,10 @@ export class FrameElementWdjs implements FrameElementFinder {
                     let promise = frameSwitched ? Promise.resolve() : this.switchFrame();
 
                     promise
-                        .then(() => {frameSwitched = true; return;})
+                        .then(() => frameSwitched = true)
                         .then(() => driver.switchTo().frame(driver.findElement(loc)))
                         .then(fulfill)
-                        .catch(e => reject(e));
+                        .catch(reject);
                 });
             }) as FrameHelper;
 
@@ -95,10 +95,10 @@ export class FrameElementWdjs implements FrameElementFinder {
                 return new Promise((fulfill, reject) => {
                     let promise = frameSwitched ? Promise.resolve() : this.switchFrame();
                     promise
-                        .then(() => {frameSwitched = true; return;})
+                        .then(() => frameSwitched = true)
                         .then(() => driver.findElement(loc))
-                        .then((element: WdElement) => fulfill(element))
-                        .catch(e => reject(e))
+                        .then(fulfill)
+                        .catch(reject)
                 })
             };
             return switchFrame;
