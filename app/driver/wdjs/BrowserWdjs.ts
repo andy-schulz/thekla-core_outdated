@@ -1,19 +1,19 @@
 import {getLogger, Logger} from "@log4js-node/log4js-api";
-import {throws}            from "assert";
 
 import {Options as FFOptions}                from "selenium-webdriver/firefox";
 import {Builder, promise, ThenableWebDriver} from "selenium-webdriver";
 import {
     BrowserCapabilities,
-    CapabilitiesFunction,
     FirefoxOptions,
     ProxyConfig,
     SeleniumConfig
 }                                            from "../../config/SeleniumConfig";
 
 import {Browser, BrowserScreenshotData}         from "../interface/Browser";
+import {BrowserWindow}                          from "../interface/BrowserWindow";
 import {By}                                     from "../lib/Locator";
 import {WebElementFinder, WebElementListFinder} from "../interface/WebElements";
+import {BrowserWindowWdjs}                      from "./BrowserWindowWdjs";
 import {FrameElementWdjs}                       from "./FrameElementWdjs";
 import {FrameHelper, WdElement}                 from "./interfaces/WdElement";
 import {LocatorWdjs}                            from "./LocatorWdjs";
@@ -22,7 +22,6 @@ import {Condition}                              from "../lib/Condition";
 import * as path                                from "path";
 import * as fs                                  from "fs";
 import fsExtra                                  from "fs-extra";
-import any = jasmine.any;
 
 
 promise.USE_PROMISE_MANAGER = false;
@@ -30,17 +29,23 @@ promise.USE_PROMISE_MANAGER = false;
 interface CapabilitiesWdjs {
     browserName?: string;
 }
-
 export class BrowserWdjs implements Browser{
-    private logger: Logger = getLogger("BrowserWdjs");
     private static logger: Logger = getLogger("BrowserWdjsClass");
-
     private static browserMap: Map<string,Browser> = new Map<string,Browser>();
+
+    private logger: Logger = getLogger("BrowserWdjs");
+    private _window: BrowserWindow;
 
     constructor(
         private _driver: ThenableWebDriver,
         private _selConfig: SeleniumConfig,
         private browserName: string = "") {
+
+        if(typeof this._selConfig.capabilities === "function") {
+
+        } else {
+
+        }
     }
 
     get driver() {
@@ -51,6 +56,10 @@ export class BrowserWdjs implements Browser{
         return this._selConfig;
     }
 
+    get window() {
+        return this._window;
+    }
+
     /**
      * create a new browser instance for the given Config
      * @param selConf - the selenium config for which the browser has to be created
@@ -59,7 +68,7 @@ export class BrowserWdjs implements Browser{
      * @returns - browser instance
      * @throws - Error in case the given browser name is empty or already exists
      */
-    public static create(selConf: SeleniumConfig, browserName: string = `browser${this.browserMap.size + 1}`): Browser {
+    public static async create(selConf: SeleniumConfig, browserName: string = `browser${this.browserMap.size + 1}`): Promise<Browser> {
         let builder: Builder;
 
         if (!browserName)
@@ -75,18 +84,33 @@ export class BrowserWdjs implements Browser{
 
         builder = new Builder();
         try {
+            const capa: BrowserCapabilities = typeof selConf.capabilities === "function" ? selConf.capabilities() : selConf.capabilities;
+
             builder = builder.usingServer(selConf.seleniumServerAddress);
-            this.setCapabilities(builder, selConf.capabilities);
+            this.setCapabilities(builder, capa);
 
             let driver = builder.build();
 
-            let browser = new BrowserWdjs(driver, selConf, browserName);
+            const browser = new BrowserWdjs(driver, selConf, browserName);
+            try {
+                const window = await BrowserWindowWdjs.create(driver, capa.window);
+                browser.windowManagedBy(window);
+            } catch (e) {
+                browser.quit();
+                return Promise.reject(e);
+            }
+
             this.browserMap.set(browserName,browser);
             return browser;
         } catch (e) {
+
             const message = ` ${e} ${Error().stack}`;
-            throw new Error(message)
+            return Promise.reject(e);
         }
+    }
+
+    public windowManagedBy(window: BrowserWindow) {
+        this._window = window;
     }
 
     /**
@@ -94,10 +118,10 @@ export class BrowserWdjs implements Browser{
      * @param builder - the builder the capabilities will be set for
      * @param capabilities - the capabilities to be set
      */
-    private static  setCapabilities(builder: Builder, capabilities: BrowserCapabilities | CapabilitiesFunction | undefined) {
+    private static  setCapabilities(builder: Builder, capabilities: BrowserCapabilities | undefined) {
         if(!capabilities) return;
 
-        const ca = <BrowserCapabilities>capabilities;
+        const ca = capabilities;
 
         const capa: CapabilitiesWdjs = {};
 
@@ -450,5 +474,14 @@ export class BrowserWdjs implements Browser{
             };
             setTimeout(check,0);
         })
+    }
+
+    public executeScript(func: Function, ...func_args: any[]): Promise<{}> {
+        return new Promise((resolve, reject) => {
+            this._driver.executeScript(func, func_args)
+                .then(resolve)
+                .catch(reject)
+        });
+
     }
 }

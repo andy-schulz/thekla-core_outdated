@@ -4,7 +4,7 @@ import {BrowserWdjs}             from "../wdjs/BrowserWdjs";
 
 export class BrowserFactory {
 
-    public static create(config: SeleniumConfig, framework: string = "wdjs"): Browser {
+    public static create(config: SeleniumConfig, framework: string = "wdjs"): Promise<Browser> {
         if(framework == "wdjs") {
             return BrowserWdjs.create(<SeleniumConfig>config);
         } else {

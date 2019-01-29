@@ -46,9 +46,9 @@ describe('Using Google Search to find an online calculator', () => {
         // using the jasmine matcher for our checks on the UI
         const match = (expected: string) => (actual: string) => expect(actual).toEqual(expected);
 
-        beforeAll(() => {
+        beforeAll(async () => {
             // and give him the ability to browse the web using a browser of your choice
-            philipp.whoCan(BrowseTheWeb.using(BrowserFactory.create(conf)));
+            philipp.whoCan(BrowseTheWeb.using(await BrowserFactory.create(conf)));
         });
 
         it('the google calculator should be loaded - (test case id: ee1fcbb5-eb08-4f0d-979b-601ba9b63d87)', async () => {

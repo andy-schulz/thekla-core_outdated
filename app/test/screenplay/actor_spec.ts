@@ -39,9 +39,9 @@ const logger = getLogger("Actor");
 describe('Searching on Google', () => {
     let john: Actor;
 
-    beforeAll(() => {
+    beforeAll(async () => {
         john = Actor.named("Andy");
-        john.whoCan(BrowseTheWeb.using(BrowserFactory.create(config)));
+        john.whoCan(BrowseTheWeb.using(await BrowserFactory.create(config)));
     });
 
     it('for calculator should show the Google calculator - (test case id: 1761a239-3e50-408a-8e5e-1e4e6e6f07c2)', async () => {

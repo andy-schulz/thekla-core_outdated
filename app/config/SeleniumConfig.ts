@@ -19,6 +19,18 @@ export interface BrowserCapabilities {
 
     firefoxConfig?: FirefoxOptions;
     chromeConfig?: ChromeOptions;
+
+    window?: WindowConfig
+
+}
+
+export interface WindowConfig {
+    initialSize: "maximum" | WindowSize
+}
+
+export interface WindowSize {
+    width: number;
+    height: number
 }
 
 export interface ProxyConfig {

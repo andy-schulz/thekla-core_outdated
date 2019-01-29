@@ -32,9 +32,9 @@ const logger = getLogger("SppWaitForElements");
 describe('The description on an element', () => {
     let andy: Actor;
 
-    beforeAll(() => {
+    beforeAll(async () => {
         andy = Actor.named("Andy");
-        andy.whoCan(BrowseTheWeb.using(BrowserFactory.create(config)));
+        andy.whoCan(BrowseTheWeb.using(await BrowserFactory.create(config)));
     });
 
     afterAll(async () => {

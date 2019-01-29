@@ -32,7 +32,7 @@ describe('Taking a screenshot', () => {
 
     beforeAll(async () => {
         await BrowserWdjs.cleanup();
-        browser = BrowserWdjs.create(conf);
+        browser = await BrowserWdjs.create(conf);
     });
 
     afterEach(() => {
@@ -130,8 +130,8 @@ describe('Taking a screenshot', () => {
     describe('from multiple browser as base64 string', () => {
         let browser2: Browser;
 
-        beforeEach(() => {
-            browser2 = BrowserWdjs.create(conf);
+        beforeEach(async () => {
+            browser2 = await BrowserWdjs.create(conf);
         });
 
         afterEach(async () => {
@@ -163,8 +163,8 @@ describe('Taking a screenshot', () => {
     describe('from multiple browser and save it to a file', () => {
         let browser2: Browser;
 
-        beforeEach(() => {
-            browser2 = BrowserWdjs.create(conf);
+        beforeEach(async () => {
+            browser2 = await BrowserWdjs.create(conf);
         });
 
         afterEach(async () => {

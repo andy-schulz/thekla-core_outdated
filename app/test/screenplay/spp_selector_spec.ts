@@ -18,9 +18,9 @@ let config: SeleniumConfig = {
 describe('Locating an element', () => {
     let andy: Actor;
 
-    beforeAll(() => {
+    beforeAll(async () => {
         andy = Actor.named("Andy");
-        andy.whoCan(BrowseTheWeb.using(BrowserFactory.create(config)));
+        andy.whoCan(BrowseTheWeb.using(await BrowserFactory.create(config)));
     });
 
     describe('by xpath', () => {

@@ -20,8 +20,8 @@ const conf: SeleniumConfig = {
 describe('trying to access a Frame', () => {
     let browser: Browser;
 
-    beforeAll(() => {
-        browser = BrowserWdjs.create(conf);
+    beforeAll(async () => {
+        browser = await BrowserWdjs.create(conf);
     });
 
     afterAll(async () => {

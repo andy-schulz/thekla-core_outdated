@@ -29,9 +29,9 @@ const logger = getLogger("SppWaitForElements");
 describe('Waiting for SPP Elements', () => {
     let andy: Actor;
 
-    beforeAll(() => {
+    beforeAll(async () => {
         andy = Actor.named("Andy");
-        andy.whoCan(BrowseTheWeb.using(BrowserFactory.create(config)));
+        andy.whoCan(BrowseTheWeb.using(await BrowserFactory.create(config)));
     });
 
     afterAll(async () => {
