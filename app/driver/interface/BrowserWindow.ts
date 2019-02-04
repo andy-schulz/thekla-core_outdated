@@ -1,4 +1,7 @@
-import {WindowSize} from "../../config/SeleniumConfig";
+export interface WindowSize {
+    width: number;
+    height: number;
+}
 
 export interface BrowserWindow {
     setSize(dimension: WindowSize): Promise<void>;

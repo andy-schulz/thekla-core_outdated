@@ -1,6 +1,6 @@
-import {ISize, ThenableWebDriver} from "selenium-webdriver";
-import {WindowConfig, WindowSize} from "../../config/SeleniumConfig";
-import {BrowserWindow}            from "../interface/BrowserWindow";
+import {ISize, ThenableWebDriver}  from "selenium-webdriver";
+import {WindowConfig}              from "../../config/SeleniumConfig";
+import {BrowserWindow, WindowSize} from "../interface/BrowserWindow";
 
 export class BrowserWindowWdjs implements BrowserWindow{
     constructor(
@@ -15,12 +15,8 @@ export class BrowserWindowWdjs implements BrowserWindow{
         const window = new BrowserWindowWdjs(driver, windowConfig);
 
         if (windowConfig) {
-            if (windowConfig.initialSize) {
-                if(windowConfig.initialSize === "maximum") {
-                    await window.maximize();
-                } else if(windowConfig.initialSize.width && windowConfig.initialSize.height) {
-                    await window.setSize(windowConfig.initialSize)
-                }
+            if (windowConfig.setToMaxSize) {
+                await window.maximize();
             }
         }
 

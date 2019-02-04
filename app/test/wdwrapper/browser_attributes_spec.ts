@@ -1,6 +1,7 @@
-import {BrowserCapabilities, SeleniumConfig, WindowSize} from "../../config/SeleniumConfig";
-import * as _                                            from "lodash";
-import {BrowserWdjs}                                     from "../../driver/wdjs/BrowserWdjs";
+import {BrowserCapabilities, SeleniumConfig} from "../../config/SeleniumConfig";
+import * as _                                from "lodash";
+import {WindowSize}                          from "../../driver/interface/BrowserWindow";
+import {BrowserWdjs}                         from "../../driver/wdjs/BrowserWdjs";
 
 const conf: SeleniumConfig = {
     seleniumServerAddress: "http://localhost:4444/wd/hub",
@@ -25,7 +26,7 @@ describe('creating a new Browser', () => {
             '- (test case id: 8a0d9a58-9591-43c1-89bb-d848319c90f1)', async () => {
             const con: SeleniumConfig = _.cloneDeep(conf);
             (<BrowserCapabilities>(con.capabilities)).window = {
-                initialSize: "maximum"
+                setToMaxSize: true
             };
 
             const browserInitialResize = await BrowserWdjs.create(con);
@@ -49,26 +50,6 @@ describe('creating a new Browser', () => {
             expect(dataAfterParsed.height).toBeGreaterThanOrEqual(dataBeforeParsed.height)
 
         });
-
-        it('it should be resized when the config contains the initial size object ' +
-            '- (test case id: b4ae7342-f862-4be4-945d-cb56e7418ab1)', async () => {
-            const con: SeleniumConfig = _.cloneDeep(conf);
-            (<BrowserCapabilities>(con.capabilities)).window = {
-                initialSize: {
-                    width: 500,
-                    height: 500
-                }
-            };
-
-            try {
-                await BrowserWdjs.create(con);
-                expect(true).toBeFalsy(`Bug () in Selenium Webdriver 4.0 alpha has ben fixed, rewrite the test`)
-            } catch (e) {
-                expect(e.toString()).toContain(`this._driver.manage(...).window(...).setSize is not a function`);
-            }
-        });
-
-
 
         it('it should be maximized when the config contains the "maximum" attribute ' +
             '- (test case id: 1b7451ac-0ca2-4bdc-8700-60b4098d5829)', async () => {

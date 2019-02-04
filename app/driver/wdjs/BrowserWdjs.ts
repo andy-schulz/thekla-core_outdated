@@ -87,10 +87,11 @@ export class BrowserWdjs implements Browser{
             const capa: BrowserCapabilities = typeof selConf.capabilities === "function" ? selConf.capabilities() : selConf.capabilities;
 
             builder = builder.usingServer(selConf.seleniumServerAddress);
-            this.setCapabilities(builder, capa);
+            builder.withCapabilities(capa);
+            this.setProxy(builder, capa.proxy);
 
-            let driver = builder.build();
-
+            const drv = await BrowserWdjs.buildDriver(builder);
+            const driver = <ThenableWebDriver>drv;
             const browser = new BrowserWdjs(driver, selConf, browserName);
             try {
                 const window = await BrowserWindowWdjs.create(driver, capa.window);
@@ -109,6 +110,14 @@ export class BrowserWdjs implements Browser{
         }
     }
 
+    private static buildDriver(builder: Builder): Promise<ThenableWebDriver> {
+        return new Promise((resolve, reject) => {
+            const drv: ThenableWebDriver = builder.build();
+
+            drv.then(() => resolve(drv), reject);
+        })
+    }
+
     public windowManagedBy(window: BrowserWindow) {
         this._window = window;
     }
@@ -118,22 +127,21 @@ export class BrowserWdjs implements Browser{
      * @param builder - the builder the capabilities will be set for
      * @param capabilities - the capabilities to be set
      */
-    private static  setCapabilities(builder: Builder, capabilities: BrowserCapabilities | undefined) {
-        if(!capabilities) return;
-
-        const ca = capabilities;
-
-        const capa: CapabilitiesWdjs = {};
-
-        if(ca.browserName) capa.browserName = ca.browserName;
-        this.setProxy(builder, ca.proxy);
-        if(ca.firefoxConfig) this.applyFirefoxOptions(builder,ca.firefoxOptions);
-        if(ca.chromeConfig) this.applyFirefoxOptions(builder,ca.chromeConfig);
-
-
-        return builder.withCapabilities(capa);
-
-    }
+    // private static  setCapabilities(builder: Builder, capabilities: BrowserCapabilities | undefined) {
+    //     if(!capabilities) return;
+    //
+    //     const ca = capabilities;
+    //
+    //     const capa: CapabilitiesWdjs = {};
+    //
+    //     if(ca.browserName) capa.browserName = ca.browserName;
+    //     if(ca["moz:firefoxOptions"]) this.applyFirefoxOptions(builder,ca["moz:firefoxOptions"]);
+    //     if(ca.chromeConfig) this.applyFirefoxOptions(builder,ca.chromeConfig);
+    //
+    //
+    //     return builder.withCapabilities(capa);
+    //
+    // }
 
     /**
      * set the proxy for the browser
@@ -163,16 +171,16 @@ export class BrowserWdjs implements Browser{
      * @param builder - the builder the firefox options will be set for
      * @param options - the firefox options to set
      */
-    private static applyFirefoxOptions(builder: Builder, options: FirefoxOptions | undefined): void  {
-        if(options) {
-            const  firefoxOptions = new FFOptions();
-            if(options.binary) {
-                firefoxOptions.setBinary(options.binary);
-            }
-
-            builder.setFirefoxOptions(firefoxOptions);
-        }
-    }
+    // private static applyFirefoxOptions(builder: Builder, options: FirefoxOptions | undefined): void  {
+    //     if(options) {
+    //         const  firefoxOptions = new FFOptions();
+    //         if(options.binary) {
+    //             firefoxOptions.setBinary(options.binary);
+    //         }
+    //
+    //         builder.setFirefoxOptions(firefoxOptions);
+    //     }
+    // }
 
     /**
      * close all browser created with BrowserWdjs.create method
