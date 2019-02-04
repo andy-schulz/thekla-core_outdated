@@ -33,7 +33,7 @@ describe('a simple table', () => {
     });
 
     afterAll(async () => {
-        return BrowserWdjs.cleanup()
+        return await BrowserWdjs.cleanup()
     });
 
     it('select elements by - (test case id: 48788a13-ade7-4b76-b366-8eae26a1194d)', async () => {
