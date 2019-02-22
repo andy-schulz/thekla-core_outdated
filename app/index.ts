@@ -43,6 +43,8 @@ export {BrowseTheWeb}                                           from "./screenpl
 export {Authenticate, AuthenticationInfo}                       from "./screenplay/web/abilities/Authenticate";
 export {UseTheRestApi, RestAbilityOptions}                      from "./screenplay/rest/abilities/UseTheRestApi";
 
+// Tasks
+export {PerformsTask} from "./screenplay/Actor";
 
 // Activities
 export {Activity, Task, Interaction}    from "./screenplay/lib/actions/Activities";
