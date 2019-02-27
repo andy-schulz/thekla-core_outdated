@@ -1,10 +1,8 @@
 import {getLogger, Logger} from "@log4js-node/log4js-api";
 
-import {Options as FFOptions}                from "selenium-webdriver/firefox";
 import {Builder, promise, ThenableWebDriver} from "selenium-webdriver";
 import {
     BrowserCapabilities,
-    FirefoxOptions,
     ProxyConfig,
     SeleniumConfig
 }                                            from "../../config/SeleniumConfig";
@@ -123,27 +121,6 @@ export class BrowserWdjs implements Browser{
     }
 
     /**
-     * set the browsers capabilities
-     * @param builder - the builder the capabilities will be set for
-     * @param capabilities - the capabilities to be set
-     */
-    // private static  setCapabilities(builder: Builder, capabilities: BrowserCapabilities | undefined) {
-    //     if(!capabilities) return;
-    //
-    //     const ca = capabilities;
-    //
-    //     const capa: CapabilitiesWdjs = {};
-    //
-    //     if(ca.browserName) capa.browserName = ca.browserName;
-    //     if(ca["moz:firefoxOptions"]) this.applyFirefoxOptions(builder,ca["moz:firefoxOptions"]);
-    //     if(ca.chromeConfig) this.applyFirefoxOptions(builder,ca.chromeConfig);
-    //
-    //
-    //     return builder.withCapabilities(capa);
-    //
-    // }
-
-    /**
      * set the proxy for the browser
      * @param builder - the builder the proxy will be set for
      * @param proxy - the Proxy config which will be set
@@ -165,22 +142,6 @@ export class BrowserWdjs implements Browser{
             return builder.setProxy(proxyWdjs.manual(proxy.manualConfig))
         }
     };
-
-    /**
-     * apply the given firefox options to the builder
-     * @param builder - the builder the firefox options will be set for
-     * @param options - the firefox options to set
-     */
-    // private static applyFirefoxOptions(builder: Builder, options: FirefoxOptions | undefined): void  {
-    //     if(options) {
-    //         const  firefoxOptions = new FFOptions();
-    //         if(options.binary) {
-    //             firefoxOptions.setBinary(options.binary);
-    //         }
-    //
-    //         builder.setFirefoxOptions(firefoxOptions);
-    //     }
-    // }
 
     /**
      * close all browser created with BrowserWdjs.create method
