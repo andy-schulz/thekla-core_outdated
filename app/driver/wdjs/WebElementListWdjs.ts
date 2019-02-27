@@ -7,7 +7,7 @@ import {LocatorWdjs}                            from "./LocatorWdjs";
 import {WdElement}                              from "./interfaces/WdElement";
 import {UntilElementWdjs}                       from "./UntilElementWdjs";
 import {WebElementWdjs}                         from "./WebElementWdjs";
-import {ThenableWebDriver, WebElement}          from "selenium-webdriver";
+import {WebElement}                             from "selenium-webdriver";
 
 /**
  * List object to wrap the location strategy for finding multiple elements with WebDriverJS
@@ -69,13 +69,13 @@ export class WebElementListWdjs implements WebElementListFinder{
     shallWait(condition: UntilElementCondition): WebElementListFinder {
         const getElements = async () => {
 
-            const elements: WdElement[] = await this.getElements();
+            let elements: WdElement[] = await this.getElements();
 
-            const loop = (): Promise<boolean> => {
+            const loop = async (): Promise<boolean> => {
                 if(elements.length == 0) {
+                    elements = await this.getElements();
                     return Promise.resolve(false)
                 }
-
                 const mapper = async (elem: WdElement): Promise<boolean> => {
                     const el = UntilElementWdjs.execute(condition,elem);
                     return el;
