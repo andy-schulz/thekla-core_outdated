@@ -56,7 +56,7 @@ export class Actor implements AnswersQuestions, PerformsTask, UsesAbilities{
     }
 
     /**
-     * Executes the giben Tasks
+     * Executes the given Tasks
      * @param activities a list of tasks to execute
      */
     attemptsTo(...activities: Activity[]): Promise<void>{
