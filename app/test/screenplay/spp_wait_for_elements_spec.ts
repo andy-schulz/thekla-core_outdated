@@ -41,7 +41,7 @@ describe('Waiting for SPP Elements', () => {
 
     it('should be possible with wait actions on an element - (test case id: 7fd0c550-e31c-42fd-96f8-4ceb50e6cf3b)', async () => {
         const button = element(By.css("[data-test-id='AppearButtonBy5000']"))
-            .called("Test Element outside Frame")
+            .called("Test appearing element after 5 seconds")
             .shallWait(UntilElement.isVisible().forAsLongAs(20000));
 
         const match = (expected: string) => {
@@ -50,7 +50,23 @@ describe('Waiting for SPP Elements', () => {
 
         await andy.attemptsTo(
             Navigate.to(`/delayed`),
-            See.if(Text.of(button)).fulfills(match("Appear in 5 Seconds")),
+            See.if(Text.of(button)).fulfills(match("Appeared after 5 Seconds")),
+        );
+
+    }, 15000);
+
+    it('should be possible with wait actions on an element and an redirecting page - (test case id: 4406f09a-5b80-4106-b46a-9f2683faefc9)', async () => {
+        const button = element(By.css("[data-test-id='AppearButtonBy5000']"))
+            .called("test appearing element after redirect")
+            .shallWait(UntilElement.isVisible().forAsLongAs(20000));
+
+        const match = (expected: string) => {
+            return (actual: string) => expect(expected).toEqual(actual);
+        };
+
+        await andy.attemptsTo(
+            Navigate.to(`/redirect`),
+            See.if(Text.of(button)).fulfills(match("Appeared after 5 Seconds")),
         );
 
     }, 15000);
