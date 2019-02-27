@@ -1,4 +1,3 @@
-import {CoreOptions}                  from "request";
 import {Ability}                      from "../../lib/abilities/Ability";
 import {UsesAbilities}                from "../../Actor";
 import {SppRequest, SppRequestResult} from "../interfaces/requests";
