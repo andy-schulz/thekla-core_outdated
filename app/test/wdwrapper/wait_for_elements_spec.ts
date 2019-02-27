@@ -48,5 +48,13 @@ describe('Waiting for WD Elements', () => {
             await browser.get("/delayed");
             expect(await appearButton5000ShallWait.isVisible()).toEqual(true)
         }, 20000);
+
+        it('the system should wait for element after redirect - (test case id: a86b8f45-9706-40ab-bdd2-a5319cde0d0f)', async () => {
+            appearButton5000ShallWait = browser.element(By.css("[data-test-id='AppearButtonBy5000']"))
+                .shallWait(UntilElement.isVisible().forAsLongAs(11000));
+
+            await browser.get("/redirect");
+            expect(await appearButton5000ShallWait.isVisible()).toEqual(true)
+        }, 20000);
     });
 });
