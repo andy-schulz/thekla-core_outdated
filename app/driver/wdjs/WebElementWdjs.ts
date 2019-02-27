@@ -25,7 +25,7 @@ export class WebElementWdjs implements WebElementFinder{
     private getWebElement(): Promise<WdElement> {
         return new Promise(async (fulfill, reject) => {
             const elements = await this.elementList.getElements()
-                .catch(e => reject(e));
+                .catch(reject);
 
             // if getElements is rejected just leave the function
             if(!elements) {
