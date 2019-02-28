@@ -109,7 +109,7 @@ describe('The description on an element', () => {
             const description = "Test Element description in case an error is thrown";
             const button = element(By.css(".elementDoesNotExist"))
                 .called(description)
-                .shallWait(UntilElement.isVisible());
+                .shallWait(UntilElement.is.visible());
 
             return checkErrorMessage(button);
         }, 20000);

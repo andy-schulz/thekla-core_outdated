@@ -67,11 +67,16 @@ export class WebElementWdjs implements WebElementFinder{
     }
 
     public isVisible(): Promise<boolean> {
+        return this.isDisplayed()
+    }
+
+    public isDisplayed(): Promise<boolean> {
         return this.getWebElement()
             .then(element => element.isDisplayed())
             .then(state => state)
             .catch(() => false)
     }
+
 
     get description(): string {
         return this.elementList.description + this._description;
@@ -89,6 +94,6 @@ export class WebElementWdjs implements WebElementFinder{
 
 
     shallWait(condition: UntilElementCondition): WebElementFinder {
-        return <WebElementFinder>(<WebElementListWdjs>this.elementList.shallWait(condition)).toWebElement();
+        return (this.elementList.shallWait(condition) as WebElementListWdjs).toWebElement() as WebElementFinder;
     }
 }

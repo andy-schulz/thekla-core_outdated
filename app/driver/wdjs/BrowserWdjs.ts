@@ -9,12 +9,14 @@ import {
 
 import {Browser, BrowserScreenshotData}         from "../interface/Browser";
 import {BrowserWindow}                          from "../interface/BrowserWindow";
+import {UntilElementCondition}                  from "../lib/ElementConditions";
 import {By}                                     from "../lib/Locator";
 import {WebElementFinder, WebElementListFinder} from "../interface/WebElements";
 import {BrowserWindowWdjs}                      from "./BrowserWindowWdjs";
 import {FrameElementWdjs}                       from "./FrameElementWdjs";
 import {FrameHelper, WdElement}                 from "./interfaces/WdElement";
 import {LocatorWdjs}                            from "./LocatorWdjs";
+import {ExecuteCondition}                       from "./ExecuteCondition";
 import {WebElementListWdjs}                     from "./WebElementListWdjs";
 import {Condition}                              from "../lib/Condition";
 import * as path                                from "path";
@@ -438,6 +440,40 @@ export class BrowserWdjs implements Browser{
                 };
 
                 condition.check()
+                    .then(worker)
+                    .catch((e: any) => worker(false, e + Error().stack))
+            };
+            setTimeout(check,0);
+        })
+    }
+
+    public wait2(
+        condition: UntilElementCondition,
+        element: WebElementFinder): Promise<string> {
+
+        return new Promise((fulfill,reject) => {
+            const start = Date.now();
+            const check = () => {
+                const worker = (workerState: boolean, error?: String) => {
+                    const timeSpendWaiting = Date.now() - start;
+                    if(timeSpendWaiting > condition.timeout) {
+                        const message = `Waiting until element called '${element.description}' ${condition.conditionHelpText} timed out after ${condition.timeout} ms.
+                        Stack: ${Error().stack}`;
+                        this.logger.trace(message);
+                        reject(message);
+                        return;
+                    }
+                    if(workerState) {
+                        const message = `Waiting until element called '${element.description}' ${condition.conditionHelpText} was successful after ${timeSpendWaiting} ms.`;
+                        this.logger.trace(message);
+                        fulfill(message);
+                        return;
+                    } else {
+                        setTimeout(check,0);
+                    }
+                };
+
+                ExecuteCondition.execute(condition, element)
                     .then(worker)
                     .catch((e: any) => worker(false, e + Error().stack))
             };

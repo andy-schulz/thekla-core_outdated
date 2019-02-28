@@ -41,7 +41,7 @@ describe('trying to access a Frame', () => {
 
         it('css and explicit waiting -> the frame should be found. - (test case id: 189c9d59-c31a-4e9d-9c4e-e43dc0302868)', async () => {
             const frame = browser.frame(By.css(".button-in-single-frame"))
-                .shallWait(UntilElement.isVisible().forAsLongAs(5000));
+                .shallWait(UntilElement.is.visible().forAsLongAs(5000));
             const button = frame.element(By.css(".btn-secondary"));
 
             await browser.get(`/nestedFrames`);
@@ -73,7 +73,7 @@ describe('trying to access a Frame', () => {
             const frame1 = browser.frame(By.css(".button-in-single-frame"));
             const frame21 = browser.frame(By.css(".button-in-two-frames"));
             const frame22 = frame21.frame(By.css(".button-in-single-frame"))
-                .shallWait(UntilElement.isVisible());
+                .shallWait(UntilElement.is.visible());
 
             const button1 = frame1.element(By.css(".btn-secondary"));
             const button2 = frame22.element(By.css(".btn-secondary"));
@@ -92,7 +92,7 @@ describe('trying to access a Frame', () => {
             const frame1 = browser.frame(By.css(".button-in-single-frame"));
             const frame21 = browser.frame(By.css(".button-in-two-frames"));
             const frame22 = frame21.frame(By.css(".button-in-single-frame"))
-                .shallWait(UntilElement.isVisible());
+                .shallWait(UntilElement.is.visible());
 
             const button1 = frame1.element(By.css(".btn-secondary"));
             const button2 = frame22.element(By.css(".btn-secondary"));

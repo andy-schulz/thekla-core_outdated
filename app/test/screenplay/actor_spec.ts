@@ -1,20 +1,18 @@
 import {
     Actor,
     BrowseTheWeb,
-    BrowserCapabilities,
     BrowserFactory,
     Enter,
-    Wait,
     Navigate,
     See,
     Key,
-    Value,
     all,
     By,
     Count,
     Text,
-    SeleniumConfig
-} from "../..";
+    SeleniumConfig,
+    Sleep
+}                         from "../..";
 import {GoogleSearch}     from "../PageObjects/GoogleSearch/GoogleSearch";
 import {Add}              from "../PageObjects/GoogleCalculator/Add";
 import {GoogleCalculator} from "../PageObjects/GoogleCalculator/GoogleCalculator";
@@ -55,10 +53,10 @@ describe('Searching on Google', () => {
             Navigate.to("https://www.google.de"),
             Enter.value("calculator").into(GoogleSearch.searchField),
             Enter.value(Key.ENTER).into(GoogleSearch.searchField),
-            Wait.for(500),
+            Sleep.for(500),
             Add.number(1).to(5),
             See.if(Text.of(GoogleCalculator.input)).fulfills(match("6")),
-            Wait.for(500),
+            Sleep.for(500),
         );
 
     }, 20000);
@@ -71,10 +69,10 @@ describe('Searching on Google', () => {
             Navigate.to("https://www.google.de"),
             Enter.value("calculator").into(GoogleSearch.searchField),
             Enter.value(Key.ENTER).into(GoogleSearch.searchField),
-            Wait.for(500),
+            Sleep.for(500),
             Add.number(1).to(5),
             See.if(Text.of(GoogleCalculator.inputNumber)).fulfills(match("6")),
-            Wait.for(500),
+            Sleep.for(500),
         );
 
     }, 20000);

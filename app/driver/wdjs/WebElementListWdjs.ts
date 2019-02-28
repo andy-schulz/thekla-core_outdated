@@ -5,7 +5,7 @@ import {By}                                     from "../lib/Locator";
 import {BrowserWdjs}                            from "./BrowserWdjs";
 import {LocatorWdjs}                            from "./LocatorWdjs";
 import {WdElement}                              from "./interfaces/WdElement";
-import {UntilElementWdjs}                       from "./UntilElementWdjs";
+import {ExecuteCondition}                       from "./ExecuteCondition";
 import {WebElementWdjs}                         from "./WebElementWdjs";
 import {WebElement}                             from "selenium-webdriver";
 
@@ -76,12 +76,13 @@ export class WebElementListWdjs implements WebElementListFinder{
                     elements = await this.getElements();
                     return Promise.resolve(false)
                 }
-                const mapper = async (elem: WdElement): Promise<boolean> => {
-                    const el = UntilElementWdjs.execute(condition,elem);
+                const mapper = (elem: WdElement): Promise<boolean> => {
+                    const el = ExecuteCondition.execute(condition,elem);
                     return el;
                 };
 
                 const arr: Promise<boolean>[] = elements.map(mapper);
+
 
                 return Promise.all(arr).then((arr: boolean[]) => {
                     return Promise.resolve(arr.some(b => b === true))

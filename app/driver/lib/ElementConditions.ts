@@ -1,5 +1,7 @@
 export interface UntilElementCondition {
+    visible(): UntilElementCondition;
     forAsLongAs(timeout: number): UntilElementCondition;
+    readonly negate: LogicFunction<boolean>;
     readonly waiter: ElementCondition;
     readonly timeout: number;
     readonly conditionHelpText: string;
@@ -11,19 +13,33 @@ abstract class  ElementCondition {
 
 export class VisibilityCheck extends ElementCondition{
     constructor(
-        public helpText = "Waiting for visibility of "
+        public helpText = "visible"
     ) {super()}
 }
 
+type LogicFunction<T> = (param: T) => T
+
 export class UntilElement implements UntilElementCondition{
     private _timeout: number = 5000;
+    public waiter: ElementCondition;
 
-    public static isVisible() {
-        return new UntilElement(new VisibilityCheck())
+    private static readonly id: LogicFunction<boolean> = (result: boolean) => result;
+    private static readonly negate: LogicFunction<boolean> = (result: boolean) => !result;
+
+    public static get is():UntilElement {
+        return new UntilElement(UntilElement.id)
     }
 
-    constructor(
-        public  waiter: ElementCondition) {
+    public static get isNot(): UntilElement {
+        return new UntilElement(UntilElement.negate)
+    }
+
+    public visible(): UntilElementCondition {
+        this.waiter = new VisibilityCheck();
+        return this;
+    }
+
+    constructor(public negate: LogicFunction<boolean>) {
     }
 
     forAsLongAs(timeout: number): UntilElementCondition {
@@ -36,6 +52,6 @@ export class UntilElement implements UntilElementCondition{
     }
 
     get conditionHelpText() {
-        return this.waiter.helpText
+        return `${this.negate(true) ? "is" : "is not"} ${this.waiter.helpText}`
     }
 }

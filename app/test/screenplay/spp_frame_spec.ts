@@ -68,13 +68,13 @@ describe('Locating Elements inside Frames', () => {
         const button = element(By.css(".buttonoutsideframes button"));
 
         const frame1 = frame(By.css(".button-in-single-frame"))
-            .shallWait(UntilElement.isVisible().forAsLongAs(5000));
+            .shallWait(UntilElement.is.visible().forAsLongAs(5000));
         const button1 = frame1.element(By.css(".btn-secondary"));
 
         const frame21 = frame(By.css(".button-in-two-frames"))
-            .shallWait(UntilElement.isVisible().forAsLongAs(5000));
+            .shallWait(UntilElement.is.visible().forAsLongAs(5000));
         const frame22 = frame21.frame(By.css(".button-in-single-frame"))
-            .shallWait(UntilElement.isVisible().forAsLongAs(5000));
+            .shallWait(UntilElement.is.visible().forAsLongAs(5000));
         const button2 = frame22.element(By.css(".btn-secondary"));
 
 

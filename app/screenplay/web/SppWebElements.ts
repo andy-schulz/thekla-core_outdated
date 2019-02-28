@@ -104,14 +104,14 @@ export class SppWebElementFinder extends SppFinderRoot implements SppFinderWaite
 
     public called(description: string): SppWebElementFinder {
         const desc = (browser: Browser): WebElementFinder => {
-            return <WebElementFinder>this.getElements(browser).called(description);
+            return this.getElements(browser).called(description) as WebElementFinder;
         };
         return new SppWebElementFinder(this.locator, desc);
     }
 
     shallWait(condition: UntilElementCondition): SppWebElementFinder {
         const waiter = (browser: Browser): WebElementFinder => {
-            return (<WebElementFinder>this.getElements(browser)).shallWait(condition);
+            return (this.getElements(browser) as WebElementFinder).shallWait(condition);
         };
         return new SppWebElementFinder(this.locator,waiter);
     }

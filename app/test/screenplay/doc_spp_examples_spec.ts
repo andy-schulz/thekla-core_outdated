@@ -18,7 +18,7 @@ import {
 class GooglePgo {
     // define your elements in a page object
     public static searchField = element(By.css("[name='q']"))
-        .shallWait(UntilElement.isVisible().forAsLongAs(5000))
+        .shallWait(UntilElement.is.visible().forAsLongAs(5000))
         .called("The Google search field (GPO)");
 
     public static submitSearch = element(By.css(".FPdoLc [name='btnK']"))
@@ -26,7 +26,7 @@ class GooglePgo {
 
     public static calculatorInput = element(By.css("#cwos"))
         .called("Google calculator input field")
-        .shallWait(UntilElement.isVisible().forAsLongAs(5000));
+        .shallWait(UntilElement.is.visible().forAsLongAs(5000));
 }
 
 import {getLogger, configure} from "log4js";

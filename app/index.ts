@@ -1,7 +1,7 @@
 /**
  *
  */
-export {ProcessedSeleniumConfig} from "./config/ProcessedSeleniumConfig"
+export {ProcessedSeleniumConfig}                         from "./config/ProcessedSeleniumConfig"
 export {SeleniumConfig, RestConfig, BrowserCapabilities} from "./config/SeleniumConfig"
 
 
@@ -19,16 +19,16 @@ export {Key}            from "./driver/lib/Key";
 export {until}          from "./driver/lib/Condition";
 export {UntilElement}   from "./driver/lib/ElementConditions";
 
-export {Utils}  from "./driver/utils/Utils";
+export {Utils}                                                       from "./driver/utils/Utils";
 
 /**
  *
  * Request Wrapper
  *
  */
-export {Get}    from "./screenplay/rest/actions/Get"
-export {Post}   from "./screenplay/rest/actions/Post"
-export {Delete} from "./screenplay/rest/actions/Delete"
+export {Get}                                                         from "./screenplay/rest/actions/Get"
+export {Post}                                                        from "./screenplay/rest/actions/Post"
+export {Delete}                                                      from "./screenplay/rest/actions/Delete"
 
 /**
  * screenplay Elements
@@ -47,22 +47,23 @@ export {UseTheRestApi, RestAbilityOptions}                      from "./screenpl
 export {PerformsTask} from "./screenplay/Actor";
 
 // Activities
-export {Activity, Task, Interaction}    from "./screenplay/lib/actions/Activities";
-export {Click}                          from "./screenplay/web/actions/Click";
-export {Enter}                          from "./screenplay/web/actions/Enter";
-export {Navigate}                       from "./screenplay/web/actions/Navigate";
-export {Wait}                           from "./screenplay/web/actions/Wait";
+export {Activity, Task, Interaction}     from "./screenplay/lib/actions/Activities";
+export {Click}                           from "./screenplay/web/actions/Click";
+export {Enter}                           from "./screenplay/web/actions/Enter";
+export {Navigate}                        from "./screenplay/web/actions/Navigate";
+export {Wait}                            from "./screenplay/web/actions/Wait";
+export {Sleep}                           from "./screenplay/web/actions/Sleep";
 
 // Oracle
 export {See}     from "./screenplay/lib/matcher/See";
 export {Extract} from "./screenplay/lib/matcher/Extract";
 
 // Questions
-export {Text}                         from "./screenplay/web/matcher/questions/Text";
+export {Text}                          from "./screenplay/web/matcher/questions/Text";
 export {Value}                         from "./screenplay/web/matcher/questions/Value";
-export {Count}                        from "./screenplay/web/matcher/questions/Count";
-export {Response}                     from "./screenplay/rest/questions/Response";
-export {SppRequestResult, SppRequest} from "./screenplay/rest/interfaces/requests";
+export {Count}                         from "./screenplay/web/matcher/questions/Count";
+export {Response}                      from "./screenplay/rest/questions/Response";
+export {SppRequestResult, SppRequest}  from "./screenplay/rest/interfaces/requests";
 
 // Custom Errors
 export {NoSuchAbilityError} from "./screenplay/errors/NoSuchAbilityError";
