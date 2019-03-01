@@ -32,7 +32,8 @@ describe('Trying to Add two numbers by the mathjs API', () => {
         };
     });
 
-    it('simple integers should be added together - (test case id: 87b6d0ac-d022-4dc6-b0ce-b542550d6be1)', async () => {
+    it('simple integers should be added together ' +
+        '- (test case id: 87b6d0ac-d022-4dc6-b0ce-b542550d6be1)', async () => {
 
 
         let matcher: (response: SppRequestResult) => any
@@ -45,7 +46,8 @@ describe('Trying to Add two numbers by the mathjs API', () => {
         );
     }, 10000);
 
-    it('simple integers should be added together - (test case id: 850015a4-6126-41a6-aa3c-7a6e621fd4b8)', async () => {
+    it('simple integers should be added together ' +
+        '- (test case id: 850015a4-6126-41a6-aa3c-7a6e621fd4b8)', async () => {
 
         let andy = Actor.named("Andy");
         andy.whoCan(UseTheRestApi.using(restConfig));
@@ -54,7 +56,8 @@ describe('Trying to Add two numbers by the mathjs API', () => {
         );
     });
 
-    it('simple integers should be added together - (test case id: 7127c2c9-7167-49c8-850f-287a05d49880)', async () => {
+    it('simple integers should be added together ' +
+        '- (test case id: 7127c2c9-7167-49c8-850f-287a05d49880)', async () => {
 
         let conf: RestAbilityOptions =  {
             resolveWithFullResponse: true,

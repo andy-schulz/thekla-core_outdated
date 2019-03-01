@@ -30,6 +30,7 @@ export interface WebElementFinder
     getAttribute(attribute: string): Promise<string>;
     isVisible(): Promise<boolean>;
     isDisplayed(): Promise<boolean>;
+    isEnabled(): Promise<boolean>;
 }
 
 export interface WebElementListFinder

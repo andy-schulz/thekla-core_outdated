@@ -1,6 +1,6 @@
-import {WebElementFinder}                       from "../interface/WebElements";
-import {UntilElementCondition, VisibilityCheck} from "../lib/ElementConditions";
-import {WdElement}                              from "./interfaces/WdElement";
+import {WebElementFinder}                                     from "../interface/WebElements";
+import {EnabledCheck, UntilElementCondition, VisibilityCheck} from "../lib/ElementConditions";
+import {WdElement}                                            from "./interfaces/WdElement";
 
 export class ExecuteCondition {
     public static execute (condition: UntilElementCondition, element: WdElement | WebElementFinder): Promise<boolean> {
@@ -8,6 +8,13 @@ export class ExecuteCondition {
             case VisibilityCheck:
                 return new Promise((fulfill, reject) => {
                     element.isDisplayed()
+                        .then(condition.negate)
+                        .then(fulfill)
+                        .catch(reject)
+                });
+            case EnabledCheck:
+                return new Promise((fulfill, reject) => {
+                    element.isEnabled()
                         .then(condition.negate)
                         .then(fulfill)
                         .catch(reject)

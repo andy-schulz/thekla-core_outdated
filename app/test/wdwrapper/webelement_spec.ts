@@ -148,41 +148,36 @@ describe('When using the Browser object', () => {
         });
     });
 
-    describe('and try to wait for an Element', async () => {
+    describe('and try to wait for an element state', () => {
         let browser: Browser;
-        let appearButton5000: WebElementFinder;
         let appearButton10000: WebElementFinder;
-        let disappearButton5000: WebElementFinder;
-        let disappearButton10000: WebElementFinder;
         let buttonNeverExists: WebElementFinder;
-
+        let disappearButton10000: WebElementFinder;
+        let enabledButton5000: WebElementFinder;
 
         beforeAll(async () => {
             browser = await BrowserWdjs.create(conf);
-            appearButton5000 = browser.element(By.css("[data-test-id='AppearButtonBy5000']"));
-            disappearButton5000 = browser.element(By.css("[data-test-id='DisappearButtonBy5000']"));
             appearButton10000 = browser.element(By.css("[data-test-id='AppearButtonBy10000']"));
-            disappearButton10000 = browser.element(By.css("[data-test-id='DisappearButtonBy10000']"));
             buttonNeverExists = browser.element(By.css("[data-test-id='neverExists']"));
+            disappearButton10000 = browser.element(By.css("[data-test-id='DisappearButtonBy10000']"));
+            enabledButton5000 = browser.element(By.css("[data-test-id='EnabledButtonBy5000']"));
         });
 
         beforeEach(async () => {
             await browser.get(testurl + "/delayed");
         });
 
-        it('the system should wait fo 5 Seconds for the element to appear - (test case id: c8d3d65d-63a5-41de-8407-b9a506c2f478)', async () => {
-            // expect(await delayButton5000.isVisible()).toEqual(true);
-            expect(await appearButton5000.isVisible()).toEqual(false);
-            await browser.wait(until(() => appearButton5000.isVisible()));
-            expect(await appearButton5000.isVisible()).toEqual(true);
-
-        });
-
-        it('the system should wait fo 5 Seconds and then timout - (test case id: c004412c-9e79-4df4-8af6-ea079318769d)', async () => {
-            // expect(await delayButton5000.isVisible()).toEqual(true);
+        it('the system should wait for 5 Seconds and then timout - (test case id: c004412c-9e79-4df4-8af6-ea079318769d)', async () => {
             expect(await appearButton10000.isVisible()).toEqual(false);
             await browser.wait(until(() => appearButton10000.isVisible())).catch(e => e);
             expect(await appearButton10000.isVisible()).toEqual(false);
+
+        });
+
+        it('the system should wait for 5 Seconds and then timout - (test case id: c004412c-9e79-4df4-8af6-ea079318769d)', async () => {
+            expect(await enabledButton5000.isEnabled()).toEqual(false);
+            await browser.wait(until(() => enabledButton5000.isEnabled()),2000).catch(e => e);
+            expect(await enabledButton5000.isEnabled()).toEqual(false);
 
         });
 
@@ -198,13 +193,6 @@ describe('When using the Browser object', () => {
             expect(callback.catchfn).toHaveBeenCalled();
             expect(callback.catchfn).toHaveBeenCalledTimes(1);
             expect(error).toContain(errorMessage);
-        });
-
-        it('the system should wait fo 5 Seconds for the element to disappear - (test case id: 2beb4d0f-9b90-47ec-8e54-927d452d7c5f)', async () => {
-            // expect(await delayButton5000.isVisible()).toEqual(true);
-            expect(await disappearButton5000.isVisible()).toEqual(true);
-            await browser.wait(until.not(() => disappearButton5000.isVisible()));
-            expect(await disappearButton5000.isVisible()).toEqual(false);
         });
 
         it(' the wait Promise should be rejected when the Element is still visible - (test case id: 93b57a1f-9435-4870-b110-d32adb8fb945)', async () => {
@@ -223,6 +211,74 @@ describe('When using the Browser object', () => {
         });
     });
 
+    describe('and try to wait for an Element to be VISIBLE', async () => {
+        let browser: Browser;
+        let appearButton5000: WebElementFinder;
+        let disappearButton5000: WebElementFinder;
+
+
+        beforeAll(async () => {
+            browser = await BrowserWdjs.create(conf);
+            appearButton5000 = browser.element(By.css("[data-test-id='AppearButtonBy5000']"));
+            disappearButton5000 = browser.element(By.css("[data-test-id='DisappearButtonBy5000']"));
+        });
+
+        beforeEach(async () => {
+            await browser.get(testurl + "/delayed");
+        });
+
+        it('the system should wait for 5 Seconds for the element to appear - (test case id: c8d3d65d-63a5-41de-8407-b9a506c2f478)', async () => {
+            expect(await appearButton5000.isVisible()).toEqual(false);
+            await browser.wait(until(() => appearButton5000.isVisible()));
+            expect(await appearButton5000.isVisible()).toEqual(true);
+
+        });
+
+        it('the system should wait for 5 Seconds for the element to disappear - (test case id: 2beb4d0f-9b90-47ec-8e54-927d452d7c5f)', async () => {
+            // expect(await delayButton5000.isVisible()).toEqual(true);
+            expect(await disappearButton5000.isVisible()).toEqual(true);
+            await browser.wait(until.not(() => disappearButton5000.isVisible()));
+            expect(await disappearButton5000.isVisible()).toEqual(false);
+        });
+
+    });
+
+    describe('and try to wait for an Element to be ENABLED', () => {
+        let browser: Browser;
+        let enabledButton5000: WebElementFinder;
+        let disabledButton5000: WebElementFinder;
+
+
+        beforeAll(async () => {
+            browser = await BrowserWdjs.create(conf);
+            enabledButton5000 = browser.element(By.css("[data-test-id='EnabledButtonBy5000']"));
+            disabledButton5000 = browser.element(By.css("[data-test-id='DisabledButtonBy5000']"));
+        });
+
+        beforeEach(async () => {
+            await browser.get(testurl + "/delayed");
+        });
+
+        it('the system should wait for 5 Seconds for the element to be enabled ' +
+            '- (test case id: a1558fb9-fdee-4775-b44d-8cd848d517b2)', async () => {
+            // expect(await delayButton5000.isVisible()).toEqual(true);
+            expect(await enabledButton5000.isEnabled()).toEqual(false, `the button should be disabled at first check`);
+            await browser.wait(until(() => enabledButton5000.isEnabled()));
+            expect(await enabledButton5000.isEnabled()).toEqual(true, `the button should be enabled after 5 seconds`);
+
+        });
+
+        it('the system should wait for 5 Seconds for the element to be disabled ' +
+            '- (test case id: 010e0544-4852-4258-9729-30a2ff5ca063)', async () => {
+            // expect(await delayButton5000.isVisible()).toEqual(true);
+            expect(await disabledButton5000.isEnabled()).toEqual(true, `the button should be enabled at first check`);
+            await browser.wait(until.not(() => disabledButton5000.isEnabled()));
+            expect(await disabledButton5000.isEnabled()).toEqual(false, `the button should be disabled after 5 seconds`);
+
+        });
+
+
+    });
 
     describe('and work with the title', async () => {
         let browser: Browser;

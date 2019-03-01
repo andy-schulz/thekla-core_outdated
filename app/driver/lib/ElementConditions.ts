@@ -17,6 +17,12 @@ export class VisibilityCheck extends ElementCondition{
     ) {super()}
 }
 
+export class EnabledCheck extends ElementCondition{
+    constructor(
+        public helpText = "enabled"
+    ) {super()}
+}
+
 type LogicFunction<T> = (param: T) => T
 
 export class UntilElement implements UntilElementCondition{
@@ -36,6 +42,11 @@ export class UntilElement implements UntilElementCondition{
 
     public visible(): UntilElementCondition {
         this.waiter = new VisibilityCheck();
+        return this;
+    }
+
+    public enabled(): UntilElementCondition {
+        this.waiter = new EnabledCheck();
         return this;
     }
 

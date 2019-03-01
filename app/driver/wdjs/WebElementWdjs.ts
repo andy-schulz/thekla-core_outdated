@@ -73,10 +73,16 @@ export class WebElementWdjs implements WebElementFinder{
     public isDisplayed(): Promise<boolean> {
         return this.getWebElement()
             .then(element => element.isDisplayed())
-            .then(state => state)
+            .then(state => state) // returns a Promise an not the webdriver promise.Promise
             .catch(() => false)
     }
 
+    isEnabled(): Promise<boolean> {
+        return this.getWebElement()
+            .then(element => element.isEnabled())
+            .then(state => state)
+            .catch(() => false)
+    }
 
     get description(): string {
         return this.elementList.description + this._description;
