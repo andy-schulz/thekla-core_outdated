@@ -1,23 +1,26 @@
-import {getLogger, Logger}      from "log4js";
-import {until}                  from "selenium-webdriver";
+import {getLogger, Logger}     from "@log4js-node/log4js-api";
 import {
     WebElementFinder,
     WebElementListFinder,
     FrameElementFinder
-}                               from "../interface/WebElements";
-import {UntilElementCondition}  from "../lib/ElementConditions";
-import {By}                     from "../lib/Locator";
-import {BrowserWdjs}            from "./BrowserWdjs";
-import {LocatorWdjs}            from "./LocatorWdjs";
-import {FrameHelper, WdElement} from "./interfaces/WdElement";
-import {WebElementListWdjs}     from "./WebElementListWdjs";
+}                              from "../interface/WebElements";
+import {UntilElementCondition} from "../lib/ElementConditions";
+import {By}                    from "../lib/Locator";
+import {BrowserWdjs}           from "./BrowserWdjs";
+import {ExecuteConditionWdjs}  from "./ExecuteConditionWdjs";
+import {LocatorWdjs}           from "./LocatorWdjs";
+import {FrameHelper}           from "./interfaces/WdElement";
+import {WebElementListWdjs}    from "./WebElementListWdjs";
 
 
 export class FrameElementWdjs implements FrameElementFinder {
     private _description = "";
     private logger: Logger = getLogger("FrameElementWdjs");
+    private conditions: UntilElementCondition[] = [];
+
     constructor(
         public switchFrame: FrameHelper,
+        public parent: FrameElementWdjs | null,
         private _locator: By,
         private browser: BrowserWdjs) {
     }
@@ -28,11 +31,13 @@ export class FrameElementWdjs implements FrameElementFinder {
     }
 
     public all(
+
         locator: By): WebElementListFinder {
+        this.logger.debug(`Chains all element from frame: ${locator.toString()}`);
 
         const loc = LocatorWdjs.getSelector(locator);
         let getElements = () => {
-            return this.switchFrame()
+            return this.switchFrame(this.conditions)
                 .then(() => this.browser.driver.findElements(loc))
                 .then((elements) => {
                     return elements;
@@ -43,73 +48,53 @@ export class FrameElementWdjs implements FrameElementFinder {
     }
 
     shallWait(condition: UntilElementCondition): FrameElementFinder {
-        const loc = LocatorWdjs.getSelector(this._locator);
-
-
-        const createSwitchFrame = () => {
-            let switchFrame = (() => {
-                return new Promise((fulfill, reject) => {
-                    this.switchFrame.element()
-                        .then((element: WdElement) => this.browser.driver.wait(
-                            until.elementIsVisible(element),
-                            condition.timeout,
-                            `${condition.conditionHelpText} ${this.toString()}`))
-                        // here the frame switch is chained (call current frame switcher)
-                        .then(() => this.switchFrame())
-                        .then(fulfill)
-                        .catch(reject);
-                });
-            }) as FrameHelper;
-
-            switchFrame.element = this.switchFrame.element;
-
-            return switchFrame;
-        };
-
-        return new FrameElementWdjs(createSwitchFrame(),this._locator, this.browser);
+        this.conditions.push(condition);
+        return this;
     }
 
 
 
     frame(locator: By): FrameElementFinder {
+        this.logger.debug(`Chains all frames from frame: ${locator.toString()}`);
+
         const loc = LocatorWdjs.getSelector(locator);
 
 
         const createSwitchFrame = () => {
             const driver = this.browser.driver;
-            let frameSwitched = false;
 
-            let switchFrame = (() => {
+
+
+            let switchFrame = ((conditions: UntilElementCondition[]) => {
                 return new Promise((fulfill, reject) => {
-                    let promise = frameSwitched ? Promise.resolve() : this.switchFrame();
 
-                    promise
-                        .then(() => frameSwitched = true)
+                    const reducer = (acc: Promise<boolean>, condition: UntilElementCondition): Promise<boolean> => {
+                        return acc.then(() => {
+                            return ExecuteConditionWdjs.execute(condition,driver.findElement(loc))
+                        })
+                    };
+
+                    this.switchFrame(this.conditions)
+                        .then(() => conditions.reduce(reducer, Promise.resolve(true)))
                         .then(() => driver.switchTo().frame(driver.findElement(loc)))
-                        .then(fulfill)
-                        .catch(reject);
+                        .then(fulfill,reject)
+                        .catch(reject)
                 });
             }) as FrameHelper;
 
-            switchFrame.element = () => {
-                return new Promise((fulfill, reject) => {
-                    let promise = frameSwitched ? Promise.resolve() : this.switchFrame();
-                    promise
-                        .then(() => frameSwitched = true)
-                        .then(() => driver.findElement(loc))
-                        .then(fulfill)
-                        .catch(reject)
-                })
-            };
             return switchFrame;
         };
 
-        return new FrameElementWdjs(createSwitchFrame(),locator, this.browser);
+        return new FrameElementWdjs(createSwitchFrame(),this, locator, this.browser);
     }
 
 
     get description(): string {
         return this._description;
+    }
+
+    get myIdentifyer(): string {
+        return `Frame called '${this.description}' identified by >>${this._locator.toString()}<<`
     }
 
     public called(description: string): FrameElementFinder {

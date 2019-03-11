@@ -1,10 +1,11 @@
-import {WebElement} from "selenium-webdriver";
+import {WebElement}            from "selenium-webdriver";
+import {UntilElementCondition} from "../../lib/ElementConditions";
 
 export interface WdElement extends  WebElement {}
 
 export interface FrameHelper extends Function {
-    (): Promise<void>;
-    element: () => Promise<WdElement>;
+    (conditions: UntilElementCondition[]): Promise<void>;
+    // waiter: (condition: UntilElementCondition) => Promise<boolean>;
 }
 
 export interface ElementListHelper extends Function {

@@ -55,7 +55,7 @@ describe('The description on an element', () => {
 
         await andy.attemptsTo(
             Navigate.to(`/`),
-            See.if(Text.of(elem)).fulfills(match("There is no element to test")),
+            See.if(Text.of(elem)).fulfills(match("There is no waiter to test")),
         ).catch(callback.catchfn);
 
         expect(callback.catchfn).toHaveBeenCalled();

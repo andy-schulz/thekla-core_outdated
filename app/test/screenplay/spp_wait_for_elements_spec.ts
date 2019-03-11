@@ -63,7 +63,7 @@ describe('Waiting for SPP Elements', () => {
             );
         });
 
-        it('should be possible with wait actions on an element and an redirecting page ' +
+        it('should be possible with wait actions on an element and a redirecting page ' +
             '- (test case id: 4406f09a-5b80-4106-b46a-9f2683faefc9)', async () => {
             await walterTheWaiter.attemptsTo(
                 Navigate.to(`/redirect`),

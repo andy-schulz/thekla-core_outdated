@@ -20,7 +20,7 @@ export interface SppFrameFinder {
 }
 
 /**
- * Interface defining the element creation methods
+ * Interface defining the waiter creation methods
  */
 export interface SppFinder {
     element(locator: By): SppWebElementFinder;
@@ -40,7 +40,7 @@ export function element(locator: By): SppWebElementFinder {
 
 /**
  * creating a list of SppWebElements
- * @param locator - selector to find the element list
+ * @param locator - selector to find the waiter list
  */
 export function all(locator: By): SppWebElementListFinder {
     const getElements = (browser: Browser) => {
@@ -93,7 +93,7 @@ export abstract class SppFinderRoot implements SppFinder{
 }
 
 /**
- * class representing a single spp web element
+ * class representing a single spp web waiter
  */
 export class SppWebElementFinder extends SppFinderRoot implements SppFinderWaiter<SppWebElementFinder>{
     constructor(
@@ -123,7 +123,7 @@ export class SppWebElementFinder extends SppFinderRoot implements SppFinderWaite
 }
 
 /**
- * class representing an spp web element list
+ * class representing an spp web waiter list
  */
 export class SppWebElementListFinder extends SppFinderRoot{
     constructor(
@@ -152,7 +152,7 @@ export class SppWebElementListFinder extends SppFinderRoot{
 }
 
 /**
- * class representing a frame element
+ * class representing a frame waiter
  */
 export class SppFrameElementFinder implements SppFinder, SppFrameFinder, SppFinderWaiter<SppFrameElementFinder>{
     constructor(

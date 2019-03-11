@@ -14,9 +14,9 @@ import {By}                                     from "../lib/Locator";
 import {WebElementFinder, WebElementListFinder} from "../interface/WebElements";
 import {BrowserWindowWdjs}                      from "./BrowserWindowWdjs";
 import {FrameElementWdjs}                       from "./FrameElementWdjs";
-import {FrameHelper, WdElement}                 from "./interfaces/WdElement";
+import {FrameHelper}                 from "./interfaces/WdElement";
 import {LocatorWdjs}                            from "./LocatorWdjs";
-import {ExecuteCondition}                       from "./ExecuteCondition";
+import {ExecuteConditionWdjs}                   from "./ExecuteConditionWdjs";
 import {WebElementListWdjs}                     from "./WebElementListWdjs";
 import {Condition}                              from "../lib/Condition";
 import * as path                                from "path";
@@ -282,26 +282,34 @@ export class BrowserWdjs implements Browser{
         const loc = LocatorWdjs.getSelector(locator);
 
         const createSwitchFrame = () => {
-            let switchFrame = (() => {
+            let switchFrame = ((conditions: UntilElementCondition[]) => {
+                this.logger.info("Enter switchFrame of Browser frame method");
                 return new Promise((fulfill, reject) => {
+                    this.logger.debug(`frame base - trying to switch to: ${locator.toString()}`);
+
+                    const reducer = (acc: Promise<boolean>, condition: UntilElementCondition): Promise<boolean> => {
+                        return acc.then(() => {
+                            return ExecuteConditionWdjs.execute(condition,this._driver.findElement(loc))
+                        })
+                    };
+
+
                     this._driver.switchTo().defaultContent()
+                        .then(() => this.logger.debug(`frame base - switched to default context`))
+                        .then(() => conditions.reduce(reducer, Promise.resolve(true)))
                         .then(() => this._driver.switchTo().frame(this._driver.findElement(loc)))
-                        .then(() => this.logger.debug(`First Level Browser Frame switched.`))
-                        .then(fulfill)
-                        .catch(e => reject(e));
+                        .then(() => this.logger.debug(`frame base - switched to: ${loc.toString()}`))
+                        .then(fulfill, () => {
+                            this.logger.error("Error switching base frame");
+                        })
+                        .catch(reject);
                 });
             }) as FrameHelper;
 
-            switchFrame.element = () => {
-                return new Promise((fulfill, reject) => {
-                    this._driver.findElement(loc)
-                        .then((element: WdElement) => fulfill(element), e => reject(e));
-                })
-            };
             return switchFrame;
         };
 
-        return new FrameElementWdjs(createSwitchFrame(),locator, this);
+        return new FrameElementWdjs(createSwitchFrame(),null, locator, this);
     }
 
     /**
@@ -473,7 +481,7 @@ export class BrowserWdjs implements Browser{
                     }
                 };
 
-                ExecuteCondition.execute(condition, element)
+                ExecuteConditionWdjs.execute(condition, element)
                     .then(worker)
                     .catch((e: any) => worker(false, e + Error().stack))
             };

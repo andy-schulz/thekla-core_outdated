@@ -16,7 +16,7 @@ const conf: SeleniumConfig = {
     }
 };
 
-describe('Locating an element', () => {
+describe('Locating an waiter', () => {
     let browser: Browser;
 
     beforeAll(async () => {

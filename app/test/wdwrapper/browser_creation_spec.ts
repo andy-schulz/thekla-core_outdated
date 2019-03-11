@@ -10,6 +10,8 @@ const conf: SeleniumConfig = {
     }
 };
 
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+
 describe('When using the BrowserWdjs class', () => {
     beforeAll(async () => {
         await BrowserWdjs.cleanup();
