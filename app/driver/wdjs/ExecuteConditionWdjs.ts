@@ -2,7 +2,7 @@ import {WebElementFinder}                                     from "../interface
 import {EnabledCheck, UntilElementCondition, VisibilityCheck} from "../lib/ElementConditions";
 import {WdElement}                                            from "./interfaces/WdElement";
 
-export class ExecuteCondition {
+export class ExecuteConditionWdjs {
     public static execute (condition: UntilElementCondition, element: WdElement | WebElementFinder): Promise<boolean> {
         switch (condition.waiter.constructor) {
             case VisibilityCheck:
