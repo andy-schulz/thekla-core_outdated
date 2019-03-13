@@ -165,6 +165,7 @@ describe('Using', () => {
 
         });
 
+
         it('should throw an error on first try when the element is not found ' +
             '- (test case id: 29bbbf6f-4741-48fb-9c44-7ecec23d1240)', async () => {
             const delayedButton =

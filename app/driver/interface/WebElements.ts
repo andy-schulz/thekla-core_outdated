@@ -31,6 +31,7 @@ export interface WebElementFinder
     isVisible(): Promise<boolean>;
     isDisplayed(): Promise<boolean>;
     isEnabled(): Promise<boolean>;
+    clear(): Promise<void>;
 }
 
 export interface WebElementListFinder

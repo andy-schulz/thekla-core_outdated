@@ -26,6 +26,10 @@ export class Enter implements Interaction {
             this.logger.debug(`KeySequence is undefined so nothing is entered into ${this.inputField.toString()}`);
             return Promise.resolve();
         }
-        return BrowseTheWeb.as(actor).findElement(this.inputField).sendKeys(this.keySequence);
+        return BrowseTheWeb.as(actor).findElement(this.inputField).clear()
+            .then(() => {
+                return BrowseTheWeb.as(actor).findElement(this.inputField).sendKeys(this.keySequence as string)
+            })
+        ;
     }
 }

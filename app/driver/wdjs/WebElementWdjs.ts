@@ -77,11 +77,20 @@ export class WebElementWdjs implements WebElementFinder{
             .catch(() => false)
     }
 
-    isEnabled(): Promise<boolean> {
+    public isEnabled(): Promise<boolean> {
         return this.getWebElement()
             .then(element => element.isEnabled())
             .then(state => state)
             .catch(() => false)
+    }
+
+    public clear(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.getWebElement()
+                .then(element => element.clear())
+                .then(resolve, reject)
+                .catch(reject)
+        })
     }
 
     get description(): string {
