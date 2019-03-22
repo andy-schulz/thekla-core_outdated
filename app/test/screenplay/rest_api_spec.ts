@@ -1,12 +1,9 @@
 import * as yargs                                                             from "yargs";
 import {
-    Actor, RestAbilityOptions, UseTheRestApi, Get, Post, On, Send, Method, See, Response
+    Actor, RestAbilityOptions, UseTheRestApi, Get, Post, On, Send, Method, See, Response, RestApiFactory, request
 } from "../..";
 
 import {configure}   from "log4js";
-import {}          from "../..";
-import {RestApiRqst} from "../../rest/rqst/RestApiRqst";
-import {request}     from "../..";
 import {curry}       from "lodash";
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
@@ -69,7 +66,7 @@ describe('Trying to Add two numbers by the mathjs API', () => {
         };
 
         andy = Actor.named("Andy");
-        andy.whoCan(UseTheRestApi.using(RestApiRqst.create(restConfig)));
+        andy.whoCan(UseTheRestApi.using(RestApiFactory.create(restConfig)));
     });
 
     describe('the simple integers should be added together', () => {

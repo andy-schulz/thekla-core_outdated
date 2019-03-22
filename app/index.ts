@@ -27,13 +27,14 @@ export {Utils}                                                       from "./dri
  * Request Wrapper
  *
  */
-export {Get}        from "./screenplay/rest/actions/Get";
-export {Post}       from "./screenplay/rest/actions/Post";
-export {Delete}     from "./screenplay/rest/actions/Delete";
-export {Send}       from "./screenplay/rest/actions/Send";
+export {Get}            from "./screenplay/rest/actions/Get";
+export {Post}           from "./screenplay/rest/actions/Post";
+export {Delete}         from "./screenplay/rest/actions/Delete";
+export {Send}           from "./screenplay/rest/actions/Send";
 
-export {On}         from "./rest/lib/Ressource"
-export {Method}     from "./rest/lib/Method"
+export {On}             from "./rest/lib/Ressource"
+export {Method}         from "./rest/lib/Method"
+export {RestApiFactory} from "./rest/lib/RestApiFactory"
 
 /**
  * screenplay Elements
