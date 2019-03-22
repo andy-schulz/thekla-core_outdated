@@ -1,11 +1,11 @@
-import {UsesAbilities}                     from "../../Actor";
-import {Interaction}                       from "../../lib/actions/Activities";
-import {stepDetails}                       from "../../lib/decorators/StepDecorators";
-import {UseTheRestApi}                     from "../abilities/UseTheRestApi";
-import {SppRestRequest}                    from "../SppRestRequests";
-import {catchAndSaveOnError, safeResponse} from "./0_helper";
+import {UsesAbilities}                                    from "../../Actor";
+import {Interaction}                                      from "../../lib/actions/Activities";
+import {stepDetails}                                      from "../../lib/decorators/StepDecorators";
+import {UseTheRestApi}                                    from "../abilities/UseTheRestApi";
+import {SppRestRequest}                                   from "../SppRestRequests";
+import {catchAndSaveOnError, MethodActions, safeResponse} from "./0_helper";
 
-export class Post implements Interaction {
+export class Post implements Interaction, MethodActions {
     private safeTo: (result: any) => void;
     private catchError =  false;
 
@@ -16,12 +16,12 @@ export class Post implements Interaction {
     constructor(private request: SppRestRequest) {
     }
 
-    andSaveResult(safeTo: (result: any) => void) {
+    andSaveResponse(safeTo: (result: any[]) => void): Post {
         this.safeTo = safeTo;
         return this;
     }
 
-    dontFailInCaseOfAnError() {
+    dontFailInCaseOfAnError(): Post {
         this.catchError = true;
         return this;
     }

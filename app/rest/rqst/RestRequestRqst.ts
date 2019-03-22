@@ -28,6 +28,8 @@ export class RestRequestRqst implements RestRequest {
         return this.send(rp.delete);
     }
 
+
+
     // private send(fn: any, options: RestAbilityOptions = {}) {
     private send(fn: any) {
         return new Promise((fulfill, reject) => {

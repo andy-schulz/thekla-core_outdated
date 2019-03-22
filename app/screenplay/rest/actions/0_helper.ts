@@ -12,3 +12,8 @@ export const catchAndSaveOnError = curry((safeTo: (result: any) => void, catchEr
         return Promise.resolve();
     return Promise.reject(e)
 });
+
+export interface MethodActions {
+    andSaveResponse(safeTo: (result: any) => void): MethodActions
+    dontFailInCaseOfAnError(): MethodActions
+}

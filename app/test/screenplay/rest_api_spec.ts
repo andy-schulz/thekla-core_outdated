@@ -1,13 +1,13 @@
 import * as yargs                                                             from "yargs";
 import {
-    Actor, RestAbilityOptions, UseTheRestApi, Get, Post
+    Actor, RestAbilityOptions, UseTheRestApi, Get, Post, On, Send, Method, See, Response
 } from "../..";
 
-import {configure} from "log4js";
-import {On}                   from "../..";
-import {RestApiRqst}          from "../../rest/rqst/RestApiRqst";
-import {request}              from "../..";
-import {curry} from "lodash";
+import {configure}   from "log4js";
+import {}          from "../..";
+import {RestApiRqst} from "../../rest/rqst/RestApiRqst";
+import {request}     from "../..";
+import {curry}       from "lodash";
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
@@ -86,7 +86,20 @@ describe('Trying to Add two numbers by the mathjs API', () => {
             const req = request(On.ressource(`/?expr=${a}%2B${b}`));
 
             await andy.attemptsTo(
-                Get.from(req).andSaveResult(toResult(result))
+                Get.from(req).andSaveResponse(toResult(result))
+            );
+
+            expect(result[0].statusCode).toEqual(200);
+            expect(result[0].body).toEqual(`${calculationResult}`);
+        });
+
+        it('when using the GET Method and setting it on the Activity' +
+            '- (test case id: 80e8f4fe-a623-4e0f-a835-d49f1d507541)', async () => {
+            const req = request(On.ressource(`/?expr=${a}%2B${b}`));
+
+            await andy.attemptsTo(
+                Send.the(req).as(Method.get())
+                    .andSaveResponse(toResult(result))
             );
 
             expect(result[0].statusCode).toEqual(200);
@@ -108,7 +121,30 @@ describe('Trying to Add two numbers by the mathjs API', () => {
                 .using(conf);
 
             await andy.attemptsTo(
-                Post.to(req).andSaveResult(toResult(result))
+                Post.to(req).andSaveResponse(toResult(result))
+            );
+
+            expect(result[0].statusCode).toEqual(200);
+            expect(JSON.parse(result[0].body).result[0]).toEqual(`${calculationResult}`);
+        });
+
+        it('when using the POST Method and setting it on the Activity' +
+            '- (test case id: 81089f86-cf3d-4112-bb9f-bfcb5d51cc0b)', async () => {
+            const conf: RestAbilityOptions = {
+                body: JSON.stringify({
+                    expr: [
+                        `${a} + ${b}`
+                    ],
+                    "precision": 2
+                })
+            };
+
+            const req = request(On.ressource(`/`))
+                .using(conf);
+
+            await andy.attemptsTo(
+                Send.the(req).as(Method.post())
+                    .andSaveResponse(toResult(result))
             );
 
             expect(result[0].statusCode).toEqual(200);
@@ -131,7 +167,7 @@ describe('Trying to Add two numbers by the mathjs API', () => {
 
             try {
                 await andy.attemptsTo(
-                    Get.from(req).andSaveResult(toResult(result))
+                    Get.from(req).andSaveResponse(toResult(result))
                 );
             } catch (e) {
                 expect(result[0].statusCode).toEqual(404);
@@ -145,7 +181,21 @@ describe('Trying to Add two numbers by the mathjs API', () => {
 
             try {
                 await andy.attemptsTo(
-                    Post.to(req).andSaveResult(toResult(result))
+                    Post.to(req).andSaveResponse(toResult(result))
+                );
+            } catch (e) {
+                expect(result[0].statusCode).toEqual(404);
+            }
+        });
+
+        it('when using the POST method and setting it on the Activity' +
+            '- (test case id: 47fc1292-bb55-4de2-a7fc-313b47cf15f3)', async () => {
+            const req = request(On.ressource(`/`))
+                .using(restConfig2);
+
+            try {
+                await andy.attemptsTo(
+                    Send.the(req).as(Method.post()).andSaveResponse(toResult(result))
                 );
             } catch (e) {
                 expect(result[0].statusCode).toEqual(404);
@@ -169,7 +219,7 @@ describe('Trying to Add two numbers by the mathjs API', () => {
             try {
                 await andy.attemptsTo(
                     Get.from(req)
-                        .andSaveResult(toResult(result))
+                        .andSaveResponse(toResult(result))
                         .dontFailInCaseOfAnError()
                 );
             } catch (e) {
@@ -188,7 +238,7 @@ describe('Trying to Add two numbers by the mathjs API', () => {
             try {
                 await andy.attemptsTo(
                     Post.to(req)
-                        .andSaveResult(toResult(result))
+                        .andSaveResponse(toResult(result))
                         .dontFailInCaseOfAnError()
                 );
             } catch (e) {
@@ -222,7 +272,7 @@ describe('Trying to Add two numbers by the mathjs API', () => {
                 .using(conf);
 
             await andy.attemptsTo(
-                Get.from(req).andSaveResult(toResult(result)),
+                Get.from(req).andSaveResponse(toResult(result)),
             );
 
             expect(result[0]).toEqual(2);
@@ -245,9 +295,28 @@ describe('Trying to Add two numbers by the mathjs API', () => {
                 .using(conf);
 
             await andy.attemptsTo(
-                Post.to(req).andSaveResult(toResult(result)),
+                Post.to(req).andSaveResponse(toResult(result)),
             );
             expect(result[0].result[0]).toEqual("2");
+        });
+    });
+
+    describe('when using the Response question', () => {
+        it('it should be possible to check the result ' +
+            '- (test case id: 7f4b74f0-048f-43b0-81a6-614299229d6f)', () => {
+            const req = request(On.ressource(`/?expr=${a}%2B${b}`));
+
+            const theResponseCheck = (respone: any) => {
+                expect(respone.statusCode).toEqual(200);
+                expect(respone.body).toEqual(`${calculationResult}`);
+                return true;
+            };
+
+            return andy.attemptsTo(
+                See.if(Response.of(req).as(Method.get()))
+                    .fulfills(theResponseCheck)
+                    .repeatFor(5, 1000),
+            );
         });
     });
 });

@@ -27,10 +27,13 @@ export {Utils}                                                       from "./dri
  * Request Wrapper
  *
  */
-export {Get}        from "./screenplay/rest/actions/Get"
-export {Post}       from "./screenplay/rest/actions/Post"
-export {Delete}     from "./screenplay/rest/actions/Delete"
+export {Get}        from "./screenplay/rest/actions/Get";
+export {Post}       from "./screenplay/rest/actions/Post";
+export {Delete}     from "./screenplay/rest/actions/Delete";
+export {Send}       from "./screenplay/rest/actions/Send";
+
 export {On}         from "./rest/lib/Ressource"
+export {Method}     from "./rest/lib/Method"
 
 /**
  * screenplay Elements
@@ -71,7 +74,7 @@ export {Text}                              from "./screenplay/web/questions/Text
 export {Value}                             from "./screenplay/web/questions/Value";
 export {Attribute}                         from "./screenplay/web/questions/Attribute";
 export {Count}                             from "./screenplay/web/questions/Count";
-// export {Response}                          from "./screenplay/rest/questions/Response";
+export {Response}                          from "./screenplay/rest/questions/Response";
 
 // Custom Errors
 export {NoSuchAbilityError} from "./screenplay/errors/NoSuchAbilityError";

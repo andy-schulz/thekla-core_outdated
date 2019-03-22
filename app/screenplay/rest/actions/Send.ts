@@ -1,3 +1,4 @@
+import {RequestMethod}                                    from "../../../rest/lib/Method";
 import {UsesAbilities}                                    from "../../Actor";
 import {Interaction}                                      from "../../lib/actions/Activities";
 import {stepDetails}                                      from "../../lib/decorators/StepDecorators";
@@ -5,30 +6,36 @@ import {UseTheRestApi}                                    from "../abilities/Use
 import {SppRestRequest}                                   from "../SppRestRequests";
 import {catchAndSaveOnError, MethodActions, safeResponse} from "./0_helper";
 
-export class Delete implements Interaction, MethodActions {
+export class Send implements Interaction, MethodActions {
     private safeTo: (result: any) => void;
     private catchError =  false;
+    private method: RequestMethod;
 
-    public static from(request: SppRestRequest): Delete {
-        return new Delete(request);
+    public static the(request: SppRestRequest): Send {
+        return new Send(request);
     }
 
     constructor(private request: SppRestRequest) {
     }
 
-    andSaveResponse(safeTo: (result: any[]) => void): Delete {
+    andSaveResponse(safeTo: (result: any[]) => void): Send {
         this.safeTo = safeTo;
         return this;
     }
 
-    dontFailInCaseOfAnError(): Delete {
+    dontFailInCaseOfAnError(): Send {
         this.catchError = true;
         return this;
     }
 
-    @stepDetails<UsesAbilities>(`send a delete request for: '<<request>>'`)
+    as(method: RequestMethod): Send {
+        this.method = method;
+        return this;
+    }
+
+    @stepDetails<UsesAbilities>(`send a get request for: '<<request>>'`)
     performAs(actor: UsesAbilities): Promise<void> {
-        return UseTheRestApi.as(actor).send(this.request).post()
+        return this.method.send(UseTheRestApi.as(actor).send(this.request))
             .then(safeResponse(this.safeTo))
             .catch(catchAndSaveOnError(this.safeTo, this.catchError))
     }
