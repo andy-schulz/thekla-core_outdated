@@ -3,7 +3,7 @@ import {
     Actor, RestAbilityOptions, UseTheRestApi, Get, Post
 } from "../..";
 
-import {getLogger, configure} from "log4js";
+import {configure} from "log4js";
 import {On}                   from "../../rest/lib/Ressource";
 import {RestApiRqst}          from "../../rest/rqst/RestApiRqst";
 import {request}              from "../..";
@@ -31,7 +31,6 @@ const config = {
 // @ts-ignore
 configure(config);
 // @ts-ignore
-logger.stepdetails("Start");
 
 describe('Trying to Add two numbers by the mathjs API', () => {
     const a = 5;
