@@ -4,7 +4,7 @@ import {
 } from "../..";
 
 import {configure} from "log4js";
-import {On}                   from "../../rest/lib/Ressource";
+import {On}                   from "../..";
 import {RestApiRqst}          from "../../rest/rqst/RestApiRqst";
 import {request}              from "../..";
 import {curry} from "lodash";

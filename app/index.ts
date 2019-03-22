@@ -1,3 +1,4 @@
+
 /**
  *
  */
@@ -26,9 +27,10 @@ export {Utils}                                                       from "./dri
  * Request Wrapper
  *
  */
-export {Get}                                                         from "./screenplay/rest/actions/Get"
-export {Post}                                                        from "./screenplay/rest/actions/Post"
-export {Delete}                                                      from "./screenplay/rest/actions/Delete"
+export {Get}        from "./screenplay/rest/actions/Get"
+export {Post}       from "./screenplay/rest/actions/Post"
+export {Delete}     from "./screenplay/rest/actions/Delete"
+export {On}         from "./rest/lib/Ressource"
 
 /**
  * screenplay Elements
