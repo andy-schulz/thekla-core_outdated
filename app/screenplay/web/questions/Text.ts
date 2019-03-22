@@ -1,7 +1,7 @@
-import {Question}            from "../../../lib/matcher/Question";
-import {UsesAbilities}       from "../../../Actor";
-import {SppWebElementFinder} from "../../SppWebElements";
-import {BrowseTheWeb}        from "../../../../index";
+import {Question}            from "../../lib/matcher/Question";
+import {UsesAbilities}       from "../../Actor";
+import {SppWebElementFinder} from "../SppWebElements";
+import {BrowseTheWeb}        from "../../../index";
 
 export class Text implements Question<string> {
 

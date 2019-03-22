@@ -2,6 +2,7 @@ import {Browser}                                                    from "../../
 import {FrameElementFinder, WebElementFinder, WebElementListFinder} from "../../driver/interface/WebElements";
 import {UntilElementCondition}                                      from "../../driver/lib/ElementConditions";
 import {By}                                                         from "../../driver/lib/Locator"
+import {WdElement}                                                  from "../../driver/wdjs/interfaces/WdElement";
 
 // export interface FinderLocator {
 //     type: string;
@@ -60,8 +61,15 @@ export function frame(locator: By): SppFrameElementFinder {
     return new SppFrameElementFinder(locator, switchFrame);
 }
 
-type GetEl = (browser: Browser) => WebElementFinder
-type GetEls = (browser: Browser) => WebElementListFinder
+export interface ElementHelper extends Function {
+    (browser: Browser): WebElementFinder;
+    description?: () => string;
+}
+
+export interface ElementListHelper extends Function {
+    (browser: Browser): WebElementListFinder;
+    description?: () => string;
+}
 /**
  * abstract class implementing the finders for sub elements
  */
@@ -70,13 +78,15 @@ export abstract class SppFinderRoot implements SppFinder{
 
     protected constructor(
         public locator: By,
-        public getElements: GetEl | GetEls) {
+        public getElements: ElementHelper | ElementListHelper) {
     }
 
     public element(locator: By): SppWebElementFinder {
         const getElements = (browser: Browser): WebElementFinder => {
             return this.getElements(browser).element(locator);
         };
+        getElements.description = this.getElements.description;
+
         return new SppWebElementFinder(locator, getElements);
     }
 
@@ -106,6 +116,13 @@ export class SppWebElementFinder extends SppFinderRoot implements SppFinderWaite
         const desc = (browser: Browser): WebElementFinder => {
             return this.getElements(browser).called(description) as WebElementFinder;
         };
+
+        desc.description = () => {
+            const desc = this.getElements.description ? this.getElements.description() + " -> " : "";
+
+            return desc + description;
+        };
+
         return new SppWebElementFinder(this.locator, desc);
     }
 
@@ -113,12 +130,14 @@ export class SppWebElementFinder extends SppFinderRoot implements SppFinderWaite
         const waiter = (browser: Browser): WebElementFinder => {
             return (this.getElements(browser) as WebElementFinder).shallWait(condition);
         };
+        waiter.description = this.getElements.description;
+
         return new SppWebElementFinder(this.locator,waiter);
     }
 
 
     toString() {
-        return `${this._description ? this._description : "'SppElement'"} located by >>${this.locator.toString()}<<`;
+        return `${this.getElements.description ? this.getElements.description() : "'SppElement'"} located by >>${this.locator.toString()}<<`;
     }
 }
 

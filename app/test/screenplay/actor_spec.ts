@@ -11,8 +11,8 @@ import {
     Count,
     Text,
     SeleniumConfig,
-    Sleep
-}                         from "../..";
+    UntilElement, Wait
+} from "../..";
 import {GoogleSearch}     from "../PageObjects/GoogleSearch/GoogleSearch";
 import {Add}              from "../PageObjects/GoogleCalculator/Add";
 import {GoogleCalculator} from "../PageObjects/GoogleCalculator/GoogleCalculator";
@@ -33,6 +33,9 @@ let config: SeleniumConfig = {
 };
 import {getLogger, configure} from "log4js";
 const logger = getLogger("Actor");
+configure("res/config/log4js.json");
+
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
 describe('Searching on Google', () => {
     let john: Actor;
@@ -53,10 +56,9 @@ describe('Searching on Google', () => {
             Navigate.to("https://www.google.de"),
             Enter.value("calculator").into(GoogleSearch.searchField),
             Enter.value(Key.ENTER).into(GoogleSearch.searchField),
-            Sleep.for(500),
+            Wait.for(GoogleCalculator.input).andCheck(UntilElement.is.visible()),
             Add.number(1).to(5),
             See.if(Text.of(GoogleCalculator.input)).fulfills(match("6")),
-            Sleep.for(500),
         );
 
     }, 20000);
@@ -69,10 +71,9 @@ describe('Searching on Google', () => {
             Navigate.to("https://www.google.de"),
             Enter.value("calculator").into(GoogleSearch.searchField),
             Enter.value(Key.ENTER).into(GoogleSearch.searchField),
-            Sleep.for(500),
+            Wait.for(GoogleCalculator.input).andCheck(UntilElement.is.visible()),
             Add.number(1).to(5),
             See.if(Text.of(GoogleCalculator.inputNumber)).fulfills(match("6")),
-            Sleep.for(500),
         );
 
     }, 20000);

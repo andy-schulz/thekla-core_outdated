@@ -65,4 +65,13 @@ export class UntilElement implements UntilElementCondition{
     get conditionHelpText() {
         return `${this.negate(true) ? "is" : "is not"} ${this.waiter.helpText}`
     }
+
+    public toString() {
+        const conditionType = (waiter: ElementCondition) => {
+            if(waiter.constructor.name === "VisibilityCheck")   return "visible";
+            if(waiter.constructor.name === "EnabledCheck")      return "enabled";
+        };
+
+        return `condition until element is${this.negate(true) ? "" : " not"} ${conditionType(this.waiter)}`
+    }
 }

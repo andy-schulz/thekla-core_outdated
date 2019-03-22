@@ -1,7 +1,8 @@
+import {stepDetails}           from "../../lib/decorators/StepDecorators";
 import {BrowseTheWeb}          from "../abilities/BrowseTheWeb";
 import {SppWebElementFinder}   from "../SppWebElements";
 import {Interaction}           from "../../lib/actions/Activities";
-import {Actor}                 from "../../Actor";
+import {Actor, UsesAbilities}  from "../../Actor";
 import {getLogger}             from "@log4js-node/log4js-api"
 import {UntilElementCondition} from "../../../driver/lib/ElementConditions";
 
@@ -20,7 +21,8 @@ export class Wait implements Interaction {
 
     constructor(private waitCondition: SppWebElementFinder | number) {}
 
-    performAs(actor: Actor): Promise<void> {
+    @stepDetails<UsesAbilities>(`wait for '<<condition>>'.`)
+    performAs(actor: UsesAbilities): Promise<void> {
 
         return new Promise((resolve, reject) => {
             BrowseTheWeb.as(actor).wait(this.condition, this.waitCondition as SppWebElementFinder)
@@ -30,6 +32,5 @@ export class Wait implements Interaction {
                 })
                 .catch(reject)
         });
-
     }
 }

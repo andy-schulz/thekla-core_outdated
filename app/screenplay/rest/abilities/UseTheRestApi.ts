@@ -1,10 +1,12 @@
-import {Ability}                      from "../../lib/abilities/Ability";
-import {UsesAbilities}                from "../../Actor";
-import {SppRequest, SppRequestResult} from "../interfaces/requests";
-import merge                          from "deepmerge";
-import {RequestPromiseOptions}        from "request-promise-native";
+import {RestApi}               from "../../../rest/interface/RestApi";
+import {RestRequest}           from "../../../rest/interface/RestRequest";
+import {Ability}               from "../../lib/abilities/Ability";
+import {UsesAbilities}         from "../../Actor";
+import {RequestPromiseOptions} from "request-promise-native";
+import {SppRestRequest}        from "../SppRestRequests";
 
-export interface RestAbilityOptions extends RequestPromiseOptions{
+export interface RestAbilityOptions extends RequestPromiseOptions {
+    [key:string]: any,
     restClient?: "request";
     baseUrl?: string;
 }
@@ -15,20 +17,33 @@ export interface RestAbilityOptions extends RequestPromiseOptions{
  */
 export class UseTheRestApi implements Ability {
 
-    static using(standardOptions: RestAbilityOptions = {restClient: "request"}) {
-        return new UseTheRestApi(standardOptions);
+    // static using(standardOptions: RestAbilityOptions = {restClient: "request"}) {
+    //     return new UseTheRestApi(standardOptions);
+    // }
+
+    static using(restApi: RestApi) {
+        return new UseTheRestApi(restApi);
     }
+
 
     static as(actor: UsesAbilities): UseTheRestApi {
-        return <UseTheRestApi>actor.withAbilityTo(UseTheRestApi);
+        return actor.withAbilityTo(UseTheRestApi) as UseTheRestApi;
     }
 
-    constructor(private restAbilityOptions: RestAbilityOptions) {}
-
-
-    send(request: SppRequest): Promise<SppRequestResult> {
-        return request.send(merge(request.options, this.restAbilityOptions));
+    send(spe: SppRestRequest): RestRequest {
+        return spe.send(this.restApi)
     }
+
+    constructor(private restApi: RestApi) {
+
+    }
+
+
+
+
+    // send(request: SppRequest): RestRequest {
+    //     return request.send(merge(request.options, this.restAbilityOptions));
+    // }
 
 
 

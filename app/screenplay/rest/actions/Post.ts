@@ -1,35 +1,35 @@
-import merge                          from "deepmerge";
-import * as rp                        from "request-promise-native";
-import {RestAbilityOptions}           from "../abilities/UseTheRestApi";
-import {SppRequest, SppRequestResult} from "../interfaces/requests";
+import {UsesAbilities}                     from "../../Actor";
+import {Interaction}                       from "../../lib/actions/Activities";
+import {stepDetails}                       from "../../lib/decorators/StepDecorators";
+import {UseTheRestApi}                     from "../abilities/UseTheRestApi";
+import {SppRestRequest}                    from "../SppRestRequests";
+import {catchAndSaveOnError, safeResponse} from "./0_helper";
 
-export class Post implements SppRequest {
-    private restAbilityOptions: RestAbilityOptions;
-    public static to(ressource: string): Post {
-        return new Post(ressource);
+export class Post implements Interaction {
+    private safeTo: (result: any) => void;
+    private catchError =  false;
+
+    public static to(request: SppRestRequest): Post {
+        return new Post(request);
     }
 
-    constructor(private ressource: string) {
-        this.restAbilityOptions = {};
+    constructor(private request: SppRestRequest) {
     }
 
-    public using(options: RestAbilityOptions): Post {
-        this.restAbilityOptions = options;
+    andSaveResult(safeTo: (result: any) => void) {
+        this.safeTo = safeTo;
         return this;
     }
 
-
-    send(options: RestAbilityOptions): Promise<SppRequestResult> {
-        return new Promise((fulfill, reject) => {
-            rp.post(this.ressource, merge(options, this.restAbilityOptions)).then((response: SppRequestResult) => {
-                fulfill(response);
-            }).catch((e: any) => {
-                reject(e);
-            });
-        });
+    dontFailInCaseOfAnError() {
+        this.catchError = true;
+        return this;
     }
 
-    get options(): RestAbilityOptions {
-        return this.restAbilityOptions;
+    @stepDetails<UsesAbilities>(`send a post request for: '<<request>>'`)
+    performAs(actor: UsesAbilities): Promise<void> {
+        return UseTheRestApi.as(actor).send(this.request).post()
+            .then(safeResponse(this.safeTo))
+            .catch(catchAndSaveOnError(this.safeTo, this.catchError))
     }
 }

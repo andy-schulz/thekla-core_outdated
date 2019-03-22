@@ -1,4 +1,5 @@
 import {BrowseTheWeb, Interaction} from "../../../index";
+import {stepDetails}               from "../../lib/decorators/StepDecorators";
 import {SppWebElementFinder}       from "../SppWebElements";
 import {UsesAbilities}             from "../../Actor";
 import {getLogger, Logger}         from "@log4js-node/log4js-api";
@@ -6,6 +7,7 @@ import {getLogger, Logger}         from "@log4js-node/log4js-api";
 
 export class Enter implements Interaction {
     private inputField: SppWebElementFinder;
+    private clearBeforeFill: boolean = false;
     private logger: Logger = getLogger("Enter");
 
     public static value(inputString: string | undefined): Enter {
@@ -19,6 +21,12 @@ export class Enter implements Interaction {
         return this;
     }
 
+    public butClearsTheFieldBefore(clear: boolean = true) {
+        this.clearBeforeFill = clear;
+        return this;
+    }
+
+    @stepDetails<UsesAbilities>("enter the value '<<keySequence>>' into field: <<inputField>>")
     performAs(actor: UsesAbilities): Promise<void> {
         // if undefined do nothing,
         // it makes it possible to work with data structures on forms
@@ -26,10 +34,11 @@ export class Enter implements Interaction {
             this.logger.debug(`KeySequence is undefined so nothing is entered into ${this.inputField.toString()}`);
             return Promise.resolve();
         }
-        return BrowseTheWeb.as(actor).findElement(this.inputField).clear()
+        return Promise.resolve()
             .then(() => {
-                return BrowseTheWeb.as(actor).findElement(this.inputField).sendKeys(this.keySequence as string)
+                if(this.clearBeforeFill)
+                    return BrowseTheWeb.as(actor).findElement(this.inputField).clear();
             })
-        ;
+            .then(() => BrowseTheWeb.as(actor).findElement(this.inputField).sendKeys(this.keySequence as string));
     }
 }

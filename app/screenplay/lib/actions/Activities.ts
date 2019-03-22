@@ -17,6 +17,7 @@ export interface Oracle extends Activity{
 
 export interface Interaction extends Activity{
     performAs(actor: UsesAbilities): Promise<void>;
+    toString(): string;
 }
 
 export abstract class Task implements Activity {

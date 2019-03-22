@@ -12,7 +12,7 @@ export class BrowseTheWeb implements Ability {
     }
 
     static as(actor: UsesAbilities): BrowseTheWeb {
-        return <BrowseTheWeb>actor.withAbilityTo(BrowseTheWeb);
+        return actor.withAbilityTo(BrowseTheWeb) as BrowseTheWeb;
     }
 
     constructor(private browser: Browser) {

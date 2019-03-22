@@ -5,9 +5,9 @@ import {Actor}                        from "../../screenplay/Actor";
 import {See}                          from "../../screenplay/lib/matcher/See";
 import {BrowseTheWeb}                 from "../../screenplay/web/abilities/BrowseTheWeb";
 import {Navigate}                     from "../../screenplay/web/actions/Navigate";
-import {Attribute}                    from "../../screenplay/web/matcher/questions/Attribute";
+import {Attribute}                    from "../../screenplay/web/questions/Attribute";
 import {element, SppWebElementFinder} from "../../screenplay/web/SppWebElements";
-import {strictEqual} from "assert";
+import {strictEqual}                  from "assert";
 
 
 let config: SeleniumConfig = {

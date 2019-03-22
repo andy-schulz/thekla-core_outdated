@@ -36,6 +36,11 @@ export {Delete}                                                      from "./scr
 export {element, all, frame}                                         from "./screenplay/web/SppWebElements";
 export {SppWebElementFinder, SppWebElementListFinder}                from "./screenplay/web/SppWebElements";
 export {Actor}                                                       from "./screenplay/Actor";
+export {
+    request, SppRestRequest
+}
+                                                                     from "./screenplay/rest/SppRestRequests";
+
 
 // Abilities
 export {Ability}                                                from "./screenplay/lib/abilities/Ability";
@@ -54,17 +59,23 @@ export {Navigate}                        from "./screenplay/web/actions/Navigate
 export {Wait}                            from "./screenplay/web/actions/Wait";
 export {Sleep}                           from "./screenplay/web/actions/Sleep";
 
+
 // Oracle
 export {See}     from "./screenplay/lib/matcher/See";
 export {Extract} from "./screenplay/lib/matcher/Extract";
 
 // Questions
-export {Text}                              from "./screenplay/web/matcher/questions/Text";
-export {Value}                             from "./screenplay/web/matcher/questions/Value";
-export {Attribute}                         from "./screenplay/web/matcher/questions/Attribute";
-export {Count}                             from "./screenplay/web/matcher/questions/Count";
-export {Response}                          from "./screenplay/rest/questions/Response";
-export {SppRequestResult, SppRequest}      from "./screenplay/rest/interfaces/requests";
+export {Text}                              from "./screenplay/web/questions/Text";
+export {Value}                             from "./screenplay/web/questions/Value";
+export {Attribute}                         from "./screenplay/web/questions/Attribute";
+export {Count}                             from "./screenplay/web/questions/Count";
+// export {Response}                          from "./screenplay/rest/questions/Response";
 
 // Custom Errors
 export {NoSuchAbilityError} from "./screenplay/errors/NoSuchAbilityError";
+
+//Function Matcher
+export {strictEqual} from "./screenplay/lib/matcher/FunctionMatcher/matcher"
+
+// Decorators
+export {stepDetails, step} from "./screenplay/lib/decorators/StepDecorators"

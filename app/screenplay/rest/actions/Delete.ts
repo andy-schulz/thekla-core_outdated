@@ -1,35 +1,35 @@
-import merge                          from "deepmerge";
-import * as rp                        from "request-promise-native";
-import {RestAbilityOptions}           from "../abilities/UseTheRestApi";
-import {SppRequest, SppRequestResult} from "../interfaces/requests";
+import {UsesAbilities}                     from "../../Actor";
+import {Interaction}                       from "../../lib/actions/Activities";
+import {stepDetails}                       from "../../lib/decorators/StepDecorators";
+import {UseTheRestApi}                     from "../abilities/UseTheRestApi";
+import {SppRestRequest}                    from "../SppRestRequests";
+import {catchAndSaveOnError, safeResponse} from "./0_helper";
 
-export class Delete implements SppRequest {
-    private restAbilityOptions: RestAbilityOptions;
-    public static from(ressource: string): Delete {
-        return new Delete(ressource);
+export class Delete implements Interaction {
+    private safeTo: (result: any) => void;
+    private catchError =  false;
+
+    public static from(request: SppRestRequest): Delete {
+        return new Delete(request);
     }
 
-    constructor(private ressource: string) {
-        this.restAbilityOptions = {};
+    constructor(private request: SppRestRequest) {
     }
 
-    public using(options: RestAbilityOptions): Delete {
-        this.restAbilityOptions = options;
+    andSaveResult(safeTo: (result: any) => void) {
+        this.safeTo = safeTo;
         return this;
     }
 
-
-    send(options: RestAbilityOptions): Promise<SppRequestResult> {
-        return new Promise((fulfill, reject) => {
-            rp.delete(this.ressource, merge(options, this.restAbilityOptions)).then((response: SppRequestResult) => {
-                fulfill(response);
-            }).catch((e: any) => {
-                reject(e);
-            });
-        });
+    dontFailInCaseOfAnError() {
+        this.catchError = true;
+        return this;
     }
 
-    get options(): RestAbilityOptions {
-        return this.restAbilityOptions;
+    @stepDetails<UsesAbilities>(`send a delete request for: '<<request>>'`)
+    performAs(actor: UsesAbilities): Promise<void> {
+        return UseTheRestApi.as(actor).send(this.request).post()
+            .then(safeResponse(this.safeTo))
+            .catch(catchAndSaveOnError(this.safeTo, this.catchError))
     }
 }

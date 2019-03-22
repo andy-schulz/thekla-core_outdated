@@ -29,42 +29,105 @@ const config: SeleniumConfig = {
 import {getLogger, configure} from "log4js";
 const logger = getLogger("SppWaitForElements");
 
+jasmine.DEFAULT_TIMEOUT_INTERVAL=30000;
+
 describe('The description on an element', () => {
-    let andy: Actor;
 
-    beforeAll(async () => {
-        andy = Actor.named("Andy");
-        andy.whoCan(BrowseTheWeb.using(await BrowserFactory.create(config)));
+    describe('should be attached to the element', () => {
+        it('on a simple element - (test case id: 161de6a4-2f53-4864-832a-2e291fc250d6)', () => {
+            const testButton =
+                element(By.css("#doesNotExistOnLevelOne"))
+                    .called("Test Button description on level one");
+
+            expect(testButton.toString()).toEqual("Test Button description on level one located by >>byCss: #doesNotExistOnLevelOne<<")
+        });
+
+        it('with a wait stepDetails - (test case id: 161de6a4-2f53-4864-832a-2e291fc250d6)', () => {
+            const testButton =
+                element(By.css("#doesNotExistOnLevelOne"))
+                    .shallWait(UntilElement.is.visible())
+                    .called("Test Button description on level one");
+
+            expect(testButton.toString()).toEqual("Test Button description on level one located by >>byCss: #doesNotExistOnLevelOne<<")
+        });
+
+        it('with a wait stepDetails after the description is set - (test case id: 161de6a4-2f53-4864-832a-2e291fc250d6)', () => {
+            const testButton =
+                element(By.css("#doesNotExistOnLevelOne"))
+                    .called("Test Button description on level one")
+                    .shallWait(UntilElement.is.visible());
+
+
+            expect(testButton.toString()).toEqual("Test Button description on level one located by >>byCss: #doesNotExistOnLevelOne<<")
+        });
+
+        it('with a wait stepDetails after the description is set - (test case id: 161de6a4-2f53-4864-832a-2e291fc250d6)', () => {
+            const testButton =
+                element(By.css("#doesNotExistOnLevelOne"))
+                    .called("Test Button description on level one")
+                    .shallWait(UntilElement.is.visible())
+                    .called("The second description of the Test Button description on level one");
+
+
+            expect(testButton.toString()).toEqual("Test Button description on level one -> The second description of the Test Button description on level one located by >>byCss: #doesNotExistOnLevelOne<<")
+        });
+
+        it('with a wait stepDetails after the description is set - (test case id: 161de6a4-2f53-4864-832a-2e291fc250d6)', () => {
+            const testButton =
+                element(By.css("#doesNotExistOnLevelOne"))
+                    .called("Test Button description on level one")
+                    .element(By.css("#doesNotExistOnLevelOne"))
+                    .shallWait(UntilElement.is.visible())
+                    .called("The second description of the Test Button description on level one");
+
+
+            expect(testButton.toString()).toEqual("Test Button description on level one -> The second description of the Test Button description on level one located by >>byCss: #doesNotExistOnLevelOne<<")
+        });
+
+        it('with a wait stepDetails after the description is set - (test case id: 161de6a4-2f53-4864-832a-2e291fc250d6)', () => {
+            const testButton =
+                element(By.css("#doesNotExistOnLevelOne"))
+                    .called("Test Button description on level one")
+                    .element(By.css("#doesNotExistOnLevelOne"))
+                    .shallWait(UntilElement.is.visible());
+
+
+            expect(testButton.toString()).toEqual("Test Button description on level one located by >>byCss: #doesNotExistOnLevelOne<<")
+        });
     });
-
-    afterAll(async () => {
-        return BrowserFactory.cleanup();
-    });
-
-    const description = "Test Element description in case an error is thrown";
-    const match = (expected: string) => {
-        return (actual: string) => expect(actual).toEqual(expected);
-    };
-    const greaterThan = (expected: number) => {
-        return (actual: number) => expect(actual).toBeGreaterThanOrEqual(expected);
-    };
-
-    const checkErrorMessage = async (elem: SppWebElementFinder) => {
-        const callback = {catchfn: (e: any) => match(description)};
-        spyOn(callback, "catchfn").and.callThrough();
-
-        await andy.attemptsTo(
-            Navigate.to(`/`),
-            See.if(Text.of(elem)).fulfills(match("There is no waiter to test")),
-        ).catch(callback.catchfn);
-
-        expect(callback.catchfn).toHaveBeenCalled();
-        expect(callback.catchfn).toHaveBeenCalledTimes(1);
-    };
 
     describe('should be thrown in case of an error', () => {
+        let andy: Actor;
 
+        beforeAll(async () => {
+            andy = Actor.named("Andy");
+            andy.whoCan(BrowseTheWeb.using(await BrowserFactory.create(config)));
+        });
 
+        afterAll(async () => {
+            return BrowserFactory.cleanup();
+        });
+
+        const description = "Test Element description in case an error is thrown";
+        const match = (expected: string) => {
+            return (actual: string) => expect(actual).toEqual(expected);
+        };
+        const greaterThan = (expected: number) => {
+            return (actual: number) => expect(actual).toBeGreaterThanOrEqual(expected);
+        };
+
+        const checkErrorMessage = async (elem: SppWebElementFinder) => {
+            const callback = {catchfn: (e: any) => match(description)};
+            spyOn(callback, "catchfn").and.callThrough();
+
+            await andy.attemptsTo(
+                Navigate.to(`/`),
+                See.if(Text.of(elem)).fulfills(match("There is no waiter to test")),
+            ).catch(callback.catchfn);
+
+            expect(callback.catchfn).toHaveBeenCalled();
+            expect(callback.catchfn).toHaveBeenCalledTimes(1);
+        };
 
 
         it('when it is attached to level one of the element chain - (test case id: 2332afe2-5d61-488c-b4e1-398b34947d82)', async () => {
@@ -101,11 +164,9 @@ describe('The description on an element', () => {
             return checkErrorMessage(button);
         }, 20000);
 
-    });
 
-    describe('on different chaning stages', () => {
 
-        it('should be displayed in case of an error - (test case id: 51807468-c3d5-4e96-9a2e-1b89ee926ee4)', async () => {
+        it('on different chaining stages - (test case id: 51807468-c3d5-4e96-9a2e-1b89ee926ee4)', async () => {
             const description = "Test Element description in case an error is thrown";
             const button = element(By.css(".elementDoesNotExist"))
                 .called(description)
@@ -113,5 +174,8 @@ describe('The description on an element', () => {
 
             return checkErrorMessage(button);
         }, 20000);
-    })
+
+    });
+
+
 });
