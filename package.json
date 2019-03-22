@@ -23,6 +23,7 @@
   "dependencies": {
     "@log4js-node/log4js-api": "^1.0.2",
     "@types/fs-extra": "^5.0.5",
+    "@types/lodash": "^4.14.123",
     "@types/node": "^10.14.2",
     "@types/request-promise-native": "^1.0.15",
     "@types/selenium-webdriver": "^3.0.15",
@@ -40,7 +41,6 @@
   },
   "devDependencies": {
     "@types/jasmine": "^2.8.16",
-    "@types/lodash": "^4.14.123",
     "@types/uuid": "^3.4.4",
     "jasmine": "^3.3.1",
     "uuid": "^3.3.2"
