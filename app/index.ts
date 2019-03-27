@@ -2,6 +2,8 @@
 /**
  *
  */
+import {objectContains}                                  from "./screenplay/lib/matcher/FunctionMatcher/matcher";
+
 export {ProcessedSeleniumConfig}                         from "./config/ProcessedSeleniumConfig"
 export {SeleniumConfig, RestConfig, BrowserCapabilities} from "./config/SeleniumConfig"
 
@@ -81,7 +83,7 @@ export {Response}                          from "./screenplay/rest/questions/Res
 export {NoSuchAbilityError} from "./screenplay/errors/NoSuchAbilityError";
 
 //Function Matcher
-export {strictEqual} from "./screenplay/lib/matcher/FunctionMatcher/matcher"
+export {strictEqual, objectContains} from "./screenplay/lib/matcher/FunctionMatcher/matcher"
 
 // Decorators
 export {stepDetails, step} from "./screenplay/lib/decorators/StepDecorators"
