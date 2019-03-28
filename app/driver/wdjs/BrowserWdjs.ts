@@ -283,7 +283,7 @@ export class BrowserWdjs implements Browser{
 
         const createSwitchFrame = () => {
             let switchFrame = ((conditions: UntilElementCondition[]) => {
-                this.logger.info("Enter switchFrame of Browser frame method");
+                this.logger.debug("Enter switchFrame of Browser frame method");
                 return new Promise((fulfill, reject) => {
                     this.logger.debug(`frame base - trying to switch to: ${locator.toString()}`);
 
