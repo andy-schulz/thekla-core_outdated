@@ -1,8 +1,8 @@
-import {SeleniumConfig}                                 from "../../config/SeleniumConfig";
+import {DesiredCapabilities, SeleniumConfig}            from "../../config/SeleniumConfig";
 import {BrowserWdjs}                                    from "../../driver/wdjs/BrowserWdjs";
 import * as fs                                          from "fs";
 import fsExtra                                          from "fs-extra";
-import {Browser, BrowserFactory, BrowserScreenshotData} from "../..";
+import {Browser, RunningBrowser, BrowserScreenshotData} from "../..";
 import * as uuid                                        from "uuid";
 
 
@@ -16,12 +16,12 @@ describe('Taking a screenshot', () => {
     const googleClockSearch = `http://localhost:3000/delayed`;
     const conf: SeleniumConfig = {
         seleniumServerAddress: "http://localhost:4444/wd/hub",
+    };
 
-        capabilities: {
-            browserName: "chrome",
-            proxy: {
-                type: "direct"
-            }
+    const capabilities: DesiredCapabilities = {
+        browserName: "chrome",
+        proxy: {
+            type: "direct"
         }
     };
 
@@ -32,7 +32,7 @@ describe('Taking a screenshot', () => {
 
     beforeAll(async () => {
         await BrowserWdjs.cleanup();
-        browser = await BrowserWdjs.create(conf);
+        browser = await BrowserWdjs.create(conf, capabilities);
     });
 
     afterEach(() => {
@@ -131,7 +131,7 @@ describe('Taking a screenshot', () => {
         let browser2: Browser;
 
         beforeEach(async () => {
-            browser2 = await BrowserWdjs.create(conf);
+            browser2 = await BrowserWdjs.create(conf, capabilities);
         });
 
         afterEach(async () => {
@@ -164,7 +164,7 @@ describe('Taking a screenshot', () => {
         let browser2: Browser;
 
         beforeEach(async () => {
-            browser2 = await BrowserWdjs.create(conf);
+            browser2 = await BrowserWdjs.create(conf, capabilities);
         });
 
         afterEach(async () => {
@@ -227,7 +227,7 @@ describe('Taking a screenshot', () => {
             await fsExtra.mkdirp(basePath);
 
             await browser.get(googleClockSearch);
-            const bsd: BrowserScreenshotData[] = await BrowserFactory.takeScreenshots();
+            const bsd: BrowserScreenshotData[] = await RunningBrowser.takeScreenshots();
 
             fs.writeFileSync(filePath, bsd[0].browserScreenshotData, 'base64');
 
@@ -244,7 +244,7 @@ describe('Taking a screenshot', () => {
             const filename = `Screenshot.png`;
 
             await browser.get(googleClockSearch);
-            const fn: string[] = await BrowserFactory.saveScreenshots(basePath, filename);
+            const fn: string[] = await RunningBrowser.saveScreenshots(basePath, filename);
             expect(fn[0]).toEqual(`${basePath}/browser1_${filename}`);
             expect(getFilesizeInBytes(fn[0])).toBeGreaterThanOrEqual(30000);
 

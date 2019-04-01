@@ -1,7 +1,7 @@
 import {
     Actor,
     BrowseTheWeb,
-    BrowserFactory,
+    RunningBrowser,
     Enter,
     Navigate,
     See,
@@ -11,26 +11,21 @@ import {
     Count,
     Text,
     SeleniumConfig,
-    UntilElement, Wait
+    UntilElement, Wait, DesiredCapabilities
 } from "../..";
+
 import {GoogleSearch}     from "../PageObjects/GoogleSearch/GoogleSearch";
 import {Add}              from "../PageObjects/GoogleCalculator/Add";
 import {GoogleCalculator} from "../PageObjects/GoogleCalculator/GoogleCalculator";
 
 let config: SeleniumConfig = {
     seleniumServerAddress: "http://localhost:4444/wd/hub",
-
-    capabilities: {
-        browserName: "chrome",
-
-    }
-    // firefoxOptions: {
-    //     binary: "C:\\PProgramme\\FirefoxPortable\\App\\Firefox\\firefox.exe",
-        // proxy: {
-        //     proxyType: "direct"
-        // }
-    // }
 };
+
+const capabilities: DesiredCapabilities = {
+    browserName: "chrome",
+};
+
 import {getLogger, configure} from "log4js";
 const logger = getLogger("Actor");
 configure("res/config/log4js.json");
@@ -42,7 +37,7 @@ describe('Searching on Google', () => {
 
     beforeAll(async () => {
         john = Actor.named("Andy");
-        john.whoCan(BrowseTheWeb.using(await BrowserFactory.create(config)));
+        john.whoCan(BrowseTheWeb.using(await RunningBrowser.startedOn(config).withDesiredCapability(capabilities)));
     });
 
     it('for calculator should show the Google calculator - (test case id: 1761a239-3e50-408a-8e5e-1e4e6e6f07c2)', async () => {
@@ -89,6 +84,6 @@ describe('Searching on Google', () => {
     }, 20000);
 
     afterAll(() => {
-        return  BrowserFactory.cleanup();
+        return  RunningBrowser.cleanup();
     })
 });

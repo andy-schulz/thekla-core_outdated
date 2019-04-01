@@ -1,14 +1,10 @@
 export interface SeleniumConfig {
     seleniumServerAddress: string;
-    capabilities: BrowserCapabilities | CapabilitiesFunction;
-
     baseUrl?: string;
     multiBrowserTest?: boolean;
 }
 
-export type CapabilitiesFunction = () => BrowserCapabilities
-
-export interface BrowserCapabilities {
+export interface DesiredCapabilities {
     [key: string]: any;
 
     browserName: string;
@@ -38,6 +34,7 @@ export interface ProxyConfig {
     type: "direct" | "system" | "manual";
     manualConfig?: ManualProxyConfig;
 }
+
 export interface ManualProxyConfig {
     default?: string;
     ftp?: string;

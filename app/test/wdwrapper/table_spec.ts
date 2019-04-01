@@ -1,17 +1,18 @@
 import {
-    Browser, BrowserFactory, By, SeleniumConfig
+    Browser, By, SeleniumConfig, DesiredCapabilities
 } from "../..";
 import {BrowserWdjs} from "../../driver/wdjs/BrowserWdjs";
 
 const conf: SeleniumConfig = {
     seleniumServerAddress: "http://localhost:4444/wd/hub",
+};
 
-    capabilities: {
-        browserName: "chrome",
-        proxy: {
-            type: "direct"
-        }
+const capabilities: DesiredCapabilities = {
+    browserName: "chrome",
+    proxy: {
+        type: "direct"
     }
+
     // firefoxOptions: {
     // binary: "C:\\PProgramme\\FirefoxPortable64\\App\\Firefox\\firefox.exe",
     // binary: "C:\\PProgramme\\FirefoxPortable\\App\\Firefox\\firefox.exe",
@@ -28,7 +29,7 @@ describe('a simple table', () => {
     let browser: Browser;
 
     beforeAll(async (done) => {
-        browser = await BrowserWdjs.create(conf);
+        browser = await BrowserWdjs.create(conf, capabilities);
         done();
     });
 

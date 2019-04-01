@@ -1,13 +1,22 @@
-import {Browser, BrowserFactory, By, Key, SeleniumConfig, UntilElement, WebElementFinder} from "../..";
-import {BrowserWdjs}                                                                      from "../../driver/wdjs/BrowserWdjs";
+import {
+    Browser,
+    RunningBrowser,
+    By,
+    Key,
+    SeleniumConfig,
+    UntilElement,
+    WebElementFinder,
+    DesiredCapabilities
+}                    from "../..";
+import {BrowserWdjs} from "../../driver/wdjs/BrowserWdjs";
 
 describe('Using Google Search to find an online calculator', () => {
     const conf: SeleniumConfig = {
         seleniumServerAddress: "http://localhost:4444/wd/hub",
+    };
 
-        capabilities: {
-            browserName: "chrome",
-        }
+    const capabilities: DesiredCapabilities = {
+        browserName: "chrome",
     };
     describe('with the WebdriverJS wrapper,', () => {
         // define your elements preferably in a separate class like a page object
@@ -17,7 +26,7 @@ describe('Using Google Search to find an online calculator', () => {
         let calculatorInput:WebElementFinder;
 
         beforeAll(async () => {
-            b = await BrowserWdjs.create(conf);
+            b = await BrowserWdjs.create(conf,capabilities);
             searchField = b.element(By.css("[name='q']"))
                 .shallWait(UntilElement.is.visible().forAsLongAs(5000))
                 .called("The Google search field (describe)");
@@ -41,7 +50,7 @@ describe('Using Google Search to find an online calculator', () => {
     });
 
     afterAll(async () => {
-        return  BrowserFactory.cleanup();
+        return  RunningBrowser.cleanup();
     })
 });
 

@@ -2,7 +2,7 @@ import {getLogger, Logger} from "@log4js-node/log4js-api";
 
 import {Builder, promise, ThenableWebDriver} from "selenium-webdriver";
 import {
-    BrowserCapabilities,
+    DesiredCapabilities,
     ProxyConfig,
     SeleniumConfig
 }                                            from "../../config/SeleniumConfig";
@@ -14,7 +14,7 @@ import {By}                                     from "../lib/Locator";
 import {WebElementFinder, WebElementListFinder} from "../interface/WebElements";
 import {BrowserWindowWdjs}                      from "./BrowserWindowWdjs";
 import {FrameElementWdjs}                       from "./FrameElementWdjs";
-import {FrameHelper}                 from "./interfaces/WdElement";
+import {FrameHelper}                            from "./interfaces/WdElement";
 import {LocatorWdjs}                            from "./LocatorWdjs";
 import {ExecuteConditionWdjs}                   from "./ExecuteConditionWdjs";
 import {WebElementListWdjs}                     from "./WebElementListWdjs";
@@ -26,12 +26,9 @@ import fsExtra                                  from "fs-extra";
 
 promise.USE_PROMISE_MANAGER = false;
 
-interface CapabilitiesWdjs {
-    browserName?: string;
-}
-export class BrowserWdjs implements Browser{
+export class BrowserWdjs implements Browser {
     private static logger: Logger = getLogger("BrowserWdjsClass");
-    private static browserMap: Map<string,Browser> = new Map<string,Browser>();
+    private static browserMap: Map<string, Browser> = new Map<string, Browser>();
 
     private logger: Logger = getLogger("BrowserWdjs");
     private _window: BrowserWindow;
@@ -39,13 +36,8 @@ export class BrowserWdjs implements Browser{
     constructor(
         private _driver: ThenableWebDriver,
         private _selConfig: SeleniumConfig,
+        private _desiredCapabilities: DesiredCapabilities,
         private browserName: string = "") {
-
-        if(typeof this._selConfig.capabilities === "function") {
-
-        } else {
-
-        }
     }
 
     get driver() {
@@ -61,30 +53,35 @@ export class BrowserWdjs implements Browser{
     }
 
     /**
-     * create a new browser instance for the given Config
+     * startedOn a new browser instance for the given Config
      * @param selConf - the selenium config for which the browser has to be created
      * @param browserName - a unique browser name
      *
      * @returns - browser instance
      * @throws - Error in case the given browser name is empty or already exists
      */
-    public static async create(selConf: SeleniumConfig, browserName: string = `browser${this.browserMap.size + 1}`): Promise<Browser> {
+    public static async create(
+        selConf: SeleniumConfig,
+        capabilities: DesiredCapabilities,
+        browserName: string = `browser${this.browserMap.size + 1}`): Promise<Browser> {
+
         let builder: Builder;
 
         if (!browserName)
             throw new Error(`invalid browser name '${browserName}'`);
 
         const regex = /^[a-zA-Z0-9_\-]+$/;
-        if(!browserName.match(regex))
+        if (!browserName.match(regex))
             throw new Error(`browser name '${browserName}' contains invalid characters. Allowed characters are: [a-z]*[A-Z]*[_-]*[0-9]*`);
 
-        if(this.browserMap.has(browserName)) {
+        if (this.browserMap.has(browserName)) {
             throw new Error(`browser name '${browserName}' already exists, choose another one`);
         }
 
         builder = new Builder();
         try {
-            const capa: BrowserCapabilities = typeof selConf.capabilities === "function" ? selConf.capabilities() : selConf.capabilities;
+            // const capa: DesiredCapabilities = typeof capabilities === "function" ? capabilities() : capabilities;
+            const capa: DesiredCapabilities = capabilities;
 
             builder = builder.usingServer(selConf.seleniumServerAddress);
             builder.withCapabilities(capa);
@@ -92,7 +89,7 @@ export class BrowserWdjs implements Browser{
 
             const drv = await BrowserWdjs.buildDriver(builder);
             const driver = <ThenableWebDriver>drv;
-            const browser = new BrowserWdjs(driver, selConf, browserName);
+            const browser = new BrowserWdjs(driver, selConf, capa, browserName);
             try {
                 const window = await BrowserWindowWdjs.create(driver, capa.window);
                 browser.windowManagedBy(window);
@@ -101,7 +98,7 @@ export class BrowserWdjs implements Browser{
                 return Promise.reject(e);
             }
 
-            this.browserMap.set(browserName,browser);
+            this.browserMap.set(browserName, browser);
             return browser;
         } catch (e) {
 
@@ -128,15 +125,15 @@ export class BrowserWdjs implements Browser{
      * @param proxy - the Proxy config which will be set
      */
     private static setProxy = (builder: Builder, proxy: ProxyConfig | undefined): any => {
-        if(proxy === undefined) return;
+        if (proxy === undefined) return;
 
         const proxyWdjs = require("selenium-webdriver/proxy");
 
-        if(proxy.type === "direct") return builder.setProxy(proxyWdjs.direct());
-        if(proxy.type === "system") return builder.setProxy(proxyWdjs.system());
+        if (proxy.type === "direct") return builder.setProxy(proxyWdjs.direct());
+        if (proxy.type === "system") return builder.setProxy(proxyWdjs.system());
 
-        if(proxy.type === "manual") {
-            if(!proxy.manualConfig) {
+        if (proxy.type === "manual") {
+            if (!proxy.manualConfig) {
                 const message = `You specified 'manual' proxy configuration in the capabilities but did not give a manual proxy config.`;
                 BrowserWdjs.logger.info(message);
                 throw new Error(message);
@@ -146,19 +143,19 @@ export class BrowserWdjs implements Browser{
     };
 
     /**
-     * close all browser created with BrowserWdjs.create method
+     * close all browser created with BrowserWdjs.startedOn method
      *
      * @returns - resolved Promise after all browsers are closed
      */
-    public static cleanup(browserToClean?: Browser[]):Promise<any[]> {
+    public static cleanup(browserToClean?: Browser[]): Promise<any[]> {
 
-        if(browserToClean) {
+        if (browserToClean) {
             let browserCleanupPromises: Promise<void>[] = [];
 
             const entries = [...this.browserMap.entries()];
             browserToClean.map((browser: Browser) => {
                 entries.map((browserEntry: [string, Browser]) => {
-                    if(browser === browserEntry[1]) {
+                    if (browser === browserEntry[1]) {
                         browserCleanupPromises.push(browser.quit());
                         this.browserMap.delete(browserEntry[0]);
                     }
@@ -179,7 +176,7 @@ export class BrowserWdjs implements Browser{
     }
 
     /**
-     * create screenshots of all browser created with BrowserWdjs.create
+     * startedOn screenshots of all browser created with BrowserWdjs.startedOn
      *
      * @returns - and array of BrowserScreenshotData objects, the object contains the browser name and the screenshot data
      */
@@ -188,7 +185,7 @@ export class BrowserWdjs implements Browser{
             [...this.browserMap.keys()].map((browsername: string): Promise<BrowserScreenshotData> => {
                 return new Promise((resolve, reject) => {
                     const browser = this.browserMap.get(browsername);
-                    if(browser) {
+                    if (browser) {
                         browser.takeScreenshot()
                             .then(resolve)
                             .catch(reject)
@@ -197,7 +194,8 @@ export class BrowserWdjs implements Browser{
                     }
                 })
             })
-        )}
+        )
+    }
 
     /**
      * save all browser screenshots to the given directory
@@ -212,7 +210,7 @@ export class BrowserWdjs implements Browser{
             [...this.browserMap.keys()].map((browsername: string): Promise<string> => {
                 return new Promise((resolve, reject) => {
                     const browser = this.browserMap.get(browsername);
-                    if(browser) {
+                    if (browser) {
                         browser.saveScreenshot(filepath, `${browsername}_${baseFileName}`)
                             .then(resolve)
                             .catch(reject)
@@ -221,7 +219,8 @@ export class BrowserWdjs implements Browser{
                     }
                 })
             })
-        )}
+        )
+    }
 
     /**
      * return all names of currently available browser
@@ -242,7 +241,7 @@ export class BrowserWdjs implements Browser{
      */
     public static getBrowser(browserName: string): Browser {
         const browser = this.browserMap.get(browserName);
-        if(browser)
+        if (browser)
             return browser;
         else
             throw new Error(`cant find name browser with name '${browserName}'`);
@@ -275,7 +274,7 @@ export class BrowserWdjs implements Browser{
             return await this._driver.findElements(loc);
         };
 
-        return new WebElementListWdjs(getElements,locator, this);
+        return new WebElementListWdjs(getElements, locator, this);
     }
 
     frame(locator: By): FrameElementWdjs {
@@ -289,7 +288,7 @@ export class BrowserWdjs implements Browser{
 
                     const reducer = (acc: Promise<boolean>, condition: UntilElementCondition): Promise<boolean> => {
                         return acc.then(() => {
-                            return ExecuteConditionWdjs.execute(condition,this._driver.findElement(loc))
+                            return ExecuteConditionWdjs.execute(condition, this._driver.findElement(loc))
                         })
                     };
 
@@ -309,7 +308,7 @@ export class BrowserWdjs implements Browser{
             return switchFrame;
         };
 
-        return new FrameElementWdjs(createSwitchFrame(),null, locator, this);
+        return new FrameElementWdjs(createSwitchFrame(), null, locator, this);
     }
 
     /**
@@ -329,7 +328,7 @@ export class BrowserWdjs implements Browser{
     /**
      * close the browser
      */
-    public quit():Promise<void> {
+    public quit(): Promise<void> {
         return new Promise((fulfill, reject) => {
             this._driver.quit()
                 .then(fulfill)
@@ -353,7 +352,7 @@ export class BrowserWdjs implements Browser{
      * @param expectedTitle
      */
     public hasTitle(expectedTitle: string): Promise<boolean> {
-        return new Promise((fulfill,reject) => {
+        return new Promise((fulfill, reject) => {
             this._driver.getTitle()
                 .then(title => fulfill(title === expectedTitle))
                 .catch(reject);
@@ -386,12 +385,12 @@ export class BrowserWdjs implements Browser{
      */
     public saveScreenshot(filepath: string, filename: string): Promise<string> {
         let fp: string = filepath;
-        if(!path.isAbsolute(fp)) {
-           fp = `${process.cwd()}/${fp}`;
+        if (!path.isAbsolute(fp)) {
+            fp = `${process.cwd()}/${fp}`;
         }
 
         try {
-            if(!fs.existsSync(fp))
+            if (!fs.existsSync(fp))
                 fsExtra.mkdirsSync(fp);
         } catch (e) {
             return Promise.reject(e)
@@ -424,26 +423,26 @@ export class BrowserWdjs implements Browser{
     public wait(
         condition: Condition,
         timeout: number = 5000,
-        waitMessage: string = `` ): Promise<string> {
+        waitMessage: string = ``): Promise<string> {
 
-        return new Promise((fulfill,reject) => {
+        return new Promise((fulfill, reject) => {
             const start = Date.now();
             const check = () => {
                 const worker = (workerState: boolean, error?: String) => {
                     const timeSpendWaiting = Date.now() - start;
-                    if(timeSpendWaiting > timeout) {
+                    if (timeSpendWaiting > timeout) {
                         const message = `Wait timed out after ${timeout} ms${waitMessage ? " -> (" + waitMessage + ")." : "."}`;
                         this.logger.trace(message);
                         reject(message);
                         return;
                     }
-                    if(workerState) {
+                    if (workerState) {
                         const message = `Wait successful ${waitMessage ? " -> (" + waitMessage + ")" : ""} after ${timeSpendWaiting} ms.`;
                         this.logger.trace(message);
                         fulfill(message);
                         return;
                     } else {
-                        setTimeout(check,0);
+                        setTimeout(check, 0);
                     }
                 };
 
@@ -451,7 +450,7 @@ export class BrowserWdjs implements Browser{
                     .then(worker)
                     .catch((e: any) => worker(false, e + Error().stack))
             };
-            setTimeout(check,0);
+            setTimeout(check, 0);
         })
     }
 
@@ -459,25 +458,25 @@ export class BrowserWdjs implements Browser{
         condition: UntilElementCondition,
         element: WebElementFinder): Promise<string> {
 
-        return new Promise((fulfill,reject) => {
+        return new Promise((fulfill, reject) => {
             const start = Date.now();
             const check = () => {
                 const worker = (workerState: boolean, error?: String) => {
                     const timeSpendWaiting = Date.now() - start;
-                    if(timeSpendWaiting > condition.timeout) {
+                    if (timeSpendWaiting > condition.timeout) {
                         const message = `Waiting until element called '${element.description}' ${condition.conditionHelpText} timed out after ${condition.timeout} ms.
                         Stack: ${Error().stack}`;
                         this.logger.trace(message);
                         reject(message);
                         return;
                     }
-                    if(workerState) {
+                    if (workerState) {
                         const message = `Waiting until element called '${element.description}' ${condition.conditionHelpText} was successful after ${timeSpendWaiting} ms.`;
                         this.logger.trace(message);
                         fulfill(message);
                         return;
                     } else {
-                        setTimeout(check,0);
+                        setTimeout(check, 0);
                     }
                 };
 
@@ -485,7 +484,7 @@ export class BrowserWdjs implements Browser{
                     .then(worker)
                     .catch((e: any) => worker(false, e + Error().stack))
             };
-            setTimeout(check,0);
+            setTimeout(check, 0);
         })
     }
 

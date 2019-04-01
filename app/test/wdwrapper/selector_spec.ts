@@ -1,18 +1,18 @@
-import {SeleniumConfig}   from "../../config/SeleniumConfig";
-import {Browser}          from "../../driver/interface/Browser";
-import {BrowserWdjs}      from "../../driver/wdjs/BrowserWdjs";
-import {BrowserFactory}   from "../../driver/lib/BrowserFactory";
-import {By}               from "../../driver/lib/Locator";
+import {DesiredCapabilities, SeleniumConfig} from "../../config/SeleniumConfig";
+import {Browser}                             from "../../driver/interface/Browser";
+import {BrowserWdjs}                         from "../../driver/wdjs/BrowserWdjs";
+import {RunningBrowser}                      from "../../driver/lib/RunningBrowser";
+import {By}                                  from "../../driver/lib/Locator";
 
 const conf: SeleniumConfig = {
     seleniumServerAddress: "http://localhost:4444/wd/hub",
     baseUrl: "http://localhost:3000",
+};
 
-    capabilities:  {
-        browserName: "chrome",
-        proxy: {
-            type: "direct"
-        }
+const capabilities: DesiredCapabilities = {
+    browserName: "chrome",
+    proxy: {
+        type: "direct"
     }
 };
 
@@ -20,7 +20,7 @@ describe('Locating an waiter', () => {
     let browser: Browser;
 
     beforeAll(async () => {
-        browser = await BrowserWdjs.create(conf);
+        browser = await BrowserWdjs.create(conf, capabilities);
     }, 10000);
 
     describe('by cssContainingText', () => {
@@ -54,6 +54,6 @@ describe('Locating an waiter', () => {
     });
 
     afterAll(async () => {
-        return BrowserFactory.cleanup();
+        return RunningBrowser.cleanup();
     })
 });

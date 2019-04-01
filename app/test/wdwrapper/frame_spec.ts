@@ -1,27 +1,26 @@
 import {
-    Browser, By, UntilElement, SeleniumConfig
+    Browser, By, UntilElement, SeleniumConfig, DesiredCapabilities
 } from "../..";
 import {BrowserWdjs} from "../../driver/wdjs/BrowserWdjs";
 
 const conf: SeleniumConfig = {
     seleniumServerAddress: "http://localhost:4444/wd/hub",
     baseUrl: "http://localhost:3000",
-
-    capabilities: {
-        browserName: "chrome",
-        proxy: {
-            type: "direct"
-        }
-    }
 };
 
+const capabilities: DesiredCapabilities = {
+    browserName: "chrome",
+    proxy: {
+        type: "direct"
+    }
+};
 
 
 describe('trying to access a Frame', () => {
     let browser: Browser;
 
     beforeAll(async () => {
-        browser = await BrowserWdjs.create(conf);
+        browser = await BrowserWdjs.create(conf, capabilities);
     });
 
     afterAll(async () => {

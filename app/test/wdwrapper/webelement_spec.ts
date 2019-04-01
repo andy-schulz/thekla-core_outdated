@@ -1,13 +1,13 @@
 import "jasmine"
 import {
     Browser,
-    BrowserFactory,
+    RunningBrowser,
     WebElementFinder,
     By,
     until,
     Utils,
-    SeleniumConfig
-}                       from "../..";
+    SeleniumConfig, DesiredCapabilities
+} from "../..";
 import {BrowserWdjs}    from "../../driver/wdjs/BrowserWdjs";
 import {WebElementWdjs} from "../../driver/wdjs/WebElementWdjs";
 
@@ -18,24 +18,24 @@ describe('When using the Browser object', () => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
     const conf: SeleniumConfig = {
         seleniumServerAddress: "http://localhost:4444/wd/hub",
-
-        capabilities: {
-            browserName: "chrome",
-            proxy: {
-                type: "direct"
-            }
-        }
-        // firefoxOptions: {
-            // binary: "C:\\PProgramme\\FirefoxPortable64\\App\\Firefox\\firefox.exe",
-            // binary: "C:\\PProgramme\\FirefoxPortable\\App\\Firefox\\firefox.exe",
-            // proxy: {
-            //     proxyType: "direct"
-            // }
-        // }
-        // chromeOptions: {
-        //     binary: "C:\\PProgramme\\GoogleChromePortable64\\App\\Chrome-bin\\chrome.exe"
-        // }
     };
+
+    const capabilities: DesiredCapabilities = {
+        browserName: "chrome",
+        proxy: {
+            type: "direct"
+        }
+    };
+    // firefoxOptions: {
+    // binary: "C:\\PProgramme\\FirefoxPortable64\\App\\Firefox\\firefox.exe",
+    // binary: "C:\\PProgramme\\FirefoxPortable\\App\\Firefox\\firefox.exe",
+    // proxy: {
+    //     proxyType: "direct"
+    // }
+    // }
+    // chromeOptions: {
+    //     binary: "C:\\PProgramme\\GoogleChromePortable64\\App\\Chrome-bin\\chrome.exe"
+    // }
 
     const testurl = "http://localhost:3000";
 
@@ -44,7 +44,7 @@ describe('When using the Browser object', () => {
         let browser: Browser;
 
         beforeAll(async (done) => {
-            browser = await BrowserWdjs.create(conf);
+            browser = await BrowserWdjs.create(conf, capabilities);
             done();
         });
 
@@ -57,7 +57,7 @@ describe('When using the Browser object', () => {
         let browser: Browser;
 
         beforeAll(async () => {
-            browser = await BrowserWdjs.create(conf);
+            browser = await BrowserWdjs.create(conf, capabilities);
             await browser.get(testurl);
         });
 
@@ -90,7 +90,7 @@ describe('When using the Browser object', () => {
         let optionList: WebElementFinder;
 
         beforeAll(async () => {
-            browser = await BrowserWdjs.create(conf);
+            browser = await BrowserWdjs.create(conf, capabilities);
             optionList = browser.element(By.css("[data-test-id='buttonDropDown']"));
             await browser.get(testurl);
         });
@@ -125,7 +125,7 @@ describe('When using the Browser object', () => {
 
 
         beforeAll(async () => {
-            browser = await BrowserWdjs.create(conf);
+            browser = await BrowserWdjs.create(conf, capabilities);
             emailInput = browser.element(By.css("[data-test-id='exampleEmail']"));
             await browser.get(testurl);
         });
@@ -156,7 +156,7 @@ describe('When using the Browser object', () => {
         let enabledButton5000: WebElementFinder;
 
         beforeAll(async () => {
-            browser = await BrowserWdjs.create(conf);
+            browser = await BrowserWdjs.create(conf, capabilities);
             appearButton10000 = browser.element(By.css("[data-test-id='AppearButtonBy10000']"));
             buttonNeverExists = browser.element(By.css("[data-test-id='neverExists']"));
             disappearButton10000 = browser.element(By.css("[data-test-id='DisappearButtonBy10000']"));
@@ -218,7 +218,7 @@ describe('When using the Browser object', () => {
 
 
         beforeAll(async () => {
-            browser = await BrowserWdjs.create(conf);
+            browser = await BrowserWdjs.create(conf, capabilities);
             appearButton5000 = browser.element(By.css("[data-test-id='AppearButtonBy5000']"));
             disappearButton5000 = browser.element(By.css("[data-test-id='DisappearButtonBy5000']"));
         });
@@ -250,7 +250,7 @@ describe('When using the Browser object', () => {
 
 
         beforeAll(async () => {
-            browser = await BrowserWdjs.create(conf);
+            browser = await BrowserWdjs.create(conf, capabilities);
             enabledButton5000 = browser.element(By.css("[data-test-id='EnabledButtonBy5000']"));
             disabledButton5000 = browser.element(By.css("[data-test-id='DisabledButtonBy5000']"));
         });
@@ -285,7 +285,7 @@ describe('When using the Browser object', () => {
 
 
         beforeAll(async () => {
-            browser = await BrowserWdjs.create(conf);
+            browser = await BrowserWdjs.create(conf, capabilities);
         });
 
         beforeEach(async () => {
@@ -306,7 +306,7 @@ describe('When using the Browser object', () => {
     });
 
     afterAll(async () => {
-        return BrowserFactory.cleanup();
+        return RunningBrowser.cleanup();
     })
 
 });

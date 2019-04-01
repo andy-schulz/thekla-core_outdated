@@ -1,9 +1,9 @@
 import {
     Actor,
-    BrowserFactory,
+    RunningBrowser,
     BrowseTheWeb,
     By,
-    BrowserCapabilities,
+    DesiredCapabilities,
     element,
     frame,
     Navigate,
@@ -19,14 +19,14 @@ configure("res/config/log4js.json");
 let config: SeleniumConfig = {
     seleniumServerAddress: `http://localhost:4444/wd/hub`,
     baseUrl: `http://localhost:3000`,
-
-    capabilities: {
-        browserName: `chrome`,
-        proxy: {
-            type: "direct"
-        }
-    }
 };
+
+const capabilities: DesiredCapabilities = {
+    browserName: `chrome`,
+    proxy: {
+        type: "direct"
+    }
+}
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
@@ -35,11 +35,11 @@ describe('Locating Elements inside Frames', () => {
 
     beforeAll(async () => {
         andy = Actor.named("Andy");
-        andy.whoCan(BrowseTheWeb.using(await BrowserFactory.create(config)));
+        andy.whoCan(BrowseTheWeb.using(await RunningBrowser.startedOn(config).withDesiredCapability(capabilities)));
     });
 
     afterAll(async () => {
-        return BrowserFactory.cleanup();
+        return RunningBrowser.cleanup();
     });
 
     it('a separate frame change should not be necessary - (test case id: 68f90a8c-ec6c-445b-8276-14af079fc008)', async () => {

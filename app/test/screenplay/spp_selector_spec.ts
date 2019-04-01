@@ -1,9 +1,9 @@
 import {
     Actor,
-    BrowserFactory,
+    RunningBrowser,
     BrowseTheWeb,
     By,
-    BrowserCapabilities,
+    DesiredCapabilities,
     element,
     Navigate,
     See,
@@ -22,22 +22,21 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL=30000;
 let config: SeleniumConfig = {
     seleniumServerAddress: `http://localhost:4444/wd/hub`,
     baseUrl: `http://localhost:3000`,
-
-    capabilities: {
-        browserName: `chrome`,
-        proxy: {
-            type: "direct"
-        }
-    }
 };
 
+const capabilities: DesiredCapabilities = {
+    browserName: `chrome`,
+    proxy: {
+        type: "direct"
+    }
+};
 
 describe('When locating an element,', () => {
     let john: Actor;
 
     beforeAll(async () => {
         john = Actor.named("John");
-        john.whoCan(BrowseTheWeb.using(await BrowserFactory.create(config)));
+        john.whoCan(BrowseTheWeb.using(await RunningBrowser.startedOn(config).withDesiredCapability(capabilities)));
     });
 
     describe('by xpath', () => {
@@ -56,6 +55,6 @@ describe('When locating an element,', () => {
     });
 
     afterAll(async () => {
-        return BrowserFactory.cleanup();
+        return RunningBrowser.cleanup();
     });
 });

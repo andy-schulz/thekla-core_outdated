@@ -1,5 +1,5 @@
 import {
-    BrowserFactory,
+    RunningBrowser,
     Actor,
     BrowseTheWeb,
     By,
@@ -10,19 +10,19 @@ import {
     UntilElement,
     all,
     SppWebElementFinder,
-    SeleniumConfig
+    SeleniumConfig, DesiredCapabilities
 } from "../..";
 
 
-const config: SeleniumConfig = {
+const seleniumConfig: SeleniumConfig = {
     seleniumServerAddress: "http://localhost:4444/wd/hub",
     baseUrl: "http://localhost:3000",
+};
 
-    capabilities: {
-        browserName: "chrome",
-        proxy: {
-            type: "direct"
-        }
+const capabilities: DesiredCapabilities = {
+    browserName: "chrome",
+    proxy: {
+        type: "direct"
     }
 };
 
@@ -101,11 +101,11 @@ describe('The description on an element', () => {
 
         beforeAll(async () => {
             andy = Actor.named("Andy");
-            andy.whoCan(BrowseTheWeb.using(await BrowserFactory.create(config)));
+            andy.whoCan(BrowseTheWeb.using(await RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities)));
         });
 
         afterAll(async () => {
-            return BrowserFactory.cleanup();
+            return RunningBrowser.cleanup();
         });
 
         const description = "Test Element description in case an error is thrown";

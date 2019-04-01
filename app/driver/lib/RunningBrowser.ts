@@ -1,15 +1,10 @@
-import {Browser, SeleniumConfig} from "../..";
-import {BrowserScreenshotData}   from "../interface/Browser";
+import {BrowserHelper, SeleniumConfig, BrowserScreenshotData} from "../..";
 import {BrowserWdjs}             from "../wdjs/BrowserWdjs";
 
-export class BrowserFactory {
+export class RunningBrowser {
 
-    public static create(config: SeleniumConfig, framework: string = "wdjs"): Promise<Browser> {
-        if(framework == "wdjs") {
-            return BrowserWdjs.create(<SeleniumConfig>config);
-        } else {
-            throw Error(`Error: Framework '${framework}' not implemented`);
-        }
+    public static startedOn(config: SeleniumConfig, framework: string = "wdjs"): BrowserHelper {
+        return new BrowserHelper(<SeleniumConfig>config);
     }
 
     public static cleanup(): Promise<any> {

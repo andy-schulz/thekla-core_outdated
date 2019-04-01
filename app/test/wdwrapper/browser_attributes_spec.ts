@@ -1,14 +1,14 @@
-import {BrowserCapabilities, SeleniumConfig} from "../../config/SeleniumConfig";
+import {DesiredCapabilities, SeleniumConfig} from "../../config/SeleniumConfig";
 import * as _                                from "lodash";
 import {WindowSize}                          from "../../driver/interface/BrowserWindow";
 import {BrowserWdjs}                         from "../../driver/wdjs/BrowserWdjs";
 
 const conf: SeleniumConfig = {
     seleniumServerAddress: "http://localhost:4444/wd/hub",
+};
 
-    capabilities: {
-        browserName: "chrome",
-    }
+const capabilities: DesiredCapabilities = {
+    browserName: "chrome",
 };
 
 describe('creating a new Browser', () => {
@@ -25,11 +25,11 @@ describe('creating a new Browser', () => {
         it('it should be maximized when the config contains the "maximum" attribute ' +
             '- (test case id: 8a0d9a58-9591-43c1-89bb-d848319c90f1)', async () => {
             const con: SeleniumConfig = _.cloneDeep(conf);
-            (<BrowserCapabilities>(con.capabilities)).window = {
+            (<DesiredCapabilities>(capabilities)).window = {
                 setToMaxSize: true
             };
 
-            const browserInitialResize = await BrowserWdjs.create(con);
+            const browserInitialResize = await BrowserWdjs.create(con,capabilities);
             const data = await browserInitialResize.executeScript(windowSize);
             const dataParsed: WindowSize = JSON.parse(JSON.stringify(data));
             expect(dataParsed.height).toBeGreaterThanOrEqual(100);
@@ -38,7 +38,7 @@ describe('creating a new Browser', () => {
 
         it('it should be maximized when maximize() is called after browser creation ' +
             '- (test case id: 1473a628-0347-41d9-b2f8-2c93f827f840)', async () => {
-            const browserManualResize = await BrowserWdjs.create(conf);
+            const browserManualResize = await BrowserWdjs.create(conf,capabilities);
             const dataBefore = await browserManualResize.executeScript(windowSize);
             const dataBeforeParsed: WindowSize = JSON.parse(JSON.stringify(dataBefore));
 
@@ -55,7 +55,7 @@ describe('creating a new Browser', () => {
             '- (test case id: 1b7451ac-0ca2-4bdc-8700-60b4098d5829)', async () => {
 
             try {
-                const browserResize = await BrowserWdjs.create(conf);
+                const browserResize = await BrowserWdjs.create(conf, capabilities);
                 await browserResize.window.setSize({width: 500, height: 500});
                 expect(true).toBeFalsy(`Bug () in Selenium Webdriver 4.0 alpha has ben fixed, rewrite the test`)
             } catch (e) {

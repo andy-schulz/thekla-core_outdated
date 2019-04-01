@@ -1,11 +1,9 @@
-
 /**
  *
  */
-import {objectContains}                                  from "./screenplay/lib/matcher/FunctionMatcher/matcher";
 
 export {ProcessedSeleniumConfig}                         from "./config/ProcessedSeleniumConfig"
-export {SeleniumConfig, RestConfig, BrowserCapabilities} from "./config/SeleniumConfig"
+export {SeleniumConfig, RestConfig, DesiredCapabilities} from "./config/SeleniumConfig"
 
 
 /**
@@ -16,7 +14,8 @@ export {Browser}                          from "./driver/interface/Browser";
 export {BrowserScreenshotData}            from "./driver/interface/Browser";
 export {WebElementFinder}                 from "./driver/interface/WebElements";
 
-export {BrowserFactory} from "./driver/lib/BrowserFactory";
+export {RunningBrowser} from "./driver/lib/RunningBrowser";
+export {BrowserHelper}  from "./driver/lib/BrowserHelper";
 export {By}             from "./driver/lib/Locator";
 export {Key}            from "./driver/lib/Key";
 export {until}          from "./driver/lib/Condition";
@@ -29,14 +28,14 @@ export {Utils}                                                       from "./dri
  * Request Wrapper
  *
  */
-export {Get}            from "./screenplay/rest/actions/Get";
-export {Post}           from "./screenplay/rest/actions/Post";
-export {Delete}         from "./screenplay/rest/actions/Delete";
-export {Send}           from "./screenplay/rest/actions/Send";
+export {Get}                                                         from "./screenplay/rest/actions/Get";
+export {Post}                                                        from "./screenplay/rest/actions/Post";
+export {Delete}                                                      from "./screenplay/rest/actions/Delete";
+export {Send}                                                        from "./screenplay/rest/actions/Send";
 
-export {On}             from "./rest/lib/Ressource"
-export {Method}         from "./rest/lib/Method"
-export {RestApiFactory} from "./rest/lib/RestApiFactory"
+export {On}                                                          from "./rest/lib/Ressource"
+export {Method}                                                      from "./rest/lib/Method"
+export {RestApiFactory}                                              from "./rest/lib/RestApiFactory"
 
 /**
  * screenplay Elements

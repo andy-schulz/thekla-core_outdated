@@ -1,33 +1,31 @@
-import {SeleniumConfig}               from "../../config/SeleniumConfig";
-import {BrowserFactory}               from "../../driver/lib/BrowserFactory";
-import {By}                           from "../../driver/lib/Locator";
-import {Actor}                        from "../../screenplay/Actor";
-import {See}                          from "../../screenplay/lib/matcher/See";
-import {BrowseTheWeb}                 from "../../screenplay/web/abilities/BrowseTheWeb";
-import {Navigate}                     from "../../screenplay/web/actions/Navigate";
+import {DesiredCapabilities, SeleniumConfig} from "../../config/SeleniumConfig";
+import {RunningBrowser}                      from "../../driver/lib/RunningBrowser";
+import {By}                                  from "../../driver/lib/Locator";
+import {Actor}                               from "../../screenplay/Actor";
+import {See}                                 from "../../screenplay/lib/matcher/See";
+import {BrowseTheWeb}                        from "../../screenplay/web/abilities/BrowseTheWeb";
+import {Navigate}                            from "../../screenplay/web/actions/Navigate";
 import {Attribute}                    from "../../screenplay/web/questions/Attribute";
 import {element, SppWebElementFinder} from "../../screenplay/web/SppWebElements";
 import {strictEqual}                  from "assert";
 
 
-let config: SeleniumConfig = {
+let seleniumConfig: SeleniumConfig = {
     seleniumServerAddress: `http://localhost:4444/wd/hub`,
     baseUrl: `http://localhost:3000`,
-
-    capabilities: {
-        browserName: `chrome`,
-        proxy: {
-            type: "direct"
-        }
-    }
 };
-
+const capabilities: DesiredCapabilities ={
+    browserName: `chrome`,
+    proxy: {
+        type: "direct"
+    }
+}
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
 describe('Using', () => {
 
     afterAll(async () => {
-        await BrowserFactory.cleanup();
+        await RunningBrowser.cleanup();
     });
 
 
@@ -37,7 +35,7 @@ describe('Using', () => {
         let matcher: (text: string) => boolean;
 
         beforeAll(async () => {
-            const browser = await BrowserFactory.create(config);
+            const browser = await RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities);
             John.can(BrowseTheWeb.using(browser));
 
             button = element(By.css("[data-test-id='button']"))

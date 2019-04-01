@@ -1,26 +1,26 @@
 import {
     Actor,
-    BrowserFactory,
+    RunningBrowser,
     BrowseTheWeb,
     By,
     element,
     See,
     Navigate,
-    Text, UntilElement, SeleniumConfig, Click, Wait
+    Text, UntilElement, SeleniumConfig, Click, Wait, DesiredCapabilities
 } from "../../index";
 
 
-let config: SeleniumConfig = {
+let seleniumConfig: SeleniumConfig = {
     seleniumServerAddress: "http://localhost:4444/wd/hub",
     baseUrl: "http://localhost:3000",
-
-    capabilities: {
-        browserName: "chrome",
-        proxy: {
-            type: "direct"
-        },
-    }
 };
+const capabilities: DesiredCapabilities = {
+    browserName: "chrome",
+    proxy: {
+        type: "direct"
+    },
+};
+
 import {getLogger, configure} from "log4js";
 const logger = getLogger("SppWaitForElements");
 
@@ -31,11 +31,11 @@ describe('Waiting for SPP Elements', () => {
 
     beforeAll(async () => {
         walterTheWaiter = Actor.named("Andy");
-        walterTheWaiter.whoCan(BrowseTheWeb.using(await BrowserFactory.create(config)));
+        walterTheWaiter.whoCan(BrowseTheWeb.using(await RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities)));
     });
 
     afterAll(async () => {
-        return BrowserFactory.cleanup()
+        return RunningBrowser.cleanup()
     });
 
     describe('on the element itself', () => {
