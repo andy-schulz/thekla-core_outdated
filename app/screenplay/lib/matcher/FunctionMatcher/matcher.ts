@@ -6,9 +6,11 @@ import {diff}              from 'deep-diff';
 /**
  * curried strictEqual to pass a function with the value to compare to the See.if Question
  */
-export const strictEqualTo = (expected: any) => {
-    return fp.compose(() => true, curryRight(strictEqual));
-};
+// export const strictEqualTo = fp.compose(() => true, curryRight(strictEqual));
+export const strictEqualTo = curryRight((actual: any, expected: any) => {
+    strictEqual(actual, expected);
+    return true;
+});
 
 /**
  * checks if the expected object is contained within the actual object

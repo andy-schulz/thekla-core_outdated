@@ -34,7 +34,6 @@ describe('Using', () => {
     describe('the attribute question', () => {
         let John: Actor = Actor.named("John");
         let button: SppWebElementFinder;
-        let matcher: (text: string) => boolean;
         const dangerButton: string = "<button data-test-id=\"button\" class=\"btn btn-danger\">Danger!</button>";
 
         beforeAll(async () => {
@@ -174,7 +173,7 @@ describe('Using', () => {
     });
 
     describe('the Site question', () => {
-        const Joanna: Actor = Actor.named("John");
+        const Joanna: Actor = Actor.named("Joanna");
         let browser: Browser;
 
         beforeAll(async () => {
@@ -183,19 +182,156 @@ describe('Using', () => {
         });
 
         it('with >See<: should check for the current site url ' +
-            '- (test case id: 332e9252-aec9-44b5-b936-728561523e27)', () => {
-            Joanna.attemptsTo(
+            '- (test case id: 332e9252-aec9-44b5-b936-728561523e27)', async () => {
+            await Joanna.attemptsTo(
                 Navigate.to("/delayed"),
-                See.if(TheSites.url()).is(strictEqualTo("http://localhost/delayed"))
+                See.if(TheSites.url()).is(strictEqualTo("http://localhost:3000/delayed"))
             )
         });
 
         it('with >See<: should check for the sites title ' +
-            '- (test case id: 7974c013-4234-43e4-8330-6ec788512eb8)', () => {
-            Joanna.attemptsTo(
+            '- (test case id: 7974c013-4234-43e4-8330-6ec788512eb8)', async () => {
+            await Joanna.attemptsTo(
                 Navigate.to("/delayed"),
-                See.if(TheSites.title()).is(strictEqualTo("http://localhost/delayed"))
+                See.if(TheSites.url()).is(strictEqualTo("http://localhost:3000/delayed"))
             )
         });
+    });
+
+    describe('the See oracle', () => {
+        let Jonathan: Actor = Actor.named("Jonathan");
+        let button: SppWebElementFinder;
+
+        beforeAll(async () => {
+            const browser = await RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities);
+            Jonathan.can(BrowseTheWeb.using(browser));
+
+            button = element(By.css("[data-test-id='button']"))
+                .called("the danger button");
+        });
+
+        it('should throw an error on first try when the element is not found ' +
+            'and an empty otherwise action is given' +
+            '- (test case id: cd5b5dc9-a231-4f7c-9607-3f4fe0573f8d)', async () => {
+            const delayedButton =
+                element(By.css("[data-test-id='AppearButtonBy5000']"))
+                    .called("button which appears after 5 seconds");
+
+            try {
+                await Jonathan.attemptsTo(
+                    Navigate.to("/redirect"),
+                    See.if(Attribute.of(delayedButton).called("outerHTML"))
+                        .is(strictEqualTo("<button data-test-id=\"AppearButtonBy5000\" class=\"btn btn-info\">Appeared after 5 seconds</button>"))
+                        .otherwise(
+                            // Navigate.to("/delayed"),
+                            // See.if(TheSites.url()).is(strictEqualTo("http://localhost:3000/delayed"))
+                        )
+                );
+                expect(true).toBeFalsy("call should have thrown an error. But it did not.")
+
+            } catch (e) {
+                expect(e.toString()).toContain("No Element found: 'button which appears after 5 seconds' selected by: >>byCss: [data-test-id='AppearButtonBy5000']<<")
+            }
+
+        });
+
+
+        it('should throw an error on first try when the element is not found ' +
+            'and the otherwise activities are throwing an error' +
+            '- (test case id: b76d457a-5459-4479-a975-c0a9df9fb77c)', async () => {
+            const delayedButton =
+                element(By.css("[data-test-id='AppearButtonBy5000']"))
+                    .called("button which appears after 5 seconds");
+
+            try {
+                await Jonathan.attemptsTo(
+                    Navigate.to("/redirect"),
+                    See.if(Attribute.of(delayedButton).called("outerHTML"))
+                        .is(strictEqualTo("<button data-test-id=\"AppearButtonBy5000\" class=\"btn btn-info\">Appeared after 5 seconds</button>"))
+                        .otherwise(
+                            Navigate.to("/delayed"),
+                            See.if(TheSites.url()).is(strictEqualTo(""))
+                        )
+                );
+
+                expect(true).toBeFalsy(`should throw an error, but it didn't`);
+
+            } catch (e) {
+                expect(e.toString()).toContain("AssertionError [ERR_ASSERTION]: 'http://localhost:3000/delayed' === ''");
+            }
+        });
+
+        it('should not throw an error on first try when the element is not found ' +
+            'and empty otherwise action is given' +
+            '- (test case id: 77f977ee-d79d-4b8f-9890-a6e173659e01)', async () => {
+            const delayedButton =
+                element(By.css("[data-test-id='AppearButtonBy5000']"))
+                    .called("button which appears after 5 seconds");
+
+            try {
+                await Jonathan.attemptsTo(
+                    Navigate.to("/redirect"),
+                    See.if(Attribute.of(delayedButton).called("outerHTML"))
+                        .is(strictEqualTo("<button data-test-id=\"AppearButtonBy5000\" class=\"btn btn-info\">Appeared after 5 seconds</button>"))
+                        .otherwise(
+                            Navigate.to("/delayed"),
+                            See.if(TheSites.url()).is(strictEqualTo("http://localhost:3000/delayed"))
+                        )
+                );
+
+            } catch (e) {
+                expect(true).toBeFalsy("call should not have thrown an error. But it did.");
+            }
+
+        });
+
+        it('should not throw an error on first try when the element found ' +
+            'and then activities are specified' +
+            '- (test case id: b8d1361b-a9cc-4569-9009-ed8a71084fcd)', async () => {
+            const delayedButton =
+                element(By.css("[data-test-id='button']"))
+                    .called("the danger button");
+
+            try {
+                await Jonathan.attemptsTo(
+                    Navigate.to("/"),
+                    See.if(Attribute.of(delayedButton).called("outerHTML"))
+                        .is(strictEqualTo("<button data-test-id=\"button\" class=\"btn btn-danger\">Danger!</button>"))
+                        .then(
+                            Navigate.to("/redirect"),
+                            See.if(TheSites.url()).is(strictEqualTo("http://localhost:3000/redirect"))
+                        )
+                );
+
+            } catch (e) {
+                console.error(e.toString());
+                expect(true).toBeFalsy(`should not throw an error, but it did`);
+            }
+        });
+
+        it('should throw an error on first try when the element found ' +
+            'and an error is present in the then activities' +
+            '- (test case id: c8141330-3c00-43e2-828b-e574ccc366c2)', async () => {
+            const delayedButton =
+                element(By.css("[data-test-id='button']"))
+                    .called("the danger button");
+
+            try {
+                await Jonathan.attemptsTo(
+                    Navigate.to("/"),
+                    See.if(Attribute.of(delayedButton).called("outerHTML"))
+                        .is(strictEqualTo("<button data-test-id=\"button\" class=\"btn btn-danger\">Danger!</button>"))
+                        .then(
+                            Navigate.to("/redirect"),
+                            See.if(TheSites.url()).is(strictEqualTo("http://localhost:3000/delayed"))
+                        )
+                );
+                expect(true).toBeFalsy(`should throw an error, but it didn't`);
+
+            } catch (e) {
+                expect(e.toString()).toContain(`AssertionError [ERR_ASSERTION]: 'http://localhost:3000/redirect' === 'http://localhost:3000/delayed'`);
+            }
+        });
+
     });
 });

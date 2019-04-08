@@ -1,14 +1,83 @@
-import {AnswersQuestions} from "../../Actor";
-import {Question}         from "./Question";
-import {Oracle}           from "../actions/Activities";
+import {AnswersQuestions, PerformsTask} from "../../Actor";
+import {Question}                       from "./Question";
+import {Activity, Oracle}               from "../actions/Activities";
+import {step}                           from "../../..";
 
 export class See<U> implements Oracle {
     matcher: (value: U) => boolean | Promise<boolean>;
     private repeater: number = 1;
     private ms: number = 1000;
 
+    private thenActivities: Activity[] = [];
+    private otherwiseActivities: Activity[] = [];
+
+
+    // @step<AnswersQuestions>("to check a condition")
+    async performAs(actor: AnswersQuestions | PerformsTask): Promise<void> {
+
+        const loop = async (counter: number): Promise<boolean> => {
+            const nextLoop = () => {
+                return new Promise(resolve => setTimeout(resolve, this.ms))
+                    .then(() => {
+                        return loop(counter -1);
+                    });
+            };
+
+            if(counter < 1)
+                return Promise.resolve((this.matcher(await (actor as AnswersQuestions).toAnswer(this.question))));
+
+            let promise;
+            try {
+                const answer = await (actor as AnswersQuestions).toAnswer(this.question);
+                promise = Promise.resolve((
+                    this.matcher(answer)
+                ));
+            } catch (e) {
+                return nextLoop();
+            }
+
+            return promise
+                .then((matched: boolean) => {
+                    if(!matched) {
+                        return nextLoop();
+                    } else {
+                        return matched;
+                    }
+                })
+                .catch((e) => {
+                    return nextLoop();
+                })
+        };
+
+        return loop(this.repeater - 1)
+            .then((match: boolean) => {
+                if(this.thenActivities.length > 0) {
+                    return (actor as PerformsTask).attemptsTo(...this.thenActivities);
+                }
+                else {
+                    return;
+                }
+            })
+            .catch((e) => {
+                if(this.otherwiseActivities.length > 0)
+                    return (actor as PerformsTask).attemptsTo(...this.otherwiseActivities);
+                else
+                    return Promise.reject(e);
+            });
+    }
+
     static if <T>(question: Question<T>): See<T> {
         return new See(question)
+    }
+
+    public then(...activities: Activity[]) {
+        this.thenActivities = activities;
+        return this;
+    }
+
+    public otherwise(...activities: Activity[]) {
+        this.otherwiseActivities = activities;
+        return this;
     }
 
     is(matcher: (text: U) => boolean | Promise<boolean>): See<U> {
@@ -33,43 +102,4 @@ export class See<U> implements Oracle {
     constructor(
         private question: Question<U>
     ) {}
-
-    async performAs(actor: AnswersQuestions): Promise<void> {
-
-        const loop = async (counter: number): Promise<boolean> => {
-            const nextLoop = () => {
-                return new Promise(resolve => setTimeout(resolve, this.ms))
-                    .then(() => {
-                        return loop(counter -1);
-                    });
-            };
-
-            if(counter <= 1)
-                return Promise.resolve((this.matcher(await actor.toAnswer(this.question))));
-
-            let promise;
-            try {
-                const answer = await actor.toAnswer(this.question);
-                promise = Promise.resolve((
-                    this.matcher(answer)
-                ));
-            } catch (e) {
-                return nextLoop();
-            }
-
-            return promise
-                .then((matched: boolean) => {
-                    if(!matched) {
-                        return nextLoop();
-                    } else {
-                        return matched;
-                    }
-                })
-                .catch((e) => {
-                    return nextLoop();
-                })
-        };
-
-        return await loop(this.repeater - 1).then((a) => {return});
-    }
 }
