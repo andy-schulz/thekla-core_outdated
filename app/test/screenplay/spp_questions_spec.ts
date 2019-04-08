@@ -1,13 +1,16 @@
-import {DesiredCapabilities, SeleniumConfig} from "../../config/SeleniumConfig";
-import {RunningBrowser}                      from "../../driver/lib/RunningBrowser";
-import {By}                                  from "../../driver/lib/Locator";
-import {Actor}                               from "../../screenplay/Actor";
-import {See}                                 from "../../screenplay/lib/matcher/See";
-import {BrowseTheWeb}                        from "../../screenplay/web/abilities/BrowseTheWeb";
-import {Navigate}                            from "../../screenplay/web/actions/Navigate";
-import {Attribute}                    from "../../screenplay/web/questions/Attribute";
-import {element, SppWebElementFinder} from "../../screenplay/web/SppWebElements";
-import {strictEqual}                  from "assert";
+import {
+    DesiredCapabilities,
+    SeleniumConfig,
+    Browser,
+    RunningBrowser,
+    Actor,
+    BrowseTheWeb,
+    By,
+    Navigate,
+    See,
+    TheSites,
+    Attribute, SppWebElementFinder, element, strictEqualTo
+} from "../../";
 
 
 let seleniumConfig: SeleniumConfig = {
@@ -19,7 +22,7 @@ const capabilities: DesiredCapabilities ={
     proxy: {
         type: "direct"
     }
-}
+};
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
 describe('Using', () => {
@@ -28,11 +31,11 @@ describe('Using', () => {
         await RunningBrowser.cleanup();
     });
 
-
     describe('the attribute question', () => {
         let John: Actor = Actor.named("John");
         let button: SppWebElementFinder;
         let matcher: (text: string) => boolean;
+        const dangerButton: string = "<button data-test-id=\"button\" class=\"btn btn-danger\">Danger!</button>";
 
         beforeAll(async () => {
             const browser = await RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities);
@@ -40,12 +43,6 @@ describe('Using', () => {
 
             button = element(By.css("[data-test-id='button']"))
                 .called("the danger button");
-
-            matcher = (text: string): boolean => {
-                expect(text).toEqual("<button data-test-id=\"button\" class=\"btn btn-danger\">Danger!</button>");
-                // can return true
-                return true;
-            };
         });
 
         it('"See": it should throw an error when the repeater value is out of bounds. ' +
@@ -54,7 +51,7 @@ describe('Using', () => {
                 await John.attemptsTo(
                     Navigate.to("/"),
                     See.if(Attribute.of(button).called("outerHTML"))
-                        .fulfills(matcher)
+                        .is(strictEqualTo(dangerButton))
                         .repeatFor(0,1000)
                 )
             } catch (e) {
@@ -65,7 +62,7 @@ describe('Using', () => {
                 await John.attemptsTo(
                     Navigate.to("/"),
                     See.if(Attribute.of(button).called("outerHTML"))
-                        .fulfills(matcher)
+                        .is(strictEqualTo(dangerButton))
                         .repeatFor(-1,1000)
                 )
             } catch (e) {
@@ -76,7 +73,7 @@ describe('Using', () => {
                 await John.attemptsTo(
                     Navigate.to("/"),
                     See.if(Attribute.of(button).called("outerHTML"))
-                        .fulfills(matcher)
+                        .is(strictEqualTo(dangerButton))
                         .repeatFor(1001,1000)
                 )
             } catch (e) {
@@ -90,7 +87,7 @@ describe('Using', () => {
                 await John.attemptsTo(
                     Navigate.to("/"),
                     See.if(Attribute.of(button).called("outerHTML"))
-                        .fulfills(matcher)
+                        .is(strictEqualTo(dangerButton))
                         .repeatFor(2,-1)
                 )
             } catch (e) {
@@ -101,7 +98,7 @@ describe('Using', () => {
                 await John.attemptsTo(
                     Navigate.to("/"),
                     See.if(Attribute.of(button).called("outerHTML"))
-                        .fulfills(matcher)
+                        .is(strictEqualTo(dangerButton))
                         .repeatFor(6,60001)
                 )
             } catch (e) {
@@ -113,7 +110,7 @@ describe('Using', () => {
             '- (test case id: 6458382e-d95d-49b6-972c-56fa68bede94)', async () => {
             await John.attemptsTo(
                 Navigate.to("/"),
-                See.if(Attribute.of(button).called("outerHTML")).fulfills(matcher)
+                See.if(Attribute.of(button).called("outerHTML")).is(strictEqualTo(dangerButton))
             )
         });
 
@@ -123,16 +120,11 @@ describe('Using', () => {
                     element(By.css("[data-test-id='AppearButtonBy5000']"))
                         .called("button which appears after 5 seconds");
 
-            const matcher = (text: string): boolean => {
-                strictEqual(text,"<button data-test-id=\"AppearButtonBy5000\" class=\"btn btn-info\">Appeared after 5 seconds</button>");
-                return true;
-            };
-
             await John.attemptsTo(
                 Navigate.to("/redirect"),
                 See.if(Attribute.of(delayedButton)
                     .called("outerHTML"))
-                    .fulfills(matcher)
+                    .is(strictEqualTo("<button data-test-id=\"AppearButtonBy5000\" class=\"btn btn-info\">Appeared after 5 seconds</button>"))
                     .repeatFor(12,1000)
             )
         });
@@ -143,17 +135,12 @@ describe('Using', () => {
                 element(By.css("[data-test-id='AppearButtonBy5000']"))
                     .called("button which appears after 5 seconds");
 
-            const matcher = (text: string): boolean => {
-                strictEqual(text,"<button data-test-id=\"AppearButtonBy5000\" class=\"btn btn-info\">Appeared after 5 seconds</button>");
-                return true;
-            };
-
             try {
                 await John.attemptsTo(
                     Navigate.to("/redirect"),
                     See.if(Attribute.of(delayedButton)
                         .called("outerHTML"))
-                        .fulfills(matcher)
+                        .is(strictEqualTo("<button data-test-id=\"AppearButtonBy5000\" class=\"btn btn-info\">Appeared after 5 seconds</button>"))
                         .repeatFor(5,1000)
                 );
                 expect(true).toBeFalsy("call should have thrown an error. But it did not.");
@@ -170,16 +157,12 @@ describe('Using', () => {
                 element(By.css("[data-test-id='AppearButtonBy5000']"))
                     .called("button which appears after 5 seconds");
 
-            const matcher = (text: string): boolean => {
-                return expect(text).toEqual("<button data-test-id=\"AppearButtonBy5000\" class=\"btn btn-info\">Appeared after 5 seconds</button>");
-            };
-
             try {
                 await John.attemptsTo(
                     Navigate.to("/redirect"),
                     See.if(Attribute.of(delayedButton)
                         .called("outerHTML"))
-                        .fulfills(matcher)
+                        .is(strictEqualTo("<button data-test-id=\"AppearButtonBy5000\" class=\"btn btn-info\">Appeared after 5 seconds</button>"))
                 );
                 expect(true).toBeFalsy("call should have thrown an error. But it did not.")
 
@@ -187,6 +170,32 @@ describe('Using', () => {
                 expect(e.toString()).toContain("No Element found: 'button which appears after 5 seconds' selected by: >>byCss: [data-test-id='AppearButtonBy5000']<<")
             }
 
+        });
+    });
+
+    describe('the Site question', () => {
+        const Joanna: Actor = Actor.named("John");
+        let browser: Browser;
+
+        beforeAll(async () => {
+            browser = await RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities);
+            Joanna.can(BrowseTheWeb.using(browser))
+        });
+
+        it('with >See<: should check for the current site url ' +
+            '- (test case id: 332e9252-aec9-44b5-b936-728561523e27)', () => {
+            Joanna.attemptsTo(
+                Navigate.to("/delayed"),
+                See.if(TheSites.url()).is(strictEqualTo("http://localhost/delayed"))
+            )
+        });
+
+        it('with >See<: should check for the sites title ' +
+            '- (test case id: 7974c013-4234-43e4-8330-6ec788512eb8)', () => {
+            Joanna.attemptsTo(
+                Navigate.to("/delayed"),
+                See.if(TheSites.title()).is(strictEqualTo("http://localhost/delayed"))
+            )
         });
     });
 });

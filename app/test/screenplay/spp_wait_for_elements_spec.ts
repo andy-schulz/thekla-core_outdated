@@ -6,7 +6,7 @@ import {
     element,
     See,
     Navigate,
-    Text, UntilElement, SeleniumConfig, Click, Wait, DesiredCapabilities
+    Text, UntilElement, SeleniumConfig, Click, Wait, DesiredCapabilities, strictEqualTo
 } from "../../index";
 
 
@@ -51,15 +51,11 @@ describe('Waiting for SPP Elements', () => {
             .called("Test enabled element after 5 seconds")
             .shallWait(UntilElement.isNot.enabled().forAsLongAs(20000));
 
-        const match = (expected: string) => {
-            return (actual: string) => expect(expected).toEqual(actual);
-        };
-
         it('should be possible with wait actions on an element ' +
             '- (test case id: 7fd0c550-e31c-42fd-96f8-4ceb50e6cf3b)', async () => {
             await walterTheWaiter.attemptsTo(
                 Navigate.to(`/delayed`),
-                See.if(Text.of(appearingButton)).fulfills(match("Appeared after 5 seconds")),
+                See.if(Text.of(appearingButton)).is(strictEqualTo("Appeared after 5 seconds")),
             );
         });
 
@@ -67,7 +63,7 @@ describe('Waiting for SPP Elements', () => {
             '- (test case id: 4406f09a-5b80-4106-b46a-9f2683faefc9)', async () => {
             await walterTheWaiter.attemptsTo(
                 Navigate.to(`/redirect`),
-                See.if(Text.of(appearingButton)).fulfills(match("Appeared after 5 seconds")),
+                See.if(Text.of(appearingButton)).is(strictEqualTo("Appeared after 5 seconds")),
             );
         });
 
@@ -75,7 +71,7 @@ describe('Waiting for SPP Elements', () => {
             '- (test case id: 8419865d-b444-459d-8101-7e6912af1e08)', async () => {
             await walterTheWaiter.attemptsTo(
                 Navigate.to(`/delayed`),
-                See.if(Text.of(toBeEnabledButton)).fulfills(match("Enabled after 5 seconds")),
+                See.if(Text.of(toBeEnabledButton)).is(strictEqualTo("Enabled after 5 seconds")),
             );
         });
 
@@ -83,7 +79,7 @@ describe('Waiting for SPP Elements', () => {
             '- (test case id: a0899cd4-6548-4f15-ab19-579bd6ca1ccd)', async () => {
             await walterTheWaiter.attemptsTo(
                 Navigate.to(`/delayed`),
-                See.if(Text.of(toBeDisabledButton)).fulfills(match("Disabled after 5 seconds")),
+                See.if(Text.of(toBeDisabledButton)).is(strictEqualTo("Disabled after 5 seconds")),
             );
         });
     });
@@ -103,7 +99,7 @@ describe('Waiting for SPP Elements', () => {
             '- (test case id: 5812e00b-580d-4330-899c-9f62cedc0a6e)', async () => {
             await walterTheWaiter.attemptsTo(
                 Navigate.to(`/modals`),
-                See.if(Text.of(button)).fulfills(match("Danger!")),
+                See.if(Text.of(button)).is(strictEqualTo("Danger!")),
                 Wait.for(modal).andCheck(UntilElement.isNot.visible().forAsLongAs(500)),
             )
                 .then(() => {
@@ -119,7 +115,7 @@ describe('Waiting for SPP Elements', () => {
             '- (test case id: c93f9af5-b5ea-49d2-99ba-45e7b31018b0)', async () => {
             await walterTheWaiter.attemptsTo(
                 Navigate.to(`/modals`),
-                See.if(Text.of(button)).fulfills(match("Danger!")),
+                See.if(Text.of(button)).is(strictEqualTo("Danger!")),
                 Wait.for(modal).andCheck(UntilElement.isNot.visible().forAsLongAs(10000)),
             )
 

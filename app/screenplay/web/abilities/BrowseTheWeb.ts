@@ -38,4 +38,12 @@ export class BrowseTheWeb implements Ability {
     wait(condition: UntilElementCondition, element: SppWebElementFinder): Promise<string> {
         return this.browser.wait2(condition, element.getElements(this.browser) as WebElementFinder);
     }
+
+    getCurrentUrl() {
+        return this.browser.getCurrentUrl();
+    }
+
+    getTitle() {
+        return this.browser.getTitle()
+    }
 }

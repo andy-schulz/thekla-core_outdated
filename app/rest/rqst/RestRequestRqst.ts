@@ -1,4 +1,3 @@
-import {resource}           from "selenium-webdriver/http";
 import {RestAbilityOptions} from "../../screenplay/rest/abilities/UseTheRestApi";
 import {RestRequest}        from "../interface/RestRequest";
 import {RestRequestResult}  from "../interface/RestRequestResult";

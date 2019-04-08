@@ -325,6 +325,14 @@ export class BrowserWdjs implements Browser {
         })
     }
 
+    public getCurrentUrl(): Promise<string> {
+        return new Promise((resolve, reject) => {
+            this._driver.getCurrentUrl()
+                .then(resolve, reject)
+                .catch(reject)
+        })
+    }
+
     /**
      * close the browser
      */

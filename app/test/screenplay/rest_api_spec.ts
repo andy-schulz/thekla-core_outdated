@@ -5,6 +5,7 @@ import {
 
 import {configure}   from "log4js";
 import {curry}       from "lodash";
+import fp       from "lodash/fp";
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
@@ -301,17 +302,18 @@ describe('Trying to Add two numbers by the mathjs API', () => {
     describe('when using the Response question', () => {
         it('it should be possible to check the result ' +
             '- (test case id: 7f4b74f0-048f-43b0-81a6-614299229d6f)', () => {
-            const req = request(On.ressource(`/?expr=${a}%2B${b}`));
 
-            const theResponseCheck = (respone: any) => {
-                expect(respone.statusCode).toEqual(200);
-                expect(respone.body).toEqual(`${calculationResult}`);
-                return true;
-            };
+            const req = request(On.ressource(`/?expr=${a}%2B${b}`))
+                .using({resolveWithFullResponse: true});
+
+            const containing = curry((cResult: string, stCode: number, respone: any, ) => {
+                    expect(respone.statusCode).toEqual(stCode);
+                    expect(respone.body).toEqual(cResult);
+                });
 
             return andy.attemptsTo(
                 See.if(Response.of(req).as(Method.get()))
-                    .fulfills(theResponseCheck)
+                    .is(fp.compose(() => true, (containing(`${calculationResult}`)(200))))
                     .repeatFor(5, 1000),
             );
         });

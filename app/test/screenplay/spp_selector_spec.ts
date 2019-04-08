@@ -10,7 +10,7 @@ import {
     Text,
     SeleniumConfig,
     Click,
-    UntilElement
+    UntilElement, strictEqualTo
 } from "../..";
 
 import {configure} from "log4js";
@@ -48,7 +48,7 @@ describe('When locating an element,', () => {
 
             await john.attemptsTo(
                 Navigate.to(`/`),
-                See.if(Text.of(button)).fulfills(match(`Danger!`)),
+                See.if(Text.of(button)).is(strictEqualTo(`Danger!`)),
                 Click.on(button),
             );
         }, 100000);

@@ -11,7 +11,7 @@ export class See<U> implements Oracle {
         return new See(question)
     }
 
-    fulfills(matcher: (text: U) => boolean | Promise<boolean>): See<U> {
+    is(matcher: (text: U) => boolean | Promise<boolean>): See<U> {
         this.matcher = matcher;
         return this;
     }
@@ -44,17 +44,20 @@ export class See<U> implements Oracle {
                     });
             };
 
-            if(counter < 1)
+            if(counter <= 1)
                 return Promise.resolve((this.matcher(await actor.toAnswer(this.question))));
 
+            let promise;
             try {
-                let promise = Promise.resolve((this.matcher(await actor.toAnswer(this.question))));
+                const answer = await actor.toAnswer(this.question);
+                promise = Promise.resolve((
+                    this.matcher(answer)
+                ));
             } catch (e) {
                 return nextLoop();
             }
 
-
-            return Promise.resolve((this.matcher(await actor.toAnswer(this.question))))
+            return promise
                 .then((matched: boolean) => {
                     if(!matched) {
                         return nextLoop();
@@ -64,7 +67,6 @@ export class See<U> implements Oracle {
                 })
                 .catch((e) => {
                     return nextLoop();
-
                 })
         };
 

@@ -1,11 +1,14 @@
-import {strictEqual as se} from "assert";
+import {strictEqual} from "assert";
 import {curryRight, curry} from "lodash";
+import fp from "lodash/fp";
 import {diff}              from 'deep-diff';
 
 /**
  * curried strictEqual to pass a function with the value to compare to the See.if Question
  */
-export const strictEqual = curryRight(se);
+export const strictEqualTo = (expected: any) => {
+    return fp.compose(() => true, curryRight(strictEqual));
+};
 
 /**
  * checks if the expected object is contained within the actual object
