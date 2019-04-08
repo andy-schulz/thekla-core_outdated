@@ -72,12 +72,12 @@ export {See}     from "./screenplay/lib/matcher/See";
 export {Extract} from "./screenplay/lib/matcher/Extract";
 
 // Questions
-export {Text}                              from "./screenplay/web/questions/Text";
-export {Value}                             from "./screenplay/web/questions/Value";
-export {Attribute}                         from "./screenplay/web/questions/Attribute";
-export {Count}                             from "./screenplay/web/questions/Count";
-export {TheSites}                             from "./screenplay/web/questions/Site";
-export {Response}                          from "./screenplay/rest/questions/Response";
+export {Text}                                 from "./screenplay/web/questions/Text";
+export {Value}                                from "./screenplay/web/questions/Value";
+export {Attribute}                            from "./screenplay/web/questions/Attribute";
+export {Count}                                from "./screenplay/web/questions/Count";
+export {TheSites}                             from "./screenplay/web/questions/TheSites";
+export {Response}                             from "./screenplay/rest/questions/Response";
 
 // Custom Errors
 export {NoSuchAbilityError} from "./screenplay/errors/NoSuchAbilityError";
