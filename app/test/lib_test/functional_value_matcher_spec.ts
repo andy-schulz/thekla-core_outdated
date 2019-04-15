@@ -1,4 +1,4 @@
-import {objectContains, strictEqualTo} from "../..";
+import {containingTheObject, strictEqualTo} from "../..";
 
 describe('Using the ', () => {
 

@@ -16,7 +16,7 @@ export const strictEqualTo = curryRight((actual: any, expected: any) => {
  * checks if the expected object is contained within the actual object
  * this way a subset of attributes can be checked
  */
-export const objectContains = curry((expected: Object | string, actual: Object | string): boolean => {
+export const containingTheObject = curry((expected: Object | string, actual: Object | string): boolean => {
     const exp = typeof expected === "string" ? JSON.parse(expected) : expected;
     const act = typeof actual === "string" ? JSON.parse(actual) : actual;
 
@@ -44,6 +44,6 @@ export const objectContains = curry((expected: Object | string, actual: Object |
     if (theDiff === undefined) {
         return true
     } else {
-        throw new Error(`Differences in Case Response found: ${JSON.stringify(theDiff, null, "\t")}`);
+        throw new Error(`Differences in objects found: ${JSON.stringify(theDiff, null, "\t")}`);
     }
 });
