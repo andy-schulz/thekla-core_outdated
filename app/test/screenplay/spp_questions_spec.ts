@@ -28,7 +28,7 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 describe('Using', () => {
 
     afterAll(async () => {
-        await RunningBrowser.cleanup();
+        return RunningBrowser.cleanup();
     });
 
     describe('the attribute question', () => {
@@ -37,7 +37,7 @@ describe('Using', () => {
         const dangerButton: string = "<button data-test-id=\"button\" class=\"btn btn-danger\">Danger!</button>";
 
         beforeAll(async () => {
-            const browser = await RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities);
+            const browser = RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities);
             John.can(BrowseTheWeb.using(browser));
 
             button = element(By.css("[data-test-id='button']"))
@@ -177,7 +177,7 @@ describe('Using', () => {
         let browser: Browser;
 
         beforeAll(async () => {
-            browser = await RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities);
+            browser = RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities);
             Joanna.can(BrowseTheWeb.using(browser))
         });
 
@@ -203,7 +203,7 @@ describe('Using', () => {
         let button: SppWebElementFinder;
 
         beforeAll(async () => {
-            const browser = await RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities);
+            const browser = RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities);
             Jonathan.can(BrowseTheWeb.using(browser));
 
             button = element(By.css("[data-test-id='button']"))

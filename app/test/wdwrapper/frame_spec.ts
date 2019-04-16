@@ -20,7 +20,7 @@ describe('trying to access a Frame', () => {
     let browser: Browser;
 
     beforeAll(async () => {
-        browser = await BrowserWdjs.create(conf, capabilities);
+        browser = BrowserWdjs.create(conf, capabilities);
     });
 
     afterAll(async () => {

@@ -29,7 +29,7 @@ describe('a simple table', () => {
     let browser: Browser;
 
     beforeAll(async (done) => {
-        browser = await BrowserWdjs.create(conf, capabilities);
+        browser = BrowserWdjs.create(conf, capabilities);
         done();
     });
 

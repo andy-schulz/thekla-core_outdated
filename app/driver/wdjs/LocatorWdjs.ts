@@ -32,12 +32,16 @@ export class LocatorWdjs {
             case "byJs":
                 return parentElement.findElements(ByWd.js(locator.function, locator.args));
             case "byCssContainingText":
-                return browser.driver.findElements(
-                    ByWd.js(
-                        clientSideScripts.findByCssContainingText,
-                        locator.selector,
-                        locator.searchText,
-                        parentElement));
+                return browser.getDriver()
+                    .then((driver) => {
+                        return driver.findElements(
+                            ByWd.js(
+                                clientSideScripts.findByCssContainingText,
+                                locator.selector,
+                                locator.searchText,
+                                parentElement));
+                    });
+
             default:
                 throw Error(`Selector ${locator.selector} not implemented for framework WebDriverJS`);
         }

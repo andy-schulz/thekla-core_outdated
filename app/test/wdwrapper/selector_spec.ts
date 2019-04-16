@@ -20,7 +20,7 @@ describe('Locating an waiter', () => {
     let browser: Browser;
 
     beforeAll(async () => {
-        browser = await BrowserWdjs.create(conf, capabilities);
+        browser = BrowserWdjs.create(conf, capabilities);
     }, 10000);
 
     describe('by cssContainingText', () => {

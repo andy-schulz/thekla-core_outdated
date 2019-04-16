@@ -26,7 +26,7 @@ describe('Using Google Search to find an online calculator', () => {
         let calculatorInput:WebElementFinder;
 
         beforeAll(async () => {
-            b = await BrowserWdjs.create(conf,capabilities);
+            b = BrowserWdjs.create(conf,capabilities);
             searchField = b.element(By.css("[name='q']"))
                 .shallWait(UntilElement.is.visible().forAsLongAs(5000))
                 .called("The Google search field (describe)");

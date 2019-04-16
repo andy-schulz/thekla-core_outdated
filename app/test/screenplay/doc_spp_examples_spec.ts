@@ -50,7 +50,7 @@ describe('Using Google Search to find an online calculator', () => {
 
         beforeAll(async () => {
             // and give him the ability to browse the web using a browser of your choice
-            philipp.whoCan(BrowseTheWeb.using(await RunningBrowser.startedOn(conf).withDesiredCapability(capabilities)));
+            philipp.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(conf).withDesiredCapability(capabilities)));
         });
 
         it('the google calculator should be loaded - (test case id: ee1fcbb5-eb08-4f0d-979b-601ba9b63d87)', async () => {

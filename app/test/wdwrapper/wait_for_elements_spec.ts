@@ -30,7 +30,7 @@ describe('Waiting for WD Elements', () => {
         let appearButton5000ShallWait: WebElementFinder;
 
         beforeAll(async () => {
-            browser = await BrowserWdjs.create(conf, capabilities);
+            browser = BrowserWdjs.create(conf, capabilities);
         },20000);
 
         it('the system should wait for a second - (test case id: d106ba43-542c-44c7-959e-f64dcdc6943d)', async () => {

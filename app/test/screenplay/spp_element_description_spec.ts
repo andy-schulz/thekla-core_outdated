@@ -101,7 +101,7 @@ describe('The description on an element', () => {
 
         beforeAll(async () => {
             andy = Actor.named("Andy");
-            andy.whoCan(BrowseTheWeb.using(await RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities)));
+            andy.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities)));
         });
 
         afterAll(async () => {

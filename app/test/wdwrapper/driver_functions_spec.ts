@@ -22,7 +22,7 @@ describe('Using the browser object', () => {
             '- (test case id: 5411140d-4b1a-408b-ab9a-995ab200825d)', async () => {
             const title = "React App";
 
-            const browser: Browser = await BrowserWdjs.create(selConfig, desiredCapabilities);
+            const browser: Browser = BrowserWdjs.create(selConfig, desiredCapabilities);
 
             await browser.get("http://localhost:3000/delayed");
             expect(await browser.getTitle()).toBe(title);
@@ -34,7 +34,7 @@ describe('Using the browser object', () => {
             '- (test case id: 6fef0368-82c6-4d08-9bfa-a9c399c0446d)', async () => {
             const url = "http://localhost:3000/delayed";
 
-            const browser: Browser = await BrowserWdjs.create(selConfig, desiredCapabilities);
+            const browser: Browser = BrowserWdjs.create(selConfig, desiredCapabilities);
 
             await browser.get("http://localhost:3000/delayed");
             expect(await browser.getCurrentUrl()).toBe(url);

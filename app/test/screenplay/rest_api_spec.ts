@@ -7,7 +7,7 @@ import {configure}   from "log4js";
 import {curry}       from "lodash";
 import fp       from "lodash/fp";
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
 const config = {
     levels: {

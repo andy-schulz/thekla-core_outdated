@@ -1,31 +1,30 @@
-import {ISize, ThenableWebDriver}  from "selenium-webdriver";
-import {WindowConfig}              from "../../config/SeleniumConfig";
-import {BrowserWindow, WindowSize} from "../interface/BrowserWindow";
+import {ISize, WebDriver} from "selenium-webdriver";
+import {WindowConfig}                        from "../../config/SeleniumConfig";
+import {BrowserWindow, WindowSize}           from "../interface/BrowserWindow";
 
 export class BrowserWindowWdjs implements BrowserWindow{
     constructor(
-        private _driver: ThenableWebDriver,
+        private getDriver: () => Promise<WebDriver>,
         private _windowConfig?: WindowConfig
     ) {
 
     }
 
-    public static async create(driver: ThenableWebDriver,
-                         windowConfig?: WindowConfig): Promise<BrowserWindow> {
-        const window = new BrowserWindowWdjs(driver, windowConfig);
+    public static create(getDriver: () => Promise<WebDriver>, windowConfig?: WindowConfig): BrowserWindow {
+        return new BrowserWindowWdjs(getDriver, windowConfig);
+    }
 
-        if (windowConfig) {
-            if (windowConfig.setToMaxSize) {
-                await window.maximize();
-            }
+    public setToPreset(): Promise<void> {
+        if (this._windowConfig && this._windowConfig.setToMaxSize) {
+            return this.maximize();
         }
-
-        return Promise.resolve(window);
+        return Promise.resolve()
     }
 
     public maximize(): Promise<void> {
         return new Promise((resolve, reject) => {
-            this._driver.manage().window().maximize()
+            this.getDriver()
+                .then((driver: WebDriver) => driver.manage().window().maximize())
                 .then(resolve)
                 .catch(reject);
         })
@@ -33,7 +32,8 @@ export class BrowserWindowWdjs implements BrowserWindow{
 
     public setSize(dimension: WindowSize = {width: 500, height: 500}): Promise<void> {
         return new Promise((resolve, reject) => {
-            this._driver.manage().window().setSize(dimension.width, dimension.height)
+            this.getDriver()
+                .then((driver: WebDriver) => driver.manage().window().setSize(dimension.width, dimension.height))
                 .then(resolve)
                 .catch(reject)
         });
@@ -41,7 +41,8 @@ export class BrowserWindowWdjs implements BrowserWindow{
 
     public getSize(): Promise<WindowSize> {
         return new Promise((resolve, reject) => {
-            this._driver.manage().window().getSize()
+            this.getDriver()
+                .then((driver: WebDriver) => driver.manage().window().getSize())
                 .then((s: ISize) =>resolve({width: s.width, height: s.height}))
                 .catch(reject)
         })

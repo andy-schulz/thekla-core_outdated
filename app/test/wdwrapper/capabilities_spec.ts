@@ -32,7 +32,7 @@ describe('Starting a browser instance', () => {
         it('should start a firefox instance when the browsername is "firefox" ' +
             '- (test case id: 57480387-ed1c-43ca-8da0-0767e57d106b)', async () => {
 
-            const browser: Browser = await RunningBrowser.startedOn(conf).withDesiredCapability(capabilities);
+            const browser: Browser = RunningBrowser.startedOn(conf).withDesiredCapability(capabilities);
             const agent = await browser.executeScript(browserFunc);
             expect(agent).toContain("Firefox");
         });
@@ -41,7 +41,7 @@ describe('Starting a browser instance', () => {
             '- (test case id: 6936a711-f3e6-404b-aa56-94972567f8bd)', async () => {
             const capa: DesiredCapabilities = _.cloneDeep(capabilities);
             capa.browserName = "chrome";
-            const browser: Browser = await RunningBrowser.startedOn(conf).withDesiredCapability(capa);
+            const browser: Browser = RunningBrowser.startedOn(conf).withDesiredCapability(capa);
             const agent = await browser.executeScript(browserFunc);
             expect(agent).toContain("Chrome");
         });
@@ -56,7 +56,7 @@ describe('Starting a browser instance', () => {
                 args: ["--width=2200", "--height=2200"]
             };
 
-            const browserInitialResize = await BrowserWdjs.create(con, capa);
+            const browserInitialResize = BrowserWdjs.create(con, capa);
             const data = await browserInitialResize.executeScript(windowSize);
             const dataParsed: WindowSize = JSON.parse(JSON.stringify(data));
             expect(dataParsed.height).toBeGreaterThanOrEqual(2000);
@@ -72,7 +72,7 @@ describe('Starting a browser instance', () => {
             };
             capa.browserName = "chrome";
 
-            const browserInitialResize = await BrowserWdjs.create(con, capa);
+            const browserInitialResize = BrowserWdjs.create(con, capa);
             const data = await browserInitialResize.executeScript(windowSize);
             const dataParsed: WindowSize = JSON.parse(JSON.stringify(data));
             expect(dataParsed.height).toBeLessThanOrEqual(500);
@@ -94,7 +94,7 @@ describe('Starting a browser instance', () => {
                 }
             };
 
-            return RunningBrowser.startedOn(conf).withDesiredCapability(capa)
+            return RunningBrowser.startedOn(conf).withDesiredCapability(capa).get("http://localhost:3000")
                 .then(() => {
                     return Promise.reject("creating a browser with a not existing binary should throw an Error, but it doesnt");
                 })
@@ -117,7 +117,7 @@ describe('Starting a browser instance', () => {
                 }
             };
 
-            return RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities)
+            return RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities).get("http://locahost:3000")
                 .then(() => {
                     return Promise.reject("creating a browser with a not existing binary should throw an Error, but it doesnt");
                 })

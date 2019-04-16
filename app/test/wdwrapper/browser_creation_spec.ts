@@ -23,9 +23,9 @@ describe('When using the BrowserWdjs class', () => {
 
     describe('to startedOn a single browser', () => {
         it('with an empty browser name, it should throw an invalid browser name error ' +
-            '- (test case id: f25ffac2-c583-458b-9ee1-db22a6ef0423)', async () => {
+            '- (test case id: f25ffac2-c583-458b-9ee1-db22a6ef0423)', () => {
             try {
-                await BrowserWdjs.create(conf,capabilities, "");
+                BrowserWdjs.create(conf,capabilities, "");
                 expect(true).toBeFalsy(`Creating a browser with an empty string should throw an error, but it doesnt`);
             } catch (e) {
                 expect(e.toString()).toContain("invalid browser name ''");
@@ -33,12 +33,12 @@ describe('When using the BrowserWdjs class', () => {
         }, 20000);
 
         it('with invalid browser name characters, it should throw an invalid character error ' +
-            '- (test case id: cbbc5a1b-efe9-4152-800e-dab0a1ba5d8b)', async () => {
+            '- (test case id: cbbc5a1b-efe9-4152-800e-dab0a1ba5d8b)', () => {
             const browserNames: string[] = ["A1 2", "!test", "$Test", "A123 "];
 
             browserNames.map(async (browserName: string) => {
                 try {
-                    await BrowserWdjs.create(conf, capabilities, browserName);
+                    BrowserWdjs.create(conf, capabilities, browserName);
                     expect(true). toBeFalsy(`Creating a browser with invalid characters should throw an error, but it doesnt!`);
                 }
                 catch (e) {expect(e.toString()).toMatch(/^Error: browser name (.*) contains invalid characters. Allowed characters are: (.*)/)}
@@ -47,8 +47,8 @@ describe('When using the BrowserWdjs class', () => {
         }, 20000);
 
         it('without a name,it should be created with a default name ' +
-            '- (test case id: 92f1df53-f16e-4e7d-9def-340910a2d054)', async () => {
-            const browser: Browser = await BrowserWdjs.create(conf, capabilities);
+            '- (test case id: 92f1df53-f16e-4e7d-9def-340910a2d054)', () => {
+            const browser: Browser = BrowserWdjs.create(conf, capabilities);
 
             expect(BrowserWdjs.availableBrowser.length).toBe(1, `length check for # of browser in BrowserWdjs failed`);
             expect(BrowserWdjs.availableBrowser[0]).toBe("browser1");
@@ -56,8 +56,19 @@ describe('When using the BrowserWdjs class', () => {
         }, 20000);
 
         it('with a name, it should set this name ' +
+            '- (test case id: f2e8b6f5-d639-445c-95a6-ce2ebd82a1ed)', () => {
+            const browser: Browser = BrowserWdjs.create(conf, capabilities, "theNewBrowserName");
+
+            expect(BrowserWdjs.availableBrowser.length).toBe(1, `length check for # of browser in BrowserWdjs failed`);
+            expect(BrowserWdjs.availableBrowser[0]).toBe("theNewBrowserName");
+            expect(BrowserWdjs.getBrowser("theNewBrowserName")).toEqual(browser);
+
+        }, 20000);
+
+        it('with a name and an browser instance, it should set this name ' +
             '- (test case id: f2e8b6f5-d639-445c-95a6-ce2ebd82a1ed)', async () => {
-            const browser: Browser = await BrowserWdjs.create(conf, capabilities, "theNewBrowserName");
+            const browser: Browser = BrowserWdjs.create(conf, capabilities, "theNewBrowserName");
+            await browser.get("http://localhost:3000/");
 
             expect(BrowserWdjs.availableBrowser.length).toBe(1, `length check for # of browser in BrowserWdjs failed`);
             expect(BrowserWdjs.availableBrowser[0]).toBe("theNewBrowserName");
@@ -69,8 +80,8 @@ describe('When using the BrowserWdjs class', () => {
     describe('to startedOn multiple browser', () => {
         it('without a name, they should be created with a default name ' +
             '- (test case id: 126d1e0a-1b89-4d74-8774-69c0f446084c)', async () => {
-            const browser1: Browser = await BrowserWdjs.create(conf, capabilities);
-            const browser2: Browser = await BrowserWdjs.create(conf, capabilities);
+            const browser1: Browser = BrowserWdjs.create(conf, capabilities);
+            const browser2: Browser = BrowserWdjs.create(conf, capabilities);
 
             expect(BrowserWdjs.availableBrowser.length).toBe(2, `length check for # of browser in BrowserWdjs failed`);
             expect(BrowserWdjs.availableBrowser[0]).toBe("browser1");
@@ -80,9 +91,9 @@ describe('When using the BrowserWdjs class', () => {
         }, 20000);
 
         it('and only the first browser gets a name, the second browser should get a default name ' +
-            '- (test case id: 83b28cf5-7fba-4597-b5ec-64495caa5053)', async () => {
-            const browser1: Browser = await BrowserWdjs.create(conf, capabilities, "theFirstBrowser");
-            const browser2: Browser = await BrowserWdjs.create(conf, capabilities);
+            '- (test case id: 83b28cf5-7fba-4597-b5ec-64495caa5053)', () => {
+            const browser1: Browser = BrowserWdjs.create(conf, capabilities, "theFirstBrowser");
+            const browser2: Browser = BrowserWdjs.create(conf, capabilities);
 
             expect(BrowserWdjs.availableBrowser.length).toBe(2, `length check for # of browser in BrowserWdjs failed`);
             expect(BrowserWdjs.availableBrowser[0]).toBe("theFirstBrowser");
@@ -93,9 +104,9 @@ describe('When using the BrowserWdjs class', () => {
         }, 20000);
 
         it('and only the second browser gets a name, the first browser should get a default name ' +
-            '- (test case id: 83b28cf5-7fba-4597-b5ec-64495caa5053)', async () => {
-            const browser1: Browser = await BrowserWdjs.create(conf, capabilities);
-            const browser2: Browser = await BrowserWdjs.create(conf, capabilities, "theSecondBrowser");
+            '- (test case id: 83b28cf5-7fba-4597-b5ec-64495caa5053)', () => {
+            const browser1: Browser = BrowserWdjs.create(conf, capabilities);
+            const browser2: Browser = BrowserWdjs.create(conf, capabilities, "theSecondBrowser");
 
             expect(BrowserWdjs.availableBrowser.length).toBe(2, `length check for # of browser in BrowserWdjs failed`);
             expect(BrowserWdjs.availableBrowser[0]).toBe("browser1");
@@ -105,9 +116,9 @@ describe('When using the BrowserWdjs class', () => {
         },20000);
 
         it('and both browser get a name, they should be set ' +
-            '- (test case id: 83b28cf5-7fba-4597-b5ec-64495caa5053)', async () => {
-            const browser1: Browser = await BrowserWdjs.create(conf, capabilities,"theFirstBrowser");
-            const browser2: Browser = await BrowserWdjs.create(conf, capabilities,"theSecondBrowser");
+            '- (test case id: 83b28cf5-7fba-4597-b5ec-64495caa5053)', () => {
+            const browser1: Browser = BrowserWdjs.create(conf, capabilities,"theFirstBrowser");
+            const browser2: Browser = BrowserWdjs.create(conf, capabilities,"theSecondBrowser");
 
             expect(BrowserWdjs.availableBrowser.length).toBe(2, `length check for # of browser in BrowserWdjs failed`);
             expect(BrowserWdjs.availableBrowser[0]).toBe("theFirstBrowser");
@@ -125,7 +136,7 @@ describe('When using the BrowserWdjs class', () => {
 
         it('the browser map should be empty when the browser is deleted ' +
             '- (test case id: 7125c259-247f-4535-a94a-e753a82c1582)', async () => {
-            const browser = await BrowserWdjs.create(conf, capabilities);
+            const browser = BrowserWdjs.create(conf, capabilities);
 
             expect(BrowserWdjs.availableBrowser.length).toBe(1,
                 'After creating a browser the length should be 1 but its not.');
@@ -142,10 +153,10 @@ describe('When using the BrowserWdjs class', () => {
         let browser4: Browser;
 
         beforeEach(async () => {
-            browser1 = await BrowserWdjs.create(conf, capabilities, "browser_1");
-            browser2 = await BrowserWdjs.create(conf, capabilities, "browser_2");
-            browser3 = await BrowserWdjs.create(conf, capabilities, "browser_3");
-            browser4 = await BrowserWdjs.create(conf, capabilities, "browser_4");
+            browser1 = BrowserWdjs.create(conf, capabilities, "browser_1");
+            browser2 = BrowserWdjs.create(conf, capabilities, "browser_2");
+            browser3 = BrowserWdjs.create(conf, capabilities, "browser_3");
+            browser4 = BrowserWdjs.create(conf, capabilities, "browser_4");
         });
 
         afterEach(async () => {

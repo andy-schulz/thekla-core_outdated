@@ -1,11 +1,11 @@
 import {getLogger, Logger} from "@log4js-node/log4js-api";
 
-import {Builder, promise, ThenableWebDriver} from "selenium-webdriver";
+import {Builder, promise, ThenableWebDriver, WebDriver} from "selenium-webdriver";
 import {
     DesiredCapabilities,
     ProxyConfig,
     SeleniumConfig
-}                                            from "../../config/SeleniumConfig";
+}                                                       from "../../config/SeleniumConfig";
 
 import {Browser, BrowserScreenshotData}         from "../interface/Browser";
 import {BrowserWindow}                          from "../interface/BrowserWindow";
@@ -32,20 +32,20 @@ export class BrowserWdjs implements Browser {
 
     private logger: Logger = getLogger("BrowserWdjs");
     private _window: BrowserWindow;
+    private driverCreated: boolean = false;
 
-    constructor(
-        private _driver: ThenableWebDriver,
+    private constructor(
+        private getDrvr: () => Promise<WebDriver>,
         private _selConfig: SeleniumConfig,
-        private _desiredCapabilities: DesiredCapabilities,
         private browserName: string = "") {
     }
 
-    get driver() {
-        return this._driver;
-    }
-
-    get config() {
-        return this._selConfig;
+    public getDriver(): Promise<WebDriver> {
+        return this.getDrvr()
+            .then((driver) => {
+                this.driverCreated = true;
+                return driver;
+            })
     }
 
     get window() {
@@ -55,17 +55,16 @@ export class BrowserWdjs implements Browser {
     /**
      * startedOn a new browser instance for the given Config
      * @param selConf - the selenium config for which the browser has to be created
+     * @param capabilities - the browser capabilities
      * @param browserName - a unique browser name
      *
      * @returns - browser instance
      * @throws - Error in case the given browser name is empty or already exists
      */
-    public static async create(
+    public static create(
         selConf: SeleniumConfig,
         capabilities: DesiredCapabilities,
-        browserName: string = `browser${this.browserMap.size + 1}`): Promise<Browser> {
-
-        let builder: Builder;
+        browserName: string = `browser${this.browserMap.size + 1}`): Browser {
 
         if (!browserName)
             throw new Error(`invalid browser name '${browserName}'`);
@@ -78,7 +77,7 @@ export class BrowserWdjs implements Browser {
             throw new Error(`browser name '${browserName}' already exists, choose another one`);
         }
 
-        builder = new Builder();
+        let builder: Builder = new Builder();
         try {
             // const capa: DesiredCapabilities = typeof capabilities === "function" ? capabilities() : capabilities;
             const capa: DesiredCapabilities = capabilities;
@@ -87,35 +86,72 @@ export class BrowserWdjs implements Browser {
             builder.withCapabilities(capa);
             this.setProxy(builder, capa.proxy);
 
-            const drv = await BrowserWdjs.buildDriver(builder);
-            const driver = <ThenableWebDriver>drv;
-            const browser = new BrowserWdjs(driver, selConf, capa, browserName);
-            try {
-                const window = await BrowserWindowWdjs.create(driver, capa.window);
-                browser.windowManagedBy(window);
-            } catch (e) {
-                browser.quit();
-                return Promise.reject(e);
-            }
+            const getDriver = (): () => Promise<WebDriver> => {
+                let driver: WebDriver;
+                return () => {
+                    return new Promise((resolve, reject) => {
+                        if (driver)
+                            return resolve(driver);
+                        const drv: ThenableWebDriver = builder.build();
+                        drv.then(() => {
+                            driver = drv as WebDriver;
+                            resolve(driver);
+                        }, reject);
+                    })
+                }
+            };
+
+            const getTheDriver = getDriver();
+
+            const browser = new BrowserWdjs(getTheDriver, selConf, browserName);
+            const window = BrowserWindowWdjs.create(getTheDriver, capa.window);
+            browser.windowManagedBy(window);
+
+            // const drv = await BrowserWdjs.buildDriver(builder);
+            // const driver = <WebDriver>drv;
+            // const browser = new BrowserWdjs(driver, selConf, capa, browserName);
+            // try {
+            //     const window = await BrowserWindowWdjs.create(driver, capa.window);
+            //     browser.windowManagedBy(window);
+            // } catch (e) {
+            //     browser.quit();
+            //     return Promise.reject(e);
+            // }
 
             this.browserMap.set(browserName, browser);
             return browser;
+
         } catch (e) {
 
             const message = ` ${e} ${Error().stack}`;
-            return Promise.reject(e);
+            throw e;
         }
     }
 
-    private static buildDriver(builder: Builder): Promise<ThenableWebDriver> {
-        return new Promise((resolve, reject) => {
-            const drv: ThenableWebDriver = builder.build();
+    // public getLocalDriver(): Promise<WebDriver | WebDriver> {
+    //     if(this._driver) {
+    //         return Promise.resolve(this._driver as WebDriver);
+    //     }
+    //
+    //     return new Promise((resolve, reject) => {
+    //         this.getDriver()
+    //             .then((driver: WebDriver) => {
+    //                 this._driver = driver;
+    //                 resolve(driver);
+    //             })
+    //             .catch(reject)
+    //     });
+    // }
 
-            drv.then(() => resolve(drv), reject);
-        })
-    }
+    // private static buildDriver(builder: Builder): Promise<WebDriver> {
+    //     return new Promise((resolve, reject) => {
+    //         const drv: WebDriver = builder.build();
+    //
+    //         drv.then(() => resolve(drv), reject);
+    //     })
+    // }
 
-    public windowManagedBy(window: BrowserWindow) {
+    public windowManagedBy(window: BrowserWindow): void {
         this._window = window;
     }
 
@@ -270,8 +306,14 @@ export class BrowserWdjs implements Browser {
             // always switch to the main Window
             // if you want to deal with an element in a frame DO:
             // frame(By.css("locator")).element(By.css("locator"))
-            await this._driver.switchTo().defaultContent();
-            return await this._driver.findElements(loc);
+            return await this.getDriver()
+                .then((driver) => {
+                    return driver.switchTo().defaultContent()
+                        .then(() => {
+                            return driver.findElements(loc)
+                        });
+                })
+            // return await this._driver.findElements(loc);
         };
 
         return new WebElementListWdjs(getElements, locator, this);
@@ -286,20 +328,23 @@ export class BrowserWdjs implements Browser {
                 return new Promise((fulfill, reject) => {
                     this.logger.debug(`frame base - trying to switch to: ${locator.toString()}`);
 
-                    const reducer = (acc: Promise<boolean>, condition: UntilElementCondition): Promise<boolean> => {
-                        return acc.then(() => {
-                            return ExecuteConditionWdjs.execute(condition, this._driver.findElement(loc))
-                        })
-                    };
+                    this.getDriver()
+                        .then((driver) => {
 
+                            const reducer = (acc: Promise<boolean>, condition: UntilElementCondition): Promise<boolean> => {
+                                return acc.then(() => {
+                                    return ExecuteConditionWdjs.execute(condition, driver.findElement(loc))
+                                })
+                            };
 
-                    this._driver.switchTo().defaultContent()
-                        .then(() => this.logger.debug(`frame base - switched to default context`))
-                        .then(() => conditions.reduce(reducer, Promise.resolve(true)))
-                        .then(() => this._driver.switchTo().frame(this._driver.findElement(loc)))
-                        .then(() => this.logger.debug(`frame base - switched to: ${loc.toString()}`))
-                        .then(fulfill, () => {
-                            this.logger.error("Error switching base frame");
+                            driver.switchTo().defaultContent()
+                                .then(() => this.logger.debug(`frame base - switched to default context`))
+                                .then(() => conditions.reduce(reducer, Promise.resolve(true)))
+                                .then(() => driver.switchTo().frame(driver.findElement(loc)))
+                                .then(() => this.logger.debug(`frame base - switched to: ${loc.toString()}`))
+                                .then(fulfill, () => {
+                                    this.logger.error("Error switching base frame");
+                                })
                         })
                         .catch(reject);
                 });
@@ -317,18 +362,24 @@ export class BrowserWdjs implements Browser {
      * @param destination
      */
     public get(destination: string): Promise<any> {
-        let _destination = this.config.baseUrl && !destination.startsWith("http") ? `${this.config.baseUrl}${destination}` : destination;
+        let _destination = this._selConfig.baseUrl && !destination.startsWith("http") ? `${this._selConfig.baseUrl}${destination}` : destination;
         return new Promise((fulfill, reject) => {
-            this._driver.get(_destination)
-                .then(fulfill)
+            this.getDriver()
+                .then((driver) => {
+                    driver.get(_destination)
+                        .then(fulfill, reject)
+                })
                 .catch(reject)
         })
     }
 
     public getCurrentUrl(): Promise<string> {
         return new Promise((resolve, reject) => {
-            this._driver.getCurrentUrl()
-                .then(resolve, reject)
+            this.getDriver()
+                .then((driver) => {
+                    driver.getCurrentUrl()
+                        .then(resolve, reject)
+                })
                 .catch(reject)
         })
     }
@@ -338,8 +389,15 @@ export class BrowserWdjs implements Browser {
      */
     public quit(): Promise<void> {
         return new Promise((fulfill, reject) => {
-            this._driver.quit()
-                .then(fulfill)
+            if(!this.driverCreated) {
+                return fulfill();
+            }
+
+            this.getDriver()
+                .then((driver) => {
+                    driver.quit()
+                        .then(fulfill, reject)
+                })
                 .catch(reject)
         })
     }
@@ -349,8 +407,11 @@ export class BrowserWdjs implements Browser {
      */
     public getTitle(): Promise<string> {
         return new Promise((fulfill, reject) => {
-            this._driver.getTitle()
-                .then(fulfill)
+            this.getDriver()
+                .then((driver) => {
+                    driver.getTitle()
+                        .then(fulfill, reject)
+                })
                 .catch(reject)
         })
     }
@@ -361,8 +422,11 @@ export class BrowserWdjs implements Browser {
      */
     public hasTitle(expectedTitle: string): Promise<boolean> {
         return new Promise((fulfill, reject) => {
-            this._driver.getTitle()
-                .then(title => fulfill(title === expectedTitle))
+            this.getDriver()
+                .then((driver) => {
+                    driver.getTitle()
+                        .then(title => fulfill(title === expectedTitle),reject)
+                })
                 .catch(reject);
         })
     }
@@ -372,13 +436,16 @@ export class BrowserWdjs implements Browser {
      */
     public takeScreenshot(): Promise<BrowserScreenshotData> {
         return new Promise((resolve, reject) => {
-            this._driver.takeScreenshot()
-                .then((data: string) => {
-                    const screenshotData: BrowserScreenshotData = {
-                        browserName: this.browserName,
-                        browserScreenshotData: data
-                    };
-                    return resolve(screenshotData)
+            this.getDriver()
+                .then((driver) => {
+                    driver.takeScreenshot()
+                        .then((data: string) => {
+                            const screenshotData: BrowserScreenshotData = {
+                                browserName: this.browserName,
+                                browserScreenshotData: data
+                            };
+                            return resolve(screenshotData)
+                        },reject)
                 })
                 .catch(reject);
         })
@@ -483,9 +550,10 @@ export class BrowserWdjs implements Browser {
                         this.logger.trace(message);
                         fulfill(message);
                         return;
-                    } else {
-                        setTimeout(check, 0);
                     }
+
+                    setTimeout(check, 0);
+
                 };
 
                 ExecuteConditionWdjs.execute(condition, element)
@@ -498,8 +566,9 @@ export class BrowserWdjs implements Browser {
 
     public executeScript(func: Function, ...func_args: any[]): Promise<{}> {
         return new Promise((resolve, reject) => {
-            this._driver.executeScript(func, func_args)
-                .then(resolve)
+            this.getDriver()
+                .then((driver) => driver.executeScript(func, func_args))
+                .then(resolve, reject)
                 .catch(reject)
         });
 

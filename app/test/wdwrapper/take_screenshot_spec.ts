@@ -32,7 +32,7 @@ describe('Taking a screenshot', () => {
 
     beforeAll(async () => {
         await BrowserWdjs.cleanup();
-        browser = await BrowserWdjs.create(conf, capabilities);
+        browser = BrowserWdjs.create(conf, capabilities);
     });
 
     afterEach(() => {
@@ -131,7 +131,7 @@ describe('Taking a screenshot', () => {
         let browser2: Browser;
 
         beforeEach(async () => {
-            browser2 = await BrowserWdjs.create(conf, capabilities);
+            browser2 = BrowserWdjs.create(conf, capabilities);
         });
 
         afterEach(async () => {
@@ -164,7 +164,7 @@ describe('Taking a screenshot', () => {
         let browser2: Browser;
 
         beforeEach(async () => {
-            browser2 = await BrowserWdjs.create(conf, capabilities);
+            browser2 = BrowserWdjs.create(conf, capabilities);
         });
 
         afterEach(async () => {

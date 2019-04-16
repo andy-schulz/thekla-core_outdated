@@ -36,7 +36,7 @@ describe('When locating an element,', () => {
 
     beforeAll(async () => {
         john = Actor.named("John");
-        john.whoCan(BrowseTheWeb.using(await RunningBrowser.startedOn(config).withDesiredCapability(capabilities)));
+        john.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(config).withDesiredCapability(capabilities)));
     });
 
     describe('by xpath', () => {

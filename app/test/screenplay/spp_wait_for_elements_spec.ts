@@ -31,7 +31,7 @@ describe('Waiting for SPP Elements', () => {
 
     beforeAll(async () => {
         walterTheWaiter = Actor.named("Andy");
-        walterTheWaiter.whoCan(BrowseTheWeb.using(await RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities)));
+        walterTheWaiter.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities)));
     });
 
     afterAll(async () => {

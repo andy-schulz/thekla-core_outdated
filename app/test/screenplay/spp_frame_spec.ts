@@ -26,7 +26,7 @@ const capabilities: DesiredCapabilities = {
     proxy: {
         type: "direct"
     }
-}
+};
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
@@ -35,7 +35,7 @@ describe('Locating Elements inside Frames', () => {
 
     beforeAll(async () => {
         andy = Actor.named("Andy");
-        andy.whoCan(BrowseTheWeb.using(await RunningBrowser.startedOn(config).withDesiredCapability(capabilities)));
+        andy.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(config).withDesiredCapability(capabilities)));
     });
 
     afterAll(async () => {
