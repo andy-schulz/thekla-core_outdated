@@ -83,7 +83,7 @@ export {Response}                             from "./screenplay/rest/questions/
 export {NoSuchAbilityError} from "./screenplay/errors/NoSuchAbilityError";
 
 //Function Matcher
-export {strictEqualTo, containingTheObject} from "./screenplay/lib/matcher/FunctionMatcher/matcher"
+export {strictEqualTo, containingTheObject, matching} from "./screenplay/lib/matcher/FunctionMatcher/matcher"
 
 // Decorators
 export {stepDetails, step} from "./screenplay/lib/decorators/StepDecorators"

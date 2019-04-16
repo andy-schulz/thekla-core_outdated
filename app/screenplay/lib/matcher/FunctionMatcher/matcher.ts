@@ -1,7 +1,6 @@
-import {strictEqual} from "assert";
-import {curryRight, curry} from "lodash";
-import fp from "lodash/fp";
-import {diff}              from 'deep-diff';
+import {AssertionError, strictEqual} from "assert";
+import {curryRight, curry}           from "lodash";
+import {diff}                        from 'deep-diff';
 
 /**
  * curried strictEqual to pass a function with the value to compare to the See.if Question
@@ -10,6 +9,21 @@ import {diff}              from 'deep-diff';
 export const strictEqualTo = curryRight((actual: any, expected: any) => {
     strictEqual(actual, expected);
     return true;
+});
+
+export const matching = curryRight((actual: string, expectedRegExp: RegExp) => {
+    const match = actual.match(expectedRegExp);
+
+    if(match === null) {
+        throw new AssertionError({
+            message: `'${actual}' does not match the given RegExp ${expectedRegExp}`,
+            actual: actual,
+            expected: expectedRegExp,
+            operator: "match"
+        })
+    } else {
+        return true;
+    }
 });
 
 /**
