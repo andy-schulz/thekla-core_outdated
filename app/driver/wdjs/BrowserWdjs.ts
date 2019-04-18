@@ -43,6 +43,9 @@ export class BrowserWdjs implements Browser {
     public getDriver(): Promise<WebDriver> {
         return this.getDrvr()
             .then((driver) => {
+                if(!this.driverCreated) {
+                    this._window.setToPreset();
+                }
                 this.driverCreated = true;
                 return driver;
             })
