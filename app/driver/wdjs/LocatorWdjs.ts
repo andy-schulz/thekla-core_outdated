@@ -1,7 +1,7 @@
-import {By as ByWd, ThenableWebDriver} from "selenium-webdriver";
-import {By}                            from "../lib/Locator";
-import {BrowserWdjs}                   from "./BrowserWdjs";
-import {WdElement}                     from "./interfaces/WdElement";
+import {By as ByWd, WebElement} from "selenium-webdriver";
+import {By}                                                 from "../lib/Locator";
+import {BrowserWdjs}                                        from "./BrowserWdjs";
+import {WdElement}                                          from "./interfaces/WdElement";
 
 let clientSideScripts = require('../../../res/browser/clientsidescripts');
 
@@ -24,13 +24,21 @@ export class LocatorWdjs {
 
     }
 
-    public static executeSelector(locator: By, parentElement: WdElement, browser: BrowserWdjs) {
+    public static executeSelector(locator: By, parentElement: WdElement, browser: BrowserWdjs): Promise<WebElement[]> {
 
         switch (locator.selectorType) {
             case "byCss":
-                return parentElement.findElements(ByWd.css(locator.selector));
+                return new Promise((resolve, reject) => {
+                    parentElement.findElements(ByWd.css(locator.selector))
+                        .then(resolve, reject)
+                        .catch(reject)
+                });
             case "byJs":
-                return parentElement.findElements(ByWd.js(locator.function, locator.args));
+                return new Promise((resolve, reject) => {
+                    parentElement.findElements(ByWd.js(locator.function, locator.args))
+                        .then(resolve,reject)
+                        .catch(reject)
+                });
             case "byCssContainingText":
                 return browser.getDriver()
                     .then((driver) => {

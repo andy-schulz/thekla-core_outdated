@@ -12,7 +12,7 @@ import {
     See,
     Text,
     UntilElement,
-    SeleniumConfig, strictEqualTo
+    SeleniumConfig, Expected
 } from "../..";
 
 class GooglePgo {
@@ -59,7 +59,7 @@ describe('Using Google Search to find an online calculator', () => {
                 Enter.value("calculator").into(GooglePgo.searchField),
                 Enter.value(Key.TAB).into(GooglePgo.searchField),
                 Click.on(GooglePgo.submitSearch),
-                See.if(Text.of(GooglePgo.calculatorInput)).is(strictEqualTo("0"))
+                See.if(Text.of(GooglePgo.calculatorInput)).is(Expected.toEqual("0"))
             )
         }, 20000);
     });

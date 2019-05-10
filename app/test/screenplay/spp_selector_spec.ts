@@ -10,7 +10,7 @@ import {
     Text,
     SeleniumConfig,
     Click,
-    UntilElement, strictEqualTo
+    UntilElement, Expected
 } from "../..";
 
 import {configure} from "log4js";
@@ -40,15 +40,15 @@ describe('When locating an element,', () => {
     });
 
     describe('by xpath', () => {
-        it('the button name should be found - (test case id: 9a383bbf-9db9-41c5-b903-7f8d61bea88a)', async () => {
+        it('the button name should be found - (test case id: 9a383bbf-9db9-41c5-b903-7f8d61bea88a)',() => {
             const button = element(By.xpath("//button[contains(text(),'Danger!')]"))
                 .shallWait(UntilElement.is.visible());
 
             const match = (expected: string) => (actual: string) => expect(expected).toEqual(actual);
 
-            await john.attemptsTo(
+            return  john.attemptsTo(
                 Navigate.to(`/`),
-                See.if(Text.of(button)).is(strictEqualTo(`Danger!`)),
+                See.if(Text.of(button)).is(Expected.toEqual(`Danger!`)),
                 Click.on(button),
             );
         }, 100000);

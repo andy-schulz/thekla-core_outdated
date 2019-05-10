@@ -77,13 +77,14 @@ export {Value}                                from "./screenplay/web/questions/V
 export {Attribute}                            from "./screenplay/web/questions/Attribute";
 export {Count}                                from "./screenplay/web/questions/Count";
 export {TheSites}                             from "./screenplay/web/questions/TheSites";
+export {Status}                               from "./screenplay/web/questions/Status";
 export {Response}                             from "./screenplay/rest/questions/Response";
 
 // Custom Errors
 export {NoSuchAbilityError} from "./screenplay/errors/NoSuchAbilityError";
 
 //Function Matcher
-export {strictEqualTo, containingTheObject, matching} from "./screenplay/lib/matcher/FunctionMatcher/matcher"
+export {Expected} from "./screenplay/lib/matcher/FunctionMatcher/Expected"
 
 // Decorators
 export {stepDetails, step} from "./screenplay/lib/decorators/StepDecorators"

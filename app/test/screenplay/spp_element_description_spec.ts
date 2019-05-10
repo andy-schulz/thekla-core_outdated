@@ -10,7 +10,7 @@ import {
     UntilElement,
     all,
     SppWebElementFinder,
-    SeleniumConfig, DesiredCapabilities, strictEqualTo
+    SeleniumConfig, DesiredCapabilities, Expected
 } from "../..";
 
 
@@ -122,7 +122,7 @@ describe('The description on an element', () => {
 
             await andy.attemptsTo(
                 Navigate.to(`/`),
-                See.if(Text.of(elem)).is(strictEqualTo("There is no waiter to test")),
+                See.if(Text.of(elem)).is(Expected.toEqual("There is no waiter to test")),
             ).catch(callback.catchfn);
 
             expect(callback.catchfn).toHaveBeenCalled();

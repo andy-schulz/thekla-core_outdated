@@ -1,4 +1,4 @@
-import {matching} from "../..";
+import {Expected} from "../..";
 
 describe('Using the regexp matcher', () => {
 
@@ -9,7 +9,7 @@ describe('Using the regexp matcher', () => {
             const expected = /a/g;
             const actual = "";
             try{
-                matching(expected)(actual)
+                Expected.toMatch(expected)(actual)
             } catch (e) {
                 expect(e.toString()).toContain(`'' does not match the given RegExp /a/g`)
             }
@@ -20,7 +20,7 @@ describe('Using the regexp matcher', () => {
             ' - (test case id: c2a78b59-3302-4af7-88e1-994be26fef72)', () => {
             const expected = /google\.de/g;
             const actual = "http://www.google.de";
-            expect(matching(expected)(actual)).toBeTruthy();
+            expect(Expected.toMatch(expected)(actual)).toBeTruthy();
         });
 
     });

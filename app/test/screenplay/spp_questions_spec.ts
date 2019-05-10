@@ -9,7 +9,7 @@ import {
     Navigate,
     See,
     TheSites,
-    Attribute, SppWebElementFinder, element, strictEqualTo
+    Attribute, SppWebElementFinder, element, Expected, Status, all, Count
 } from "../../";
 
 
@@ -50,7 +50,7 @@ describe('Using', () => {
                 await John.attemptsTo(
                     Navigate.to("/"),
                     See.if(Attribute.of(button).called("outerHTML"))
-                        .is(strictEqualTo(dangerButton))
+                        .is(Expected.toEqual(dangerButton))
                         .repeatFor(0,1000)
                 )
             } catch (e) {
@@ -61,7 +61,7 @@ describe('Using', () => {
                 await John.attemptsTo(
                     Navigate.to("/"),
                     See.if(Attribute.of(button).called("outerHTML"))
-                        .is(strictEqualTo(dangerButton))
+                        .is(Expected.toEqual(dangerButton))
                         .repeatFor(-1,1000)
                 )
             } catch (e) {
@@ -72,7 +72,7 @@ describe('Using', () => {
                 await John.attemptsTo(
                     Navigate.to("/"),
                     See.if(Attribute.of(button).called("outerHTML"))
-                        .is(strictEqualTo(dangerButton))
+                        .is(Expected.toEqual(dangerButton))
                         .repeatFor(1001,1000)
                 )
             } catch (e) {
@@ -86,7 +86,7 @@ describe('Using', () => {
                 await John.attemptsTo(
                     Navigate.to("/"),
                     See.if(Attribute.of(button).called("outerHTML"))
-                        .is(strictEqualTo(dangerButton))
+                        .is(Expected.toEqual(dangerButton))
                         .repeatFor(2,-1)
                 )
             } catch (e) {
@@ -97,7 +97,7 @@ describe('Using', () => {
                 await John.attemptsTo(
                     Navigate.to("/"),
                     See.if(Attribute.of(button).called("outerHTML"))
-                        .is(strictEqualTo(dangerButton))
+                        .is(Expected.toEqual(dangerButton))
                         .repeatFor(6,60001)
                 )
             } catch (e) {
@@ -109,7 +109,8 @@ describe('Using', () => {
             '- (test case id: 6458382e-d95d-49b6-972c-56fa68bede94)', async () => {
             await John.attemptsTo(
                 Navigate.to("/"),
-                See.if(Attribute.of(button).called("outerHTML")).is(strictEqualTo(dangerButton))
+                See.if(Attribute.of(button).called("outerHTML"))
+                    .is(Expected.toEqual(dangerButton))
             )
         });
 
@@ -123,7 +124,7 @@ describe('Using', () => {
                 Navigate.to("/redirect"),
                 See.if(Attribute.of(delayedButton)
                     .called("outerHTML"))
-                    .is(strictEqualTo("<button data-test-id=\"AppearButtonBy5000\" class=\"btn btn-info\">Appeared after 5 seconds</button>"))
+                    .is(Expected.toEqual("<button data-test-id=\"AppearButtonBy5000\" class=\"btn btn-info\">Appeared after 5 seconds</button>"))
                     .repeatFor(12,1000)
             )
         });
@@ -139,7 +140,7 @@ describe('Using', () => {
                     Navigate.to("/redirect"),
                     See.if(Attribute.of(delayedButton)
                         .called("outerHTML"))
-                        .is(strictEqualTo("<button data-test-id=\"AppearButtonBy5000\" class=\"btn btn-info\">Appeared after 5 seconds</button>"))
+                        .is(Expected.toEqual("<button data-test-id=\"AppearButtonBy5000\" class=\"btn btn-info\">Appeared after 5 seconds</button>"))
                         .repeatFor(5,1000)
                 );
                 expect(true).toBeFalsy("call should have thrown an error. But it did not.");
@@ -161,7 +162,7 @@ describe('Using', () => {
                     Navigate.to("/redirect"),
                     See.if(Attribute.of(delayedButton)
                         .called("outerHTML"))
-                        .is(strictEqualTo("<button data-test-id=\"AppearButtonBy5000\" class=\"btn btn-info\">Appeared after 5 seconds</button>"))
+                        .is(Expected.toEqual("<button data-test-id=\"AppearButtonBy5000\" class=\"btn btn-info\">Appeared after 5 seconds</button>"))
                 );
                 expect(true).toBeFalsy("call should have thrown an error. But it did not.")
 
@@ -185,7 +186,7 @@ describe('Using', () => {
             '- (test case id: 332e9252-aec9-44b5-b936-728561523e27)', async () => {
             await Joanna.attemptsTo(
                 Navigate.to("/delayed"),
-                See.if(TheSites.url()).is(strictEqualTo("http://localhost:3000/delayed"))
+                See.if(TheSites.url()).is(Expected.toEqual("http://localhost:3000/delayed"))
             )
         });
 
@@ -193,9 +194,78 @@ describe('Using', () => {
             '- (test case id: 7974c013-4234-43e4-8330-6ec788512eb8)', async () => {
             await Joanna.attemptsTo(
                 Navigate.to("/delayed"),
-                See.if(TheSites.url()).is(strictEqualTo("http://localhost:3000/delayed"))
+                See.if(TheSites.url()).is(Expected.toEqual("http://localhost:3000/delayed"))
             )
         });
+    });
+
+    describe('the Status question', () => {
+        let John: Actor = Actor.named("John");
+
+        beforeAll(async () => {
+            const browser = RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities);
+            John.can(BrowseTheWeb.using(browser));
+        });
+
+        it('with the visibility state should be not be successful, when the button is not displayed' +
+            '- (test case id: a9223ac1-37af-4198-bb3a-498192523c95)', async () => {
+            const delayedButton =
+                element(By.css("[data-test-id='AppearButtonBy5000']"))
+                    .called("button which appears after 5 seconds");
+
+            await John.attemptsTo(
+                Navigate.to("/delayed"),
+                See.if(Status.visible.of(delayedButton))
+                    .is(Expected.toBe(false))
+            )
+        });
+
+        it('with the visibility state should be not be successful, when the button is not displayed' +
+            '- (test case id: 8e6db458-67a6-4ce6-84af-c0fcd251dc47)', async () => {
+            const delayedButton =
+                element(By.css("[data-test-id='DisappearButtonBy10000']"))
+                    .called("button which appears after 5 seconds");
+
+            await John.attemptsTo(
+                Navigate.to("/delayed"),
+                See.if(Status.visible.of(delayedButton))
+                    .is(Expected.toBe(true))
+            )
+        });
+
+        it('with the visibility state should be successful, when the button is displayed after 5 Seconds' +
+            '- (test case id: 6eaa9c48-b786-467e-8f70-8196de34ea52)', async () => {
+            const delayedButton =
+                element(By.css("[data-test-id='DisappearButtonBy5000']"))
+                    .called("button which appears after 5 seconds");
+
+            await John.attemptsTo(
+                Navigate.to("/delayed"),
+                See.if(Status.visible.of(delayedButton))
+                    .is(Expected.toBe(false))
+                    .repeatFor(6, 1000)
+            )
+        });
+    });
+
+    describe('the Count question', () => {
+        let Jonathan: Actor = Actor.named("Jonathan");
+
+        beforeAll(async () => {
+            const browser = RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities);
+            Jonathan.can(BrowseTheWeb.using(browser));
+        });
+
+        it('should return the correct number of table rows ' +
+            '- (test case id: 74cbc743-7a32-428d-847e-1dc4aa8c4ddd)', async () => {
+
+            const tableRows = all(By.css("tr"));
+
+            await Jonathan.attemptsTo(
+                Navigate.to("http://localhost:3000/tables"),
+                See.if(Count.of(tableRows)).is(Expected.toEqual(6)),
+            );
+        }, 20000);
     });
 
     describe('the See oracle', () => {
@@ -221,7 +291,7 @@ describe('Using', () => {
                 await Jonathan.attemptsTo(
                     Navigate.to("/redirect"),
                     See.if(Attribute.of(delayedButton).called("outerHTML"))
-                        .is(strictEqualTo("<button data-test-id=\"AppearButtonBy5000\" class=\"btn btn-info\">Appeared after 5 seconds</button>"))
+                        .is(Expected.toEqual("<button data-test-id=\"AppearButtonBy5000\" class=\"btn btn-info\">Appeared after 5 seconds</button>"))
                         .otherwise(
                             // Navigate.to("/delayed"),
                             // See.if(TheSites.url()).is(strictEqualTo("http://localhost:3000/delayed"))
@@ -247,10 +317,10 @@ describe('Using', () => {
                 await Jonathan.attemptsTo(
                     Navigate.to("/redirect"),
                     See.if(Attribute.of(delayedButton).called("outerHTML"))
-                        .is(strictEqualTo("<button data-test-id=\"AppearButtonBy5000\" class=\"btn btn-info\">Appeared after 5 seconds</button>"))
+                        .is(Expected.toEqual("<button data-test-id=\"AppearButtonBy5000\" class=\"btn btn-info\">Appeared after 5 seconds</button>"))
                         .otherwise(
                             Navigate.to("/delayed"),
-                            See.if(TheSites.url()).is(strictEqualTo(""))
+                            See.if(TheSites.url()).is(Expected.toEqual(""))
                         )
                 );
 
@@ -272,10 +342,10 @@ describe('Using', () => {
                 await Jonathan.attemptsTo(
                     Navigate.to("/redirect"),
                     See.if(Attribute.of(delayedButton).called("outerHTML"))
-                        .is(strictEqualTo("<button data-test-id=\"AppearButtonBy5000\" class=\"btn btn-info\">Appeared after 5 seconds</button>"))
+                        .is(Expected.toEqual("<button data-test-id=\"AppearButtonBy5000\" class=\"btn btn-info\">Appeared after 5 seconds</button>"))
                         .otherwise(
                             Navigate.to("/delayed"),
-                            See.if(TheSites.url()).is(strictEqualTo("http://localhost:3000/delayed"))
+                            See.if(TheSites.url()).is(Expected.toEqual("http://localhost:3000/delayed"))
                         )
                 );
 
@@ -296,10 +366,10 @@ describe('Using', () => {
                 await Jonathan.attemptsTo(
                     Navigate.to("/"),
                     See.if(Attribute.of(delayedButton).called("outerHTML"))
-                        .is(strictEqualTo("<button data-test-id=\"button\" class=\"btn btn-danger\">Danger!</button>"))
+                        .is(Expected.toEqual("<button data-test-id=\"button\" class=\"btn btn-danger\">Danger!</button>"))
                         .then(
                             Navigate.to("/redirect"),
-                            See.if(TheSites.url()).is(strictEqualTo("http://localhost:3000/redirect"))
+                            See.if(TheSites.url()).is(Expected.toEqual("http://localhost:3000/redirect"))
                         )
                 );
 
@@ -320,10 +390,10 @@ describe('Using', () => {
                 await Jonathan.attemptsTo(
                     Navigate.to("/"),
                     See.if(Attribute.of(delayedButton).called("outerHTML"))
-                        .is(strictEqualTo("<button data-test-id=\"button\" class=\"btn btn-danger\">Danger!</button>"))
+                        .is(Expected.toEqual("<button data-test-id=\"button\" class=\"btn btn-danger\">Danger!</button>"))
                         .then(
                             Navigate.to("/redirect"),
-                            See.if(TheSites.url()).is(strictEqualTo("http://localhost:3000/delayed"))
+                            See.if(TheSites.url()).is(Expected.toEqual("http://localhost:3000/delayed"))
                         )
                 );
                 expect(true).toBeFalsy(`should throw an error, but it didn't`);
@@ -332,6 +402,8 @@ describe('Using', () => {
                 expect(e.toString()).toContain(`AssertionError [ERR_ASSERTION]: 'http://localhost:3000/redirect' === 'http://localhost:3000/delayed'`);
             }
         });
+
+
 
     });
 });

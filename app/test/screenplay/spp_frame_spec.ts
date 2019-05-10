@@ -10,7 +10,7 @@ import {
     See,
     Text,
     UntilElement,
-    SeleniumConfig, strictEqualTo
+    SeleniumConfig, Expected
 } from "../..";
 
 import {configure} from "log4js";
@@ -54,11 +54,11 @@ describe('Locating Elements inside Frames', () => {
 
         await andy.attemptsTo(
             Navigate.to(`/nestedFrames`),
-            See.if(Text.of(button)).is(strictEqualTo(`Button outside of Frame`)),
-            See.if(Text.of(button1)).is(strictEqualTo(`Button inside single frame`)),
-            See.if(Text.of(button)).is(strictEqualTo(`Button outside of Frame`)),
-            See.if(Text.of(button2)).is(strictEqualTo(`Button nested inside frame of frame`)),
-            See.if(Text.of(button)).is(strictEqualTo(`Button outside of Frame`)),
+            See.if(Text.of(button)).is(Expected.toEqual(`Button outside of Frame`)),
+            See.if(Text.of(button1)).is(Expected.toEqual(`Button inside single frame`)),
+            See.if(Text.of(button)).is(Expected.toEqual(`Button outside of Frame`)),
+            See.if(Text.of(button2)).is(Expected.toEqual(`Button nested inside frame of frame`)),
+            See.if(Text.of(button)).is(Expected.toEqual(`Button outside of Frame`)),
         );
 
     });
@@ -79,11 +79,11 @@ describe('Locating Elements inside Frames', () => {
 
         await andy.attemptsTo(
             Navigate.to(`/nestedFrames`),
-            See.if(Text.of(button)).is(strictEqualTo(`Button outside of Frame`)),
-            See.if(Text.of(button1)).is(strictEqualTo(`Button inside single frame`)),
-            See.if(Text.of(button)).is(strictEqualTo(`Button outside of Frame`)),
-            See.if(Text.of(button2)).is(strictEqualTo(`Button nested inside frame of frame`)),
-            See.if(Text.of(button)).is(strictEqualTo(`Button outside of Frame`)),
+            See.if(Text.of(button)).is(Expected.toEqual(`Button outside of Frame`)),
+            See.if(Text.of(button1)).is(Expected.toEqual(`Button inside single frame`)),
+            See.if(Text.of(button)).is(Expected.toEqual(`Button outside of Frame`)),
+            See.if(Text.of(button2)).is(Expected.toEqual(`Button nested inside frame of frame`)),
+            See.if(Text.of(button)).is(Expected.toEqual(`Button outside of Frame`)),
         );
 
     });

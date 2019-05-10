@@ -40,6 +40,10 @@ export class BrowserWdjs implements Browser {
         private browserName: string = "") {
     }
 
+    // public findElement(WebDriver, ) {
+    //
+    // }
+
     public getDriver(): Promise<WebDriver> {
         return this.getDrvr()
             .then((driver) => {
