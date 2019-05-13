@@ -1,9 +1,9 @@
-export const stringReplace = function (output: string) {
-    return function () {
-        const replacer = (match: string) => {
-            const newMatch = match.replace("<<", "").replace(">>", "");
+export const stringReplace = function (output: string): () => string {
+    return function (): string {
+        const replacer = (match: string): string => {
+            const newMatch = match.replace(`<<`, ``).replace(`>>`, ``);
             // @ts-ignore
-            return this[newMatch] ? (this[newMatch].constructor.name === "Object" ? JSON.stringify(this[newMatch]) : this[newMatch].toString()) : "<<not found>>"
+            return this[newMatch] ? (this[newMatch].constructor.name === `Object` ? JSON.stringify(this[newMatch]) : this[newMatch].toString()) : `<<not found>>`
         };
 
         // /(/(?<=<<)([a-z]*[A-Z]*)*(?=>>)/g

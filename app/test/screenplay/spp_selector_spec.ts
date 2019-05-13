@@ -15,7 +15,7 @@ import {
 
 import {configure} from "log4js";
 
-configure("res/config/log4js.json");
+configure(`res/config/log4js.json`);
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL=30000;
 
@@ -27,24 +27,22 @@ let config: SeleniumConfig = {
 const capabilities: DesiredCapabilities = {
     browserName: `chrome`,
     proxy: {
-        type: "direct"
+        type: `direct`
     }
 };
 
-describe('When locating an element,', () => {
+describe(`When locating an element,`, (): void => {
     let john: Actor;
 
-    beforeAll(async () => {
-        john = Actor.named("John");
+    beforeAll((): void => {
+        john = Actor.named(`John`);
         john.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(config).withDesiredCapability(capabilities)));
     });
 
-    describe('by xpath', () => {
-        it('the button name should be found - (test case id: 9a383bbf-9db9-41c5-b903-7f8d61bea88a)',() => {
-            const button = element(By.xpath("//button[contains(text(),'Danger!')]"))
+    describe(`by xpath`, () => {
+        it(`the button name should be found - (test case id: 9a383bbf-9db9-41c5-b903-7f8d61bea88a)`,() => {
+            const button = element(By.xpath(`//button[contains(text(),'Danger!')]`))
                 .shallWait(UntilElement.is.visible());
-
-            const match = (expected: string) => (actual: string) => expect(expected).toEqual(actual);
 
             return  john.attemptsTo(
                 Navigate.to(`/`),
@@ -54,7 +52,7 @@ describe('When locating an element,', () => {
         }, 100000);
     });
 
-    afterAll(async () => {
+    afterAll(async (): Promise<void[][]> => {
         return RunningBrowser.cleanup();
     });
 });

@@ -3,5 +3,5 @@ import {On}                 from "../lib/Ressource";
 import {RestRequest}        from "./RestRequest";
 
 export interface RestApi {
-    request(resource: On,  restOptions?: RestAbilityOptions): RestRequest
+    request(resource: On,  restOptions?: RestAbilityOptions): RestRequest;
 }

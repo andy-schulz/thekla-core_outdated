@@ -6,16 +6,16 @@ import {GoogleCalculator} from "./GoogleCalculator";
 export class Add extends Task {
     private secondNumber: number;
 
-    static number(firstNumber: number) {
+    public static number(firstNumber: number): Add {
         return new Add(firstNumber);
     }
 
-    to(secondNumber: number): Activity {
+    public to(secondNumber: number): Activity {
         this.secondNumber = secondNumber;
         return this;
     }
 
-    performAs(actor: PerformsTask): Promise<void> {
+    public performAs(actor: PerformsTask): Promise<void> {
         return actor.attemptsTo(
             ...this.enterNumber(this.firstNumber),
             Click.on(GoogleCalculator.plus),
@@ -24,7 +24,7 @@ export class Add extends Task {
         )
     }
 
-    constructor(private firstNumber: number) {
+    private constructor(private firstNumber: number) {
         super();
     }
 
@@ -37,34 +37,34 @@ export class Add extends Task {
 
         for (let char of number.toString()) {
             switch(char) {
-                case '1':
+                case `1`:
                     clickFlow.push(Click.on(GoogleCalculator.one));
                     break;
-                case '2':
+                case `2`:
                     clickFlow.push(Click.on(GoogleCalculator.two));
                     break;
-                case '3':
+                case `3`:
                     clickFlow.push(Click.on(GoogleCalculator.three));
                     break;
-                case '4':
+                case `4`:
                     clickFlow.push(Click.on(GoogleCalculator.four));
                     break;
-                case '5':
+                case `5`:
                     clickFlow.push(Click.on(GoogleCalculator.five));
                     break;
-                case '6':
+                case `6`:
                     clickFlow.push(Click.on(GoogleCalculator.six));
                     break;
-                case '7':
+                case `7`:
                     clickFlow.push(Click.on(GoogleCalculator.seven));
                     break;
-                case '8':
+                case `8`:
                     clickFlow.push(Click.on(GoogleCalculator.eight));
                     break;
-                case '9':
+                case `9`:
                     clickFlow.push(Click.on(GoogleCalculator.nine));
                     break;
-                case '0':
+                case `0`:
                     clickFlow.push(Click.on(GoogleCalculator.zero));
                     break;
             }

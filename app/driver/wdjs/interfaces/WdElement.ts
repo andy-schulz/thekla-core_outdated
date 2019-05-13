@@ -1,6 +1,7 @@
 import {WebElement}            from "selenium-webdriver";
 import {UntilElementCondition} from "../../lib/ElementConditions";
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface WdElement extends  WebElement {}
 
 export interface FrameHelper extends Function {

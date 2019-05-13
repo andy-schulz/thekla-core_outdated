@@ -1,9 +1,9 @@
-import {ISize, WebDriver} from "selenium-webdriver";
-import {WindowConfig}                        from "../../config/SeleniumConfig";
-import {BrowserWindow, WindowSize}           from "../interface/BrowserWindow";
+import {ISize, promise, WebDriver} from "selenium-webdriver";
+import {WindowConfig}              from "../../config/SeleniumConfig";
+import {BrowserWindow, WindowSize} from "../interface/BrowserWindow";
 
 export class BrowserWindowWdjs implements BrowserWindow{
-    constructor(
+    private constructor(
         private getDriver: () => Promise<WebDriver>,
         private _windowConfig?: WindowConfig
     ) {
@@ -22,28 +22,29 @@ export class BrowserWindowWdjs implements BrowserWindow{
     }
 
     public maximize(): Promise<void> {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject): void => {
             this.getDriver()
-                .then((driver: WebDriver) => driver.manage().window().maximize())
+                .then((driver: WebDriver): promise.Promise<void> => driver.manage().window().maximize())
                 .then(resolve)
                 .catch(reject);
         })
     }
 
     public setSize(dimension: WindowSize = {width: 500, height: 500}): Promise<void> {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject): void => {
             this.getDriver()
-                .then((driver: WebDriver) => driver.manage().window().setSize(dimension.width, dimension.height))
+                .then((driver: WebDriver): promise.Promise<void> =>
+                    driver.manage().window().setSize(dimension.width, dimension.height))
                 .then(resolve)
                 .catch(reject)
         });
     }
 
     public getSize(): Promise<WindowSize> {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject): void => {
             this.getDriver()
-                .then((driver: WebDriver) => driver.manage().window().getSize())
-                .then((s: ISize) =>resolve({width: s.width, height: s.height}))
+                .then((driver: WebDriver): promise.Promise<ISize> => driver.manage().window().getSize())
+                .then((s: ISize): void => resolve({width: s.width, height: s.height}))
                 .catch(reject)
         })
     }

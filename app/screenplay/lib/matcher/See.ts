@@ -1,10 +1,10 @@
 import {AnswersQuestions, PerformsTask} from "../../Actor";
 import {Question}                       from "./Question";
 import {Activity, Oracle}               from "../actions/Activities";
-import {step}                           from "../../..";
+// import {step}                           from "../../..";
 
 export class See<U> implements Oracle {
-    matcher: (value: U) => boolean | Promise<boolean>;
+    private matcher: (value: U) => boolean | Promise<boolean>;
     private repeater: number = 1;
     private ms: number = 1000;
 
@@ -12,13 +12,13 @@ export class See<U> implements Oracle {
     private otherwiseActivities: Activity[] = [];
 
 
-    // @step<AnswersQuestions>("to check a condition")
-    async performAs(actor: AnswersQuestions | PerformsTask): Promise<void> {
+    // @step<AnswersQuestions>("to ask Question <<question>> and see if the the result meets <<matcher>>")
+    public async performAs(actor: AnswersQuestions | PerformsTask): Promise<void> {
 
         const loop = async (counter: number): Promise<boolean> => {
-            const nextLoop = () => {
-                return new Promise(resolve => setTimeout(resolve, this.ms))
-                    .then(() => {
+            const nextLoop = (): Promise<boolean> => {
+                return new Promise((resolve): number => setTimeout(resolve, this.ms))
+                    .then((): Promise<boolean> => {
                         return loop(counter -1);
                     });
             };
@@ -37,28 +37,28 @@ export class See<U> implements Oracle {
             }
 
             return promise
-                .then((matched: boolean) => {
+                .then((matched: boolean): Promise<boolean> | boolean => {
                     if(!matched) {
                         return nextLoop();
                     } else {
                         return matched;
                     }
                 })
-                .catch((e) => {
+                .catch((): Promise<boolean> => {
                     return nextLoop();
                 })
         };
 
         return loop(this.repeater - 1)
-            .then((match: boolean) => {
+            .then((match: boolean): Promise<void> => {
                 if(this.thenActivities.length > 0) {
                     return (actor as PerformsTask).attemptsTo(...this.thenActivities);
                 }
                 else {
-                    return;
+                    return Promise.resolve();
                 }
             })
-            .catch((e) => {
+            .catch((e): Promise<void> => {
                 if(this.otherwiseActivities.length > 0)
                     return (actor as PerformsTask).attemptsTo(...this.otherwiseActivities);
                 else
@@ -66,26 +66,26 @@ export class See<U> implements Oracle {
             });
     }
 
-    static if <T>(question: Question<T>): See<T> {
+    public static if <T>(question: Question<T>): See<T> {
         return new See(question)
     }
 
-    public then(...activities: Activity[]) {
+    public then(...activities: Activity[]): See<U> {
         this.thenActivities = activities;
         return this;
     }
 
-    public otherwise(...activities: Activity[]) {
+    public otherwise(...activities: Activity[]): See<U> {
         this.otherwiseActivities = activities;
         return this;
     }
 
-    is(matcher: (text: U) => boolean | Promise<boolean>): See<U> {
+    public is(matcher: (text: U) => boolean | Promise<boolean>): See<U> {
         this.matcher = matcher;
         return this;
     }
 
-    repeatFor(times: number, interval: number = 1000): See<U> {
+    public repeatFor(times: number, interval: number = 1000): See<U> {
 
         if(times < 1 || times > 1000)
             throw new Error(`The repeat value should be between 1 and 1000. But its: ${times}`);
@@ -98,8 +98,7 @@ export class See<U> implements Oracle {
         return this;
     }
 
-
-    constructor(
+    private constructor(
         private question: Question<U>
     ) {}
 }

@@ -12,7 +12,7 @@ Thekla facilitates this by specifying the frame during element definition.
 Locating and interacting with an Element inside a Frame is as simple as:
 ````typescript
 import {BrowserFactory, Browser, By} from "thekla";
-const browser: Browser; startedOn
+const browser: Browser;
 
 const buttonInsideFrame = browser
                 .frame(By.css(".frame"))

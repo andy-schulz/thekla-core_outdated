@@ -1,21 +1,24 @@
-import {By as ByWd, WebElement} from "selenium-webdriver";
-import {By}                                                 from "../lib/Locator";
-import {BrowserWdjs}                                        from "./BrowserWdjs";
-import {WdElement}                                          from "./interfaces/WdElement";
+import {By as ByWd, promise, WebElement} from "selenium-webdriver";
+import {By}                              from "../lib/Locator";
+import {BrowserWdjs}                     from "./BrowserWdjs";
+import {WdElement}                       from "./interfaces/WdElement";
 
-let clientSideScripts = require('../../../res/browser/clientsidescripts');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+let clientSideScripts = require(`../../../res/browser/clientsidescripts`);
+// import * as clientSideScripts from module("../../../res/browser/clientsidescripts");
 
 export class LocatorWdjs {
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public static getSelector(locator: By): any {
         switch (locator.selectorType) {
-            case "byCss":
+            case `byCss`:
                 return ByWd.css(locator.selector);
-            case "byXpath":
+            case `byXpath`:
                 return ByWd.xpath(locator.selector);
-            case "byJs":
+            case `byJs`:
                 return ByWd.js(locator.function, locator.args);
-            case "byCssContainingText":
+            case `byCssContainingText`:
                 // return ByWd.js(clientSideScripts.findByCssContainingText, locator.selector, locator.searchText, parentElement);
                 return ByWd.js(clientSideScripts.findByCssContainingText, locator.selector, locator.searchText);
             default:
@@ -27,21 +30,21 @@ export class LocatorWdjs {
     public static executeSelector(locator: By, parentElement: WdElement, browser: BrowserWdjs): Promise<WebElement[]> {
 
         switch (locator.selectorType) {
-            case "byCss":
-                return new Promise((resolve, reject) => {
+            case `byCss`:
+                return new Promise((resolve, reject): void => {
                     parentElement.findElements(ByWd.css(locator.selector))
                         .then(resolve, reject)
                         .catch(reject)
                 });
-            case "byJs":
-                return new Promise((resolve, reject) => {
+            case `byJs`:
+                return new Promise((resolve, reject): void => {
                     parentElement.findElements(ByWd.js(locator.function, locator.args))
                         .then(resolve,reject)
                         .catch(reject)
                 });
-            case "byCssContainingText":
+            case `byCssContainingText`:
                 return browser.getDriver()
-                    .then((driver) => {
+                    .then((driver): promise.Promise<WebElement[]> => {
                         return driver.findElements(
                             ByWd.js(
                                 clientSideScripts.findByCssContainingText,

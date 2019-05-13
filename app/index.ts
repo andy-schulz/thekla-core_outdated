@@ -2,7 +2,6 @@
  *
  */
 
-export {ProcessedSeleniumConfig}                         from "./config/ProcessedSeleniumConfig"
 export {SeleniumConfig, RestConfig, DesiredCapabilities} from "./config/SeleniumConfig"
 
 
@@ -43,10 +42,7 @@ export {RestApiFactory}                                              from "./res
 export {element, all, frame}                                         from "./screenplay/web/SppWebElements";
 export {SppWebElementFinder, SppWebElementListFinder}                from "./screenplay/web/SppWebElements";
 export {Actor}                                                       from "./screenplay/Actor";
-export {
-    request, SppRestRequest
-}
-                                                                     from "./screenplay/rest/SppRestRequests";
+export {request, SppRestRequest}                                     from "./screenplay/rest/SppRestRequests";
 
 
 // Abilities

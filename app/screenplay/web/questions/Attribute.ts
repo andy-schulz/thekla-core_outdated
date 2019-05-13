@@ -4,22 +4,22 @@ import {SppWebElementFinder} from "../SppWebElements";
 import {BrowseTheWeb}        from "../../../index";
 
 export class Attribute implements Question<string> {
-    private attributeName: string = "";
+    private attributeName: string = ``;
 
-    static of(element: SppWebElementFinder): Attribute  {
+    public static of(element: SppWebElementFinder): Attribute  {
         return new Attribute(element)
     }
 
-    public called(attributeName: string) {
+    public called(attributeName: string): Attribute {
         this.attributeName = attributeName;
         return this;
     }
 
-    constructor(
+    private constructor(
         private element: SppWebElementFinder
     ) {}
 
-    answeredBy(actor: UsesAbilities): Promise<string> {
+    public answeredBy(actor: UsesAbilities): Promise<string> {
         return BrowseTheWeb.as(actor).findElement(this.element).getAttribute(this.attributeName);
     }
 }

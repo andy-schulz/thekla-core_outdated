@@ -16,14 +16,14 @@ export interface FinderDescription<T> {
 }
 
 export interface FinderWaiter<T> {
-    shallWait(condition: UntilElementCondition): T
+    shallWait(condition: UntilElementCondition): T;
 }
 
 export interface WebElementFinder
     extends
-        WebFinder,
-        FinderDescription<WebElementFinder>,
-        FinderWaiter<WebElementFinder> {
+    WebFinder,
+    FinderDescription<WebElementFinder>,
+    FinderWaiter<WebElementFinder> {
     click(): Promise<void>;
     sendKeys(keySequence: string): Promise<void>;
     getText(): Promise<string>;
@@ -36,8 +36,8 @@ export interface WebElementFinder
 
 export interface WebElementListFinder
     extends
-        WebFinder,
-        FinderDescription<WebElementListFinder>{
+    WebFinder,
+    FinderDescription<WebElementListFinder>{
     count(): Promise<number>;
     getText(): Promise<string[]>;
     filteredByText(text: string): WebElementListFinder;
@@ -45,8 +45,8 @@ export interface WebElementListFinder
 
 export interface FrameElementFinder
     extends
-        FrameFinder,
-        WebFinder,
-        FinderDescription<FrameElementFinder>,
-        FinderWaiter<FrameElementFinder> {
+    FrameFinder,
+    WebFinder,
+    FinderDescription<FrameElementFinder>,
+    FinderWaiter<FrameElementFinder> {
 }

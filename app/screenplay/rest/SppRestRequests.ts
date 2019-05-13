@@ -13,24 +13,24 @@ export interface RequestHelper extends Function {
 export class SppRestRequest{
     private restOptions: RestAbilityOptions = {};
 
-    constructor(
+    public constructor(
         public resource: On,
         public sender: RequestHelper) {
 
     }
 
-    using(restOptions: RestAbilityOptions) {
+    public using(restOptions: RestAbilityOptions): SppRestRequest {
         this.restOptions = restOptions;
 
         this.sender.description = `${this.sender.description} using options: ${JSON.stringify(restOptions)}`;
         return this
     }
 
-    send(restApi: RestApi): RestRequest {
+    public send(restApi: RestApi): RestRequest {
         return this.sender(restApi, this.restOptions);
     }
 
-    toString() {
+    public toString(): string {
         return this.sender.description;
     }
 }
@@ -44,7 +44,7 @@ export class SppRestRequestResult {
  * @param resource - resource the request is going to
  */
 export function request(resource: On): SppRestRequest {
-    const send: RequestHelper = (restApi: RestApi, restOptions: RestAbilityOptions = {}) => {
+    const send: RequestHelper = (restApi: RestApi, restOptions: RestAbilityOptions = {}): RestRequest => {
         return restApi.request(resource, restOptions);
     };
 

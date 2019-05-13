@@ -12,14 +12,14 @@ abstract class  ElementCondition {
 }
 
 export class VisibilityCheck extends ElementCondition{
-    constructor(
-        public helpText = "visible"
+    public constructor(
+        public helpText = `visible`
     ) {super()}
 }
 
 export class EnabledCheck extends ElementCondition{
-    constructor(
-        public helpText = "enabled"
+    public constructor(
+        public helpText = `enabled`
     ) {super()}
 }
 
@@ -29,10 +29,10 @@ export class UntilElement implements UntilElementCondition{
     private _timeout: number = 5000;
     public waiter: ElementCondition;
 
-    private static readonly id: LogicFunction<boolean> = (result: boolean) => result;
-    private static readonly negate: LogicFunction<boolean> = (result: boolean) => !result;
+    private static readonly id: LogicFunction<boolean> = (result: boolean): boolean => result;
+    private static readonly negate: LogicFunction<boolean> = (result: boolean): boolean => !result;
 
-    public static get is():UntilElement {
+    public static get is(): UntilElement {
         return new UntilElement(UntilElement.id)
     }
 
@@ -50,28 +50,29 @@ export class UntilElement implements UntilElementCondition{
         return this;
     }
 
-    constructor(public negate: LogicFunction<boolean>) {
+    private constructor(public negate: LogicFunction<boolean>) {
     }
 
-    forAsLongAs(timeout: number): UntilElementCondition {
+    public forAsLongAs(timeout: number): UntilElementCondition {
         this._timeout = timeout;
         return this;
     }
 
-    get timeout() {
+    public get timeout(): number {
         return this._timeout;
     }
 
-    get conditionHelpText() {
-        return `${this.negate(true) ? "is" : "is not"} ${this.waiter.helpText}`
+    public get conditionHelpText(): string {
+        return `${this.negate(true) ? `is` : `is not`} ${this.waiter.helpText}`
     }
 
-    public toString() {
-        const conditionType = (waiter: ElementCondition) => {
-            if(waiter.constructor.name === "VisibilityCheck")   return "visible";
-            if(waiter.constructor.name === "EnabledCheck")      return "enabled";
+    public toString(): string {
+        const conditionType = (waiter: ElementCondition): string => {
+            if(waiter.constructor.name === `VisibilityCheck`)   return `visible`;
+            if(waiter.constructor.name === `EnabledCheck`)      return `enabled`;
+            throw new Error(`ElementCondition named: '${waiter.constructor.name}' not implemented yet. ${(new Error).stack}`)
         };
 
-        return `condition until element is${this.negate(true) ? "" : " not"} ${conditionType(this.waiter)}`
+        return `condition until element is${this.negate(true) ? `` : ` not`} ${conditionType(this.waiter)}`
     }
 }

@@ -1,3 +1,3 @@
 # Screenplay Basics
 ## Overview
-![Overview]("docs/images/screenplay_overview.png")
+![Overview]("../images/screenplay_overview.png")

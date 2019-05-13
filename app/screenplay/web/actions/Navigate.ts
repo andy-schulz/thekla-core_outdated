@@ -8,10 +8,10 @@ export class Navigate implements Interaction {
         return new Navigate(url);
     }
 
-    constructor(private url: string) {}
+    private constructor(private url: string) {}
 
     @stepDetails<UsesAbilities>(`navigate to: <<url>>`)
-    performAs(actor: UsesAbilities): Promise<void> {
+    public performAs(actor: UsesAbilities): Promise<void> {
         return BrowseTheWeb.as(actor).navigate(this.url);
     }
 }

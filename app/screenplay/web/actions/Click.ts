@@ -13,7 +13,7 @@ export class Click implements Interaction {
      * @ignore
      */
     @stepDetails<UsesAbilities>(`click on element: '<<element>>'`)
-    performAs(actor: UsesAbilities): Promise<void> {
+    public performAs(actor: UsesAbilities): Promise<void> {
         return BrowseTheWeb.as(actor).findElement(this.element).click();
     }
 
@@ -22,12 +22,12 @@ export class Click implements Interaction {
      * @param element - the SPP Element
      */
     public static on(element: SppWebElementFinder | SppWebElementListFinder): Click {
-        return new Click(<SppWebElementFinder>element);
+        return new Click(element as SppWebElementFinder);
     }
 
     /**
      * @ignore
      */
-    constructor(public element: SppWebElementFinder) {
+    private constructor(public element: SppWebElementFinder) {
     }
 }

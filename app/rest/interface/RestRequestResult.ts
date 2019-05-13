@@ -1,5 +1,4 @@
-
-// export interface RestRequestResult extends request.Request {
+// eslint-disable-next-line
 export interface RestRequestResult {
 
 }

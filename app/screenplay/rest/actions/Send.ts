@@ -7,6 +7,7 @@ import {SppRestRequest}                                   from "../SppRestReques
 import {catchAndSaveOnError, MethodActions, safeResponse} from "./0_helper";
 
 export class Send implements Interaction, MethodActions {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private safeTo: (result: any) => void;
     private catchError =  false;
     private method: RequestMethod;
@@ -15,26 +16,27 @@ export class Send implements Interaction, MethodActions {
         return new Send(request);
     }
 
-    constructor(private request: SppRestRequest) {
+    private constructor(private request: SppRestRequest) {
     }
 
-    andSaveResponse(safeTo: (result: any[]) => void): Send {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    public andSaveResponse(safeTo: (result: any[]) => void): Send {
         this.safeTo = safeTo;
         return this;
     }
 
-    dontFailInCaseOfAnError(): Send {
+    public dontFailInCaseOfAnError(): Send {
         this.catchError = true;
         return this;
     }
 
-    as(method: RequestMethod): Send {
+    public as(method: RequestMethod): Send {
         this.method = method;
         return this;
     }
 
     @stepDetails<UsesAbilities>(`send a get request for: '<<request>>'`)
-    performAs(actor: UsesAbilities): Promise<void> {
+    public performAs(actor: UsesAbilities): Promise<void> {
         return this.method.send(UseTheRestApi.as(actor).send(this.request))
             .then(safeResponse(this.safeTo))
             .catch(catchAndSaveOnError(this.safeTo, this.catchError))

@@ -1,17 +1,19 @@
 export class On{
-    public function: string | Function = "";
-    public args: any[];
-    public searchText: string = "";
+    public function: string | Function = ``;
 
-    constructor(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    public args: any[];
+    public searchText: string = ``;
+
+    private constructor(
         public resource: string) {
     }
 
-    public static ressource(resource: string): On {
+    public static resource(resource: string): On {
         return new On(resource);
     }
 
-    public toString() {
+    public toString(): string {
         return `${this.resource}`
     }
 }

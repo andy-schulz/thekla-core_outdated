@@ -1,6 +1,8 @@
 export class NoSuchAbilityError extends Error {
-    constructor(...args: any[]) {
-        super(...args)
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    public constructor(...args: any[]) {
+        super(...args);
         Error.captureStackTrace(this, NoSuchAbilityError)
     }
 }

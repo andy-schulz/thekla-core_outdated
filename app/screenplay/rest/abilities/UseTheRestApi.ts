@@ -6,7 +6,9 @@ import {RequestPromiseOptions} from "request-promise-native";
 import {SppRestRequest}        from "../SppRestRequests";
 
 export interface RestAbilityOptions extends RequestPromiseOptions {
-    [key:string]: any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any;
+    // eslint-disable-next-line quotes
     restClient?: "request";
     baseUrl?: string;
 }
@@ -21,20 +23,20 @@ export class UseTheRestApi implements Ability {
     //     return new UseTheRestApi(standardOptions);
     // }
 
-    static using(restApi: RestApi) {
+    public static using(restApi: RestApi): UseTheRestApi {
         return new UseTheRestApi(restApi);
     }
 
 
-    static as(actor: UsesAbilities): UseTheRestApi {
+    public static as(actor: UsesAbilities): UseTheRestApi {
         return actor.withAbilityTo(UseTheRestApi) as UseTheRestApi;
     }
 
-    send(spe: SppRestRequest): RestRequest {
+    public send(spe: SppRestRequest): RestRequest {
         return spe.send(this.restApi)
     }
 
-    constructor(private restApi: RestApi) {
+    public constructor(private restApi: RestApi) {
 
     }
 

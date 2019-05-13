@@ -10,16 +10,16 @@ export class Response implements Question<SppRestRequestResult> {
         return new Response(request)
     }
 
-    public as(method: RequestMethod) {
+    public as(method: RequestMethod): Response {
         this.method = method;
         return this;
     }
 
-    constructor(
+    private constructor(
         private request: SppRestRequest
     ) {}
 
-    answeredBy(actor: UsesAbilities): Promise<SppRestRequestResult> {
+    public answeredBy(actor: UsesAbilities): Promise<SppRestRequestResult> {
         return this.method.send(UseTheRestApi.as(actor).send(this.request));
     }
 }

@@ -1,4 +1,3 @@
-import {RestAbilityOptions} from "../../screenplay/rest/abilities/UseTheRestApi";
 import {RestRequestResult}  from "./RestRequestResult";
 
 export interface RestRequest {

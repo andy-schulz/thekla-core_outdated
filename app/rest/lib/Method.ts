@@ -2,7 +2,31 @@ import {RestRequest}       from "../interface/RestRequest";
 import {RestRequestResult} from "../interface/RestRequestResult";
 
 export interface RequestMethod {
-    send(request: RestRequest): Promise<RestRequestResult>
+    send(request: RestRequest): Promise<RestRequestResult>;
+}
+
+export class MethodGet implements RequestMethod{
+    public send(request: RestRequest) {
+        return request.get()
+    }
+}
+
+export class MethodPost implements RequestMethod{
+    public send(request: RestRequest) {
+        return request.post()
+    }
+}
+
+export class MethodDelete implements RequestMethod{
+    public send(request: RestRequest) {
+        return request.delete()
+    }
+}
+
+export class MethodPatch implements RequestMethod{
+    public send(request: RestRequest) {
+        return request.patch()
+    }
 }
 
 export class Method {
@@ -21,29 +45,5 @@ export class Method {
 
     public static patch(): RequestMethod {
         return new MethodPatch()
-    }
-}
-
-export class MethodGet implements RequestMethod{
-    send(request: RestRequest) {
-        return request.get()
-    }
-}
-
-export class MethodPost implements RequestMethod{
-    send(request: RestRequest) {
-        return request.post()
-    }
-}
-
-export class MethodDelete implements RequestMethod{
-    send(request: RestRequest) {
-        return request.delete()
-    }
-}
-
-export class MethodPatch implements RequestMethod{
-    send(request: RestRequest) {
-        return request.patch()
     }
 }

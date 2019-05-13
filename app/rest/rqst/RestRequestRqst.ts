@@ -5,44 +5,45 @@ import * as rp              from "request-promise-native";
 
 export class RestRequestRqst implements RestRequest {
 
-    constructor(
+    public constructor(
         private resource: string,
         private options: RestAbilityOptions) {
     }
 
-    // get(options: RestAbilityOptions = {}): Promise<RestRequestResult> {
-    get(): Promise<RestRequestResult> {
-        return this.send(rp.get);
+    public get(options: RestAbilityOptions = {}): Promise<RestRequestResult> {
+        return this.send(rp.get, options);
     }
 
-    patch(options: RestAbilityOptions = {}): Promise<RestRequestResult> {
-        return this.send(rp.patch);
+    public patch(options: RestAbilityOptions = {}): Promise<RestRequestResult> {
+        return this.send(rp.patch, options);
     }
 
-    post(options: RestAbilityOptions = {}): Promise<RestRequestResult> {
-        return this.send(rp.post);
+    public post(options: RestAbilityOptions = {}): Promise<RestRequestResult> {
+        return this.send(rp.post, options);
     }
 
-    delete(options: RestAbilityOptions = {}): Promise<RestRequestResult> {
-        return this.send(rp.delete);
+    public delete(options: RestAbilityOptions = {}): Promise<RestRequestResult> {
+        return this.send(rp.delete, options);
     }
 
 
-
-    // private send(fn: any, options: RestAbilityOptions = {}) {
-    private send(fn: any) {
-        return new Promise((fulfill, reject) => {
+    //TODO: implement Rest Options with merge objects
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private send(fn: any, options: RestAbilityOptions = {}) {
+        return new Promise((fulfill, reject): void => {
             fn(this.resource, this.options)
-                .then((response: any) => {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                .then((response: any): void => {
                     fulfill(response);
                 })
-                .catch((e: any) => {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                .catch((e: any): void => {
                     reject(e.response);
                 });
         });
     }
 
-    toString() {
+    public toString(): string {
         return `resource: ${this.resource} with options: ${JSON.stringify(this.options)}`
     }
 }

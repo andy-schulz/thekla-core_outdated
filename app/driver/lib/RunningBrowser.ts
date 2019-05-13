@@ -3,11 +3,14 @@ import {BrowserWdjs}             from "../wdjs/BrowserWdjs";
 
 export class RunningBrowser {
 
-    public static startedOn(config: SeleniumConfig, framework: string = "wdjs"): BrowserHelper {
-        return new BrowserHelper(<SeleniumConfig>config);
+    public static startedOn(config: SeleniumConfig, framework: string = `wdjs`): BrowserHelper {
+        return new BrowserHelper(config as SeleniumConfig);
     }
 
-    public static cleanup(): Promise<any> {
+    // function returns an array of Browser implementations
+    // right now there is only the BrowserWdjs implementation
+    // other implementations can be added here
+    public static cleanup(): Promise<void[][]> {
         return Promise.all([BrowserWdjs.cleanup()])
     }
 

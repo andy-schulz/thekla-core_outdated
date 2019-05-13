@@ -1,9 +1,10 @@
 export class By{
-    public function: string | Function = "";
+    public function: string | Function = ``;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public args: any[];
-    public searchText: string = "";
+    public searchText: string = ``;
 
-    constructor(
+    private constructor(
         public selectorType: string,
         public selector: string) {
 
@@ -17,20 +18,21 @@ export class By{
         return new By(`byXpath`, selector);
     }
 
-    public static js(script: string | Function, ...var_args: any[]): By {
-        let by = new By("byJs", script.toString());
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    public static js(script: string | Function, ...varArgs: any[]): By {
+        let by = new By(`byJs`, script.toString());
         by.function = script;
-        by.args = var_args;
+        by.args = varArgs;
         return by;
     }
 
-    public static cssContainingText(selector: string, searchText: string) {
-        let by = new By("byCssContainingText", selector);
+    public static cssContainingText(selector: string, searchText: string): By {
+        let by = new By(`byCssContainingText`, selector);
         by.searchText = searchText;
         return by;
     }
 
-    public toString() {
+    public toString(): string {
         return `${this.selectorType}: ${this.selector}`
     }
 }

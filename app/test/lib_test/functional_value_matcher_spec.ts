@@ -1,11 +1,11 @@
 import {Expected} from "../..";
 
-describe('Using the ', () => {
+describe(`Using the `, (): void => {
 
-    describe('strictEqualTo matcher', () => {
+    describe(`strictEqualTo matcher`, () => {
 
-        it('on equal values should not throw an error ' +
-            '- (test case id: eadd18a8-4a46-46d8-867c-e2c52f66478a)', () => {
+        it(`on equal values should not throw an error ` +
+            `- (test case id: eadd18a8-4a46-46d8-867c-e2c52f66478a)`, () => {
             const comparer = true;
             try {
                 Expected.toEqual(true) (comparer);
@@ -16,8 +16,8 @@ describe('Using the ', () => {
 
         });
 
-        it('on not equal values should throw an error ' +
-            '- (test case id: 3d29b32b-408a-4e63-99ec-0fd5cf5aa3af)', () => {
+        it(`on not equal values should throw an error ` +
+            `- (test case id: 3d29b32b-408a-4e63-99ec-0fd5cf5aa3af)`, (): void => {
             const comparer = false;
             try {
                 Expected.toEqual(true) (comparer);

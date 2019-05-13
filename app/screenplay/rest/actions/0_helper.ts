@@ -1,11 +1,12 @@
 import {curry} from "lodash";
 
-export const safeResponse = curry(function(safeTo: (result: any) => void, result: any) {
+export const safeResponse = curry(function(safeTo: (result: any) => void, result: any): void { // eslint-disable-line @typescript-eslint/no-explicit-any
     if (safeTo)
         safeTo(result);
 });
 
-export const catchAndSaveOnError = curry((safeTo: (result: any) => void, catchError: boolean, e: any) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const catchAndSaveOnError = curry((safeTo: (result: any) => void, catchError: boolean, e: any): Promise<void> => {
     safeResponse(safeTo, e);
 
     if(catchError)
@@ -14,6 +15,7 @@ export const catchAndSaveOnError = curry((safeTo: (result: any) => void, catchEr
 });
 
 export interface MethodActions {
-    andSaveResponse(safeTo: (result: any) => void): MethodActions
-    dontFailInCaseOfAnError(): MethodActions
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    andSaveResponse(safeTo: (result: any) => void): MethodActions;
+    dontFailInCaseOfAnError(): MethodActions;
 }

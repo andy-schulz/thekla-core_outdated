@@ -10,18 +10,18 @@ import {getLogger}             from "@log4js-node/log4js-api"
 import {UntilElementCondition} from "../../../driver/lib/ElementConditions";
 
 export class Wait implements Interaction {
-    private logger = getLogger("Wait");
+    private logger = getLogger(`Wait`);
     private condition: UntilElementCondition;
 
     /**
      * @ignore
      */
     @stepDetails<UsesAbilities>(`wait for '<<awaitingElement>>' and check '<<condition>>'.`)
-    performAs(actor: UsesAbilities): Promise<void> {
+    public performAs(actor: UsesAbilities): Promise<void> {
 
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject): void => {
             BrowseTheWeb.as(actor).wait(this.condition, this.awaitingElement)
-                .then((message: string) => {
+                .then((message: string): void => {
                     this.logger.debug(message);
                     resolve();
                 })
@@ -33,7 +33,7 @@ export class Wait implements Interaction {
      * wait until a condition is met for the given element
      * @param awaitingElement the elements to wait for
      */
-    public static for(awaitingElement: SppWebElementFinder) {
+    public static for(awaitingElement: SppWebElementFinder): Wait {
         return new Wait(awaitingElement);
     }
 
@@ -41,7 +41,7 @@ export class Wait implements Interaction {
      * specify the condition to wait for of the given element
      * @param condition the condition to be waiting for
      */
-    public andCheck(condition: UntilElementCondition) {
+    public andCheck(condition: UntilElementCondition): Wait {
         this.condition = condition;
         return this;
     }
@@ -49,7 +49,7 @@ export class Wait implements Interaction {
     /**
      * @ignore
      */
-    constructor(private awaitingElement: SppWebElementFinder) {}
+    private constructor(private awaitingElement: SppWebElementFinder) {}
 
 
 }

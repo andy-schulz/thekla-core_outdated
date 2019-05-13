@@ -10,6 +10,7 @@ export interface BrowserScreenshotData {
 
 export interface Browser extends WebFinder, FrameFinder{
     window: BrowserWindow;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     get(url: string): Promise<any>;
     getCurrentUrl(): Promise<string>;
 
@@ -22,6 +23,8 @@ export interface Browser extends WebFinder, FrameFinder{
 
     takeScreenshot(): Promise<BrowserScreenshotData>;
     saveScreenshot(filepath: string, filename: string): Promise<string>;
-    executeScript(func: Function, ...func_args: any[]): Promise<{}>
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    executeScript(func: Function, ...funcArgs: any[]): Promise<{}>;
 }
 

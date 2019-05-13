@@ -5,15 +5,15 @@ import {BrowseTheWeb}            from "../../../index";
 
 export class Count implements Question<number> {
 
-    static of(elements: SppWebElementListFinder): Count  {
+    public static of(elements: SppWebElementListFinder): Count  {
         return new Count(elements)
     }
 
-    constructor(
+    private constructor(
         private elements: SppWebElementListFinder
     ) {}
 
-    answeredBy(actor: UsesAbilities): Promise<number> {
+    public answeredBy(actor: UsesAbilities): Promise<number> {
         return BrowseTheWeb.as(actor).findElements(this.elements).count();
     }
 }

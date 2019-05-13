@@ -4,28 +4,28 @@ import {WindowSize}                          from "../../driver/interface/Browse
 import {BrowserWdjs}                         from "../../driver/wdjs/BrowserWdjs";
 
 const conf: SeleniumConfig = {
-    seleniumServerAddress: "http://localhost:4444/wd/hub",
+    seleniumServerAddress: `http://localhost:4444/wd/hub`,
 };
 
 const capabilities: DesiredCapabilities = {
-    browserName: "chrome",
+    browserName: `chrome`,
 };
 
-describe('creating a new Browser', () => {
+describe(`creating a new Browser`, (): void => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
-    const windowSize = function() {
+    const windowSize = function(): {} {
         return {width: window.innerWidth, height: window.innerHeight};
     };
 
-    afterAll(async () => {
+    afterAll(async (): Promise<void> => {
         await BrowserWdjs.cleanup();
     });
 
-    describe('with an initial window setSize', () => {
-        it('it should be maximized when the config contains the "maximum" attribute ' +
-            '- (test case id: 8a0d9a58-9591-43c1-89bb-d848319c90f1)', async () => {
+    describe(`with an initial window setSize`, (): void => {
+        it(`it should be maximized when the config contains the "maximum" attribute ` +
+            `- (test case id: 8a0d9a58-9591-43c1-89bb-d848319c90f1)`, async (): Promise<void> => {
             const con: SeleniumConfig = _.cloneDeep(conf);
-            (<DesiredCapabilities>(capabilities)).window = {
+            ((capabilities) as DesiredCapabilities).window = {
                 setToMaxSize: true
             };
 
@@ -36,8 +36,8 @@ describe('creating a new Browser', () => {
             expect(dataParsed.width).toBeGreaterThanOrEqual(100);
         });
 
-        it('it should be maximized when maximize() is called after browser creation ' +
-            '- (test case id: 1473a628-0347-41d9-b2f8-2c93f827f840)', async () => {
+        it(`it should be maximized when maximize() is called after browser creation ` +
+            `- (test case id: 1473a628-0347-41d9-b2f8-2c93f827f840)`, async (): Promise<void> => {
             const browserManualResize = BrowserWdjs.create(conf,capabilities);
             const dataBefore = await browserManualResize.executeScript(windowSize);
             const dataBeforeParsed: WindowSize = JSON.parse(JSON.stringify(dataBefore));
@@ -51,8 +51,8 @@ describe('creating a new Browser', () => {
 
         });
 
-        it('it should be maximized when the config contains the "maximum" attribute ' +
-            '- (test case id: 1b7451ac-0ca2-4bdc-8700-60b4098d5829)', async () => {
+        it(`it should be maximized when the config contains the "maximum" attribute ` +
+            `- (test case id: 1b7451ac-0ca2-4bdc-8700-60b4098d5829)`, async (): Promise<void> => {
 
             try {
                 const browserResize = BrowserWdjs.create(conf, capabilities);

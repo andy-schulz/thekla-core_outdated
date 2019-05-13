@@ -36,11 +36,11 @@ export interface UsesAbilities {
 export class Actor implements AnswersQuestions, PerformsTask, UsesAbilities{
     private abilityMap: Map<string, Ability> = new Map();
 
-    static named(name: string): Actor {
+    public static named(name: string): Actor {
         return new Actor(name)
     }
 
-    constructor(public readonly name: string) {
+    private constructor(public readonly name: string) {
 
     }
 
@@ -48,7 +48,7 @@ export class Actor implements AnswersQuestions, PerformsTask, UsesAbilities{
      * assigns an ability to the actor, like Browser, SFT-Client, HTTP-Client ... you name it.
      * @param abilities the ability the actor is able to use
      */
-    whoCan(...abilities: Ability[]): Actor {
+    public whoCan(...abilities: Ability[]): Actor {
         for(let ability of abilities) {
             this.abilityMap.set(ability.constructor.name, ability);
         }
@@ -59,10 +59,10 @@ export class Actor implements AnswersQuestions, PerformsTask, UsesAbilities{
      * Executes the given Tasks
      * @param activities a list of tasks to execute
      */
-    attemptsTo(...activities: Activity[]): Promise<void>{
+    public attemptsTo(...activities: Activity[]): Promise<void>{
         
-        let reducefn = (chain: Promise<void>, activity: Activity, ) => {
-            return chain.then(() => {
+        let reducefn = (chain: Promise<void>, activity: Activity): Promise<void> => {
+            return chain.then((): Promise<void> => {
                 return activity.performAs(this);
             })
         };
@@ -74,7 +74,7 @@ export class Actor implements AnswersQuestions, PerformsTask, UsesAbilities{
      * Enables the Actor to do something ... Gives him the Ability
      * @param ability the ability to do something
      */
-    can(ability: Ability): void{
+    public can(ability: Ability): void{
         this.abilityMap.set(ability.constructor.name, ability);
     }
 
@@ -82,15 +82,15 @@ export class Actor implements AnswersQuestions, PerformsTask, UsesAbilities{
      *
      * @param Ability the type of Ability the actor should be able to use
      */
-    withAbilityTo(Ability: AbilityClass): Ability {
+    public withAbilityTo(Ability: AbilityClass): Ability {
 
         if(!this.abilityMap.has(Ability.name)) {
             throw new NoSuchAbilityError(`The Actor '${this.name}' does not have the Ability ${Ability.name}`);
         }
-        return <Ability>this.abilityMap.get(Ability.name);
+        return this.abilityMap.get(Ability.name) as Ability;
     }
 
-    toAnswer<T>(question: Question<T>): Promise<T> {
+    public toAnswer<T>(question: Question<T>): Promise<T> {
         return question.answeredBy(this);
     }
 

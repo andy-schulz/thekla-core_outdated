@@ -8,26 +8,26 @@ import {getLogger, Logger}         from "@log4js-node/log4js-api";
 export class Enter implements Interaction {
     private inputField: SppWebElementFinder;
     private clearBeforeFill: boolean = false;
-    private logger: Logger = getLogger("Enter");
+    private logger: Logger = getLogger(`Enter`);
 
     public static value(inputString: string | undefined): Enter {
         return new Enter(inputString);
     }
 
-    constructor(private keySequence: string | undefined) {}
+    private constructor(private keySequence: string | undefined) {}
 
     public into(element: SppWebElementFinder): Enter {
         this.inputField = element;
         return this;
     }
 
-    public butClearsTheFieldBefore(clear: boolean = true) {
+    public butClearsTheFieldBefore(clear: boolean = true): Enter {
         this.clearBeforeFill = clear;
         return this;
     }
 
-    @stepDetails<UsesAbilities>("enter the value '<<keySequence>>' into field: <<inputField>>")
-    performAs(actor: UsesAbilities): Promise<void> {
+    @stepDetails<UsesAbilities>(`enter the value '<<keySequence>>' into field: <<inputField>>`)
+    public performAs(actor: UsesAbilities): Promise<void> {
         // if undefined do nothing,
         // it makes it possible to work with data structures on forms
         if(this.keySequence === undefined) {
@@ -35,10 +35,10 @@ export class Enter implements Interaction {
             return Promise.resolve();
         }
         return Promise.resolve()
-            .then(() => {
+            .then((): Promise<void> | void => {
                 if(this.clearBeforeFill)
                     return BrowseTheWeb.as(actor).findElement(this.inputField).clear();
             })
-            .then(() => BrowseTheWeb.as(actor).findElement(this.inputField).sendKeys(this.keySequence as string));
+            .then((): Promise<void> => BrowseTheWeb.as(actor).findElement(this.inputField).sendKeys(this.keySequence as string));
     }
 }

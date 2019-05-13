@@ -6,14 +6,14 @@ export class ExecuteConditionWdjs {
     public static execute (condition: UntilElementCondition, element: WdElement | WebElementFinder): Promise<boolean> {
         switch (condition.waiter.constructor) {
             case VisibilityCheck:
-                return new Promise((fulfill, reject) => {
+                return new Promise((fulfill, reject): void => {
                     element.isDisplayed()
                         .then(condition.negate)
                         .then(fulfill)
                         .catch(reject)
                 });
             case EnabledCheck:
-                return new Promise((fulfill, reject) => {
+                return new Promise((fulfill, reject): void => {
                     element.isEnabled()
                         .then(condition.negate)
                         .then(fulfill)

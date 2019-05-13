@@ -3,28 +3,28 @@ import {UsesAbilities}                                     from "../../Actor";
 
 export interface AuthenticationInfo{
     username: string;
-    password: string
+    password: string;
 }
 
 export class Authenticate implements Ability {
 
-    static using(authInfo: AuthenticationInfo): Authenticate {
+    public static using(authInfo: AuthenticationInfo): Authenticate {
         return new Authenticate(authInfo);
     }
 
-    static as(actor: UsesAbilities): Authenticate {
-        return <Authenticate>actor.withAbilityTo(Authenticate);
+    public static as(actor: UsesAbilities): Authenticate {
+        return actor.withAbilityTo(Authenticate) as Authenticate;
     }
 
-    constructor(private authenticationInfo: AuthenticationInfo) {
+    public constructor(private authenticationInfo: AuthenticationInfo) {
 
     }
 
-    get username(): string {
+    public get username(): string {
         return this.authenticationInfo.username
     }
 
-    get password(): string {
+    public get password(): string {
         return this.authenticationInfo.password
     }
 }

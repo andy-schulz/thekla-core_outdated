@@ -8,17 +8,19 @@ import {diff}                        from 'deep-diff';
 
 export const Expected = {
 
-    toBe: curryRight((actual: any, expected: any) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    toBe: curryRight((actual: any, expected: any): boolean => {
         strictEqual(actual, expected);
         return true;
     }),
 
-    toEqual: curryRight((actual: any, expected: any) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    toEqual: curryRight((actual: any, expected: any): boolean => {
         strictEqual(actual, expected);
         return true;
     }),
 
-    toMatch: curryRight((actual: string, expectedRegExp: RegExp) => {
+    toMatch: curryRight((actual: string, expectedRegExp: RegExp): boolean => {
         const match = actual.match(expectedRegExp);
 
         if(match === null) {
@@ -26,7 +28,7 @@ export const Expected = {
                 message: `'${actual}' does not match the given RegExp ${expectedRegExp}`,
                 actual: actual,
                 expected: expectedRegExp,
-                operator: "match"
+                operator: `match`
             })
         } else {
             return true;
@@ -38,14 +40,15 @@ export const Expected = {
      * checks if the expected object is contained within the actual object
      * this way a subset of attributes can be checked
      */
-    toContain: curry((expected: Object | string, actual: Object | string): boolean => {
-        const exp = typeof expected === "string" ? JSON.parse(expected) : expected;
-        const act = typeof actual === "string" ? JSON.parse(actual) : actual;
+    toContain: curry((expected: Record<string, any> | string, actual: Record<string, any> | string): boolean => {
+        const exp = typeof expected === `string` ? JSON.parse(expected) : expected;
+        const act = typeof actual === `string` ? JSON.parse(actual) : actual;
 
 
-        const preFilter = (path: string[], key: string) => {
+        const preFilter = (path: string[], key: string): boolean => {
             let filter = false;
 
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const reducer = (acc: { [key: string]: any }, current: string): object => {
                 if (filter || acc[current] === undefined) {
                     filter = true;
@@ -53,6 +56,7 @@ export const Expected = {
                 return acc[current]
             };
 
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const obj: { [key: string]: any } = path.reduce(reducer, exp);
 
             if (filter) {
@@ -66,7 +70,7 @@ export const Expected = {
         if (theDiff === undefined) {
             return true
         } else {
-            throw new Error(`Differences in objects found: ${JSON.stringify(theDiff, null, "\t")}`);
+            throw new Error(`Differences in objects found: ${JSON.stringify(theDiff, null, `\t`)}`);
         }
     })
 };

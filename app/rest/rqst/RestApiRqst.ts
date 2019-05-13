@@ -12,12 +12,12 @@ export class RestApiRqst implements RestApi {
         return new RestApiRqst(restAbilityOptions);
     }
 
-    request(resource: On, restOptions: RestAbilityOptions = {}): RestRequest {
+    public request(resource: On, restOptions: RestAbilityOptions = {}): RestRequest {
         const opts: RestAbilityOptions = merge(this.restAbilityOptions, restOptions);
         return new RestRequestRqst(resource.resource, opts)
     }
 
-    constructor(private restAbilityOptions: RestAbilityOptions) {
+    private constructor(private restAbilityOptions: RestAbilityOptions) {
 
     }
 }

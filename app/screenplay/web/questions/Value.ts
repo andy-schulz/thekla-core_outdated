@@ -5,15 +5,15 @@ import {BrowseTheWeb}        from "../../../index";
 
 export class Value implements Question<string> {
 
-    static of(element: SppWebElementFinder): Value  {
+    public static of(element: SppWebElementFinder): Value  {
         return new Value(element)
     }
 
-    constructor(
+    private constructor(
         private element: SppWebElementFinder
     ) {}
 
-    answeredBy(actor: UsesAbilities): Promise<string> {
-        return BrowseTheWeb.as(actor).findElement(this.element).getAttribute("value");
+    public answeredBy(actor: UsesAbilities): Promise<string> {
+        return BrowseTheWeb.as(actor).findElement(this.element).getAttribute(`value`);
     }
 }

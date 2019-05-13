@@ -5,6 +5,7 @@ export interface SeleniumConfig {
 }
 
 export interface DesiredCapabilities {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any;
 
     browserName: string;
@@ -13,10 +14,12 @@ export interface DesiredCapabilities {
 
     proxy?: ProxyConfig;
 
+    // eslint-disable-next-line quotes
     "moz:firefoxOptions"?: FirefoxOptions;
+    // eslint-disable-next-line quotes
     "goog:chromeOptions"?: ChromeOptions;
 
-    window?: WindowConfig
+    window?: WindowConfig;
 
 }
 
@@ -27,10 +30,11 @@ export interface WindowConfig {
      * for chrome use options "--window-size=300,400" or "--start-maximized"
      * for firefox use options "--width=500" and "--height=500"
      */
-    setToMaxSize: true
+    setToMaxSize: true;
 }
 
 export interface ProxyConfig {
+    // eslint-disable-next-line quotes
     type: "direct" | "system" | "manual";
     manualConfig?: ManualProxyConfig;
 }
@@ -40,9 +44,10 @@ export interface ManualProxyConfig {
     ftp?: string;
     http?: string;
     https?: string;
-    bypass?: string[]
+    bypass?: string[];
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface RestConfig {}
 
 /**
@@ -56,7 +61,8 @@ export interface ChromeOptions {
     binary?: string;
     args?: string[];
     prefs?: {
-        [key: string]: any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        [key: string]: any;
     };
 }
 
@@ -72,10 +78,11 @@ export interface FirefoxOptions {
     args?: string[];
     profile?: string;
     log?: {
-        level: "trace" | "debug" | "config" | "info" | "warn" | "error" | "fatal"
-    }
+        // eslint-disable-next-line quotes
+        level: "trace" | "debug" | "config" | "info" | "warn" | "error" | "fatal";
+    };
     prefs?: {
-        [key: string]: string | boolean | number
-    }
+        [key: string]: string | boolean | number;
+    };
 
 }
