@@ -5,7 +5,7 @@ import {
     DesiredCapabilities,
     ProxyConfig,
     SeleniumConfig
-}                                                       from "../../config/SeleniumConfig";
+}                                                                   from "../../config/SeleniumConfig";
 
 import {Browser, BrowserScreenshotData}         from "../interface/Browser";
 import {BrowserWindow}                          from "../interface/BrowserWindow";
@@ -54,6 +54,14 @@ export class BrowserWdjs implements Browser {
                 this.driverCreated = true;
                 return driver;
             })
+    }
+
+    public get annotateElement() {
+        return this._selConfig.annotateElement
+    }
+
+    public get displayTestMessages() {
+        return this._selConfig.displayTestMessages
     }
 
     public get window(): BrowserWindow {

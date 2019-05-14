@@ -1,14 +1,14 @@
 import {WebElementFinder, WebElementListFinder} from "../interface/WebElements";
 import {until}                                  from "../lib/Condition";
-import {UntilElementCondition} from "../lib/ElementConditions";
-import {By}                    from "../lib/Locator";
-import {BrowserWdjs}           from "./BrowserWdjs";
-import {LocatorWdjs}           from "./LocatorWdjs";
-import {WdElement}             from "./interfaces/WdElement";
-import {ExecuteConditionWdjs}  from "./ExecuteConditionWdjs";
+import {UntilElementCondition}                  from "../lib/ElementConditions";
+import {By}                                     from "../lib/Locator";
+import {BrowserWdjs}                            from "./BrowserWdjs";
+import {LocatorWdjs}                            from "./LocatorWdjs";
+import {WdElement}                              from "./interfaces/WdElement";
+import {ExecuteConditionWdjs}                   from "./ExecuteConditionWdjs";
 import {WebElementWdjs}        from "./WebElementWdjs";
 import {promise, WebElement}   from "selenium-webdriver";
-import {getLogger, Logger}     from "@log4js-node/log4js-api";
+import {getLogger, Logger}                      from "@log4js-node/log4js-api";
 
 /**
  * List object to wrap the location strategy for finding multiple elements with WebDriverJS
@@ -130,7 +130,7 @@ export class WebElementListWdjs implements WebElementListFinder {
     }
 
     public toWebElement(): WebElementWdjs {
-        return new WebElementWdjs(this);
+        return new WebElementWdjs(this, this.browser);
     }
 
     public filteredByText(searchText: string): WebElementListFinder {

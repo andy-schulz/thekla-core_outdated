@@ -1,18 +1,23 @@
-import {promise}                                from "selenium-webdriver";
+import {promise, WebDriver, WebElement}         from "selenium-webdriver";
 import {WebElementFinder, WebElementListFinder} from "../interface/WebElements";
 import {UntilElementCondition}                  from "../lib/ElementConditions";
+import {BrowserWdjs}                            from "./BrowserWdjs";
 import {WdElement}                              from "./interfaces/WdElement";
 import {WebElementListWdjs}                     from "./WebElementListWdjs";
 import {By}                                     from "../..";
 import {getLogger, Logger}                      from "log4js";
+import {Annotator}                              from "webdriverjs_annotator";
+
 
 
 export class WebElementWdjs implements WebElementFinder{
     private _description: string = ``;
     private logger: Logger = getLogger(`WebElementWdjs`);
 
+
     public constructor(
-        private elementList: WebElementListWdjs) {
+        private elementList: WebElementListWdjs,
+        private browser: BrowserWdjs) {
     }
 
     public all(locator: By): WebElementListFinder {
@@ -25,8 +30,22 @@ export class WebElementWdjs implements WebElementFinder{
 
     private getWebElement(): Promise<WdElement> {
         return new Promise(async (fulfill, reject): Promise<void> => {
+            const displayMessage = this.browser.displayTestMessages;
+
+            if(displayMessage) {
+                const message = `Trying to find ${this.toString()}`;
+                await Annotator.displayTestMessage(await this.browser.getDriver(), message);
+            }
+
             const elements = await this.elementList.getElements()
-                .catch(reject);
+                .catch((e) => {
+                    reject(e);
+                });
+
+            const annotate = async (annotateElement: boolean, element: WebElement, driver: WebDriver) => {
+                if(annotateElement)
+                    await Annotator.highlight(driver, element);
+            };
 
             // if getElements is rejected just leave the function
             if(!elements) {
@@ -40,11 +59,13 @@ export class WebElementWdjs implements WebElementFinder{
             } else if (elements.length >= 2) {
                 const message = `More than one Element found of: ${this.toString()}. I am going to select the first one.`;
                 this.logger.warn(message);
-                fulfill(elements[0]);
-                return;
-            } else {
-                fulfill(elements[0])
             }
+
+            if(displayMessage)
+                await Annotator.hideTestMessage(await this.browser.getDriver());
+
+            await annotate(this.browser.annotateElement === true, elements[0], await this.browser.getDriver());
+            fulfill(elements[0])
         })
     }
 

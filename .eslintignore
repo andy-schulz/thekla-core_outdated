@@ -1,2 +1,4 @@
 # typescript generated files
 dist/*
+res/*
+docs/*

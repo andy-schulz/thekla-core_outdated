@@ -28,7 +28,6 @@ describe(`Locating an waiter`, (): void => {
             const dropDown = browser.element(By.css(`#exampleSelect`));
             const fourthElement = dropDown.element(By.cssContainingText(`option`, `4`));
 
-            // await dropDown.click();
             await browser.get(`/`);
 
             await fourthElement.click();
