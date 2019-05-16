@@ -36,7 +36,7 @@ export {Send}                                                        from "./scr
 
 export {On}                                                          from "./rest/lib/Ressource"
 export {Method}                                                      from "./rest/lib/Method"
-export {RestApiFactory}                                              from "./rest/lib/RestApiFactory"
+export {RestClient}                                                  from "./rest/lib/RestClient"
 
 /**
  * screenplay Elements

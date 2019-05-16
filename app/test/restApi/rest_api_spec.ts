@@ -1,6 +1,6 @@
 import * as yargs from "yargs";
 import {
-    Actor, RestApiConfig, UseTheRestApi, Get, Post, On, Send, Method, See, Response, RestApiFactory, request, Expected
+    Actor, RestApiConfig, UseTheRestApi, Get, Post, On, Send, Method, See, Response, RestClient, request
 }                 from "../../";
 
 import {configure} from "log4js";
@@ -76,7 +76,7 @@ describe(`Trying to Add two numbers by the mathjs API`, (): void => {
         // };
 
         Richard = Actor.named(`Richard`);
-        Richard.whoCan(UseTheRestApi.using(RestApiFactory.create(restConfig)));
+        Richard.whoCan(UseTheRestApi.using(RestClient.from(restConfig)));
     });
 
     describe(`using two simple integers,`, (): void => {
