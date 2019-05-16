@@ -3,11 +3,11 @@ import {Interaction}                                      from "../../lib/action
 import {stepDetails}                                      from "../../lib/decorators/StepDecorators";
 import {UseTheRestApi}                                    from "../abilities/UseTheRestApi";
 import {SppRestRequest}                                   from "../SppRestRequests";
-import {catchAndSaveOnError, MethodActions, safeResponse} from "./0_helper";
+import {catchAndSaveOnError, MethodActions, saveResponse} from "./0_helper";
 
 export class Delete implements Interaction, MethodActions {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private safeTo: (result: any) => void;
+    private saveTo: (result: any) => void;
     private catchError =  false;
 
     public static from(request: SppRestRequest): Delete {
@@ -18,8 +18,8 @@ export class Delete implements Interaction, MethodActions {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public andSaveResponse(safeTo: (result: any[]) => void): Delete {
-        this.safeTo = safeTo;
+    public andSaveResponse(saveTo: (result: any[]) => void): Delete {
+        this.saveTo = saveTo;
         return this;
     }
 
@@ -31,7 +31,7 @@ export class Delete implements Interaction, MethodActions {
     @stepDetails<UsesAbilities>(`send a delete request for: '<<request>>'`)
     public performAs(actor: UsesAbilities): Promise<void> {
         return UseTheRestApi.as(actor).send(this.request).post()
-            .then(safeResponse(this.safeTo))
-            .catch(catchAndSaveOnError(this.safeTo, this.catchError))
+            .then(saveResponse(this.saveTo))
+            .catch(catchAndSaveOnError(this.saveTo, this.catchError))
     }
 }

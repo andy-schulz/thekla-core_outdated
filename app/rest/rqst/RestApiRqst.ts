@@ -1,23 +1,23 @@
-import {RestAbilityOptions} from "../../screenplay/rest/abilities/UseTheRestApi";
-import {RestApi}            from "../interface/RestAPI";
-import {RestRequest}        from "../interface/RestRequest";
-import {On}                 from "../lib/Ressource";
-import {RestRequestRqst}    from "./RestRequestRqst";
-import merge                from "deepmerge";
+import {RestApi}         from "../interface/RestAPI";
+import {RestRequest}     from "../interface/RestRequest";
+import {On}              from "../lib/Ressource";
+import {RestRequestRqst} from "./RestRequestRqst";
+import merge             from "deepmerge";
+import {RestApiConfig}   from "../../config/RestApiConfig";
 
 
 export class RestApiRqst implements RestApi {
 
-    public static create(restAbilityOptions: RestAbilityOptions): RestApi {
-        return new RestApiRqst(restAbilityOptions);
+    public static create(restApiConfig: RestApiConfig): RestApi {
+        return new RestApiRqst(restApiConfig);
     }
 
-    public request(resource: On, restOptions: RestAbilityOptions = {}): RestRequest {
-        const opts: RestAbilityOptions = merge(this.restAbilityOptions, restOptions);
+    public request(resource: On, restOptions: RestApiConfig = {}): RestRequest {
+        const opts: RestApiConfig = merge(this.restApiConfig, restOptions);
         return new RestRequestRqst(resource.resource, opts)
     }
 
-    private constructor(private restAbilityOptions: RestAbilityOptions) {
+    private constructor(private restApiConfig: RestApiConfig) {
 
     }
 }

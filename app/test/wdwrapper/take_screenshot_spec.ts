@@ -1,9 +1,10 @@
-import {DesiredCapabilities, SeleniumConfig}            from "../../config/SeleniumConfig";
-import {BrowserWdjs}                                    from "../../driver/wdjs/BrowserWdjs";
-import * as fs                                          from "fs";
-import fsExtra                                          from "fs-extra";
-import {Browser, RunningBrowser, BrowserScreenshotData} from "../..";
-import * as uuid                                        from "uuid";
+import {BrowserWdjs} from "../../driver/wdjs/BrowserWdjs";
+import * as fs       from "fs";
+import fsExtra       from "fs-extra";
+import * as uuid     from "uuid";
+import {
+    Browser, RunningBrowser, BrowserScreenshotData, SeleniumConfig, DesiredCapabilities
+}                    from "../..";
 
 
 

@@ -1,8 +1,5 @@
-import {DesiredCapabilities, SeleniumConfig} from "../../config/SeleniumConfig";
-import {Browser}                             from "../../driver/interface/Browser";
-import {BrowserWdjs}                         from "../../driver/wdjs/BrowserWdjs";
-import {RunningBrowser}                      from "../../driver/lib/RunningBrowser";
-import {By}                                  from "../../driver/lib/Locator";
+import {Browser, By, DesiredCapabilities, RunningBrowser, SeleniumConfig} from "../..";
+import {BrowserWdjs}                                                      from "../../driver/wdjs/BrowserWdjs";
 
 const conf: SeleniumConfig = {
     seleniumServerAddress: `http://localhost:4444/wd/hub`,

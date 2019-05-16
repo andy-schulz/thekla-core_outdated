@@ -1,11 +1,8 @@
 import {getLogger, Logger} from "@log4js-node/log4js-api";
 
 import {Builder, promise, ThenableWebDriver, WebDriver, WebElement} from "selenium-webdriver";
-import {
-    DesiredCapabilities,
-    ProxyConfig,
-    SeleniumConfig
-}                                                                   from "../../config/SeleniumConfig";
+import {DesiredCapabilities, ProxyConfig}                           from "../../config/DesiredCapabilities";
+import {SeleniumConfig}                                             from "../../config/SeleniumConfig";
 
 import {Browser, BrowserScreenshotData}         from "../interface/Browser";
 import {BrowserWindow}                          from "../interface/BrowserWindow";

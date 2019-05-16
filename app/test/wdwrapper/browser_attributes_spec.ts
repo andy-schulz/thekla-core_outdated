@@ -1,7 +1,7 @@
-import {DesiredCapabilities, SeleniumConfig} from "../../config/SeleniumConfig";
 import * as _                                from "lodash";
 import {WindowSize}                          from "../../driver/interface/BrowserWindow";
 import {BrowserWdjs}                         from "../../driver/wdjs/BrowserWdjs";
+import {DesiredCapabilities, SeleniumConfig} from "../..";
 
 const conf: SeleniumConfig = {
     seleniumServerAddress: `http://localhost:4444/wd/hub`,

@@ -1,8 +1,10 @@
 /**
- *
+ * Configurations
  */
 
-export {SeleniumConfig, RestConfig, DesiredCapabilities} from "./config/SeleniumConfig"
+export {SeleniumConfig}                                         from "./config/SeleniumConfig"
+export {DesiredCapabilities}                                    from "./config/DesiredCapabilities"
+export {RestApiConfig}                                          from "./config/RestApiConfig";
 
 
 /**
@@ -49,7 +51,7 @@ export {request, SppRestRequest}                                     from "./scr
 export {Ability}                                                from "./screenplay/lib/abilities/Ability";
 export {BrowseTheWeb}                                           from "./screenplay/web/abilities/BrowseTheWeb";
 export {Authenticate, AuthenticationInfo}                       from "./screenplay/web/abilities/Authenticate";
-export {UseTheRestApi, RestAbilityOptions}                      from "./screenplay/rest/abilities/UseTheRestApi";
+export {UseTheRestApi}                                          from "./screenplay/rest/abilities/UseTheRestApi";
 
 // Tasks
 export {PerformsTask} from "./screenplay/Actor";
@@ -77,7 +79,8 @@ export {Status}                               from "./screenplay/web/questions/S
 export {Response}                             from "./screenplay/rest/questions/Response";
 
 // Custom Errors
-export {NoSuchAbilityError} from "./screenplay/errors/NoSuchAbilityError";
+export {DoesNotHave}        from "./screenplay/errors/DoesNotHave";
+export {DidNotFind}         from "./driver/errors/DidNotFind";
 
 //Function Matcher
 export {Expected} from "./screenplay/lib/matcher/FunctionMatcher/Expected"

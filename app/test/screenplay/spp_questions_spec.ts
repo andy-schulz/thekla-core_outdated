@@ -145,7 +145,7 @@ describe(`Using`, (): void => {
                 );
                 expect(true).toBeFalsy(`call should have thrown an error. But it did not.`);
             } catch (e) {
-                expect(e.toString()).toContain(`No Element found: 'button which appears after 5 seconds' selected by: >>byCss: [data-test-id='AppearButtonBy5000']<<`)
+                expect(e.toString()).toContain(`Did not find the Element: 'button which appears after 5 seconds' selected by: >>byCss: [data-test-id='AppearButtonBy5000']<<`)
             }
 
         });
@@ -167,7 +167,7 @@ describe(`Using`, (): void => {
                 expect(true).toBeFalsy(`call should have thrown an error. But it did not.`)
 
             } catch (e) {
-                expect(e.toString()).toContain(`No Element found: 'button which appears after 5 seconds' selected by: >>byCss: [data-test-id='AppearButtonBy5000']<<`)
+                expect(e.toString()).toContain(`Did not find the Element: 'button which appears after 5 seconds' selected by: >>byCss: [data-test-id='AppearButtonBy5000']<<`)
             }
 
         });
@@ -296,7 +296,7 @@ describe(`Using`, (): void => {
                 expect(true).toBeFalsy(`call should have thrown an error. But it did not.`)
 
             } catch (e) {
-                expect(e.toString()).toContain(`No Element found: 'button which appears after 5 seconds' selected by: >>byCss: [data-test-id='AppearButtonBy5000']<<`)
+                expect(e.toString()).toContain(`Did not find the Element: 'button which appears after 5 seconds' selected by: >>byCss: [data-test-id='AppearButtonBy5000']<<`)
             }
 
         });

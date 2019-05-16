@@ -1,9 +1,7 @@
-import * as _                                from "lodash";
-import {DesiredCapabilities, SeleniumConfig} from "../../config/SeleniumConfig";
-import {Browser}                             from "../../driver/interface/Browser";
-import {WindowSize}                          from "../../driver/interface/BrowserWindow";
-import {RunningBrowser}                      from "../../driver/lib/RunningBrowser";
-import {BrowserWdjs}                         from "../../driver/wdjs/BrowserWdjs";
+import * as _                                                         from "lodash";
+import {Browser, DesiredCapabilities, RunningBrowser, SeleniumConfig} from "../..";
+import {WindowSize}                                                   from "../../driver/interface/BrowserWindow";
+import {BrowserWdjs}                                                  from "../../driver/wdjs/BrowserWdjs";
 
 describe(`Starting a browser instance`, (): void => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;

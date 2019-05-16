@@ -15,7 +15,7 @@
  */
 import {Ability, AbilityClass} from "./lib/abilities/Ability";
 import {Activity}              from "./lib/actions/Activities";
-import {NoSuchAbilityError}    from "./errors/NoSuchAbilityError";
+import {DoesNotHave}           from "./errors/DoesNotHave";
 import {Question}              from "./lib/matcher/Question";
 
 
@@ -82,12 +82,12 @@ export class Actor implements AnswersQuestions, PerformsTask, UsesAbilities{
      *
      * @param Ability the type of Ability the actor should be able to use
      */
-    public withAbilityTo(Ability: AbilityClass): Ability {
+    public withAbilityTo(ability: AbilityClass): Ability {
 
-        if(!this.abilityMap.has(Ability.name)) {
-            throw new NoSuchAbilityError(`The Actor '${this.name}' does not have the Ability ${Ability.name}`);
+        if(!this.abilityMap.has(ability.name)) {
+            throw DoesNotHave.theAbility(ability).usedBy(this);
         }
-        return this.abilityMap.get(Ability.name) as Ability;
+        return this.abilityMap.get(ability.name) as Ability;
     }
 
     public toAnswer<T>(question: Question<T>): Promise<T> {

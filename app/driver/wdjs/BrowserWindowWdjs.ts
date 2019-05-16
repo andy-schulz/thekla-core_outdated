@@ -1,5 +1,5 @@
 import {ISize, promise, WebDriver} from "selenium-webdriver";
-import {WindowConfig}              from "../../config/SeleniumConfig";
+import {WindowConfig}              from "../../config/DesiredCapabilities";
 import {BrowserWindow, WindowSize} from "../interface/BrowserWindow";
 
 export class BrowserWindowWdjs implements BrowserWindow{

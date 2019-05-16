@@ -1,4 +1,5 @@
 import {promise, WebDriver, WebElement}         from "selenium-webdriver";
+import {DidNotFind}                             from "../errors/DidNotFind";
 import {WebElementFinder, WebElementListFinder} from "../interface/WebElements";
 import {UntilElementCondition}                  from "../lib/ElementConditions";
 import {BrowserWdjs}                            from "./BrowserWdjs";
@@ -53,9 +54,12 @@ export class WebElementWdjs implements WebElementFinder{
             }
 
             if(elements.length === 0) {
-                const message = `No Element found: ${this.toString()}`;
-                reject(message);
-                return;
+                // const message = `Element not found: ${this.toString()}`;
+
+                // throw DidNotFind.theElement(this);
+
+                reject(DidNotFind.theElement(this));
+                // return;
             } else if (elements.length >= 2) {
                 const message = `More than one Element found of: ${this.toString()}. I am going to select the first one.`;
                 this.logger.warn(message);

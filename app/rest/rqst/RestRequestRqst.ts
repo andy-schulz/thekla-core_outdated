@@ -1,44 +1,55 @@
-import {RestAbilityOptions} from "../../screenplay/rest/abilities/UseTheRestApi";
-import {RestRequest}        from "../interface/RestRequest";
-import {RestRequestResult}  from "../interface/RestRequestResult";
-import * as rp              from "request-promise-native";
+import {RestApiConfig}     from "../../config/RestApiConfig";
+import {RestRequest}       from "../interface/RestRequest";
+import {RestRequestResult} from "../interface/RestRequestResult";
+import * as rp             from "request-promise-native";
+import merge               from "deepmerge";
+
 
 export class RestRequestRqst implements RestRequest {
 
     public constructor(
         private resource: string,
-        private options: RestAbilityOptions) {
+        private options: RestApiConfig) {
     }
 
-    public get(options: RestAbilityOptions = {}): Promise<RestRequestResult> {
+    public get(options: RestApiConfig = {}): Promise<RestRequestResult> {
         return this.send(rp.get, options);
     }
 
-    public patch(options: RestAbilityOptions = {}): Promise<RestRequestResult> {
+    public patch(options: RestApiConfig = {}): Promise<RestRequestResult> {
         return this.send(rp.patch, options);
     }
 
-    public post(options: RestAbilityOptions = {}): Promise<RestRequestResult> {
+    public post(options: RestApiConfig = {}): Promise<RestRequestResult> {
         return this.send(rp.post, options);
     }
 
-    public delete(options: RestAbilityOptions = {}): Promise<RestRequestResult> {
+    public delete(options: RestApiConfig = {}): Promise<RestRequestResult> {
         return this.send(rp.delete, options);
     }
 
+    /**
+     * method was created to do a unit test on the merge
+     * @param orig
+     * @param merger
+     */
+    protected mergeOpts(orig: RestApiConfig, merger: RestApiConfig) {
+        return merge(orig, merger);
+    }
 
-    //TODO: implement Rest Options with merge objects
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private send(fn: any, options: RestAbilityOptions = {}) {
+    private send(fn: any, options: RestApiConfig = {}) {
+        const opts: RestApiConfig = this.mergeOpts(this.options, options);
         return new Promise((fulfill, reject): void => {
-            fn(this.resource, this.options)
+            fn(this.resource, opts.restClientOptions)
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 .then((response: any): void => {
                     fulfill(response);
                 })
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 .catch((e: any): void => {
-                    reject(e.response);
+                    reject(e.response ? e.response : e);
                 });
         });
     }
