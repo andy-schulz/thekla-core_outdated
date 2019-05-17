@@ -1,5 +1,5 @@
-import {RestClientConfig}                                 from "../../../config/RestClientConfig";
-import {RequestMethod}                                    from "../../../rest/lib/Method";
+import {RestClientConfig}                                           from "../../../config/RestClientConfig";
+import {RequestMethod}                                              from "../../../rest/lib/Method";
 import {UsesAbilities}                                              from "../../Actor";
 import {Interaction}                                                from "../../lib/actions/Activities";
 import {stepDetails}                                                from "../../lib/decorators/StepDecorators";
@@ -7,11 +7,10 @@ import {UseTheRestApi}                                              from "../abi
 import {SppRestRequest}                                             from "../SppRestRequests";
 import {catchAndSaveOnError, MethodActions, saveResponse, SaveToFn} from "./0_helper";
 
-export class Send implements Interaction, MethodActions {
+class SendHelper implements Interaction, MethodActions {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private saveTo: (result: any) => void;
     private catchError =  false;
-    private method: RequestMethod;
     private config: RestClientConfig | undefined;
 
     @stepDetails<UsesAbilities>(`send a get request for: '<<request>>'`)
@@ -21,32 +20,37 @@ export class Send implements Interaction, MethodActions {
             .catch(catchAndSaveOnError(this.saveTo, this.catchError))
     }
 
-    public static the(request: SppRestRequest): Send {
-        return new Send(request);
-    }
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public andSaveResponse(saveTo: SaveToFn): Send {
+    public andSaveResponse(saveTo: SaveToFn): SendHelper {
         this.saveTo = saveTo;
         return this;
     }
 
-    public withConfig(config: RestClientConfig) {
+    public withConfig(config: RestClientConfig): SendHelper {
         this.config = config;
         return this;
     }
 
-
-    public dontFailInCaseOfAnError(): Send {
+    public dontFailInCaseOfAnError(): SendHelper {
         this.catchError = true;
         return this;
     }
 
-    public as(method: RequestMethod): Send {
-        this.method = method;
-        return this;
+    public constructor(private request: SppRestRequest, private method: RequestMethod) {
+    }
+}
+
+export class Send {
+    public static the(request: SppRestRequest): Send {
+        return new Send(request);
+    }
+
+    public as(method: RequestMethod): SendHelper {
+        return new SendHelper(this.request, method);
     }
 
     private constructor(private request: SppRestRequest) {
+
     }
 }
+
