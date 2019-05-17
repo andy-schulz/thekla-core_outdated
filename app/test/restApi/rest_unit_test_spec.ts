@@ -1,9 +1,9 @@
-import * as assert       from "assert";
-import {RestApiConfig}   from "../../config/RestApiConfig";
-import {RestRequestRqst} from "../../rest/rqst/RestRequestRqst";
+import * as assert        from "assert";
+import {RestClientConfig} from "../../config/RestClientConfig";
+import {RestRequestRqst}  from "../../rest/rqst/RestRequestRqst";
 
 class UT extends RestRequestRqst {
-    public static testMerge(orig: RestApiConfig, merger: RestApiConfig) {
+    public static testMerge(orig: RestClientConfig, merger: RestClientConfig) {
         return (new UT(`resource`, {})).mergeOpts(orig, merger);
     }
 }
@@ -15,7 +15,7 @@ describe(`Using the RestAPI`, () => {
         it(`should return the merged option object ` +
             `- (test case id: 82878ec9-736b-4db9-912a-139c3ea16949)`, () => {
 
-            const restOptsOrig: RestApiConfig = {
+            const restOptsOrig: RestClientConfig = {
                 restClientOptions: {
                     body: {
                         one: `one`,
@@ -24,7 +24,7 @@ describe(`Using the RestAPI`, () => {
                 }
             };
 
-            const restOptsMerger: RestApiConfig = {
+            const restOptsMerger: RestClientConfig = {
                 restClientOptions: {
                     body: {
                         two: `two`,
@@ -33,7 +33,7 @@ describe(`Using the RestAPI`, () => {
                 }
             };
 
-            const result: RestApiConfig = {
+            const result: RestClientConfig = {
                 restClientOptions: {
                     body: {
                         one: `one`,

@@ -1,12 +1,12 @@
-import {RestApiConfig}     from "../../config/RestApiConfig";
+import {RestClientConfig}  from "../../config/RestClientConfig";
 import {RestRequestResult} from "./RestRequestResult";
 
 export interface RestRequest {
-    get(options?: RestApiConfig): Promise<RestRequestResult>;
+    get(options?: RestClientConfig): Promise<RestRequestResult>;
 
-    post(options?: RestApiConfig): Promise<RestRequestResult>;
+    post(options?: RestClientConfig): Promise<RestRequestResult>;
 
-    patch(options?: RestApiConfig): Promise<RestRequestResult>;
+    patch(options?: RestClientConfig): Promise<RestRequestResult>;
 
-    delete(options?: RestApiConfig): Promise<RestRequestResult>;
+    delete(options?: RestClientConfig): Promise<RestRequestResult>;
 }

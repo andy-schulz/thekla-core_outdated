@@ -2,9 +2,9 @@
  * Configurations
  */
 
-export {SeleniumConfig}                                         from "./config/SeleniumConfig"
-export {DesiredCapabilities}                                    from "./config/DesiredCapabilities"
-export {RestApiConfig}                                          from "./config/RestApiConfig";
+export {SeleniumConfig}                                            from "./config/SeleniumConfig"
+export {DesiredCapabilities}                                       from "./config/DesiredCapabilities"
+export {RestClientConfig}                                          from "./config/RestClientConfig";
 
 
 /**
@@ -36,7 +36,7 @@ export {Send}                                                        from "./scr
 
 export {On}                                                          from "./rest/lib/Ressource"
 export {Method}                                                      from "./rest/lib/Method"
-export {RestClient}                                                  from "./rest/lib/RestClient"
+export {ExecutingRestClient}                                                  from "./rest/lib/ExecutingRestClient"
 
 /**
  * screenplay Elements

@@ -1,9 +1,9 @@
-import {RestApiConfig}  from "../../../config/RestApiConfig";
-import {RestApi}        from "../../../rest/interface/RestApi";
-import {RestRequest}    from "../../../rest/interface/RestRequest";
-import {Ability}        from "../../lib/abilities/Ability";
-import {UsesAbilities}  from "../../Actor";
-import {SppRestRequest} from "../SppRestRequests";
+import {RestClientConfig} from "../../../config/RestClientConfig";
+import {RestClient}       from "../../../rest/interface/RestClient";
+import {RestRequest}      from "../../../rest/interface/RestRequest";
+import {Ability}          from "../../lib/abilities/Ability";
+import {UsesAbilities}    from "../../Actor";
+import {SppRestRequest}   from "../SppRestRequests";
 
 
 /**
@@ -12,7 +12,7 @@ import {SppRestRequest} from "../SppRestRequests";
  */
 export class UseTheRestApi implements Ability {
 
-    public static using(restApi: RestApi): UseTheRestApi {
+    public static with(restApi: RestClient): UseTheRestApi {
         return new UseTheRestApi(restApi);
     }
 
@@ -25,7 +25,7 @@ export class UseTheRestApi implements Ability {
         return spe.send(this.restApi)
     }
 
-    public constructor(private restApi: RestApi) {
+    public constructor(private restApi: RestClient) {
 
     }
 }

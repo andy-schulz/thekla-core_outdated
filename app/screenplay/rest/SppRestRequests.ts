@@ -1,17 +1,17 @@
-import {RestApiConfig} from "../../config/RestApiConfig";
-import {RestApi}       from "../../rest/interface/RestApi";
-import {RestRequest}   from "../../rest/interface/RestRequest";
-import {On}            from "../../rest/lib/Ressource";
+import {RestClientConfig} from "../../config/RestClientConfig";
+import {RestClient}       from "../../rest/interface/RestClient";
+import {RestRequest}      from "../../rest/interface/RestRequest";
+import {On}               from "../../rest/lib/Ressource";
 
 
 
 export interface RequestHelper extends Function {
-    (restApi: RestApi, restOptions: RestApiConfig): RestRequest;
+    (restApi: RestClient, restOptions: RestClientConfig): RestRequest;
     description: string;
 }
 
 export class SppRestRequest{
-    private restOptions: RestApiConfig = {};
+    private restOptions: RestClientConfig = {};
 
     public constructor(
         public resource: On,
@@ -19,14 +19,14 @@ export class SppRestRequest{
 
     }
 
-    public using(restOptions: RestApiConfig): SppRestRequest {
+    public using(restOptions: RestClientConfig): SppRestRequest {
         this.restOptions = restOptions;
 
         this.sender.description = `${this.sender.description} using options: ${JSON.stringify(restOptions)}`;
         return this
     }
 
-    public send(restApi: RestApi): RestRequest {
+    public send(restApi: RestClient): RestRequest {
         return this.sender(restApi, this.restOptions);
     }
 
@@ -44,7 +44,7 @@ export class SppRestRequestResult {
  * @param resource - resource the request is going to
  */
 export function request(resource: On): SppRestRequest {
-    const send: RequestHelper = (restApi: RestApi, restOptions: RestApiConfig = {}): RestRequest => {
+    const send: RequestHelper = (restApi: RestClient, restOptions: RestClientConfig = {}): RestRequest => {
         return restApi.request(resource, restOptions);
     };
 

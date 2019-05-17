@@ -1,4 +1,4 @@
-import {RestApiConfig}                                    from "../../../config/RestApiConfig";
+import {RestClientConfig}                                 from "../../../config/RestClientConfig";
 import {UsesAbilities}                                    from "../../Actor";
 import {Interaction}                                      from "../../lib/actions/Activities";
 import {stepDetails}                                      from "../../lib/decorators/StepDecorators";
@@ -10,7 +10,7 @@ export class Get implements Interaction, MethodActions {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private saveTo: (result: any) => void;
     private catchError =  false;
-    private config: RestApiConfig | undefined;
+    private config: RestClientConfig | undefined;
 
     @stepDetails<UsesAbilities>(`send a get request for: '<<request>>'`)
     public performAs(actor: UsesAbilities): Promise<void> {
@@ -24,7 +24,7 @@ export class Get implements Interaction, MethodActions {
         return new Get(request);
     }
 
-    public withConfig(config: RestApiConfig) {
+    public withConfig(config: RestClientConfig) {
         this.config = config;
         return this;
     }

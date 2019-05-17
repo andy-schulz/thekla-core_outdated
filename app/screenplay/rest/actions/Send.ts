@@ -1,10 +1,10 @@
-import {RestApiConfig}  from "../../../config/RestApiConfig";
-import {RequestMethod}  from "../../../rest/lib/Method";
-import {UsesAbilities}  from "../../Actor";
-import {Interaction}    from "../../lib/actions/Activities";
-import {stepDetails}    from "../../lib/decorators/StepDecorators";
-import {UseTheRestApi}  from "../abilities/UseTheRestApi";
-import {SppRestRequest} from "../SppRestRequests";
+import {RestClientConfig}                                 from "../../../config/RestClientConfig";
+import {RequestMethod}                                    from "../../../rest/lib/Method";
+import {UsesAbilities}                                    from "../../Actor";
+import {Interaction}                                      from "../../lib/actions/Activities";
+import {stepDetails}                                      from "../../lib/decorators/StepDecorators";
+import {UseTheRestApi}                                    from "../abilities/UseTheRestApi";
+import {SppRestRequest}                                   from "../SppRestRequests";
 import {catchAndSaveOnError, MethodActions, saveResponse} from "./0_helper";
 
 export class Send implements Interaction, MethodActions {
@@ -12,7 +12,7 @@ export class Send implements Interaction, MethodActions {
     private saveTo: (result: any) => void;
     private catchError =  false;
     private method: RequestMethod;
-    private config: RestApiConfig | undefined;
+    private config: RestClientConfig | undefined;
 
     public static the(request: SppRestRequest): Send {
         return new Send(request);
@@ -27,7 +27,7 @@ export class Send implements Interaction, MethodActions {
         return this;
     }
 
-    public withConfig(config: RestApiConfig) {
+    public withConfig(config: RestClientConfig) {
         this.config = config;
         return this;
     }
