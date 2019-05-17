@@ -1,6 +1,8 @@
 import {curry} from "lodash";
 
-export const saveResponse = curry(function(saveTo: (result: any) => void, result: any): void { // eslint-disable-line @typescript-eslint/no-explicit-any
+export type SaveToFn = (result: any) => void
+
+export const saveResponse = curry(function(saveTo: SaveToFn, result: any): void { // eslint-disable-line @typescript-eslint/no-explicit-any
     if (saveTo)
         saveTo(result);
 });

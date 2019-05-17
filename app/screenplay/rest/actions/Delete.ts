@@ -1,9 +1,9 @@
-import {UsesAbilities}                                    from "../../Actor";
-import {Interaction}                                      from "../../lib/actions/Activities";
-import {stepDetails}                                      from "../../lib/decorators/StepDecorators";
-import {UseTheRestApi}                                    from "../abilities/UseTheRestApi";
-import {SppRestRequest}                                   from "../SppRestRequests";
-import {catchAndSaveOnError, MethodActions, saveResponse} from "./0_helper";
+import {UsesAbilities}                                              from "../../Actor";
+import {Interaction}                                                from "../../lib/actions/Activities";
+import {stepDetails}                                                from "../../lib/decorators/StepDecorators";
+import {UseTheRestApi}                                              from "../abilities/UseTheRestApi";
+import {SppRestRequest}                                             from "../SppRestRequests";
+import {catchAndSaveOnError, MethodActions, saveResponse, SaveToFn} from "./0_helper";
 
 export class Delete implements Interaction, MethodActions {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -18,7 +18,7 @@ export class Delete implements Interaction, MethodActions {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public andSaveResponse(saveTo: (result: any[]) => void): Delete {
+    public andSaveResponse(saveTo: SaveToFn): Delete {
         this.saveTo = saveTo;
         return this;
     }
