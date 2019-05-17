@@ -25,8 +25,6 @@ export class Send implements Interaction, MethodActions {
         return new Send(request);
     }
 
-
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public andSaveResponse(saveTo: SaveToFn): Send {
         this.saveTo = saveTo;

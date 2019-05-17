@@ -44,16 +44,16 @@ describe(`Trying to Add two numbers by the mathjs API`, (): void => {
 
 
         restConfig = {
-            restClient: `request`,
-            restClientOptions: {
+            restClientName: `request`,
+            requestOptions: {
                 baseUrl: `http://api.mathjs.org/v4`,
                 resolveWithFullResponse: true,
             }
         };
 
         restConfig2 = {
-            restClient: `request`,
-            restClientOptions: {
+            restClientName: `request`,
+            requestOptions: {
                 baseUrl: `http://api.mathjs.org/v5`, // wrong base Url, should throw an error when used
                 resolveWithFullResponse: true,
 
@@ -62,13 +62,13 @@ describe(`Trying to Add two numbers by the mathjs API`, (): void => {
 
 
         if (yargs.argv.proxy) {
-            if(!restConfig.restClientOptions)
-                restConfig.restClientOptions = {};
-            (restConfig.restClientOptions).proxy = yargs.argv.proxy;
+            if(!restConfig.requestOptions)
+                restConfig.requestOptions = {};
+            (restConfig.requestOptions).proxy = yargs.argv.proxy;
         } else if(yargs.argv._[0].includes(`proxy=`)) {
-            if(!restConfig.restClientOptions)
-                restConfig.restClientOptions = {};
-            restConfig.restClientOptions.proxy = yargs.argv._[0].replace(`proxy=`,``);
+            if(!restConfig.requestOptions)
+                restConfig.requestOptions = {};
+            restConfig.requestOptions.proxy = yargs.argv._[0].replace(`proxy=`,``);
         }
 
         // extractor = (request: any) => {
@@ -123,7 +123,7 @@ describe(`Trying to Add two numbers by the mathjs API`, (): void => {
         it(`it should succeed when using the POST request` +
             `- (test case id: d91b70c0-941d-4a67-a64c-a7f666694099)`, async (): Promise<void> => {
             const conf: RestClientConfig = {
-                restClientOptions: {
+                requestOptions: {
                     body: JSON.stringify({
                         expr: [
                             `${a} + ${b}`
@@ -147,7 +147,7 @@ describe(`Trying to Add two numbers by the mathjs API`, (): void => {
         it(`it should succeed when using the POST Method and setting it on the Activity` +
             `- (test case id: 81089f86-cf3d-4112-bb9f-bfcb5d51cc0b)`, async (): Promise<void> => {
             const conf: RestClientConfig = {
-                restClientOptions: {
+                requestOptions: {
                     body: JSON.stringify({
                         expr: [
                             `${a} + ${b}`
@@ -288,7 +288,7 @@ describe(`Trying to Add two numbers by the mathjs API`, (): void => {
         it(`when using the GET request` +
             `- (test case id: 7127c2c9-7167-49c8-850f-287a05d49880)`, async (): Promise<void> => {
             const conf: RestClientConfig =  {
-                restClientOptions: {
+                requestOptions: {
                     resolveWithFullResponse: false,
                     json: true
                 }
@@ -307,7 +307,7 @@ describe(`Trying to Add two numbers by the mathjs API`, (): void => {
         it(`when using the POST request` +
             `- (test case id: ab7b185d-08f9-4277-969b-dc21dfd8091a)`, async (): Promise<void> => {
             const conf: RestClientConfig = {
-                restClientOptions: {
+                requestOptions: {
                     resolveWithFullResponse: false,
                     json: true,
                     body: {
@@ -334,7 +334,7 @@ describe(`Trying to Add two numbers by the mathjs API`, (): void => {
             `- (test case id: 7f4b74f0-048f-43b0-81a6-614299229d6f)`, (): Promise<void> => {
 
             const req = request(On.resource(`/?expr=${a}%2B${b}`))
-                .using({restClientOptions:{resolveWithFullResponse: true}});
+                .using({requestOptions:{resolveWithFullResponse: true}});
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const containing = curry((cResult: string, stCode: number, respone: any, ): void => {
@@ -352,7 +352,7 @@ describe(`Trying to Add two numbers by the mathjs API`, (): void => {
 
     describe(`and passing new options when sending the request`, () => {
         const conf: RestClientConfig = {
-            restClientOptions: {
+            requestOptions: {
                 resolveWithFullResponse: false,
                 json: true,
                 body: {
@@ -365,7 +365,7 @@ describe(`Trying to Add two numbers by the mathjs API`, (): void => {
         };
 
         const conf2: RestClientConfig = {
-            restClientOptions: {
+            requestOptions: {
                 resolveWithFullResponse: false,
                 json: true,
                 body: {

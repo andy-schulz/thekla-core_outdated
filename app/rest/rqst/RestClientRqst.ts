@@ -8,16 +8,16 @@ import {RestClientConfig} from "../../config/RestClientConfig";
 
 export class RestClientRqst implements RestClient {
 
-    public static from(restApiConfig: RestClientConfig): RestClient {
-        return new RestClientRqst(restApiConfig);
+    public static from(clientConfig: RestClientConfig): RestClient {
+        return new RestClientRqst(clientConfig);
     }
 
-    public request(resource: On, restOptions: RestClientConfig = {}): RestRequest {
-        const opts: RestClientConfig = merge(this.restApiConfig, restOptions);
-        return new RestRequestRqst(resource.resource, opts)
+    public request(resource: On, clientConfig: RestClientConfig = {}): RestRequest {
+        const conf: RestClientConfig = merge(this.clientConfig, clientConfig);
+        return new RestRequestRqst(resource.resource, conf)
     }
 
-    private constructor(private restApiConfig: RestClientConfig) {
+    private constructor(private clientConfig: RestClientConfig) {
 
     }
 }

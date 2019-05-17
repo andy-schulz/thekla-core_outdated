@@ -6,12 +6,12 @@ import {On}               from "../../rest/lib/Ressource";
 
 
 export interface RequestHelper extends Function {
-    (restApi: RestClient, restOptions: RestClientConfig): RestRequest;
+    (restClient: RestClient, clientConfig: RestClientConfig): RestRequest;
     description: string;
 }
 
 export class SppRestRequest{
-    private restOptions: RestClientConfig = {};
+    private clientConfig: RestClientConfig = {};
 
     public constructor(
         public resource: On,
@@ -19,15 +19,15 @@ export class SppRestRequest{
 
     }
 
-    public using(restOptions: RestClientConfig): SppRestRequest {
-        this.restOptions = restOptions;
+    public using(clientConfig: RestClientConfig): SppRestRequest {
+        this.clientConfig = clientConfig;
 
-        this.sender.description = `${this.sender.description} using options: ${JSON.stringify(restOptions)}`;
+        this.sender.description = `${this.sender.description} using client config: ${JSON.stringify(clientConfig)}`;
         return this
     }
 
-    public send(restApi: RestClient): RestRequest {
-        return this.sender(restApi, this.restOptions);
+    public send(restClient: RestClient): RestRequest {
+        return this.sender(restClient, this.clientConfig);
     }
 
     public toString(): string {
@@ -44,8 +44,8 @@ export class SppRestRequestResult {
  * @param resource - resource the request is going to
  */
 export function request(resource: On): SppRestRequest {
-    const send: RequestHelper = (restApi: RestClient, restOptions: RestClientConfig = {}): RestRequest => {
-        return restApi.request(resource, restOptions);
+    const send: RequestHelper = (restClient: RestClient, clientConfig: RestClientConfig = {}): RestRequest => {
+        return restClient.request(resource, clientConfig);
     };
 
     send.description = `resource: ${resource}`;

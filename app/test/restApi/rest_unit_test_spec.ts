@@ -4,7 +4,7 @@ import {RestRequestRqst}  from "../../rest/rqst/RestRequestRqst";
 
 class UT extends RestRequestRqst {
     public static testMerge(orig: RestClientConfig, merger: RestClientConfig) {
-        return (new UT(`resource`, {})).mergeOpts(orig, merger);
+        return (new UT(`resource`, {})).mergeClientConfig(orig, merger);
     }
 }
 
@@ -16,7 +16,7 @@ describe(`Using the RestAPI`, () => {
             `- (test case id: 82878ec9-736b-4db9-912a-139c3ea16949)`, () => {
 
             const restOptsOrig: RestClientConfig = {
-                restClientOptions: {
+                requestOptions: {
                     body: {
                         one: `one`,
                         array: [`one`]
@@ -25,7 +25,7 @@ describe(`Using the RestAPI`, () => {
             };
 
             const restOptsMerger: RestClientConfig = {
-                restClientOptions: {
+                requestOptions: {
                     body: {
                         two: `two`,
                         array: [`two`]
@@ -34,7 +34,7 @@ describe(`Using the RestAPI`, () => {
             };
 
             const result: RestClientConfig = {
-                restClientOptions: {
+                requestOptions: {
                     body: {
                         one: `one`,
                         two: `two`,

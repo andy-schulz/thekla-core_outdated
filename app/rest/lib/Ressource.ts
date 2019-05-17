@@ -1,10 +1,4 @@
 export class On{
-    public function: string | Function = ``;
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public args: any[];
-    public searchText: string = ``;
-
     private constructor(
         public resource: string) {
     }

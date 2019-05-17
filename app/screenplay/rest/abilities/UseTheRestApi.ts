@@ -12,8 +12,8 @@ import {SppRestRequest}   from "../SppRestRequests";
  */
 export class UseTheRestApi implements Ability {
 
-    public static with(restApi: RestClient): UseTheRestApi {
-        return new UseTheRestApi(restApi);
+    public static with(restClient: RestClient): UseTheRestApi {
+        return new UseTheRestApi(restClient);
     }
 
 
@@ -22,10 +22,10 @@ export class UseTheRestApi implements Ability {
     }
 
     public send(spe: SppRestRequest): RestRequest {
-        return spe.send(this.restApi)
+        return spe.send(this.restClient)
     }
 
-    public constructor(private restApi: RestClient) {
+    public constructor(private restClient: RestClient) {
 
     }
 }
