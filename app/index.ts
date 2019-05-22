@@ -34,17 +34,17 @@ export {Post}                                                        from "./scr
 export {Delete}                                                      from "./screenplay/rest/actions/Delete";
 export {Send}                                                        from "./screenplay/rest/actions/Send";
 
-export {On}                                                          from "./rest/lib/Ressource"
-export {Method}                                                      from "./rest/lib/Method"
+export {On}                                                                   from "./rest/lib/Ressource"
+export {Method}                                                               from "./rest/lib/Method"
 export {ExecutingRestClient}                                                  from "./rest/lib/ExecutingRestClient"
 
 /**
  * screenplay Elements
  */
-export {element, all, frame}                                         from "./screenplay/web/SppWebElements";
-export {SppWebElementFinder, SppWebElementListFinder}                from "./screenplay/web/SppWebElements";
-export {Actor}                                                       from "./screenplay/Actor";
-export {request, SppRestRequest}                                     from "./screenplay/rest/SppRestRequests";
+export {element, all, frame}                                                  from "./screenplay/web/SppWebElements";
+export {SppWebElementFinder, SppWebElementListFinder}                         from "./screenplay/web/SppWebElements";
+export {Actor}                                                                from "./screenplay/Actor";
+export {request, SppRestRequest}                                              from "./screenplay/rest/SppRestRequests";
 
 
 // Abilities
@@ -59,6 +59,7 @@ export {PerformsTask} from "./screenplay/Actor";
 // Activities
 export {Activity, Task, Interaction}     from "./screenplay/lib/actions/Activities";
 export {Click}                           from "./screenplay/web/actions/Click";
+export {Hover}                           from "./screenplay/web/actions/Hover";
 export {Enter}                           from "./screenplay/web/actions/Enter";
 export {Navigate}                        from "./screenplay/web/actions/Navigate";
 export {Wait}                            from "./screenplay/web/actions/Wait";

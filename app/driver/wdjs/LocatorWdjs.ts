@@ -22,7 +22,7 @@ export class LocatorWdjs {
                 // return ByWd.js(clientSideScripts.findByCssContainingText, locator.selector, locator.searchText, parentElement);
                 return ByWd.js(clientSideScripts.findByCssContainingText, locator.selector, locator.searchText);
             default:
-                throw Error(`Selector ${locator.selector} not implemented for framework WebDriverJS`);
+                throw Error(`Selector ${locator.selectorType} not implemented for framework WebDriverJS`);
         }
 
     }
@@ -33,6 +33,12 @@ export class LocatorWdjs {
             case `byCss`:
                 return new Promise((resolve, reject): void => {
                     parentElement.findElements(ByWd.css(locator.selector))
+                        .then(resolve, reject)
+                        .catch(reject)
+                });
+            case `byXpath`:
+                return new Promise((resolve, reject): void => {
+                    parentElement.findElements(ByWd.xpath(locator.selector))
                         .then(resolve, reject)
                         .catch(reject)
                 });
@@ -54,7 +60,7 @@ export class LocatorWdjs {
                     });
 
             default:
-                throw Error(`Selector ${locator.selector} not implemented for framework WebDriverJS`);
+                throw Error(`Selector ${locator.selectorType} not implemented for framework WebDriverJS`);
         }
     }
 }

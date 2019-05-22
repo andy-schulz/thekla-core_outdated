@@ -25,6 +25,7 @@ export interface WebElementFinder
     FinderDescription<WebElementFinder>,
     FinderWaiter<WebElementFinder> {
     click(): Promise<void>;
+    hover(): Promise<void>;
     sendKeys(keySequence: string): Promise<void>;
     getText(): Promise<string>;
     getAttribute(attribute: string): Promise<string>;

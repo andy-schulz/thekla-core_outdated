@@ -10,8 +10,7 @@ import {getLogger, Logger}                      from "log4js";
 import {Annotator}                              from "webdriverjs_annotator";
 
 
-
-export class WebElementWdjs implements WebElementFinder{
+export class WebElementWdjs implements WebElementFinder {
     private _description: string = ``;
     private logger: Logger = getLogger(`WebElementWdjs`);
 
@@ -25,7 +24,7 @@ export class WebElementWdjs implements WebElementFinder{
         return this.elementList.all(locator);
     };
 
-    public element(locator: By): WebElementFinder{
+    public element(locator: By): WebElementFinder {
         return this.elementList.element(locator);
     };
 
@@ -33,7 +32,7 @@ export class WebElementWdjs implements WebElementFinder{
         return new Promise(async (fulfill, reject): Promise<void> => {
             const displayMessage = this.browser.displayTestMessages;
 
-            if(displayMessage) {
+            if (displayMessage) {
                 const message = `Trying to find ${this.toString()}`;
                 await Annotator.displayTestMessage(await this.browser.getDriver(), message);
             }
@@ -44,16 +43,16 @@ export class WebElementWdjs implements WebElementFinder{
                 });
 
             const annotate = async (annotateElement: boolean, element: WebElement, driver: WebDriver) => {
-                if(annotateElement)
+                if (annotateElement)
                     await Annotator.highlight(driver, element);
             };
 
             // if getElements is rejected just leave the function
-            if(!elements) {
+            if (!elements) {
                 return;
             }
 
-            if(elements.length === 0) {
+            if (elements.length === 0) {
                 // const message = `Element not found: ${this.toString()}`;
 
                 // throw DidNotFind.theElement(this);
@@ -65,7 +64,7 @@ export class WebElementWdjs implements WebElementFinder{
                 this.logger.warn(message);
             }
 
-            if(displayMessage)
+            if (displayMessage)
                 await Annotator.hideTestMessage(await this.browser.getDriver());
 
             await annotate(this.browser.annotateElement === true, elements[0], await this.browser.getDriver());
@@ -75,6 +74,24 @@ export class WebElementWdjs implements WebElementFinder{
 
     public click(): Promise<void> {
         return this.getWebElement().then((element): promise.Promise<void> => element.click())
+    }
+
+    public hover(): Promise<void> {
+        return this.browser.getDriver()
+            .then(async (driver: WebDriver): Promise<void> => {
+                return this.getWebElement()
+                    .then((element: WebElement) => {
+                        const toLocation = {
+                            x: 0,
+                            y: 0,
+                            duration: 100,
+                            origin: element
+                        };
+
+                        // @ts-ignore - webdriver 4.0.0 alpha is used, but there is no typing as of now (2019-05-21)
+                        return driver.actions({bridge: true}).move(toLocation).perform();
+                    })
+            });
     }
 
     public sendKeys(keySequence: string): Promise<void> {
@@ -100,7 +117,7 @@ export class WebElementWdjs implements WebElementFinder{
     public isDisplayed(): Promise<boolean> {
         return this.getWebElement()
             .then((element): promise.Promise<boolean> => element.isDisplayed())
-            .then((state): boolean => state) // returns a Promise an not the webdriver promise.Promise
+            .then((state): boolean => state) // returns a Promise and not the webdriver promise.Promise
             .catch((): boolean => false)
     }
 

@@ -21,9 +21,9 @@ describe(`When using the Browser object`, (): void => {
     };
 
     const capabilities: DesiredCapabilities = {
-        browserName: `chrome`,
+        browserName: `firefox`,
         proxy: {
-            type: `direct`
+            type: `system`
         }
     };
     // firefoxOptions: {
@@ -122,6 +122,33 @@ describe(`When using the Browser object`, (): void => {
 
             await optionListDelayed.click();
 
+        });
+    });
+
+    describe(`and try to hover an element`, () => {
+        let browser: Browser;
+        let userName: WebElementFinder,
+            hoverElement: WebElementFinder,
+            button: WebElementFinder;
+
+        beforeAll((): Promise<void> => {
+            browser = BrowserWdjs.create(conf, capabilities);
+            hoverElement = browser.element(By.css(`[data-test-id='usericon']`));
+            userName = browser.element(By.css(`[data-test-id='hoverusername']`));
+            button = browser.element(By.css(`[data-test-id='button']`));
+            return browser.get(testurl);
+        });
+
+        it(`the optionList should be found and opened 
+        - (test case id: 879ded3b-ce4b-4475-aacd-310c57774f59)`, async (): Promise<void> => {
+
+            expect(await userName.isVisible()).toBe(false);
+            await hoverElement.hover();
+            expect(await userName.isVisible()).toBe(true);
+            await button.hover();
+            expect(await userName.isVisible()).toBe(false);
+
+            await Utils.wait(5000);
         });
     });
 
