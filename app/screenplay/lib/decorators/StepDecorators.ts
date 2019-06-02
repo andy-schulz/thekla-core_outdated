@@ -4,23 +4,23 @@ import {getLogger, Logger}      from "@log4js-node/log4js-api";
 import {Activity} from "../../..";
 import {stringReplace}          from "./decoratorStrings";
 
-export function stepDetails<U>(text: string): (
-    target: Activity,
+export function stepDetails<U, PT, RT>(text: string): (
+    target: Activity<PT,RT>,
     propertyName: string,
-    propertyDesciptor: TypedPropertyDescriptor<((actor: U) => Promise<void>)>) => PropertyDescriptor {
+    propertyDesciptor: TypedPropertyDescriptor<((actor: U) => Promise<RT>)>) => PropertyDescriptor {
 
     return function logTask(
-        target: Activity,
+        target: Activity<PT,RT>,
         propertyName: string,
-        propertyDesciptor: TypedPropertyDescriptor<((actor: U) => Promise<void>)>): PropertyDescriptor {
+        propertyDesciptor: TypedPropertyDescriptor<((actor: U) => Promise<RT>)>): PropertyDescriptor {
         const logger: Logger = getLogger(target.constructor.name);
 
-        const method = propertyDesciptor.value as () => Promise<void>;
+        const method = propertyDesciptor.value as () => Promise<RT>;
 
         target.toString = stringReplace(text);
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        propertyDesciptor.value = function (...args: any): Promise<void> {
+        propertyDesciptor.value = function (...args: any): Promise<RT> {
             // @ts-ignore
             if(typeof logger.stepdetails == `function`) {
                 // @ts-ignore
@@ -36,13 +36,13 @@ export function stepDetails<U>(text: string): (
     }
 }
 
-export function step<U>(text: string): (
-    target: Activity,
+export function step<U,PT,RT>(text: string): (
+    target: Activity<PT,RT>,
     propertyName: string,
     propertyDesciptor: TypedPropertyDescriptor<((actor: U) => Promise<void>)>) => PropertyDescriptor {
 
     return function logTask(
-        target: Activity,
+        target: Activity<PT,RT>,
         propertyName: string,
         propertyDesciptor: TypedPropertyDescriptor<((actor: U) => Promise<void>)>): PropertyDescriptor {
         const logger = getLogger(target.constructor.name);

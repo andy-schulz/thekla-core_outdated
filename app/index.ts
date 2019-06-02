@@ -54,7 +54,9 @@ export {Authenticate, AuthenticationInfo}                       from "./screenpl
 export {UseTheRestApi}                                          from "./screenplay/rest/abilities/UseTheRestApi";
 
 // Tasks
-export {PerformsTask} from "./screenplay/Actor";
+export {PerformsTask}                                 from "./screenplay/Actor";
+export {ReturnTaskValue}                              from "./screenplay/lib/actions/ReturnTaskValue";
+
 
 // Activities
 export {Activity, Task, Interaction}     from "./screenplay/lib/actions/Activities";
@@ -63,20 +65,28 @@ export {Hover}                           from "./screenplay/web/actions/Hover";
 export {Enter}                           from "./screenplay/web/actions/Enter";
 export {Navigate}                        from "./screenplay/web/actions/Navigate";
 export {Wait}                            from "./screenplay/web/actions/Wait";
-export {Sleep}                           from "./screenplay/web/actions/Sleep";
+export {Sleep}                           from "./screenplay/lib/actions/Sleep";
 
 
 // Oracle
 export {See}     from "./screenplay/lib/matcher/See";
 export {Extract} from "./screenplay/lib/matcher/Extract";
 
-// Questions
+/**
+ * Questions
+ */
+// the interface
+export {Question}                             from "./screenplay/lib/questions/Question";
+// Basic Questions
+export {ReturnedResult}                       from "./screenplay/lib/questions/ReturnedResult";
+// Web Questions
 export {Text}                                 from "./screenplay/web/questions/Text";
 export {Value}                                from "./screenplay/web/questions/Value";
 export {Attribute}                            from "./screenplay/web/questions/Attribute";
 export {Count}                                from "./screenplay/web/questions/Count";
 export {TheSites}                             from "./screenplay/web/questions/TheSites";
 export {Status}                               from "./screenplay/web/questions/Status";
+// Rest Questions
 export {Response}                             from "./screenplay/rest/questions/Response";
 
 // Custom Errors

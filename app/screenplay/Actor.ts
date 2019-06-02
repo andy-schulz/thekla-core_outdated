@@ -16,15 +16,28 @@
 import {Ability, AbilityClass} from "./lib/abilities/Ability";
 import {Activity}              from "./lib/actions/Activities";
 import {DoesNotHave}           from "./errors/DoesNotHave";
-import {Question}              from "./lib/matcher/Question";
+import {Question}              from "./lib/questions/Question";
 
 
 export interface AnswersQuestions {
-    toAnswer<T>(question: Question<T>): Promise<T>;
+    toAnswer<PT, RT>(question: Question<PT,RT>, activityResult: PT): Promise<RT>;
 }
 
+// interface TaskPerfomer {
+//     <P,R1>(
+//         a1: Activity<P,R1>): Promise<R1>;
+//     <P,R1,R2>(
+//         a1: Activity<P,R1>,
+//         a2: Activity<R1,R2>): Promise<R2>;
+//     // <P,R1,R2,R3>(
+//     //     a1: Activity<P,R1>,
+//     //     a2: Activity<R1,R2>,
+//     //     a3: Activity<R2,R3>): Promise<R2>;
+// }
+
 export interface PerformsTask {
-    attemptsTo(...activities: Activity[]): Promise<void>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    attemptsTo<PT,RT>(...activities: Activity<any, any>[]): Promise<RT>;
 }
 
 export interface UsesAbilities {
@@ -59,15 +72,38 @@ export class Actor implements AnswersQuestions, PerformsTask, UsesAbilities{
      * Executes the given Tasks
      * @param activities a list of tasks to execute
      */
-    public attemptsTo(...activities: Activity[]): Promise<void>{
-        
-        let reducefn = (chain: Promise<void>, activity: Activity): Promise<void> => {
-            return chain.then((): Promise<void> => {
-                return activity.performAs(this);
+
+    // public attemptsTo<PT,RT>(...activities: Activity<PT, RT>[]): Promise<RT>{
+    // public attemptsTo<P,R1, R2>(
+    //     a1: Activity<P, R1>
+    // ): Promise<R2>;
+    // public attemptsTo<P,R1,R2>(
+    //     a1: Activity<P, R1>,
+    //     a2: Activity<R1, R2>
+    // ): Promise<R2>;
+    // public attemptsTo<P,R1,R2, R3>(
+    //     a1: Activity<P, R1>,
+    //     a2: Activity<R1, R2>,
+    //     a3: Activity<R2, R3>
+    // ): Promise<R3>;
+    // public attemptsTo<P,R1,R2>(
+    //     result: P,
+    //     a1: Activity<P, R1>,
+    //     a2: Activity<R1, R2>,
+    // ): Promise<R2>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    public attemptsTo<PT,RT>(...activities: Activity<any, any>[]): Promise<RT>
+    {
+
+        let reducefn = (chain: Promise<PT>, activity: Activity<PT, RT>): Promise<RT> => {
+            return chain.then((result: PT): Promise<RT> => {
+                return activity.performAs(this, result);
             })
         };
-        
-        return activities.reduce(reducefn, Promise.resolve());
+
+        // @ts-ignore
+        return activities.reduce(reducefn, Promise.resolve())
+
     }
 
     /**
@@ -80,7 +116,7 @@ export class Actor implements AnswersQuestions, PerformsTask, UsesAbilities{
 
     /**
      *
-     * @param Ability the type of Ability the actor should be able to use
+     * @param ability provides the interactions the actor should be able to use
      */
     public withAbilityTo(ability: AbilityClass): Ability {
 
@@ -90,8 +126,8 @@ export class Actor implements AnswersQuestions, PerformsTask, UsesAbilities{
         return this.abilityMap.get(ability.name) as Ability;
     }
 
-    public toAnswer<T>(question: Question<T>): Promise<T> {
-        return question.answeredBy(this);
+    public toAnswer<PT,RT>(question: Question<PT,RT>, activityResult: PT): Promise<RT> {
+        return question.answeredBy(this, activityResult);
     }
 
 }

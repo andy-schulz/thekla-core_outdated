@@ -1,8 +1,8 @@
 import {UsesAbilities}       from "../../Actor";
-import {Question}            from "../../lib/matcher/Question";
+import {Question}            from "../../lib/questions/Question";
 import {BrowseTheWeb}        from "../abilities/BrowseTheWeb";
 import {SppWebElementFinder} from "../SppWebElements";
-class VisibleStatus implements Question<boolean>{
+class VisibleStatus implements Question<void, boolean>{
 
     public answeredBy(actor: UsesAbilities): Promise<boolean> {
         return BrowseTheWeb.as(actor).findElement(this.element).isVisible();
@@ -14,7 +14,7 @@ class VisibleStatus implements Question<boolean>{
 }
 
 
-class EnableStatus implements Question<boolean>{
+class EnableStatus implements Question<void, boolean>{
 
     public answeredBy(actor: UsesAbilities): Promise<boolean> {
         return BrowseTheWeb.as(actor).findElement(this.element).isEnabled();

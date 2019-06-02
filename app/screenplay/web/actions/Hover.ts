@@ -7,12 +7,12 @@ import {stepDetails}                                    from "../../lib/decorato
 import {SppWebElementListFinder}                        from "../SppWebElements";
 import {UsesAbilities}                                  from "../../Actor";
 
-export class Hover implements Interaction {
+export class Hover implements Interaction<void, void> {
 
     /**
      * @ignore
      */
-    @stepDetails<UsesAbilities>(`hover over element: '<<element>>'`)
+    @stepDetails<UsesAbilities, void, void>(`hover over element: '<<element>>'`)
     public performAs(actor: UsesAbilities): Promise<void> {
         return BrowseTheWeb.as(actor).findElement(this.element).hover();
     }

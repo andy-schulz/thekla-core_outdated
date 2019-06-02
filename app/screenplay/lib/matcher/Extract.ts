@@ -1,27 +1,27 @@
 import {AnswersQuestions} from "../../Actor";
-import {Question}         from "./Question";
+import {Question}         from "../questions/Question";
 import {Oracle}           from "../actions/Activities";
 
-export class Extract<U> implements Oracle {
+export class Extract<PT, EPT> implements Oracle<PT,void> {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private matcher: (value: U) => any;
+    private matcher: (value: EPT) => any;
 
-    public static the <T>(question: Question<T>): Extract<T> {
+    public static the <PT, QRT>(question: Question<PT, QRT>): Extract<PT,QRT> {
         return new Extract(question)
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public by(matcher: (text: U) => any): Extract<U> {
+    public by(matcher: (text: EPT) => void): Extract<PT,EPT> {
         this.matcher = matcher;
         return this;
     }
 
     private constructor(
-        private question: Question<U>
+        private question: Question<PT,EPT>
     ) {}
 
-    public async performAs(actor: AnswersQuestions): Promise<void> {
-        return (this.matcher(await actor.toAnswer(this.question)))
+    public async performAs(actor: AnswersQuestions, activityResult: PT): Promise<void> {
+        return (this.matcher(await actor.toAnswer(this.question, activityResult)))
     }
 }

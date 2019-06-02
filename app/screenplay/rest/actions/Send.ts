@@ -1,20 +1,21 @@
-import {RestClientConfig}                                           from "../../../config/RestClientConfig";
-import {RequestMethod}                                              from "../../../rest/lib/Method";
-import {UsesAbilities}                                              from "../../Actor";
-import {Interaction}                                                from "../../lib/actions/Activities";
-import {stepDetails}                                                from "../../lib/decorators/StepDecorators";
-import {UseTheRestApi}                                              from "../abilities/UseTheRestApi";
+import {RestClientConfig}  from "../../../config/RestClientConfig";
+import {RestRequestResult} from "../../../rest/interface/RestRequestResult";
+import {RequestMethod}     from "../../../rest/lib/Method";
+import {UsesAbilities}     from "../../Actor";
+import {Interaction}       from "../../lib/actions/Activities";
+import {stepDetails}       from "../../lib/decorators/StepDecorators";
+import {UseTheRestApi}     from "../abilities/UseTheRestApi";
 import {SppRestRequest}                                             from "../SppRestRequests";
 import {catchAndSaveOnError, MethodActions, saveResponse, SaveToFn} from "./0_helper";
 
-class SendHelper implements Interaction, MethodActions {
+class SendHelper implements Interaction<void, RestRequestResult>, MethodActions {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private saveTo: (result: any) => void;
     private catchError =  false;
     private config: RestClientConfig | undefined;
 
-    @stepDetails<UsesAbilities>(`send a get request for: '<<request>>'`)
-    public performAs(actor: UsesAbilities): Promise<void> {
+    @stepDetails<UsesAbilities, void, RestRequestResult>(`send a get request for: '<<request>>'`)
+    public performAs(actor: UsesAbilities): Promise<RestRequestResult> {
         return this.method.send(UseTheRestApi.as(actor).send(this.request), this.config)
             .then(saveResponse(this.saveTo))
             .catch(catchAndSaveOnError(this.saveTo, this.catchError))

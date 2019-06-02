@@ -7,12 +7,12 @@ import {stepDetails}                                    from "../../lib/decorato
 import {SppWebElementListFinder}                        from "../SppWebElements";
 import {UsesAbilities}                                  from "../../Actor";
 
-export class Click implements Interaction {
+export class Click implements Interaction<void, void> {
 
     /**
      * @ignore
      */
-    @stepDetails<UsesAbilities>(`click on element: '<<element>>'`)
+    @stepDetails<UsesAbilities, void, void>(`click on element: '<<element>>'`)
     public performAs(actor: UsesAbilities): Promise<void> {
         return BrowseTheWeb.as(actor).findElement(this.element).click();
     }

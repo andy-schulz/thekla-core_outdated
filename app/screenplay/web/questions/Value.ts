@@ -1,9 +1,9 @@
-import {Question}            from "../../lib/matcher/Question";
+import {Question}            from "../../lib/questions/Question";
 import {UsesAbilities}       from "../../Actor";
 import {SppWebElementFinder} from "../SppWebElements";
 import {BrowseTheWeb}        from "../../../index";
 
-export class Value implements Question<string> {
+export class Value implements Question<void, string> {
 
     public static of(element: SppWebElementFinder): Value  {
         return new Value(element)

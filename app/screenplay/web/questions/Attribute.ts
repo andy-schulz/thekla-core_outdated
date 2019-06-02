@@ -1,9 +1,9 @@
-import {Question}            from "../../lib/matcher/Question";
+import {Question}            from "../../lib/questions/Question";
 import {UsesAbilities}       from "../../Actor";
 import {SppWebElementFinder} from "../SppWebElements";
 import {BrowseTheWeb}        from "../../../index";
 
-export class Attribute implements Question<string> {
+export class Attribute implements Question<void, string> {
     private attributeName: string = ``;
 
     public static of(element: SppWebElementFinder): Attribute  {

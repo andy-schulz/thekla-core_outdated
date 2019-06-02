@@ -9,14 +9,14 @@ import {UsesAbilities}  from "../../Actor";
 import {getLogger}             from "@log4js-node/log4js-api"
 import {UntilElementCondition} from "../../../driver/lib/ElementConditions";
 
-export class Wait implements Interaction {
+export class Wait implements Interaction<void, void> {
     private logger = getLogger(`Wait`);
     private condition: UntilElementCondition;
 
     /**
      * @ignore
      */
-    @stepDetails<UsesAbilities>(`wait for '<<awaitingElement>>' and check '<<condition>>'.`)
+    @stepDetails<UsesAbilities, void, void>(`wait for '<<awaitingElement>>' and check '<<condition>>'.`)
     public performAs(actor: UsesAbilities): Promise<void> {
 
         return new Promise((resolve, reject): void => {

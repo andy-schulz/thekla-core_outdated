@@ -5,7 +5,7 @@ import {UsesAbilities}             from "../../Actor";
 import {getLogger, Logger}         from "@log4js-node/log4js-api";
 
 
-export class Enter implements Interaction {
+export class Enter implements Interaction<void, void> {
     private inputField: SppWebElementFinder;
     private clearBeforeFill: boolean = false;
     private logger: Logger = getLogger(`Enter`);
@@ -26,7 +26,7 @@ export class Enter implements Interaction {
         return this;
     }
 
-    @stepDetails<UsesAbilities>(`enter the value '<<keySequence>>' into field: <<inputField>>`)
+    @stepDetails<UsesAbilities, void, void>(`enter the value '<<keySequence>>' into field: <<inputField>>`)
     public performAs(actor: UsesAbilities): Promise<void> {
         // if undefined do nothing,
         // it makes it possible to work with data structures on forms

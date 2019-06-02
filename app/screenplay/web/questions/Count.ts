@@ -1,9 +1,9 @@
-import {Question}                from "../../lib/matcher/Question";
+import {Question}                from "../../lib/questions/Question";
 import {UsesAbilities}           from "../../Actor";
 import {SppWebElementListFinder} from "../SppWebElements";
 import {BrowseTheWeb}            from "../../../index";
 
-export class Count implements Question<number> {
+export class Count implements Question<void, number> {
 
     public static of(elements: SppWebElementListFinder): Count  {
         return new Count(elements)

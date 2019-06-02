@@ -1,10 +1,12 @@
 import {curry} from "lodash";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type SaveToFn = (result: any) => void
 
-export const saveResponse = curry(function(saveTo: SaveToFn, result: any): void { // eslint-disable-line @typescript-eslint/no-explicit-any
+export const saveResponse = curry(function(saveTo: SaveToFn, result: any): any { // eslint-disable-line @typescript-eslint/no-explicit-any
     if (saveTo)
         saveTo(result);
+    return result;
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
