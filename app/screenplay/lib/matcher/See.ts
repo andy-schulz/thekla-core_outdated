@@ -17,7 +17,7 @@ export class See<PT, MPT> implements Oracle<PT, void> {
 
         const loop = async (counter: number): Promise<boolean> => {
             const nextLoop = (): Promise<boolean> => {
-                return new Promise((resolve): number => setTimeout(resolve, this.ms))
+                return new Promise((resolve): number => window.setTimeout(resolve, this.ms))
                     .then((): Promise<boolean> => {
                         return loop(counter -1);
                     });

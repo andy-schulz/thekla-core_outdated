@@ -39,7 +39,7 @@ export class RestRequestRqst implements RestRequest {
 
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private send(fn: any, clientConfig: RestClientConfig = {}) {
+    private send(fn: any, clientConfig: RestClientConfig = {}): Promise<RestRequestResult> {
         const conf: RestClientConfig = this.mergeClientConfig(this.clientConfig, clientConfig);
         return new Promise((fulfill, reject): void => {
             fn(this.resource, conf.requestOptions)
