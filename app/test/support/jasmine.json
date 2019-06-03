@@ -1,8 +1,10 @@
 {
-  "spec_dir": "dist/test"
-  ,"spec_files": [
+  "spec_dir": "dist/test",
+  "spec_files": [
     "screenplay/**/*[sS]pec.js",
-    "wdwrapper/**/*[sS]pec.js"
+    "wd_wrapper/**/*[sS]pec.js",
+    "lib_test/**/*[sS]pec.js",
+    "rest_api/**/*[sS]pec.js"
   ]
   ,"oneFailurePerSpec": false
   ,"random": true

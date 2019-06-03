@@ -87,7 +87,7 @@ describe(`Using the object contains matcher`, (): void => {
                 Expected.toContain(expected)(actual);
                 expect(false).toBeTruthy(`should throw an error, but it doesnt`)
             } catch (e) {
-                expect(e.toString()).toContain(`Error: Differences in Case Response found: [
+                expect(e.toString()).toContain(`Error: Differences in objects found: [
 \t{
 \t\t"kind": "E",
 \t\t"path": [
@@ -113,7 +113,7 @@ describe(`Using the object contains matcher`, (): void => {
                 Expected.toContain(expected)(JSON.stringify(actual));
                 expect(false).toBeTruthy(`should throw an error, but it doesnt`)
             } catch (e) {
-                expect(e.toString()).toContain(`Error: Differences in Case Response found: [
+                expect(e.toString()).toContain(`Error: Differences in objects found: [
 \t{
 \t\t"kind": "E",
 \t\t"path": [
