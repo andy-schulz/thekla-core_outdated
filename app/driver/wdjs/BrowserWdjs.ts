@@ -327,7 +327,11 @@ export class BrowserWdjs implements Browser {
                 .then((driver): promise.Promise<WebElement[]> => {
                     return driver.switchTo().defaultContent()
                         .then((): promise.Promise<WebElement[]> => {
-                            return driver.findElements(loc)
+
+                            return driver.findElements(loc).then((elements: WebElement[]): WebElement[] => {
+                                this.logger.trace(`Found ${elements ? elements.length : 0} element(s) for locator '${locator}'`);
+                                return elements;
+                            })
                         });
                 })
             // return await this._driver.findElements(loc);
@@ -536,7 +540,7 @@ export class BrowserWdjs implements Browser {
                         fulfill(message);
                         return;
                     } else {
-                        setTimeout(check, 0);
+                        setTimeout(check, 300);
                     }
                 };
 
@@ -546,7 +550,7 @@ export class BrowserWdjs implements Browser {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     .catch((e: any) => worker(false, `${e.toString()} \n ${Error().stack}`))
             };
-            setTimeout(check, 0);
+            setTimeout(check, 300);
         })
     }
 

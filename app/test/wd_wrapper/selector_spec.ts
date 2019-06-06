@@ -7,13 +7,13 @@ const conf: SeleniumConfig = {
 };
 
 const capabilities: DesiredCapabilities = {
-    browserName: `chrome`,
+    browserName: `firefox`,
     proxy: {
-        type: `direct`
+        type: `system`
     }
 };
 
-describe(`Locating an waiter`, (): void => {
+describe(`Locating a waiter`, (): void => {
     let browser: Browser;
 
     beforeAll((): void => {
@@ -32,7 +32,7 @@ describe(`Locating an waiter`, (): void => {
             await fourthElement.click();
 
             expect(await dropDown.getAttribute(`value`)).toBe(`4`);
-        }, 10000);
+        }, 20000);
     });
 
     describe(`by xpath`, (): void => {
@@ -52,7 +52,67 @@ describe(`Locating an waiter`, (): void => {
             const button = browser.element(By.css(`.btn-danger`));
             await browser.get(`/`);
             expect(await button.getText()).toBe(`Danger!`)
-        },10000);
+        },20000);
+    });
+
+    describe(`by chained xpath`,  (): void => {
+        it(`should locate the email1 label 
+        - (test case id: 063d50fe-421b-4354-b63e-60ac495f8360)`, async (): Promise<void> => {
+            const container = browser.element(By.xpath(`//*[contains(@data-test-id,'LoginExampleRow1')]`));
+            const label = container.element(By.xpath(`//label`));
+
+            await browser.get(`/`);
+            expect(await label.getText()).toBe(`Email1`)
+        });
+
+        it(`should locate the email2 label 
+        - (test case id: 063d50fe-421b-4354-b63e-60ac495f8360)`, async (): Promise<void> => {
+            const container = browser.element(By.xpath(`//*[contains(@data-test-id,'LoginExampleRow2')]`));
+            const label = container.element(By.xpath(`.//label[contains(@for,'exampleEmail')]`));
+
+            await browser.get(`/`);
+            expect(await label.getText()).toBe(`Email2`)
+        },1000000);
+    });
+
+    describe(`by chained xpath and css`, () => {
+        it(`should locate the email1 label 
+        - (test case id: 063d50fe-421b-4354-b63e-60ac495f8360)`, async (): Promise<void> => {
+            const container = browser.element(By.xpath(`//*[contains(@data-test-id,'LoginExampleRow1')]`));
+            const label = container.element(By.css(`label[for='exampleEmail']`));
+
+            await browser.get(`/`);
+            expect(await label.getText()).toBe(`Email1`)
+        });
+
+        it(`should locate the email2 label 
+        - (test case id: 063d50fe-421b-4354-b63e-60ac495f8360)`, async (): Promise<void> => {
+            const container = browser.element(By.xpath(`//*[contains(@data-test-id,'LoginExampleRow2')]`));
+            const label = container.element(By.css(`label[for='exampleEmail']`));
+
+            await browser.get(`/`);
+            expect(await label.getText()).toBe(`Email2`)
+        });
+    });
+
+    describe(`by chained css and xpath`, () => {
+        it(`should locate the email1 label 
+        - (test case id: 063d50fe-421b-4354-b63e-60ac495f8360)`, async (): Promise<void> => {
+            const container = browser.element(By.css(`[data-test-id='LoginExampleRow1']`));
+            const label = container.element(By.xpath(`//label`));
+
+            await browser.get(`/`);
+            expect(await label.getText()).toBe(`Email1`)
+        });
+
+        it(`should locate the email2 label 
+        - (test case id: 063d50fe-421b-4354-b63e-60ac495f8360)`, async (): Promise<void> => {
+            const container = browser.element(By.css(`[data-test-id='LoginExampleRow2']`));
+            const label = container.element(By.xpath(`.//label`));
+
+            await browser.get(`/`);
+            expect(await label.getText()).toBe(`Email2`)
+        });
     });
 
     afterAll(async (): Promise<void[][]> => {

@@ -64,7 +64,10 @@ export class WebElementListWdjs implements WebElementListFinder {
                 const acc: WebElement[] = await accPromise;
                 const elemsList: WebElement[] = await LocatorWdjs.executeSelector(locator, elem, this.browser);
                 return [...acc, ...elemsList];
-            }, Promise.resolve([] as WebElement[]));
+            }, Promise.resolve([] as WebElement[])).then((elements: WebElement[]) => {
+                this.logger.trace(`Found ${elements ? elements.length : 0} element(s) for locator '${locator}'`);
+                return elements
+            });
         };
         return new WebElementListWdjs(getElements, locator, this.browser).called(this.description);
     }
@@ -80,13 +83,21 @@ export class WebElementListWdjs implements WebElementListFinder {
             this.logger.debug(`shallWait - Start getting elements from function chain: ${this._locator.toString()}`);
 
             let elements: WdElement[] = await this.getElements();
+            if (this.logger.isTraceEnabled()) {
+                this.logger.trace(`shallWait: ${elements.length} initial element(s) found for locator ${this._locator.toString()}`);
+            }
+
             const loop = async (): Promise<boolean> => {
+                elements = await this.getElements();
 
                 if (elements.length == 0) {
-                    elements = await this.getElements();
                     return Promise.resolve(false)
                 }
-                const mapper = (elem: WdElement): Promise<boolean> => {
+                const mapper = async (elem: WdElement): Promise<boolean> => {
+                    if (this.logger.isTraceEnabled()) {
+                        this.logger.trace(`outerHTML: ${await elem.getAttribute(`outerHTML`)}`);
+                        this.logger.trace(`innerHTML: ${await elem.getAttribute(`innerHTML`)}`);
+                    }
                     return ExecuteConditionWdjs.execute(condition, elem);
                 };
 
@@ -94,6 +105,7 @@ export class WebElementListWdjs implements WebElementListFinder {
 
 
                 return Promise.all(arr).then((arr: boolean[]): Promise<boolean> => {
+                    this.logger.trace(`shallWait result: ${arr}`);
                     return Promise.resolve(arr.some((b): boolean => b))
                 })
             };

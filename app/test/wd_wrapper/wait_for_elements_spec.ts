@@ -20,18 +20,18 @@ const capabilities: DesiredCapabilities = {
 
 
 describe(`Waiting for WD Elements`, (): void => {
+    let browser: Browser;
+    let appearButton5000ShallWait: WebElementFinder;
 
     afterAll((): Promise<void[]> => {
         return BrowserWdjs.cleanup();
     });
 
-    describe(`and try to implicitly wait for an Element`,(): void => {
-        let browser: Browser;
-        let appearButton5000ShallWait: WebElementFinder;
+    beforeAll((): void => {
+        browser = BrowserWdjs.create(conf, capabilities);
+    },20000);
 
-        beforeAll((): void => {
-            browser = BrowserWdjs.create(conf, capabilities);
-        },20000);
+    describe(`and try to implicitly wait for an Element`,(): void => {
 
         it(`the system should wait for a second 
         - (test case id: d106ba43-542c-44c7-959e-f64dcdc6943d)`, async (): Promise<void> => {
@@ -59,5 +59,22 @@ describe(`Waiting for WD Elements`, (): void => {
             await browser.get(`/redirect`);
             expect(await appearButton5000ShallWait.isVisible()).toEqual(true)
         }, 20000);
+    });
+
+    describe(`which are chained by xpath`, (): void => {
+        it(`should find the element after 5 Seconds 
+        - (test case id: 958da8f9-82eb-465c-ace8-bb4496f8f77b)`, async () => {
+            const appearRow = browser.element(By.xpath(`//*[@data-test-id='appear']`))
+                .shallWait(UntilElement.is.visible().forAsLongAs(11000));
+
+            const appearCol1 = appearRow.element(By.xpath(`.//*[@data-test-id='appearCol1']`));
+
+            const button = appearCol1.element(By.xpath(`.//button`))
+                .shallWait(UntilElement.is.visible().forAsLongAs(10000));
+
+            await browser.get(`/delayed`);
+            expect(await button.isVisible()).toEqual(true)
+
+        });
     });
 });

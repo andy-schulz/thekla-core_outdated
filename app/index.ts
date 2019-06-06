@@ -2,6 +2,8 @@
  * Configurations
  */
 
+import {SkipTaskExecution}                                         from "./screenplay/lib/tasks/SkipTaskExecution";
+
 export {SeleniumConfig}                                            from "./config/SeleniumConfig"
 export {DesiredCapabilities}                                       from "./config/DesiredCapabilities"
 export {RestClientConfig}                                          from "./config/RestClientConfig";
@@ -98,3 +100,6 @@ export {Expected} from "./screenplay/lib/matcher/FunctionMatcher/Expected"
 
 // Decorators
 export {stepDetails, step} from "./screenplay/lib/decorators/StepDecorators"
+
+// Tasks
+export {SkipTaskExecution} from  "./screenplay/lib/tasks/SkipTaskExecution";

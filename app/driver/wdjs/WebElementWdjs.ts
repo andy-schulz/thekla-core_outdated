@@ -5,7 +5,7 @@ import {UntilElementCondition}                  from "../lib/ElementConditions";
 import {BrowserWdjs}                            from "./BrowserWdjs";
 import {WdElement}                              from "./interfaces/WdElement";
 import {WebElementListWdjs}                     from "./WebElementListWdjs";
-import {By}                                     from "../..";
+import {By, element}                            from "../..";
 import {getLogger, Logger}                      from "log4js";
 import {Annotator}                              from "webdriverjs_annotator";
 
@@ -41,6 +41,8 @@ export class WebElementWdjs implements WebElementFinder {
                 .catch((e) => {
                     reject(e);
                 });
+
+            this.logger.trace(`Found ${elements ? elements.length : 0} element(s) for ${this.elementList.locatorDescription}`);
 
             const annotate = async (annotateElement: boolean, element: WebElement, driver: WebDriver) => {
                 if (annotateElement)
@@ -116,6 +118,10 @@ export class WebElementWdjs implements WebElementFinder {
 
     public isDisplayed(): Promise<boolean> {
         return this.getWebElement()
+            .then((element: WdElement): WdElement => {
+                this.logger.trace(`${element ? `Did find ` : `Did not find`} the elements to check for display state`);
+                return element;
+            })
             .then((element): promise.Promise<boolean> => element.isDisplayed())
             .then((state): boolean => state) // returns a Promise and not the webdriver promise.Promise
             .catch((): boolean => false)
