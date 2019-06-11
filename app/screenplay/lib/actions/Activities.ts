@@ -1,4 +1,5 @@
 import {AnswersQuestions, PerformsTask, UsesAbilities} from "../../Actor";
+import {SkipTask}                                      from "../tasks/SkipTask";
 
 /**
  *       Task = a Workflow composed of Tasks or Interactions or both

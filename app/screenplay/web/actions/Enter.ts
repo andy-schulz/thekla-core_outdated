@@ -1,5 +1,5 @@
 import {BrowseTheWeb, Interaction} from "../../../index";
-import {stepDetails}               from "../../lib/decorators/StepDecorators";
+import {stepDetails}               from "../../lib/decorators/step_decorators";
 import {SppWebElementFinder}       from "../SppWebElements";
 import {UsesAbilities}             from "../../Actor";
 import {getLogger, Logger}         from "@log4js-node/log4js-api";

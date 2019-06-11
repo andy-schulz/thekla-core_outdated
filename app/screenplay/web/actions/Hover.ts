@@ -3,7 +3,7 @@
  */
 
 import {BrowseTheWeb, Interaction, SppWebElementFinder} from "../../../index";
-import {stepDetails}                                    from "../../lib/decorators/StepDecorators";
+import {stepDetails}                                    from "../../lib/decorators/step_decorators";
 import {SppWebElementListFinder}                        from "../SppWebElements";
 import {UsesAbilities}                                  from "../../Actor";
 

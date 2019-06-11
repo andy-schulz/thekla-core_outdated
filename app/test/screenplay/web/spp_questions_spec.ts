@@ -9,10 +9,8 @@ import {
     Navigate,
     See,
     TheSites,
-    Attribute, SppWebElementFinder, element, Expected, Status, all, Count, ReturnTaskValue, ReturnedResult,
-}                      from "../../../index";
-import {UsesAbilities} from "../../../screenplay/Actor";
-import {Question}      from "../../../screenplay/lib/questions/Question";
+    Attribute, element, Expected, Status, all, Count, Extract, Text, Click
+} from "../../../index";
 
 
 let seleniumConfig: SeleniumConfig = {
@@ -124,10 +122,72 @@ describe(`Using`, (): void => {
             const tableRows = all(By.css(`tr`));
 
             await Jonathan.attemptsTo(
-                Navigate.to(`https://teststepsframeworktester.azurewebsites.net/tables`),
+                Navigate.to(`/tables`),
                 See.if(Count.of(tableRows)).is(Expected.toEqual(6)),
             );
         },
         20000);
+    });
+
+    describe(`the Attribute question`, (): void => {
+        let Jonathan: Actor = Actor.named(`Jonathan`);
+
+
+        beforeAll((): void => {
+            const browser = RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities);
+            Jonathan.can(BrowseTheWeb.using(browser));
+        });
+
+        it(`on the elements attribute should return the calculated value 
+        - (test case id: b9b77405-54c1-48dc-8e2e-036d9382f192)`, async (): Promise<void> => {
+
+            const elementWithCalculatedValueAttribute = element(By.css(`[data-test-id='elementAttribute']`));
+            const divWithText = element(By.css(`[data-test-id='innerHtmlTextOfDiv']`));
+            const setElementsValueButton = element(By.css(`[data-test-id='setElementsValueButton']`));
+
+            const arr: string[] = [];
+            const saveTo = (text: string): void => {
+                arr.push(text);
+                console.log(`Found: ${text}`)
+            };
+
+            await Jonathan.attemptsTo(
+                Navigate.to(`/`),
+                Click.on(setElementsValueButton),
+                Extract.the(Text.of(divWithText)).by(saveTo),
+                See.if(Attribute
+                    .of(elementWithCalculatedValueAttribute)
+                    .called(`value`)
+                )
+                    .is((actual: string): boolean => {
+                        expect(actual).toEqual(arr[0]);
+                        return true;
+                    })
+            );
+        });
+
+        it(`on the tags attribute should return the tags value 
+        - (test case id: b9b77405-54c1-48dc-8e2e-036d9382f192)`, async (): Promise<void> => {
+
+            const elementHtmlAttribute = element(By.css(`[data-test-id='htmlAttribute']`));
+            const divWithText = element(By.css(`[data-test-id='innerHtmlTextOfDiv']`));
+            const setElementsValueButton = element(By.css(`[data-test-id='setElementsValueButton']`));
+
+            const arr: string[] = [];
+            const saveTo = (text: string): void => {
+                arr.push(text);
+            };
+
+            await Jonathan.attemptsTo(
+                Navigate.to(`/`),
+                Click.on(setElementsValueButton),
+                Extract.the(Text.of(divWithText)).by(saveTo),
+                See.if(Attribute.of(elementHtmlAttribute).called(`value`))
+                    .is((actual: string): boolean => {
+                        expect(actual).toEqual(arr[0], `expected tag attribute was not found`);
+                        return true;
+                    }),
+            );
+        });
     });
 });

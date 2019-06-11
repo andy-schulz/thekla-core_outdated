@@ -2,7 +2,7 @@
  * Configurations
  */
 
-import {SkipTaskExecution}                                         from "./screenplay/lib/tasks/SkipTaskExecution";
+import {SkipTask} from "./screenplay/lib/tasks/SkipTask";
 
 export {SeleniumConfig}                                            from "./config/SeleniumConfig"
 export {DesiredCapabilities}                                       from "./config/DesiredCapabilities"
@@ -99,7 +99,7 @@ export {DidNotFind}         from "./driver/errors/DidNotFind";
 export {Expected} from "./screenplay/lib/matcher/FunctionMatcher/Expected"
 
 // Decorators
-export {stepDetails, step} from "./screenplay/lib/decorators/StepDecorators"
+export {stepDetails, step} from "./screenplay/lib/decorators/step_decorators"
 
 // Tasks
-export {SkipTaskExecution} from  "./screenplay/lib/tasks/SkipTaskExecution";
+export {SkipTask} from "./screenplay/lib/tasks/SkipTask";

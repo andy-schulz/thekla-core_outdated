@@ -1,7 +1,7 @@
 /**
  * Wait until a condition is met on a given element
  */
-import {stepDetails}           from "../../lib/decorators/StepDecorators";
+import {stepDetails}           from "../../lib/decorators/step_decorators";
 import {BrowseTheWeb}          from "../abilities/BrowseTheWeb";
 import {SppWebElementFinder}   from "../SppWebElements";
 import {Interaction}           from "../../lib/actions/Activities";

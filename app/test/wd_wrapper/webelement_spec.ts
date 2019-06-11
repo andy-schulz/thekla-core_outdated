@@ -303,8 +303,8 @@ describe(`When using the Browser object`, (): void => {
             return browser.get(testurl + `/delayed`);
         });
 
-        it(`the system should wait for 5 Seconds for the element to be enabled ` +
-            `- (test case id: a1558fb9-fdee-4775-b44d-8cd848d517b2)`, async (): Promise<void> => {
+        it(`the system should wait for 5 Seconds for the element to be enabled 
+            - (test case id: a1558fb9-fdee-4775-b44d-8cd848d517b2)`, async (): Promise<void> => {
             // expect(await delayButton5000.isVisible()).toEqual(true);
             expect(await enabledButton5000.isEnabled()).toEqual(false, `the button should be disabled at first check`);
             await browser.wait(until((): Promise<boolean> => enabledButton5000.isEnabled()));
@@ -312,8 +312,8 @@ describe(`When using the Browser object`, (): void => {
 
         });
 
-        it(`the system should wait for 5 Seconds for the element to be disabled ` +
-            `- (test case id: 010e0544-4852-4258-9729-30a2ff5ca063)`, async (): Promise<void> => {
+        it(`the system should wait for 5 Seconds for the element to be disabled 
+            - (test case id: 010e0544-4852-4258-9729-30a2ff5ca063)`, async (): Promise<void> => {
             // expect(await delayButton5000.isVisible()).toEqual(true);
             expect(await disabledButton5000.isEnabled()).toEqual(true, `the button should be enabled at first check`);
             await browser.wait(until.not((): Promise<boolean> => disabledButton5000.isEnabled()));

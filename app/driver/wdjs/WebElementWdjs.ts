@@ -106,9 +106,25 @@ export class WebElementWdjs implements WebElementFinder {
             .then((text): string => text);
     }
 
-    public getAttribute(attribute: string): Promise<string> {
+    public getAttribute(attributeName: string): Promise<string> {
         return this.getWebElement()
-            .then((element): promise.Promise<string> => element.getAttribute(attribute))
+            .then(async (element: WdElement): Promise<string> =>  {
+
+                const elementAttrubuteValue = await element.getAttribute(attributeName);
+
+                if(elementAttrubuteValue)
+                    return elementAttrubuteValue;
+
+                const getAttributeValue = (elem: WdElement, attributeName: string): string => {
+                    // @ts-ignore
+                    return elem[attributeName];
+                };
+
+                const driver = await this.browser.getDriver();
+                const value: string = await driver.executeScript(getAttributeValue, element, attributeName);
+                return value;
+
+            })
             .then((text): string => text);
     }
 

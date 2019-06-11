@@ -1,6 +1,6 @@
 import {BrowseTheWeb, Interaction} from "../../../index";
 import {UsesAbilities}             from "../../Actor";
-import {stepDetails}               from "../../lib/decorators/StepDecorators";
+import {stepDetails}               from "../../lib/decorators/step_decorators";
 
 export class Navigate implements Interaction<void, void> {
 

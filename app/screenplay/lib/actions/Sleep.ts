@@ -2,7 +2,7 @@ import {Interaction}   from "./Activities";
 import {UsesAbilities} from "../../Actor";
 import {Utils}         from "../../../driver/utils/Utils";
 import {getLogger}     from "@log4js-node/log4js-api"
-import {stepDetails}   from "../decorators/StepDecorators";
+import {stepDetails}   from "../decorators/step_decorators";
 
 export class Sleep implements Interaction<void, void> {
     private logger = getLogger(`Sleep`);
