@@ -123,7 +123,7 @@ describe(`Using`, (): void => {
 
             await Jonathan.attemptsTo(
                 Navigate.to(`/tables`),
-                See.if(Count.of(tableRows)).is(Expected.toEqual(6)),
+                See.if(Count.of(tableRows)).is(Expected.toEqual(107)),
             );
         },
         20000);

@@ -9,15 +9,18 @@ import {
     SeleniumConfig, DesiredCapabilities
 }                       from "../..";
 import {BrowserWdjs}    from "../../driver/wdjs/BrowserWdjs";
+import {WdElement}      from "../../driver/wdjs/interfaces/WdElement";
 import {WebElementWdjs} from "../../driver/wdjs/WebElementWdjs";
 
-import {configure} from "log4js";
+import {configure}                   from "log4js";
+import {BoundaryCheck, boundingRect} from "../0_helper/browser_viewport";
 configure(`res/config/log4js.json`);
 
 describe(`When using the Browser object`, (): void => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
     const conf: SeleniumConfig = {
         seleniumServerAddress: `http://localhost:4444/wd/hub`,
+        baseUrl: `https://teststepsframeworktester.azurewebsites.net`
     };
 
     const capabilities: DesiredCapabilities = {
@@ -149,6 +152,33 @@ describe(`When using the Browser object`, (): void => {
             expect(await userName.isVisible()).toBe(false);
 
             await Utils.wait(5000);
+        });
+    });
+
+    describe(`and try to scroll an element into view`, () => {
+        let browser: Browser;
+        let lastTableRow: WebElementFinder;
+
+        beforeAll((): Promise<void> => {
+            browser = BrowserWdjs.create(conf, capabilities);
+            lastTableRow = browser.element(By.css(`[data-test-id='lastTableRow']`));
+
+            return browser.get(`/tables`);
+        });
+
+
+
+        it(`it should scroll to the element 
+        - (test case id: 8284b313-f35f-4841-931f-2927d848d138)`, async () => {
+            const className = `lastTableRow`;
+
+            const isOutOnfirstCheck: BoundaryCheck = await browser.executeScript(boundingRect, className) as BoundaryCheck;
+            expect(isOutOnfirstCheck.any).toBeTruthy();
+
+            await lastTableRow.scrollIntoView();
+
+            const isOutOnSecondCheck: BoundaryCheck = await browser.executeScript(boundingRect, className) as BoundaryCheck;
+            expect(isOutOnSecondCheck.any).toBeFalsy();
         });
     });
 

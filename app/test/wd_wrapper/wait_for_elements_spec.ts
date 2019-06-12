@@ -42,10 +42,10 @@ describe(`Waiting for WD Elements`, (): void => {
             expect(await appearButton5000ShallWait.isVisible()).toEqual(false)
         }, 20000);
 
-        it(`the system should wait for 5 seconds 
+        it(`the system should wait for 7 seconds 
         - (test case id: 2af14d42-6f9d-4532-a151-c4d4390c352e)`, async (): Promise<void> => {
             appearButton5000ShallWait = browser.element(By.css(`[data-test-id='AppearButtonBy5000']`))
-                .shallWait(UntilElement.is.visible().forAsLongAs(5000));
+                .shallWait(UntilElement.is.visible().forAsLongAs(7000));
 
             await browser.get(`/delayed`);
             expect(await appearButton5000ShallWait.isVisible()).toEqual(true)

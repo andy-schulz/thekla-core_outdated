@@ -159,6 +159,24 @@ export class WebElementWdjs implements WebElementFinder {
         })
     }
 
+    public scrollIntoView(): Promise<void> {
+
+        const scrollIntoView = (element: WebElement) => {
+            // @ts-ignore
+            return element.scrollIntoView();
+        };
+
+        return new Promise((resolve, reject): void => {
+            this.getWebElement()
+                .then(async (element): Promise<void> => {
+                    const driver = await this.browser.getDriver();
+                    return driver.executeScript(scrollIntoView, element);
+                })
+                .then(resolve, reject)
+                .catch(reject)
+        })
+    }
+
     public get description(): string {
         return this.elementList.description + this._description;
     }

@@ -33,6 +33,7 @@ export interface WebElementFinder
     isDisplayed(): Promise<boolean>;
     isEnabled(): Promise<boolean>;
     clear(): Promise<void>;
+    scrollIntoView(): Promise<void>;
 }
 
 export interface WebElementListFinder
