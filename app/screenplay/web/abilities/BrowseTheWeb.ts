@@ -46,4 +46,8 @@ export class BrowseTheWeb implements Ability {
     public getTitle(): Promise<string> {
         return this.browser.getTitle()
     }
+
+    public scrollTo({x,y}: {x: number; y: number}): Promise<void> {
+        return this.browser.scrollTo({x,y});
+    }
 }

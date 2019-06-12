@@ -53,11 +53,11 @@ export class BrowserWdjs implements Browser {
             })
     }
 
-    public get annotateElement() {
+    public get annotateElement(): boolean | undefined {
         return this._selConfig.annotateElement
     }
 
-    public get displayTestMessages() {
+    public get displayTestMessages(): boolean | undefined {
         return this._selConfig.displayTestMessages
     }
 
@@ -500,7 +500,7 @@ export class BrowserWdjs implements Browser {
             this.takeScreenshot()
                 .then((data: BrowserScreenshotData): void => {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    fs.writeFile(fpn, data.browserScreenshotData, `base64`, (err: any) => {
+                    fs.writeFile(fpn, data.browserScreenshotData, `base64`, (err: any): void => {
                         if (err)
                             return reject(err);
                         resolve(fpn);
@@ -526,7 +526,7 @@ export class BrowserWdjs implements Browser {
         return new Promise((fulfill, reject): void => {
             const start = Date.now();
             const check = (): void => {
-                const worker = (workerState: boolean, error?: string) => {
+                const worker = (workerState: boolean, error?: string): void => {
                     const timeSpendWaiting = Date.now() - start;
                     if (timeSpendWaiting > timeout) {
                         const message = `Wait timed out after ${timeout} ms${waitMessage ? ` -> (` + waitMessage + `).` : `.`}`;
@@ -548,7 +548,7 @@ export class BrowserWdjs implements Browser {
                     .then(worker)
                     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    .catch((e: any) => worker(false, `${e.toString()} \n ${Error().stack}`))
+                    .catch((e: any): void => worker(false, `${e.toString()} \n ${Error().stack}`))
             };
             setTimeout(check, 300);
         })
@@ -561,7 +561,7 @@ export class BrowserWdjs implements Browser {
         return new Promise((fulfill, reject): void => {
             const start = Date.now();
             const check = (): void => {
-                const worker = (workerState: boolean, error?: string) => {
+                const worker = (workerState: boolean, error?: string): void => {
                     const timeSpendWaiting = Date.now() - start;
                     if (timeSpendWaiting > condition.timeout) {
                         const message = `Waiting until element called '${element.description}' ${condition.conditionHelpText} timed out after ${condition.timeout} ms.
@@ -591,7 +591,24 @@ export class BrowserWdjs implements Browser {
         })
     }
 
-    //eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    public scrollTo({x,y}: {x: number; y: number}): Promise<void> {
+
+        const scrollTo = ({x, y}: {x: number; y: number}): void => {
+            return window.scrollTo(x,y<0 ? document.body.scrollHeight : y)
+        };
+
+        return new Promise(async (resolve, reject): Promise<void> => {
+            const driver = await this.getDriver();
+
+            driver.executeScript(scrollTo,{x,y})
+                .then(() => {
+                    resolve();
+                }, reject)
+                .catch(reject)
+        });
+    }
+
+    //eslint-disable-next-line @typescript-eslint/explicit-function-return-type @typescript-eslint/no-explicit-any
     public executeScript(func: Function, ...funArgs: any[]): Promise<{}> {
         return new Promise((resolve, reject): void => {
             this.getDriver()

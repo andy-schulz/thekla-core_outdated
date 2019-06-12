@@ -24,6 +24,8 @@ export interface Browser extends WebFinder, FrameFinder{
     takeScreenshot(): Promise<BrowserScreenshotData>;
     saveScreenshot(filepath: string, filename: string): Promise<string>;
 
+    scrollTo({x,y}: {x: number; y: number}): Promise<void>;
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     executeScript(func: Function, ...funcArgs: any[]): Promise<{}>;
 }

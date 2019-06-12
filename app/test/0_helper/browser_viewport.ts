@@ -29,3 +29,7 @@ export const boundingRect = (className: string) => {
     // @ts-ignore
     return isOutOfViewport(elements[0]);
 };
+
+export const clientRect = (): ClientRectList | DOMRectList => {
+    return document.documentElement.getClientRects();
+};

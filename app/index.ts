@@ -61,14 +61,14 @@ export {ReturnTaskValue}                              from "./screenplay/lib/act
 
 
 // Activities
-export {Activity, Task, Interaction}      from "./screenplay/lib/actions/Activities";
-export {Click}                            from "./screenplay/web/actions/Click";
-export {Hover}                            from "./screenplay/web/actions/Hover";
-export {Enter}                            from "./screenplay/web/actions/Enter";
-export {Navigate}                         from "./screenplay/web/actions/Navigate";
-export {Wait}                             from "./screenplay/web/actions/Wait";
-export {Scroll}                           from "./screenplay/web/actions/Scroll";
-export {Sleep}                            from "./screenplay/lib/actions/Sleep";
+export {Activity, Task, Interaction}            from "./screenplay/lib/actions/Activities";
+export {Click}                                  from "./screenplay/web/actions/Click";
+export {Hover}                                  from "./screenplay/web/actions/Hover";
+export {Enter}                                  from "./screenplay/web/actions/Enter";
+export {Navigate}                               from "./screenplay/web/actions/Navigate";
+export {Wait}                                   from "./screenplay/web/actions/Wait";
+export {Scroll, Page}                           from "./screenplay/web/actions/Scroll";
+export {Sleep}                                  from "./screenplay/lib/actions/Sleep";
 
 
 // Oracle
