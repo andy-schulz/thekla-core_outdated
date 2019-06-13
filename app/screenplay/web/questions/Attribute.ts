@@ -22,4 +22,8 @@ export class Attribute implements Question<void, string> {
     public answeredBy(actor: UsesAbilities): Promise<string> {
         return BrowseTheWeb.as(actor).findElement(this.element).getAttribute(this.attributeName);
     }
+
+    public toString(): string {
+        return `Attribute '${this.attributeName}' of element '${this.element.toString()}'`
+    }
 }

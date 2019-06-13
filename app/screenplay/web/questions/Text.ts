@@ -16,4 +16,8 @@ export class Text implements Question<void, string> {
     public answeredBy(actor: UsesAbilities): Promise<string> {
         return BrowseTheWeb.as(actor).findElement(this.element).getText();
     }
+
+    public toString(): string {
+        return `Text (innerHTML) of element '${this.element.toString()}'`
+    }
 }

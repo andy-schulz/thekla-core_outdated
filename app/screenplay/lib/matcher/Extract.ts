@@ -5,15 +5,15 @@ import {Oracle}           from "../actions/Activities";
 export class Extract<PT, EPT> implements Oracle<PT,void> {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private matcher: (value: EPT) => any;
+    private extractor: (value: EPT) => any;
 
     public static the <PT, QRT>(question: Question<PT, QRT>): Extract<PT,QRT> {
         return new Extract(question)
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public by(matcher: (text: EPT) => void): Extract<PT,EPT> {
-        this.matcher = matcher;
+    public by(extractor: (text: EPT) => void): Extract<PT,EPT> {
+        this.extractor = extractor;
         return this;
     }
 
@@ -22,6 +22,6 @@ export class Extract<PT, EPT> implements Oracle<PT,void> {
     ) {}
 
     public async performAs(actor: AnswersQuestions, activityResult: PT): Promise<void> {
-        return (this.matcher(await actor.toAnswer(this.question, activityResult)))
+        return (this.extractor(await actor.toAnswer(this.question, activityResult)))
     }
 }

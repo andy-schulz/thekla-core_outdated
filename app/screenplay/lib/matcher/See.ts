@@ -1,6 +1,8 @@
 import {AnswersQuestions, PerformsTask} from "../../Actor";
 import {Question}                       from "../questions/Question";
 import {Activity, Oracle}               from "../actions/Activities";
+import {stepDetails}              from "../decorators/step_decorators";
+
 // import {step}                           from "../../..";
 
 export class See<PT, MPT> implements Oracle<PT, void> {
@@ -12,7 +14,7 @@ export class See<PT, MPT> implements Oracle<PT, void> {
     private otherwiseActivities: Activity<PT, void>[] = [];
 
 
-    // @step<AnswersQuestions>("to ask Question <<question>> and see if the the result meets <<matcher>>")
+    @stepDetails<AnswersQuestions, PT, void>(`ask if '<<question>>' fulfills the matcher`)
     public async performAs(actor: AnswersQuestions | PerformsTask, activityResult?: PT): Promise<void> {
 
         const loop = async (counter: number): Promise<boolean> => {
@@ -59,9 +61,9 @@ export class See<PT, MPT> implements Oracle<PT, void> {
                 if(match)
                     return Promise.resolve();
 
-                return Promise.reject(new Error(`Matcher function of See ${this.question.toString()}
+                return Promise.reject(new Error(`See interaction with question '${this.question.toString()}' and matcher 
                 ${this.matcher.toString()}
-                returned ${match}. No 'then' activities were given`));
+                returned ${match}. No 'otherwise' activities were given`));
 
             })
             .catch((e): Promise<void> => {

@@ -4,10 +4,11 @@ import {
     ReturnedResult,
     Actor,
     Expected,
-    Question, DelayedResult
+    DelayedResult
 } from "../../..";
 
-
+import {configure}   from "log4js";
+configure(`res/config/log4js.json`);
 
 describe(`Using the See interaction`, (): void => {
     const Josh = Actor.named(`Josh`);
@@ -156,10 +157,29 @@ describe(`Using the See interaction`, (): void => {
             ).then((): void => {
                 expect(true).toBeFalsy(`Promise should be rejected but it wasn't`);
             }).catch((e): Promise<void> => {
-                expect(e.toString()).toContain(`Matcher function of See Question called 'DelayedResult with timeout of 0 ms'`);
-                expect(e.toString()).toContain(`returned false. No 'then' activities were given`);
+                expect(e.toString()).toContain(`See interaction with question 'delayed result with timeout of '0 ms'' and matcher`);
+                expect(e.toString()).toContain(`returned false. No 'otherwise' activities were given`);
                 return Promise.resolve();
             })
+        });
+
+        it(`should be resolved if matcher returns false and otherwise actions are given
+            - (test case id: 18ef8895-a0a2-4e5b-a3b6-60068378b54f)`,(): Promise<void | {}> => {
+            const testString = `18ef8895-a0a2-4e5b-a3b6-60068378b54f`;
+            return Josh.attemptsTo(
+                See
+                    .if(DelayedResult.returnsValue(testString).after(0))
+                    .is((): boolean => {
+                        return false;
+                    })
+                    .otherwise(
+                        See
+                            .if(DelayedResult.returnsValue(testString).after(0))
+                            .is((): boolean => {
+                                return true;
+                            })
+                    )
+            )
         });
 
         it(`should be reject if matcher throws an error

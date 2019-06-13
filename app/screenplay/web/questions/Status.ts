@@ -2,6 +2,7 @@ import {UsesAbilities}       from "../../Actor";
 import {Question}            from "../../lib/questions/Question";
 import {BrowseTheWeb}        from "../abilities/BrowseTheWeb";
 import {SppWebElementFinder} from "../SppWebElements";
+
 class VisibleStatus implements Question<void, boolean>{
 
     public answeredBy(actor: UsesAbilities): Promise<boolean> {
@@ -10,6 +11,10 @@ class VisibleStatus implements Question<void, boolean>{
 
     public constructor(private element: SppWebElementFinder) {
 
+    }
+
+    public toString(): string {
+        return `Status of element '${this.element.toString()}'`
     }
 }
 

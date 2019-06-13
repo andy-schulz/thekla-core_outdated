@@ -16,4 +16,8 @@ export class Value implements Question<void, string> {
     public answeredBy(actor: UsesAbilities): Promise<string> {
         return BrowseTheWeb.as(actor).findElement(this.element).getAttribute(`value`);
     }
+
+    public toString(): string {
+        return `Attribute 'value' of element '${this.element.toString()}'`;
+    }
 }

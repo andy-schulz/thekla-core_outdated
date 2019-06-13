@@ -32,7 +32,7 @@ export class DelayedResult implements Question<void,string> {
     private constructor(private value: string) {
     };
 
-    public toString() {
-        return `Question called '${DelayedResult.name} with timeout of ${this.timeout} ms'`
+    public toString(): string {
+        return `delayed result with timeout of '${this.timeout} ms'`
     }
 }

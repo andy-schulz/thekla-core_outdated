@@ -12,6 +12,9 @@ import {
     Attribute, element, Expected, Status, all, Count, Extract, Text, Click
 } from "../../../index";
 
+import {configure} from "log4js";
+configure(`res/config/log4js.json`);
+
 
 let seleniumConfig: SeleniumConfig = {
     seleniumServerAddress: `http://localhost:4444/wd/hub`,
@@ -148,7 +151,6 @@ describe(`Using`, (): void => {
             const arr: string[] = [];
             const saveTo = (text: string): void => {
                 arr.push(text);
-                console.log(`Found: ${text}`)
             };
 
             await Jonathan.attemptsTo(

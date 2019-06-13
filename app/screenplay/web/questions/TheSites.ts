@@ -6,11 +6,19 @@ class SiteUrl implements Question<void, string> {
     public answeredBy(actor: UsesAbilities): Promise<string> {
         return BrowseTheWeb.as(actor).getCurrentUrl();
     }
+
+    public toString(): string {
+        return `Url of site`;
+    }
 }
 
 class SiteTitle implements Question<void, string> {
     public answeredBy(actor: UsesAbilities): Promise<string> {
         return BrowseTheWeb.as(actor).getTitle();
+    }
+
+    public toString(): string {
+        return `Title of site`;
     }
 }
 

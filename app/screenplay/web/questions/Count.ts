@@ -16,4 +16,8 @@ export class Count implements Question<void, number> {
     public answeredBy(actor: UsesAbilities): Promise<number> {
         return BrowseTheWeb.as(actor).findElements(this.elements).count();
     }
+
+    public toString(): string {
+        return `count of elements '${this.elements.toString()}'`
+    }
 }

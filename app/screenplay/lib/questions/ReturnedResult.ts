@@ -2,7 +2,7 @@ import {Question}            from "../../lib/questions/Question";
 import {UsesAbilities}       from "../../Actor";
 
 export class ReturnedResult<PT> implements Question<PT,PT> {
-    private value: PT | undefined;
+    private readonly value: PT | undefined;
 
     public static ofLastActivity<PT>(): ReturnedResult<PT>  {
         return new ReturnedResult()
@@ -19,5 +19,9 @@ export class ReturnedResult<PT> implements Question<PT,PT> {
 
     private constructor(value?: PT) {
         this.value = value;
+    }
+
+    public toString(): string {
+        return `returned ${this.value ? `direct` : `last activities`} result`
     }
 }
