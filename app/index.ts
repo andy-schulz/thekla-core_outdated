@@ -82,6 +82,7 @@ export {Extract} from "./screenplay/lib/matcher/Extract";
 export {Question}                             from "./screenplay/lib/questions/Question";
 // Basic Questions
 export {ReturnedResult}                       from "./screenplay/lib/questions/ReturnedResult";
+export {DelayedResult}                       from "./screenplay/lib/questions/DelayedResult";
 // Web Questions
 export {Text}                                 from "./screenplay/web/questions/Text";
 export {Value}                                from "./screenplay/web/questions/Value";

@@ -4,41 +4,10 @@ import {
     ReturnedResult,
     Actor,
     Expected,
-    Question
-}                      from "../../..";
-
-class RepeaterQuestion implements Question<void,string> {
-    private timeout = 1000;
-    private delayedValue: string = `default value, value setting time not reached yet`;
-    private called = false;
-    private setValue = (): string => this.delayedValue = this.value;
-
-    public answeredBy(): Promise<string> {
-        if(!this.called)
-            setTimeout(this.setValue, this.timeout);
-        this.called = true;
-        return Promise.resolve(this.delayedValue);
-    };
-
-    public static returnsValue(value: string): RepeaterQuestion {
-        return new RepeaterQuestion(value)
-    };
+    Question, DelayedResult
+} from "../../..";
 
 
-    public after(timeInMs: number): RepeaterQuestion {
-        this.timeout = timeInMs;
-
-        if(timeInMs <= 0)
-            this.delayedValue = this.value;
-
-        return this;
-    }
-
-
-    private constructor(private value: string) {
-    };
-
-}
 
 describe(`Using the See interaction`, (): void => {
     const Josh = Actor.named(`Josh`);
@@ -52,7 +21,7 @@ describe(`Using the See interaction`, (): void => {
 
             try {
                 await John.attemptsTo(
-                    See.if(RepeaterQuestion.returnsValue(testString).after(10000))
+                    See.if(DelayedResult.returnsValue(testString).after(10000))
                         .is(Expected.toEqual(testString))
                         .repeatFor(0,500)
                 )
@@ -67,7 +36,7 @@ describe(`Using the See interaction`, (): void => {
 
             try {
                 await John.attemptsTo(
-                    See.if(RepeaterQuestion.returnsValue(`Error`).after(10000))
+                    See.if(DelayedResult.returnsValue(`Error`).after(10000))
                         .is(Expected.toEqual(testString))
                         .repeatFor(-1,1000)
                 )
@@ -82,7 +51,7 @@ describe(`Using the See interaction`, (): void => {
 
             try {
                 await John.attemptsTo(
-                    See.if(RepeaterQuestion.returnsValue(`Error`).after(10000))
+                    See.if(DelayedResult.returnsValue(`Error`).after(10000))
                         .is(Expected.toEqual(testString))
                         .repeatFor(1001,1000)
                 )
@@ -96,7 +65,7 @@ describe(`Using the See interaction`, (): void => {
             const testString = `0676e29a-529e-474c-8413-da4c29897ab5`;
             try {
                 await John.attemptsTo(
-                    See.if(RepeaterQuestion.returnsValue(`Error`).after(10000))
+                    See.if(DelayedResult.returnsValue(`Error`).after(10000))
                         .is(Expected.toEqual(testString))
                         .repeatFor(2,-1)
                 )
@@ -110,7 +79,7 @@ describe(`Using the See interaction`, (): void => {
             const testString = `17b6dc70-44bd-4f6f-b051-b1bce4776c4c`;
             try {
                 await John.attemptsTo(
-                    See.if(RepeaterQuestion.returnsValue(`Error`).after(10000))
+                    See.if(DelayedResult.returnsValue(`Error`).after(10000))
                         .is(Expected.toEqual(testString))
                         .repeatFor(6,60001)
                 )
@@ -132,7 +101,7 @@ describe(`Using the See interaction`, (): void => {
             const testString = `0d5c98b2-9975-4c30-a81f-5a8ef862a0aa`;
 
             await John.attemptsTo(
-                See.if(RepeaterQuestion.returnsValue(testString).after(1000))
+                See.if(DelayedResult.returnsValue(testString).after(1000))
                     .is(Expected.toEqual(testString))
                     .repeatFor(12,100)
             )
@@ -144,14 +113,14 @@ describe(`Using the See interaction`, (): void => {
 
             try {
                 await John.attemptsTo(
-                    See.if(RepeaterQuestion.returnsValue(testString).after(1000))
+                    See.if(DelayedResult.returnsValue(testString).after(1000))
                         .is(Expected.toEqual(testString))
                         .repeatFor(5,100)
                 );
                 expect(true).toBeFalsy(`call should have thrown an error. But it did not.`);
             } catch (e) {
                 expect(e.toString()).toContain(
-                    `AssertionError [ERR_ASSERTION]: 'default value, value setting time not reached yet' === 'b1afa0cd-bb66-432a-b6d3-755b422d6506'`)
+                    `AssertionError [ERR_ASSERTION]: 'Default value. Timeout of 1000 ms not reached. Second value not set yet.' === 'b1afa0cd-bb66-432a-b6d3-755b422d6506'`)
             }
 
         });
@@ -161,13 +130,13 @@ describe(`Using the See interaction`, (): void => {
             const testString =`29bbbf6f-4741-48fb-9c44-7ecec23d1240`;
             try {
                 await John.attemptsTo(
-                    See.if(RepeaterQuestion.returnsValue(testString).after(1000))
+                    See.if(DelayedResult.returnsValue(testString).after(1000))
                         .is(Expected.toEqual(testString))
                 );
                 expect(true).toBeFalsy(`call should have thrown an error. But it did not.`)
 
             } catch (e) {
-                expect(e.toString()).toContain(`AssertionError [ERR_ASSERTION]: 'default value, value setting time not reached yet' === '29bbbf6f-4741-48fb-9c44-7ecec23d1240'`)
+                expect(e.toString()).toContain(`AssertionError [ERR_ASSERTION]: 'Default value. Timeout of 1000 ms not reached. Second value not set yet.' === '29bbbf6f-4741-48fb-9c44-7ecec23d1240'`)
             }
 
         });
@@ -175,17 +144,66 @@ describe(`Using the See interaction`, (): void => {
 
     describe(`with the then method`, (): void => {
 
+        it(`should be rejected if matcher returns false
+            - (test case id: 18ef8895-a0a2-4e5b-a3b6-60068378b54f)`,(): Promise<void | {}> => {
+            const testString = `18ef8895-a0a2-4e5b-a3b6-60068378b54f`;
+            return Josh.attemptsTo(
+                See
+                    .if(DelayedResult.returnsValue(testString).after(0))
+                    .is((): boolean => {
+                        return false;
+                    })
+            ).then((): void => {
+                expect(true).toBeFalsy(`Promise should be rejected but it wasn't`);
+            }).catch((e): Promise<void> => {
+                expect(e.toString()).toContain(`Matcher function of See Question called 'DelayedResult with timeout of 0 ms'`);
+                expect(e.toString()).toContain(`returned false. No 'then' activities were given`);
+                return Promise.resolve();
+            })
+        });
+
+        it(`should be reject if matcher throws an error
+            - (test case id: b206bc37-59c1-4bb8-b04d-eb1a7517ba19)`,(): Promise<void | {}> => {
+            const testString = `b206bc37-59c1-4bb8-b04d-eb1a7517ba19`;
+
+            return Josh.attemptsTo(
+                See
+                    .if(DelayedResult.returnsValue(testString).after(0))
+                    .is((): boolean => {
+                        throw new Error(`found a bug on See interaction`)
+                    })
+            ).then((): void => {
+                expect(true).toBeFalsy(`Promise should be rejected but it wasn't`);
+            }).catch((e): Promise<void> => {
+                expect(e.toString()).toContain(`found a bug on See interaction`);
+                return Promise.resolve();
+            })
+        });
+
+        it(`should be resolved if matcher returns true
+            - (test case id: 95d87af1-7376-4268-9d78-7a26a4ee15cf)`,(): Promise<void | {}> => {
+            const testString = `95d87af1-7376-4268-9d78-7a26a4ee15cf`;
+
+            return Josh.attemptsTo(
+                See
+                    .if(DelayedResult.returnsValue(testString).after(0))
+                    .is((): boolean => {
+                        return true;
+                    })
+            )
+        });
+
         it(`should not throw an error on success in "then-tree"` +
             `- (test case id: b8d1361b-a9cc-4569-9009-ed8a71084fcd)`,(): Promise<void> => {
             const testString = `b8d1361b-a9cc-4569-9009-ed8a71084fcd`;
             try {
                 return Josh.attemptsTo(
                     See
-                        .if(RepeaterQuestion.returnsValue(testString).after(0))
+                        .if(DelayedResult.returnsValue(testString).after(0))
                         .is(Expected.toEqual(testString))
                         .then(
                             See
-                                .if(RepeaterQuestion.returnsValue(testString).after(0))
+                                .if(DelayedResult.returnsValue(testString).after(0))
                                 .is(Expected.toEqual(testString))
                         )
                 );

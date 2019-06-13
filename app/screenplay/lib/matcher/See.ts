@@ -25,7 +25,9 @@ export class See<PT, MPT> implements Oracle<PT, void> {
             };
 
             if(counter < 1)
-                return Promise.resolve((this.matcher(await (actor as AnswersQuestions).toAnswer(this.question, activityResult))));
+                return Promise.resolve(
+                    this.matcher(await (actor as AnswersQuestions).toAnswer(this.question, activityResult))
+                );
 
             let promise;
             try {
@@ -51,13 +53,16 @@ export class See<PT, MPT> implements Oracle<PT, void> {
         };
 
         return loop(this.repeater - 1)
-            .then((/*match: boolean*/): Promise<void> => {
-                if(this.thenActivities.length > 0) {
+            .then((match: boolean): Promise<void> => {
+                if(match && this.thenActivities.length > 0)
                     return (actor as PerformsTask).attemptsTo(...this.thenActivities);
-                }
-                else {
+                if(match)
                     return Promise.resolve();
-                }
+
+                return Promise.reject(new Error(`Matcher function of See ${this.question.toString()}
+                ${this.matcher.toString()}
+                returned ${match}. No 'then' activities were given`));
+
             })
             .catch((e): Promise<void> => {
                 if(this.otherwiseActivities.length > 0)
