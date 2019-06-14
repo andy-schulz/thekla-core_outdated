@@ -7,12 +7,12 @@ import {stringReplace}          from "./decoratorStrings";
 export function stepDetails<U, PT, RT>(text: string): (
     target: Activity<PT,RT>,
     propertyName: string,
-    propertyDesciptor: TypedPropertyDescriptor<((actor: U) => Promise<RT>)>) => PropertyDescriptor {
+    propertyDesciptor: TypedPropertyDescriptor<((actor: U, param?: PT) => Promise<RT>)>) => PropertyDescriptor {
 
     return function logTask(
         target: Activity<PT,RT>,
         propertyName: string,
-        propertyDesciptor: TypedPropertyDescriptor<((actor: U) => Promise<RT>)>): PropertyDescriptor {
+        propertyDesciptor: TypedPropertyDescriptor<((actor: U, param?: PT) => Promise<RT>)>): PropertyDescriptor {
         const logger: Logger = getLogger(target.constructor.name);
 
         const method = propertyDesciptor.value as () => Promise<RT>;
@@ -39,12 +39,12 @@ export function stepDetails<U, PT, RT>(text: string): (
 export function skip<U, PT, RT>(text: string): (
     target: Activity<PT,RT>,
     propertyName: string,
-    propertyDesciptor: TypedPropertyDescriptor<((actor: U) => Promise<RT>)>) => PropertyDescriptor {
+    propertyDesciptor: TypedPropertyDescriptor<((actor: U, param?: PT) => Promise<RT>)>) => PropertyDescriptor {
 
     return function logTask(
         target: Activity<PT,RT>,
         propertyName: string,
-        propertyDesciptor: TypedPropertyDescriptor<((actor: U) => Promise<RT>)>): PropertyDescriptor {
+        propertyDesciptor: TypedPropertyDescriptor<((actor: U, param?: PT) => Promise<RT>)>): PropertyDescriptor {
         const logger: Logger = getLogger(target.constructor.name);
 
         const method = propertyDesciptor.value as () => Promise<RT>;
@@ -54,9 +54,9 @@ export function skip<U, PT, RT>(text: string): (
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         propertyDesciptor.value = function (...args: any): Promise<RT> {
             // @ts-ignore
-            if(typeof logger.step == `function`) {
+            if(typeof logger.stepdetails == `function`) {
                 // @ts-ignore
-                logger.step(`${args[0].name} skips ${this.toString()}`);
+                logger.stepdetails(`${args[0].name} skips ${this.toString()}`);
             } else {
                 logger.debug(`${args[0].name} skips ${this.toString()}`);
             }
@@ -71,12 +71,12 @@ export function skip<U, PT, RT>(text: string): (
 export function step<U,PT,RT>(text: string): (
     target: Activity<PT,RT>,
     propertyName: string,
-    propertyDesciptor: TypedPropertyDescriptor<((actor: U) => Promise<void>)>) => PropertyDescriptor {
+    propertyDesciptor: TypedPropertyDescriptor<((actor: U, param?: PT) => Promise<void>)>) => PropertyDescriptor {
 
     return function logTask(
         target: Activity<PT,RT>,
         propertyName: string,
-        propertyDesciptor: TypedPropertyDescriptor<((actor: U) => Promise<void>)>): PropertyDescriptor {
+        propertyDesciptor: TypedPropertyDescriptor<((actor: U, param?: PT) => Promise<void>)>): PropertyDescriptor {
         const logger = getLogger(target.constructor.name);
 
         const method = propertyDesciptor.value as () => Promise<void>;
