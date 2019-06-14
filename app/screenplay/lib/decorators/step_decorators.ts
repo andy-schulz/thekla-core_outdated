@@ -71,18 +71,18 @@ export function skip<U, PT, RT>(text: string): (
 export function step<U,PT,RT>(text: string): (
     target: Activity<PT,RT>,
     propertyName: string,
-    propertyDesciptor: TypedPropertyDescriptor<((actor: U, param?: PT) => Promise<void>)>) => PropertyDescriptor {
+    propertyDesciptor: TypedPropertyDescriptor<((actor: U, param?: PT) => Promise<RT>)>) => PropertyDescriptor {
 
     return function logTask(
         target: Activity<PT,RT>,
         propertyName: string,
-        propertyDesciptor: TypedPropertyDescriptor<((actor: U, param?: PT) => Promise<void>)>): PropertyDescriptor {
+        propertyDesciptor: TypedPropertyDescriptor<((actor: U, param?: PT) => Promise<RT>)>): PropertyDescriptor {
         const logger = getLogger(target.constructor.name);
 
-        const method = propertyDesciptor.value as () => Promise<void>;
+        const method = propertyDesciptor.value as () => Promise<RT>;
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        propertyDesciptor.value = function (...args: any): Promise<void> {
+        propertyDesciptor.value = function (...args: any): Promise<RT> {
 
             // @ts-ignore
             if(typeof logger.step == `function`) {
