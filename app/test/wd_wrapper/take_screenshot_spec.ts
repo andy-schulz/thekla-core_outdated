@@ -14,7 +14,7 @@ describe(`Taking a screenshot`, (): void => {
 
 
     // const googleClockSearch = `https://www.google.de/search?q=clock&btnK=Google-Suche`;
-    const googleClockSearch = `https://teststepsframeworktester.azurewebsites.net/delayed`;
+    const googleClockSearch = `http://framework-tester.test-steps.de/delayed`;
     const conf: SeleniumConfig = {
         seleniumServerAddress: `http://localhost:4444/wd/hub`,
     };

@@ -5,7 +5,7 @@ import {BrowserWdjs} from "../../driver/wdjs/BrowserWdjs";
 
 const conf: SeleniumConfig = {
     seleniumServerAddress: `http://localhost:4444/wd/hub`,
-    baseUrl: `https://teststepsframeworktester.azurewebsites.net`,
+    baseUrl: `http://framework-tester.test-steps.de`,
 };
 
 const capabilities: DesiredCapabilities = {

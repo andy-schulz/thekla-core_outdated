@@ -12,7 +12,7 @@ import {
 
 let seleniumConfig: SeleniumConfig = {
     seleniumServerAddress: `http://localhost:4444/wd/hub`,
-    baseUrl: `https://teststepsframeworktester.azurewebsites.net`,
+    baseUrl: `http://framework-tester.test-steps.de`,
 };
 const capabilities: DesiredCapabilities = {
     browserName: `chrome`,
@@ -41,7 +41,7 @@ describe(`Waiting for SPP Elements`, (): void => {
 
     describe(`on the element itself`, (): void => {
 
-        const appearingButton = element(By.css(`[data-test-id='AppearButtonBy5000']`))
+        const appearingButton = element(By.css(`[data-test-id='AppearButtonBy4000']`))
             .called(`Test appearing element after 5 seconds`)
             .shallWait(UntilElement.is.visible().forAsLongAs(20000));
 

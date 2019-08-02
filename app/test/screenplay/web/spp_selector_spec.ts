@@ -21,7 +21,7 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL=30000;
 
 let config: SeleniumConfig = {
     seleniumServerAddress: `http://localhost:4444/wd/hub`,
-    baseUrl: `https://teststepsframeworktester.azurewebsites.net`,
+    baseUrl: `http://framework-tester.test-steps.de`,
 };
 
 const capabilities: DesiredCapabilities = {

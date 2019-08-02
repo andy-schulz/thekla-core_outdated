@@ -20,7 +20,7 @@ describe(`When using the Browser object`, (): void => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
     const conf: SeleniumConfig = {
         seleniumServerAddress: `http://localhost:4444/wd/hub`,
-        baseUrl: `https://teststepsframeworktester.azurewebsites.net`
+        baseUrl: `http://framework-tester.test-steps.de`
     };
 
     const capabilities: DesiredCapabilities = {
@@ -40,7 +40,7 @@ describe(`When using the Browser object`, (): void => {
     //     binary: "C:\\PProgramme\\GoogleChromePortable64\\App\\Chrome-bin\\chrome.exe"
     // }
 
-    const testurl = `https://teststepsframeworktester.azurewebsites.net`;
+    const testurl = `http://framework-tester.test-steps.de`;
 
 
     describe(`and calling the get method `, (): void => {
@@ -218,14 +218,14 @@ describe(`When using the Browser object`, (): void => {
         let appearButton10000: WebElementFinder;
         let buttonNeverExists: WebElementFinder;
         let disappearButton10000: WebElementFinder;
-        let enabledButton5000: WebElementFinder;
+        let enabledButton4000: WebElementFinder;
 
         beforeAll((): void => {
             browser = BrowserWdjs.create(conf, capabilities);
             appearButton10000 = browser.element(By.css(`[data-test-id='AppearButtonBy10000']`));
             buttonNeverExists = browser.element(By.css(`[data-test-id='neverExists']`));
-            disappearButton10000 = browser.element(By.css(`[data-test-id='DisappearButtonBy10000']`));
-            enabledButton5000 = browser.element(By.css(`[data-test-id='EnabledButtonBy5000']`));
+            disappearButton10000 = browser.element(By.css(`[data-test-id='DisappearButtonBy8000']`));
+            enabledButton4000 = browser.element(By.css(`[data-test-id='EnabledButtonBy5000']`));
         });
 
         beforeEach((): Promise<void> => {
@@ -242,10 +242,10 @@ describe(`When using the Browser object`, (): void => {
 
         it(`the system should wait for 5 Seconds and then timout 
         - (test case id: c004412c-9e79-4df4-8af6-ea079318769d)`, async (): Promise<void> => {
-            expect(await enabledButton5000.isEnabled()).toEqual(false);
-            await browser.wait(until((): Promise<boolean> => enabledButton5000.isEnabled()),2000)
+            expect(await enabledButton4000.isEnabled()).toEqual(false);
+            await browser.wait(until((): Promise<boolean> => enabledButton4000.isEnabled()),2000)
                 .catch((e): string => e);
-            expect(await enabledButton5000.isEnabled()).toEqual(false);
+            expect(await enabledButton4000.isEnabled()).toEqual(false);
 
         });
 
@@ -285,14 +285,14 @@ describe(`When using the Browser object`, (): void => {
 
     describe(`and try to wait for an Element to be VISIBLE`, (): void => {
         let browser: Browser;
-        let appearButton5000: WebElementFinder;
-        let disappearButton5000: WebElementFinder;
+        let appearButton4000: WebElementFinder;
+        let disappearButton4000: WebElementFinder;
 
 
         beforeAll((): void => {
             browser = BrowserWdjs.create(conf, capabilities);
-            appearButton5000 = browser.element(By.css(`[data-test-id='AppearButtonBy5000']`));
-            disappearButton5000 = browser.element(By.css(`[data-test-id='DisappearButtonBy5000']`));
+            appearButton4000 = browser.element(By.css(`[data-test-id='AppearButtonBy4000']`));
+            disappearButton4000 = browser.element(By.css(`[data-test-id='DisappearButtonBy4000']`));
         });
 
         beforeEach((): Promise<void> => {
@@ -301,19 +301,19 @@ describe(`When using the Browser object`, (): void => {
 
         it(`the system should wait for 5 Seconds for the element to appear 
         - (test case id: c8d3d65d-63a5-41de-8407-b9a506c2f478)`, async (): Promise<void> => {
-            expect(await appearButton5000.isVisible()).toEqual(false);
-            await browser.wait(until((): Promise<boolean> => appearButton5000.isVisible()));
-            expect(await appearButton5000.isVisible()).toEqual(true);
+            expect(await appearButton4000.isVisible()).toEqual(false);
+            await browser.wait(until((): Promise<boolean> => appearButton4000.isVisible()));
+            expect(await appearButton4000.isVisible()).toEqual(true);
 
         });
 
         it(`the system should wait for 5 Seconds for the element to disappear 
         - (test case id: 2beb4d0f-9b90-47ec-8e54-927d452d7c5f)`, async (): Promise<void> => {
             // expect(await delayButton5000.isVisible()).toEqual(true);
-            expect(await disappearButton5000.isVisible()).toEqual(true);
-            await browser.wait(until.not((): Promise<boolean> => disappearButton5000.isVisible()));
-            expect(await disappearButton5000.isVisible()).toEqual(false);
-        });
+            expect(await disappearButton4000.isVisible()).toEqual(true);
+            await browser.wait(until.not((): Promise<boolean> => disappearButton4000.isVisible()));
+            expect(await disappearButton4000.isVisible()).toEqual(false);
+        }, 7000);
 
     });
 
@@ -349,7 +349,7 @@ describe(`When using the Browser object`, (): void => {
             await browser.wait(until.not((): Promise<boolean> => disabledButton5000.isEnabled()));
             expect(await disabledButton5000.isEnabled()).toEqual(false, `the button should be disabled after 5 seconds`);
 
-        });
+        }, 7000);
 
     });
 

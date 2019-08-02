@@ -41,7 +41,7 @@ describe(`Hover`, (): void => {
         it(`should display additional information 
         - (test case id: bc7ff4ef-d0ea-4ac1-b2c6-5cedefd11391)`, (): Promise<void> => {
             return Howard.attemptsTo(
-                Navigate.to(`https://teststepsframeworktester.azurewebsites.net`),
+                Navigate.to(`http://framework-tester.test-steps.de`),
                 See.if(Status.visible.of(userName)).is(Expected.toBe(false)),
                 Hover.over(userIcon),
                 See.if(Status.visible.of(userName)).is(Expected.toBe(true)),
@@ -52,7 +52,7 @@ describe(`Hover`, (): void => {
         it(`should not display the hover when another element is hovered upon 
         - (test case id: bc7ff4ef-d0ea-4ac1-b2c6-5cedefd11391)`, (): Promise<void> => {
             return Howard.attemptsTo(
-                Navigate.to(`https://teststepsframeworktester.azurewebsites.net`),
+                Navigate.to(`http://framework-tester.test-steps.de`),
                 See.if(Status.visible.of(userName)).is(Expected.toBe(false)),
                 Hover.over(userIcon),
                 See.if(Status.visible.of(userName)).is(Expected.toBe(true)),

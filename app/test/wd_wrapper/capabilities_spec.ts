@@ -75,8 +75,8 @@ describe(`Starting a browser instance`, (): void => {
             const browserInitialResize = BrowserWdjs.create(con, capa);
             const data = await browserInitialResize.executeScript(windowSize);
             const dataParsed: WindowSize = JSON.parse(JSON.stringify(data));
-            expect(dataParsed.height).toBeLessThanOrEqual(500);
-            expect(dataParsed.width).toBeLessThanOrEqual(500);
+            expect(dataParsed.height).toBeLessThanOrEqual(510);
+            expect(dataParsed.width).toBeLessThanOrEqual(510);
         });
     });
 
@@ -94,7 +94,7 @@ describe(`Starting a browser instance`, (): void => {
                 }
             };
 
-            return RunningBrowser.startedOn(conf).withDesiredCapability(capa).get(`https://teststepsframeworktester.azurewebsites.net`)
+            return RunningBrowser.startedOn(conf).withDesiredCapability(capa).get(`http://framework-tester.test-steps.de`)
                 .then((): Promise<void> => {
                     return Promise.reject(`creating a browser with a not existing binary should throw an Error, but it doesnt`);
                 })
@@ -117,7 +117,7 @@ describe(`Starting a browser instance`, (): void => {
                 }
             };
 
-            return RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities).get(`https://teststepsframeworktester.azurewebsites.net`)
+            return RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities).get(`http://framework-tester.test-steps.de`)
                 .then((): Promise<void> => {
                     return Promise.reject(`creating a browser with a not existing binary should throw an Error, but it doesnt`);
                 })

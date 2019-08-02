@@ -35,7 +35,7 @@ describe(`Using the browser object`, (): void => {
 
             const browser: Browser = BrowserWdjs.create(selConfig, desiredCapabilities);
 
-            await browser.get(`https://teststepsframeworktester.azurewebsites.net/delayed`);
+            await browser.get(`http://framework-tester.test-steps.de/delayed`);
             expect(await browser.getTitle()).toBe(title);
         });
     });
@@ -43,11 +43,11 @@ describe(`Using the browser object`, (): void => {
     describe(`to retrieve the url`, (): void => {
         it(`should equal the sites url ` +
             `- (test case id: 6fef0368-82c6-4d08-9bfa-a9c399c0446d)`, async (): Promise<void> => {
-            const url = `https://teststepsframeworktester.azurewebsites.net/delayed`;
+            const url = `http://framework-tester.test-steps.de/delayed`;
 
             const browser: Browser = BrowserWdjs.create(selConfig, desiredCapabilities);
 
-            await browser.get(`https://teststepsframeworktester.azurewebsites.net/delayed`);
+            await browser.get(`http://framework-tester.test-steps.de/delayed`);
             expect(await browser.getCurrentUrl()).toBe(url);
         });
     });
@@ -56,7 +56,7 @@ describe(`Using the browser object`, (): void => {
         it(`should succeed when page is scrolled down` +
             `- (test case id: 6fef0368-82c6-4d08-9bfa-a9c399c0446d)`, async (): Promise<void> => {
             const browser: Browser = BrowserWdjs.create(selConfig, desiredCapabilities);
-            await browser.get(`https://teststepsframeworktester.azurewebsites.net/tables`);
+            await browser.get(`http://framework-tester.test-steps.de/tables`);
 
 
 

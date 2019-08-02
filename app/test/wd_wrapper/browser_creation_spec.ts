@@ -67,7 +67,7 @@ describe(`When using the BrowserWdjs class`, (): void => {
         it(`with a name and an browser instance, it should set this name ` +
             `- (test case id: f2e8b6f5-d639-445c-95a6-ce2ebd82a1ed)`, async (): Promise<void> => {
             const browser: Browser = BrowserWdjs.create(conf, capabilities, `theNewBrowserName`);
-            await browser.get(`https://teststepsframeworktester.azurewebsites.net`);
+            await browser.get(`http://framework-tester.test-steps.de`);
 
             expect(BrowserWdjs.availableBrowser.length).toBe(1, `length check for # of browser in BrowserWdjs failed`);
             expect(BrowserWdjs.availableBrowser[0]).toBe(`theNewBrowserName`);
