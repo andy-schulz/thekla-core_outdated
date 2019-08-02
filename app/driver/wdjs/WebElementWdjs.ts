@@ -5,7 +5,7 @@ import {UntilElementCondition}                  from "../lib/ElementConditions";
 import {BrowserWdjs}                            from "./BrowserWdjs";
 import {WdElement}                              from "./interfaces/WdElement";
 import {WebElementListWdjs}                     from "./WebElementListWdjs";
-import {By, element}                            from "../..";
+import {By}                                     from "../..";
 import {getLogger, Logger}                      from "log4js";
 import {Annotator}                              from "webdriverjs_annotator";
 
