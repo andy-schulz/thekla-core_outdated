@@ -66,7 +66,7 @@ export class BrowserWdjs implements Browser {
     }
 
     /**
-     * startedOn a new browser instance for the given Config
+     * start a new browser instance for the given Config
      * @param selConf - the selenium config for which the browser has to be created
      * @param capabilities - the browser capabilities
      * @param browserName - a unique browser name
