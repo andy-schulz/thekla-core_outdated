@@ -10,12 +10,14 @@ import {
     UntilElement,
     all,
     SppWebElementFinder,
-    SeleniumConfig, DesiredCapabilities, Expected
+    ServerConfig, DesiredCapabilities, Expected
 } from "../../../index";
 
 
-const seleniumConfig: SeleniumConfig = {
-    seleniumServerAddress: `http://localhost:4444/wd/hub`,
+const seleniumConfig: ServerConfig = {
+    serverAddress: {
+        hostname: `localhost`
+    },
     baseUrl: `http://framework-tester.test-steps.de`,
 };
 
@@ -109,7 +111,7 @@ describe(`The description on an element`, (): void => {
 
         beforeAll((): void => {
             Edward = Actor.named(`Edward`);
-            Edward.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities)));
+            Edward.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(seleniumConfig).withCapabilities(capabilities)));
         });
 
         afterAll(async (): Promise<void[][]> => {

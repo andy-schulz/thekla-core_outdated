@@ -4,7 +4,7 @@
 
 import {SkipTask} from "./screenplay/lib/tasks/SkipTask";
 
-export {SeleniumConfig}                                            from "./config/SeleniumConfig"
+export {ServerConfig}                                            from "./config/ServerConfig"
 export {DesiredCapabilities}                                       from "./config/DesiredCapabilities"
 export {RestClientConfig}                                          from "./config/RestClientConfig";
 

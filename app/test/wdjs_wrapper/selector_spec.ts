@@ -1,8 +1,10 @@
-import {Browser, By, DesiredCapabilities, RunningBrowser, SeleniumConfig} from "../..";
-import {BrowserWdjs}                                                      from "../../driver/wdjs/BrowserWdjs";
+import {Browser, By, DesiredCapabilities, RunningBrowser, ServerConfig} from "../..";
+import {BrowserWdjs}                                                    from "../../driver/wdjs/BrowserWdjs";
 
-const conf: SeleniumConfig = {
-    seleniumServerAddress: `http://localhost:4444/wd/hub`,
+const conf: ServerConfig = {
+    serverAddress: {
+        hostname: `localhost`
+    },
     baseUrl: `http://framework-tester.test-steps.de`,
 };
 

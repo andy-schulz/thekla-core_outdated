@@ -1,13 +1,15 @@
-import * as _                                                         from "lodash";
-import {Browser, DesiredCapabilities, RunningBrowser, SeleniumConfig} from "../..";
-import {WindowSize}                                                   from "../../driver/interface/BrowserWindow";
-import {BrowserWdjs}                                                  from "../../driver/wdjs/BrowserWdjs";
+import * as _                                                       from "lodash";
+import {Browser, DesiredCapabilities, RunningBrowser, ServerConfig} from "../..";
+import {WindowSize}                                                 from "../../driver/interface/BrowserWindow";
+import {BrowserWdjs}                                                from "../../driver/wdjs/BrowserWdjs";
 
 describe(`Starting a browser instance`, (): void => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
-    const conf: SeleniumConfig =  {
-        seleniumServerAddress: `http://localhost:4444/wd/hub`,
+    const conf: ServerConfig =  {
+        serverAddress: {
+            hostname: `localhost`
+        },
     };
 
     const capabilities: DesiredCapabilities ={
@@ -31,7 +33,7 @@ describe(`Starting a browser instance`, (): void => {
         it(`should start a firefox instance when the browsername is "firefox" ` +
             `- (test case id: 57480387-ed1c-43ca-8da0-0767e57d106b)`, async (): Promise<void> => {
 
-            const browser: Browser = RunningBrowser.startedOn(conf).withDesiredCapability(capabilities);
+            const browser: Browser = RunningBrowser.startedOn(conf).withCapabilities(capabilities);
             const agent = await browser.executeScript(browserFunc);
             expect(agent).toContain(`Firefox`);
         });
@@ -40,7 +42,7 @@ describe(`Starting a browser instance`, (): void => {
             `- (test case id: 6936a711-f3e6-404b-aa56-94972567f8bd)`, async (): Promise<void> => {
             const capa: DesiredCapabilities = _.cloneDeep(capabilities);
             capa.browserName = `chrome`;
-            const browser: Browser = RunningBrowser.startedOn(conf).withDesiredCapability(capa);
+            const browser: Browser = RunningBrowser.startedOn(conf).withCapabilities(capa);
             const agent = await browser.executeScript(browserFunc);
             expect(agent).toContain(`Chrome`);
         });
@@ -65,7 +67,7 @@ describe(`Starting a browser instance`, (): void => {
 
         it(`it should change the viewport for the chrome browser instance` +
             `- (test case id: ff147acf-a7fd-4297-9d3d-addd4ab7b883)`, async (): Promise<void> => {
-            const con: SeleniumConfig = _.cloneDeep(conf);
+            const con: ServerConfig = _.cloneDeep(conf);
             const capa: DesiredCapabilities = _.cloneDeep(capabilities);
             capa[`goog:chromeOptions`] = {
                 args: [`--window-size=500,500`]
@@ -83,8 +85,10 @@ describe(`Starting a browser instance`, (): void => {
     describe(`and passing browser binary information`, (): void => {
         it(`should evaluate the binary for a firefox instance` +
             `- (test case id: b11e0c91-b84f-4ae3-b08d-7b8dad6d6c74)`, async (): Promise<void> => {
-            const conf: SeleniumConfig =  {
-                seleniumServerAddress: `http://localhost:4444/wd/hub`,
+            const conf: ServerConfig =  {
+                serverAddress: {
+                    hostname: `localhost`
+                },
             };
 
             const capa: DesiredCapabilities = {
@@ -94,7 +98,7 @@ describe(`Starting a browser instance`, (): void => {
                 }
             };
 
-            return RunningBrowser.startedOn(conf).withDesiredCapability(capa).get(`http://framework-tester.test-steps.de`)
+            return RunningBrowser.startedOn(conf).withCapabilities(capa).get(`http://framework-tester.test-steps.de`)
                 .then((): Promise<void> => {
                     return Promise.reject(`creating a browser with a not existing binary should throw an Error, but it doesnt`);
                 })
@@ -106,8 +110,10 @@ describe(`Starting a browser instance`, (): void => {
 
         it(`should evaluate the binary for a chrome instance` +
             `- (test case id: b11e0c91-b84f-4ae3-b08d-7b8dad6d6c74)`, async (): Promise<void> => {
-            const seleniumConfig: SeleniumConfig =  {
-                seleniumServerAddress: `http://localhost:4444/wd/hub`,
+            const seleniumConfig: ServerConfig =  {
+                serverAddress: {
+                    hostname: `localhost`
+                },
             };
 
             const capabilities: DesiredCapabilities = {
@@ -117,7 +123,7 @@ describe(`Starting a browser instance`, (): void => {
                 }
             };
 
-            return RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities).get(`http://framework-tester.test-steps.de`)
+            return RunningBrowser.startedOn(seleniumConfig).withCapabilities(capabilities).get(`http://framework-tester.test-steps.de`)
                 .then((): Promise<void> => {
                     return Promise.reject(`creating a browser with a not existing binary should throw an Error, but it doesnt`);
                 })

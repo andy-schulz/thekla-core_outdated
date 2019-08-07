@@ -6,12 +6,14 @@ import {
     element,
     See,
     Navigate,
-    Text, UntilElement, SeleniumConfig, Wait, DesiredCapabilities, Expected
+    Text, UntilElement, ServerConfig, Wait, DesiredCapabilities, Expected
 } from "../../../index";
 
 
-let seleniumConfig: SeleniumConfig = {
-    seleniumServerAddress: `http://localhost:4444/wd/hub`,
+let seleniumConfig: ServerConfig = {
+    serverAddress: {
+        hostname: `localhost`
+    },
     baseUrl: `http://framework-tester.test-steps.de`,
 };
 const capabilities: DesiredCapabilities = {
@@ -32,7 +34,7 @@ describe(`Waiting for SPP Elements`, (): void => {
 
     beforeAll((): void => {
         walterTheWaiter = Actor.named(`Walter`);
-        walterTheWaiter.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities)));
+        walterTheWaiter.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(seleniumConfig).withCapabilities(capabilities)));
     });
 
     afterAll(async (): Promise<void[][]> => {
@@ -45,11 +47,11 @@ describe(`Waiting for SPP Elements`, (): void => {
             .called(`Test appearing element after 5 seconds`)
             .shallWait(UntilElement.is.visible().forAsLongAs(20000));
 
-        const toBeEnabledButton = element(By.css(`[data-test-id='EnabledButtonBy5000']`))
+        const toBeEnabledButton = element(By.css(`[data-test-id='EnabledButtonBy4000']`))
             .called(`Test enabled element after 5 seconds`)
             .shallWait(UntilElement.is.enabled().forAsLongAs(20000));
 
-        const toBeDisabledButton = element(By.css(`[data-test-id='DisabledButtonBy5000']`))
+        const toBeDisabledButton = element(By.css(`[data-test-id='DisabledButtonBy4000']`))
             .called(`Test enabled element after 5 seconds`)
             .shallWait(UntilElement.isNot.enabled().forAsLongAs(20000));
 
@@ -57,7 +59,7 @@ describe(`Waiting for SPP Elements`, (): void => {
             `- (test case id: 7fd0c550-e31c-42fd-96f8-4ceb50e6cf3b)`, (): Promise<void> => {
             return walterTheWaiter.attemptsTo(
                 Navigate.to(`/delayed`),
-                See.if(Text.of(appearingButton)).is(Expected.toEqual(`Appeared after 5 seconds`)),
+                See.if(Text.of(appearingButton)).is(Expected.toEqual(`Appeared after 4 seconds`)),
             );
         });
 
@@ -65,7 +67,7 @@ describe(`Waiting for SPP Elements`, (): void => {
             `- (test case id: 4406f09a-5b80-4106-b46a-9f2683faefc9)`, (): Promise<void> => {
             return walterTheWaiter.attemptsTo(
                 Navigate.to(`/redirect`),
-                See.if(Text.of(appearingButton)).is(Expected.toEqual(`Appeared after 5 seconds`)),
+                See.if(Text.of(appearingButton)).is(Expected.toEqual(`Appeared after 4 seconds`)),
             );
         });
 
@@ -73,7 +75,7 @@ describe(`Waiting for SPP Elements`, (): void => {
             `- (test case id: 8419865d-b444-459d-8101-7e6912af1e08)`, (): Promise<void> => {
             return walterTheWaiter.attemptsTo(
                 Navigate.to(`/delayed`),
-                See.if(Text.of(toBeEnabledButton)).is(Expected.toEqual(`Enabled after 5 seconds`)),
+                See.if(Text.of(toBeEnabledButton)).is(Expected.toEqual(`Enabled after 4 seconds`)),
             );
         });
 
@@ -81,7 +83,7 @@ describe(`Waiting for SPP Elements`, (): void => {
             `- (test case id: a0899cd4-6548-4f15-ab19-579bd6ca1ccd)`, (): Promise<void> => {
             return  walterTheWaiter.attemptsTo(
                 Navigate.to(`/delayed`),
-                See.if(Text.of(toBeDisabledButton)).is(Expected.toEqual(`Disabled after 5 seconds`)),
+                See.if(Text.of(toBeDisabledButton)).is(Expected.toEqual(`Disabled after 4 seconds`)),
             );
         });
     });

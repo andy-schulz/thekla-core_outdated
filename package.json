@@ -8,7 +8,13 @@
     "prepare": "npm run build",
     "test": "tsc & jasmine --config=app/test/support/jasmine.json",
     "build": "./node_modules/.bin/del-cli dist/**/* & tsc",
-    "postversion": "git push --tags"
+    "postversion": "git push --tags",
+    "test-all": "tsc & run-p test:wdjs test:wdio test:scpl test:rapi test:tlib",
+    "test:wdjs": "jasmine --config=app/test/support/jasmine_parallel.json dist/test/wdjs_wrapper/**/*[sS]pec.js",
+    "test:wdio": "jasmine --config=app/test/support/jasmine_parallel.json dist/test/wdio_wrapper/**/*[sS]pec.js",
+    "test:scpl": "jasmine --config=app/test/support/jasmine_parallel.json dist/test/screenplay/**/*[sS]pec.js",
+    "test:rapi": "jasmine --config=app/test/support/jasmine_parallel.json dist/test/rest_api/**/*[sS]pec.js",
+    "test:tlib": "jasmine --config=app/test/support/jasmine_parallel.json dist/test/lib_test/**/*[sS]pec.js"
   },
   "repository": {
     "type": "git",
@@ -40,6 +46,7 @@
     "request-promise-native": "^1.0.7",
     "selenium-webdriver": "^4.0.0-alpha.1",
     "typescript": "^3.5.1",
+    "webdriver": "^5.11.13",
     "webdriverjs_annotator": "^1.1.4",
     "yargs": "^12.0.5"
   },
@@ -55,6 +62,7 @@
     "eslint-plugin-promise": "^4.1.1",
     "eslint-plugin-standard": "^4.0.0",
     "jasmine": "^3.4.0",
+    "npm-run-all": "^4.1.5",
     "uuid": "^3.3.2"
   }
 }

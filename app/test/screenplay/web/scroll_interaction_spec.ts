@@ -2,7 +2,7 @@ import {
     DesiredCapabilities,
     By,
     UntilElement,
-    SeleniumConfig,
+    ServerConfig,
     Actor,
     BrowseTheWeb,
     RunningBrowser,
@@ -20,8 +20,10 @@ describe(`Scroll`, (): void => {
 
     const classNameOfLastRow = `lastTableRow`;
 
-    const conf: SeleniumConfig = {
-        seleniumServerAddress: `http://localhost:4444/wd/hub`,
+    const conf: ServerConfig = {
+        serverAddress: {
+            hostname: `localhost`
+        }
     };
 
     const capabilities: DesiredCapabilities = {
@@ -36,7 +38,7 @@ describe(`Scroll`, (): void => {
 
         beforeAll((): void => {
             // and give him the ability to browse the web using a browser of your choice
-            theBrowser = RunningBrowser.startedOn(conf).withDesiredCapability(capabilities);
+            theBrowser = RunningBrowser.startedOn(conf).withCapabilities(capabilities);
             Sam.whoCan(BrowseTheWeb.using(theBrowser));
         });
 
@@ -68,7 +70,7 @@ describe(`Scroll`, (): void => {
 
         beforeAll((): void => {
             // and give him the ability to browse the web using a browser of your choice
-            theBrowser = RunningBrowser.startedOn(conf).withDesiredCapability(capabilities);
+            theBrowser = RunningBrowser.startedOn(conf).withCapabilities(capabilities);
             Sam.whoCan(BrowseTheWeb.using(theBrowser));
         });
 

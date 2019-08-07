@@ -10,14 +10,16 @@ import {
     See,
     Text,
     UntilElement,
-    SeleniumConfig, Expected
+    ServerConfig, Expected
 } from "../../../index";
 
 import {configure} from "log4js";
 configure(`res/config/log4js.json`);
 
-let config: SeleniumConfig = {
-    seleniumServerAddress: `http://localhost:4444/wd/hub`,
+let config: ServerConfig = {
+    serverAddress: {
+        hostname: `localhost`
+    },
     baseUrl: `http://framework-tester.test-steps.de`,
 };
 
@@ -35,7 +37,7 @@ describe(`Locating Elements inside Frames`, (): void => {
 
     beforeAll((): void => {
         Francine = Actor.named(`Francine`);
-        Francine.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(config).withDesiredCapability(capabilities)));
+        Francine.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(config).withCapabilities(capabilities)));
     });
 
     afterAll(async (): Promise<void[][]> => {

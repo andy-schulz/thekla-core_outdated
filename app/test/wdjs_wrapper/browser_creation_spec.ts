@@ -1,8 +1,10 @@
-import {BrowserWdjs}                                  from "../../driver/wdjs/BrowserWdjs";
-import {Browser, DesiredCapabilities, SeleniumConfig} from "../..";
+import {BrowserWdjs}                                from "../../driver/wdjs/BrowserWdjs";
+import {Browser, DesiredCapabilities, ServerConfig} from "../..";
 
-const conf: SeleniumConfig = {
-    seleniumServerAddress: `http://localhost:4444/wd/hub`,
+const conf: ServerConfig = {
+    serverAddress: {
+        hostname: `localhost`
+    },
 };
 
 const capabilities: DesiredCapabilities = {
@@ -25,9 +27,9 @@ describe(`When using the BrowserWdjs class`, (): void => {
             `- (test case id: f25ffac2-c583-458b-9ee1-db22a6ef0423)`, (): void => {
             try {
                 BrowserWdjs.create(conf,capabilities, ``);
-                expect(true).toBeFalsy(`Creating a browser with an empty string should throw an error, but it doesnt`);
+                expect(true).toBeFalsy(`Creating a client with an empty string should throw an error, but it doesnt`);
             } catch (e) {
-                expect(e.toString()).toContain(`invalid browser name ''`);
+                expect(e.toString()).toContain(`invalid client name ''`);
             }
         }, 20000);
 
@@ -40,7 +42,7 @@ describe(`When using the BrowserWdjs class`, (): void => {
                     BrowserWdjs.create(conf, capabilities, browserName);
                     expect(true). toBeFalsy(`Creating a browser with invalid characters should throw an error, but it doesnt!`);
                 }
-                catch (e) {expect(e.toString()).toMatch(/^Error: browser name (.*) contains invalid characters. Allowed characters are: (.*)/)}
+                catch (e) {expect(e.toString()).toMatch(/^Error: client name (.*) contains invalid characters. Allowed characters are: (.*)/)}
 
             });
         }, 20000);

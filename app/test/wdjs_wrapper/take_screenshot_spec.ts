@@ -3,7 +3,7 @@ import * as fs       from "fs";
 import fsExtra       from "fs-extra";
 import * as uuid     from "uuid";
 import {
-    Browser, RunningBrowser, BrowserScreenshotData, SeleniumConfig, DesiredCapabilities
+    Browser, RunningBrowser, BrowserScreenshotData, ServerConfig, DesiredCapabilities
 }                    from "../..";
 
 
@@ -15,8 +15,10 @@ describe(`Taking a screenshot`, (): void => {
 
     // const googleClockSearch = `https://www.google.de/search?q=clock&btnK=Google-Suche`;
     const googleClockSearch = `http://framework-tester.test-steps.de/delayed`;
-    const conf: SeleniumConfig = {
-        seleniumServerAddress: `http://localhost:4444/wd/hub`,
+    const conf: ServerConfig = {
+        serverAddress: {
+            hostname: `localhost`
+        },
     };
 
     const capabilities: DesiredCapabilities = {

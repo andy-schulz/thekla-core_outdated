@@ -3,7 +3,7 @@ import {
     RunningBrowser,
     By,
     Key,
-    SeleniumConfig,
+    ServerConfig,
     UntilElement,
     WebElementFinder,
     DesiredCapabilities
@@ -11,8 +11,10 @@ import {
 import {BrowserWdjs} from "../../driver/wdjs/BrowserWdjs";
 
 describe(`Using Google Search to find an online calculator`, (): void => {
-    const conf: SeleniumConfig = {
-        seleniumServerAddress: `http://localhost:4444/wd/hub`,
+    const conf: ServerConfig = {
+        serverAddress: {
+            hostname: `localhost`
+        },
     };
 
     const capabilities: DesiredCapabilities = {

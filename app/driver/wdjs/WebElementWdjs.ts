@@ -97,7 +97,8 @@ export class WebElementWdjs implements WebElementFinder {
     }
 
     public sendKeys(keySequence: string): Promise<void> {
-        return this.getWebElement().then((element): promise.Promise<void> => element.sendKeys(keySequence))
+        return this.getWebElement()
+            .then((element): promise.Promise<void> => element.sendKeys(keySequence))
     }
 
     public getText(): Promise<string> {

@@ -12,7 +12,7 @@ import {
     See,
     Text,
     UntilElement,
-    SeleniumConfig, Expected
+    ServerConfig, Expected
 } from "../../../index";
 
 class GooglePgo {
@@ -34,8 +34,10 @@ const logger = getLogger(`DocSppExamples`);
 
 describe(`Using Google Search to find an online calculator`, (): void => {
     logger.trace(`Start Google Search test`);
-    const conf: SeleniumConfig = {
-        seleniumServerAddress: `http://localhost:4444/wd/hub`,
+    const conf: ServerConfig = {
+        serverAddress: {
+            hostname: `localhost`
+        }
     };
 
     const capabilities: DesiredCapabilities = {
@@ -48,7 +50,7 @@ describe(`Using Google Search to find an online calculator`, (): void => {
 
         beforeAll((): void => {
             // and give him the ability to browse the web using a browser of your choice
-            philipp.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(conf).withDesiredCapability(capabilities)));
+            philipp.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(conf).withCapabilities(capabilities)));
         });
 
         it(`the google calculator should be loaded - (test case id: ee1fcbb5-eb08-4f0d-979b-601ba9b63d87)`, async (): Promise<void> => {

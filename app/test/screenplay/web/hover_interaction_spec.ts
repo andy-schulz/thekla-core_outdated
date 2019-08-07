@@ -2,7 +2,7 @@ import {
     DesiredCapabilities,
     By,
     UntilElement,
-    SeleniumConfig,
+    ServerConfig,
     Actor,
     BrowseTheWeb,
     RunningBrowser,
@@ -23,8 +23,10 @@ describe(`Hover`, (): void => {
             .shallWait(UntilElement.is.visible().forAsLongAs(5000))
             .called(`the general danger button in red`);
 
-        const conf: SeleniumConfig = {
-            seleniumServerAddress: `http://localhost:4444/wd/hub`,
+        const conf: ServerConfig = {
+            serverAddress: {
+                hostname: `localhost`
+            }
         };
 
         const capabilities: DesiredCapabilities = {
@@ -35,7 +37,7 @@ describe(`Hover`, (): void => {
 
         beforeAll((): void => {
             // and give him the ability to browse the web using a browser of your choice
-            Howard.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(conf).withDesiredCapability(capabilities)));
+            Howard.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(conf).withCapabilities(capabilities)));
         });
 
         it(`should display additional information 

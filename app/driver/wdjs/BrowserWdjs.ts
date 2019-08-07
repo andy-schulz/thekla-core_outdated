@@ -2,13 +2,16 @@ import {getLogger, Logger} from "@log4js-node/log4js-api";
 
 import {Builder, promise, ThenableWebDriver, WebDriver, WebElement} from "selenium-webdriver";
 import {DesiredCapabilities, ProxyConfig}                           from "../../config/DesiredCapabilities";
-import {SeleniumConfig}                                             from "../../config/SeleniumConfig";
+import {ServerConfig}                                               from "../../config/ServerConfig";
 
 import {Browser, BrowserScreenshotData}         from "../interface/Browser";
 import {BrowserWindow}                          from "../interface/BrowserWindow";
+import {cleanupClients, executeFnOnClient}      from "../lib/BrowserHelper";
+import {checkClientName}                        from "../lib/checks";
 import {UntilElementCondition}                  from "../lib/ElementConditions";
 import {By}                                     from "../lib/Locator";
 import {WebElementFinder, WebElementListFinder} from "../interface/WebElements";
+import {getServerUrl}                           from "../lib/url_formatter";
 import {BrowserWindowWdjs}                      from "./BrowserWindowWdjs";
 import {FrameElementWdjs}                       from "./FrameElementWdjs";
 import {FrameHelper}                            from "./interfaces/WdElement";
@@ -33,7 +36,7 @@ export class BrowserWdjs implements Browser {
 
     private constructor(
         private getDrvr: () => Promise<WebDriver>,
-        private _selConfig: SeleniumConfig,
+        private _selConfig: ServerConfig,
         private browserName: string = ``) {
     }
 
@@ -41,7 +44,7 @@ export class BrowserWdjs implements Browser {
     //
     // }
 
-    public getDriver(): Promise<WebDriver> {
+    public getDriver = (): Promise<WebDriver> => {
         return this.getDrvr()
             .then((driver): WebDriver => {
                 if(!this.driverCreated) {
@@ -51,7 +54,7 @@ export class BrowserWdjs implements Browser {
                 this.driverCreated = true;
                 return driver;
             })
-    }
+    };
 
     public get annotateElement(): boolean | undefined {
         return this._selConfig.annotateElement
@@ -75,16 +78,11 @@ export class BrowserWdjs implements Browser {
      * @throws - Error in case the given browser name is empty or already exists
      */
     public static create(
-        selConf: SeleniumConfig,
+        selConf: ServerConfig,
         capabilities: DesiredCapabilities,
         browserName: string = `browser${this.browserMap.size + 1}`): Browser {
 
-        if (!browserName)
-            throw new Error(`invalid browser name '${browserName}'`);
-
-        const regex = /^[a-zA-Z0-9_\-]+$/;
-        if (!browserName.match(regex))
-            throw new Error(`browser name '${browserName}' contains invalid characters. Allowed characters are: [a-z]*[A-Z]*[_-]*[0-9]*`);
+        checkClientName(browserName);
 
         if (this.browserMap.has(browserName)) {
             throw new Error(`browser name '${browserName}' already exists, choose another one`);
@@ -95,7 +93,7 @@ export class BrowserWdjs implements Browser {
             // const capa: DesiredCapabilities = typeof capabilities === "function" ? capabilities() : capabilities;
             const capa: DesiredCapabilities = capabilities;
 
-            builder = builder.usingServer(selConf.seleniumServerAddress);
+            builder = builder.usingServer(getServerUrl(selConf.serverAddress));
             builder.withCapabilities(capa);
             this.setProxy(builder, capa.proxy);
 
@@ -197,36 +195,11 @@ export class BrowserWdjs implements Browser {
      *
      * @returns - resolved Promise after all browsers are closed
      */
+
     public static cleanup(browserToClean?: Browser[]): Promise<void[]> {
-
-        if (browserToClean) {
-            let browserCleanupPromises: Promise<void>[] = [];
-
-            const entries = [...this.browserMap.entries()];
-            browserToClean.map((browser: Browser): void => {
-                entries.map((browserEntry: [string, Browser]): void => {
-                    if (browser === browserEntry[1]) {
-                        browserCleanupPromises.push(browser.quit());
-                        this.browserMap.delete(browserEntry[0]);
-                    }
-                });
-            });
-
-            return Promise.all(browserCleanupPromises);
-        }
-
-        return Promise.all(
-            [...this.browserMap.values()]
-                .map((browser): Promise<void> => {
-                    return browser.quit();
-                })
-        )
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            .then((result: any[]): any[] => {
-                this.browserMap.clear();
-                return result;
-            })
+        return cleanupClients(this.browserMap, browserToClean)
     }
+
 
     /**
      * startedOn screenshots of all browser created with BrowserWdjs.startedOn
@@ -428,14 +401,15 @@ export class BrowserWdjs implements Browser {
      * return the browsers title
      */
     public getTitle(): Promise<string> {
-        return new Promise((fulfill, reject): void => {
-            this.getDriver()
-                .then((driver): void => {
-                    driver.getTitle()
-                        .then(fulfill, reject)
-                })
-                .catch(reject)
-        })
+        return executeFnOnClient(this.getDriver, `getTitle`, [])
+        // return new Promise((fulfill, reject): void => {
+        //     this.getDriver()
+        //         .then((driver): void => {
+        //             driver.getTitle()
+        //                 .then(fulfill, reject)
+        //         })
+        //         .catch(reject)
+        // })
     }
 
     /**

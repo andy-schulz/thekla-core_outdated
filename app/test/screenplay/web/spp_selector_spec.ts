@@ -8,7 +8,7 @@ import {
     Navigate,
     See,
     Text,
-    SeleniumConfig,
+    ServerConfig,
     Click,
     UntilElement, Expected
 } from "../../../index";
@@ -19,8 +19,10 @@ configure(`res/config/log4js.json`);
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL=30000;
 
-let config: SeleniumConfig = {
-    seleniumServerAddress: `http://localhost:4444/wd/hub`,
+let config: ServerConfig = {
+    serverAddress: {
+        hostname: `localhost`
+    },
     baseUrl: `http://framework-tester.test-steps.de`,
 };
 
@@ -36,7 +38,7 @@ describe(`When locating an element,`, (): void => {
 
     beforeAll((): void => {
         john = Actor.named(`John`);
-        john.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(config).withDesiredCapability(capabilities)));
+        john.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(config).withCapabilities(capabilities)));
     });
 
     describe(`by xpath`, (): void => {

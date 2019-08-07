@@ -7,7 +7,7 @@ import {
     See,
     Key,
     Text,
-    SeleniumConfig,
+    ServerConfig,
     UntilElement, Wait, DesiredCapabilities, Expected
 } from "../../../index";
 
@@ -15,8 +15,10 @@ import {GoogleSearch}     from "../../page_objects/GoogleSearch/GoogleSearch";
 import {Add}              from "../../page_objects/GoogleCalculator/Add";
 import {GoogleCalculator} from "../../page_objects/GoogleCalculator/GoogleCalculator";
 
-let config: SeleniumConfig = {
-    seleniumServerAddress: `http://localhost:4444/wd/hub`,
+let config: ServerConfig = {
+    serverAddress: {
+        hostname: `localhost`
+    },
 };
 
 const capabilities: DesiredCapabilities = {
@@ -35,7 +37,7 @@ describe(`Searching on Google`, (): void => {
 
     beforeAll((): void => {
         John = Actor.named(`John`);
-        John.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(config).withDesiredCapability(capabilities)));
+        John.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(config).withCapabilities(capabilities)));
     });
 
     it(`for calculator should show the Google calculator ` +

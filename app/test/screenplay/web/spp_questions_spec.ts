@@ -1,6 +1,6 @@
 import {
     DesiredCapabilities,
-    SeleniumConfig,
+    ServerConfig,
     Browser,
     RunningBrowser,
     Actor,
@@ -16,8 +16,10 @@ import {configure} from "log4js";
 configure(`res/config/log4js.json`);
 
 
-let seleniumConfig: SeleniumConfig = {
-    seleniumServerAddress: `http://localhost:4444/wd/hub`,
+let seleniumConfig: ServerConfig = {
+    serverAddress: {
+        hostname: `localhost`,
+    },
     baseUrl: `http://framework-tester.test-steps.de`,
 };
 const capabilities: DesiredCapabilities ={
@@ -41,7 +43,7 @@ describe(`Using`, (): void => {
         let browser: Browser;
 
         beforeAll((): void => {
-            browser = RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities);
+            browser = RunningBrowser.startedOn(seleniumConfig).withCapabilities(capabilities);
             Joanna.can(BrowseTheWeb.using(browser))
         });
 
@@ -66,7 +68,7 @@ describe(`Using`, (): void => {
         let John: Actor = Actor.named(`John`);
 
         beforeAll((): void => {
-            const browser = RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities);
+            const browser = RunningBrowser.startedOn(seleniumConfig).withCapabilities(capabilities);
             John.can(BrowseTheWeb.using(browser));
         });
 
@@ -115,7 +117,7 @@ describe(`Using`, (): void => {
         let Jonathan: Actor = Actor.named(`Jonathan`);
 
         beforeAll((): void => {
-            const browser = RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities);
+            const browser = RunningBrowser.startedOn(seleniumConfig).withCapabilities(capabilities);
             Jonathan.can(BrowseTheWeb.using(browser));
         });
 
@@ -137,7 +139,7 @@ describe(`Using`, (): void => {
 
 
         beforeAll((): void => {
-            const browser = RunningBrowser.startedOn(seleniumConfig).withDesiredCapability(capabilities);
+            const browser = RunningBrowser.startedOn(seleniumConfig).withCapabilities(capabilities);
             Jonathan.can(BrowseTheWeb.using(browser));
         });
 

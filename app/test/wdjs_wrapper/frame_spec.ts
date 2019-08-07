@@ -1,10 +1,12 @@
 import {
-    Browser, By, UntilElement, SeleniumConfig, DesiredCapabilities
+    Browser, By, UntilElement, ServerConfig, DesiredCapabilities
 } from "../..";
 import {BrowserWdjs} from "../../driver/wdjs/BrowserWdjs";
 
-const conf: SeleniumConfig = {
-    seleniumServerAddress: `http://localhost:4444/wd/hub`,
+const conf: ServerConfig = {
+    serverAddress: {
+        hostname: `localhost`
+    },
     baseUrl: `http://framework-tester.test-steps.de`,
 };
 

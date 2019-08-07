@@ -1,8 +1,10 @@
-import {BrowserWdjs}                                                        from "../../driver/wdjs/BrowserWdjs";
-import {Browser, DesiredCapabilities, WebElementFinder, SeleniumConfig, By} from "../..";
+import {BrowserWdjs}                                                      from "../../driver/wdjs/BrowserWdjs";
+import {Browser, DesiredCapabilities, WebElementFinder, ServerConfig, By} from "../..";
 
-const conf: SeleniumConfig = {
-    seleniumServerAddress: `http://localhost:4444/wd/hub`,
+const conf: ServerConfig = {
+    serverAddress: {
+        hostname: `localhost`
+    },
     baseUrl: `http://framework-tester.test-steps.de`,
 };
 
@@ -16,7 +18,7 @@ const capabilities: DesiredCapabilities = {
 describe(`When annotating`, (): void => {
 
     describe(`an element`, (): void => {
-        const confAnnotate: SeleniumConfig = conf;
+        const confAnnotate: ServerConfig = conf;
         confAnnotate.annotateElement = true;
         let browser: Browser;
 
@@ -111,7 +113,7 @@ describe(`When annotating`, (): void => {
     });
 
     describe(`the test with a message`, (): void => {
-        const confAnnotate: SeleniumConfig = conf;
+        const confAnnotate: ServerConfig = conf;
         confAnnotate.displayTestMessages = true;
         let browser: Browser;
 

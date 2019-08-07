@@ -6,10 +6,9 @@ import {
     By,
     until,
     Utils,
-    SeleniumConfig, DesiredCapabilities
+    ServerConfig, DesiredCapabilities
 }                       from "../..";
 import {BrowserWdjs}    from "../../driver/wdjs/BrowserWdjs";
-import {WdElement}      from "../../driver/wdjs/interfaces/WdElement";
 import {WebElementWdjs} from "../../driver/wdjs/WebElementWdjs";
 
 import {configure}                   from "log4js";
@@ -18,8 +17,10 @@ configure(`res/config/log4js.json`);
 
 describe(`When using the Browser object`, (): void => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
-    const conf: SeleniumConfig = {
-        seleniumServerAddress: `http://localhost:4444/wd/hub`,
+    const conf: ServerConfig = {
+        serverAddress: {
+            hostname: `localhost`
+        },
         baseUrl: `http://framework-tester.test-steps.de`
     };
 
@@ -29,16 +30,6 @@ describe(`When using the Browser object`, (): void => {
             type: `system`
         }
     };
-    // firefoxOptions: {
-    // binary: "C:\\PProgramme\\FirefoxPortable64\\App\\Firefox\\firefox.exe",
-    // binary: "C:\\PProgramme\\FirefoxPortable\\App\\Firefox\\firefox.exe",
-    // proxy: {
-    //     proxyType: "direct"
-    // }
-    // }
-    // chromeOptions: {
-    //     binary: "C:\\PProgramme\\GoogleChromePortable64\\App\\Chrome-bin\\chrome.exe"
-    // }
 
     const testurl = `http://framework-tester.test-steps.de`;
 
@@ -319,14 +310,14 @@ describe(`When using the Browser object`, (): void => {
 
     describe(`and try to wait for an Element to be ENABLED`, (): void => {
         let browser: Browser;
-        let enabledButton5000: WebElementFinder;
-        let disabledButton5000: WebElementFinder;
+        let enabledButton4000: WebElementFinder;
+        let disabledButton4000: WebElementFinder;
 
 
         beforeAll((): void => {
             browser = BrowserWdjs.create(conf, capabilities);
-            enabledButton5000 = browser.element(By.css(`[data-test-id='EnabledButtonBy5000']`));
-            disabledButton5000 = browser.element(By.css(`[data-test-id='DisabledButtonBy5000']`));
+            enabledButton4000 = browser.element(By.css(`[data-test-id='EnabledButtonBy4000']`));
+            disabledButton4000 = browser.element(By.css(`[data-test-id='DisabledButtonBy4000']`));
         });
 
         beforeEach((): Promise<void> => {
@@ -336,48 +327,21 @@ describe(`When using the Browser object`, (): void => {
         it(`the system should wait for 5 Seconds for the element to be enabled 
             - (test case id: a1558fb9-fdee-4775-b44d-8cd848d517b2)`, async (): Promise<void> => {
             // expect(await delayButton5000.isVisible()).toEqual(true);
-            expect(await enabledButton5000.isEnabled()).toEqual(false, `the button should be disabled at first check`);
-            await browser.wait(until((): Promise<boolean> => enabledButton5000.isEnabled()));
-            expect(await enabledButton5000.isEnabled()).toEqual(true, `the button should be enabled after 5 seconds`);
+            expect(await enabledButton4000.isEnabled()).toEqual(false, `the button should be disabled at first check`);
+            await browser.wait(until((): Promise<boolean> => enabledButton4000.isEnabled()));
+            expect(await enabledButton4000.isEnabled()).toEqual(true, `the button should be enabled after 5 seconds`);
 
         });
 
         it(`the system should wait for 5 Seconds for the element to be disabled 
             - (test case id: 010e0544-4852-4258-9729-30a2ff5ca063)`, async (): Promise<void> => {
             // expect(await delayButton5000.isVisible()).toEqual(true);
-            expect(await disabledButton5000.isEnabled()).toEqual(true, `the button should be enabled at first check`);
-            await browser.wait(until.not((): Promise<boolean> => disabledButton5000.isEnabled()));
-            expect(await disabledButton5000.isEnabled()).toEqual(false, `the button should be disabled after 5 seconds`);
+            expect(await disabledButton4000.isEnabled()).toEqual(true, `the button should be enabled at first check`);
+            await browser.wait(until.not((): Promise<boolean> => disabledButton4000.isEnabled()));
+            expect(await disabledButton4000.isEnabled()).toEqual(false, `the button should be disabled after 5 seconds`);
 
         }, 7000);
 
-    });
-
-    describe(`and work with the title`, (): void => {
-        let browser: Browser;
-
-        beforeAll( (): void => {
-            browser = BrowserWdjs.create(conf, capabilities);
-        });
-
-        beforeEach( (): Promise<void> => {
-            return  browser.get(testurl);
-        });
-
-        it(`the getTitle method should get the correct title 
-        - (test case id: 69c764e0-ad69-4bdf-b2a1-fd259ea57d04)`, async (): Promise<void> => {
-            expect(await browser.getTitle()).toEqual(`React App`);
-        });
-
-        it(`the hasTitle method should test for the correct title 
-        - (test case id: 32a63a6a-cd0d-43e8-8806-3f4a9b07614d)`, async (): Promise<void> => {
-            expect(await browser.hasTitle(`React App`)).toEqual(true);
-        });
-
-        it(`the hasTitle method should return false when the given title is not correct. 
-        - (test case id: 03314fd1-dd48-474c-be45-7360853c3ff5)`, async (): Promise<void> => {
-            expect(await browser.hasTitle(`ReactApp`)).toEqual(false);
-        });
     });
 
     afterAll(async (): Promise<void[][]> => {

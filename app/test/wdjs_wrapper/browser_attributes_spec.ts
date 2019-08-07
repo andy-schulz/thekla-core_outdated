@@ -1,10 +1,12 @@
-import * as _                                from "lodash";
-import {WindowSize}                          from "../../driver/interface/BrowserWindow";
-import {BrowserWdjs}                         from "../../driver/wdjs/BrowserWdjs";
-import {DesiredCapabilities, SeleniumConfig} from "../..";
+import * as _                              from "lodash";
+import {WindowSize}                        from "../../driver/interface/BrowserWindow";
+import {BrowserWdjs}                       from "../../driver/wdjs/BrowserWdjs";
+import {DesiredCapabilities, ServerConfig} from "../..";
 
-const conf: SeleniumConfig = {
-    seleniumServerAddress: `http://localhost:4444/wd/hub`,
+const conf: ServerConfig = {
+    serverAddress: {
+        hostname: `localhost`
+    },
 };
 
 const capabilities: DesiredCapabilities = {
@@ -24,7 +26,7 @@ describe(`creating a new Browser`, (): void => {
     describe(`with an initial window setSize`, (): void => {
         it(`it should be maximized when the config contains the "maximum" attribute ` +
             `- (test case id: 8a0d9a58-9591-43c1-89bb-d848319c90f1)`, async (): Promise<void> => {
-            const con: SeleniumConfig = _.cloneDeep(conf);
+            const con: ServerConfig = _.cloneDeep(conf);
             ((capabilities) as DesiredCapabilities).window = {
                 setToMaxSize: true
             };

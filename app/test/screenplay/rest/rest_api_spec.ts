@@ -60,20 +60,12 @@ describe(`Trying to Add two numbers by the mathjs API`, (): void => {
             }
         };
 
-
-        if (yargs.argv.proxy) {
+        console.log(process.env.MY_PROXY);
+        if (process.env.MY_PROXY) {
             if(!restConfig.requestOptions)
                 restConfig.requestOptions = {};
-            (restConfig.requestOptions).proxy = yargs.argv.proxy;
-        } else if(yargs.argv._[0].includes(`proxy=`)) {
-            if(!restConfig.requestOptions)
-                restConfig.requestOptions = {};
-            restConfig.requestOptions.proxy = yargs.argv._[0].replace(`proxy=`,``);
+            (restConfig.requestOptions).proxy = process.env.MY_PROXY;
         }
-
-        // extractor = (request: any) => {
-        //     statusCode = request.response ? request.response.statusCode: undefined;
-        // };
 
         Richard = Actor.named(`Richard`);
         Richard.whoCan(UseTheRestApi.with(ExecutingRestClient.from(restConfig)));
