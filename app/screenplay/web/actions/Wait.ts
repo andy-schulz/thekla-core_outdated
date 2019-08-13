@@ -5,9 +5,9 @@ import {stepDetails}           from "../../lib/decorators/step_decorators";
 import {BrowseTheWeb}          from "../abilities/BrowseTheWeb";
 import {SppWebElementFinder}   from "../SppWebElements";
 import {Interaction}           from "../../lib/actions/Activities";
-import {UsesAbilities}  from "../../Actor";
+import {UsesAbilities}         from "../../Actor";
 import {getLogger}             from "@log4js-node/log4js-api"
-import {UntilElementCondition} from "../../../driver/lib/ElementConditions";
+import {UntilElementCondition} from "../../../driver/lib/element/ElementConditions";
 
 export class Wait implements Interaction<void, void> {
     private logger = getLogger(`Wait`);

@@ -1,5 +1,5 @@
 import {WebElementListFinder}                                        from "../../../driver/interface/WebElements";
-import {UntilElementCondition}                                       from "../../../driver/lib/ElementConditions";
+import {UntilElementCondition}                                       from "../../../driver/lib/element/ElementConditions";
 import {Ability}                                                     from "../../lib/abilities/Ability";
 import {Browser, WebElementFinder}                                   from "../../../index";
 import {UsesAbilities}                                               from "../../Actor";

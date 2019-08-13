@@ -23,7 +23,7 @@ let seleniumConfig: ServerConfig = {
     baseUrl: `http://framework-tester.test-steps.de`,
 };
 const capabilities: DesiredCapabilities ={
-    browserName: `chrome`,
+    browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
     proxy: {
         type: `direct`
     }

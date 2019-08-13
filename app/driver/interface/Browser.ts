@@ -1,5 +1,6 @@
-import {UntilElementCondition}                    from "../lib/ElementConditions";
+import {UntilElementCondition}                    from "../lib/element/ElementConditions";
 import {BrowserWindow}                            from "./BrowserWindow";
+import {ClientCtrls}                              from "./ClientCtrls";
 import {FrameFinder, WebElementFinder, WebFinder} from "./WebElements";
 import {Condition}                                from "../lib/Condition";
 
@@ -8,7 +9,7 @@ export interface BrowserScreenshotData {
     browserScreenshotData: string;
 }
 
-export interface Browser extends WebFinder, FrameFinder{
+export interface Browser extends WebFinder, FrameFinder {
     window: BrowserWindow;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     get(url: string): Promise<any>;

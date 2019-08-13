@@ -41,7 +41,7 @@ describe(`Using Google Search to find an online calculator`, (): void => {
     };
 
     const capabilities: DesiredCapabilities = {
-        browserName: `chrome`,
+        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
     };
 
     describe(`with the screenplay pattern implementation,`, (): void => {

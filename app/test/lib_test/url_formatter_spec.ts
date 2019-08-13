@@ -1,5 +1,5 @@
 import {ServerAddress} from "../../config/ServerConfig";
-import {getServerUrl}  from "../../driver/lib/url_formatter";
+import {getServerUrl}  from "../../driver/lib/config/url_formatter";
 
 describe(`creating the url`, (): void => {
 

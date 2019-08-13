@@ -1,7 +1,7 @@
-import {By as ByWd, promise, WebElement} from "selenium-webdriver";
-import {By}                              from "../lib/Locator";
-import {BrowserWdjs}                     from "./BrowserWdjs";
-import {WdElement}                       from "./interfaces/WdElement";
+import {By as ByWd, promise, WebDriver} from "selenium-webdriver";
+import {ClientCtrls}                    from "../interface/ClientCtrls";
+import {By}                             from "../lib/element/Locator";
+import {WebElementJS}                   from "./wrapper/WedElementJS";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 let clientSideScripts = require(`../../../res/browser/clientsidescripts`);
@@ -27,40 +27,41 @@ export class LocatorWdjs {
 
     }
 
-    public static executeSelector(locator: By, parentElement: WdElement, browser: BrowserWdjs): Promise<WebElement[]> {
+    // public static executeSelector(locator: By, parentElement: WebElementJS, browser: ClientCtrls<WebDriver>): Promise<WebElementJS[]> {
 
-        switch (locator.selectorType) {
-            case `byCss`:
-                return new Promise((resolve, reject): void => {
-                    parentElement.findElements(ByWd.css(locator.selector))
-                        .then(resolve, reject)
-                        .catch(reject)
-                });
-            case `byXpath`:
-                return new Promise((resolve, reject): void => {
-                    parentElement.findElements(ByWd.xpath(locator.selector))
-                        .then(resolve, reject)
-                        .catch(reject)
-                });
-            case `byJs`:
-                return new Promise((resolve, reject): void => {
-                    parentElement.findElements(ByWd.js(locator.function, locator.args))
-                        .then(resolve,reject)
-                        .catch(reject)
-                });
-            case `byCssContainingText`:
-                return browser.getDriver()
-                    .then((driver): promise.Promise<WebElement[]> => {
-                        return driver.findElements(
-                            ByWd.js(
-                                clientSideScripts.findByCssContainingText,
-                                locator.selector,
-                                locator.searchText,
-                                parentElement));
-                    });
-
-            default:
-                throw Error(`Selector ${locator.selectorType} not implemented for framework WebDriverJS`);
-        }
-    }
+    // switch (locator.selectorType) {
+    //     case `byCss`:
+    //         return parentElement.findElements(locator)
+    //         return new Promise((resolve, reject): void => {
+    //             parentElement.findElements(ByWd.css(locator.selector))
+    //                 .then(resolve, reject)
+    //                 .catch(reject)
+    //         });
+    //     case `byXpath`:
+    //         return new Promise((resolve, reject): void => {
+    //             parentElement.findElements(ByWd.xpath(locator.selector))
+    //                 .then(resolve, reject)
+    //                 .catch(reject)
+    //         });
+    //     case `byJs`:
+    //         return new Promise((resolve, reject): void => {
+    //             parentElement.findElements(ByWd.js(locator.function, locator.args))
+    //                 .then(resolve,reject)
+    //                 .catch(reject)
+    //         });
+    //     case `byCssContainingText`:
+    //         return browser.getFrameWorkClient()
+    //             .then((driver): promise.Promise<WebElementJS[]> => {
+    //                 return driver.findElements(
+    //                     ByWd.js(
+    //                         clientSideScripts.findByCssContainingText,
+    //                         locator.selector,
+    //                         locator.searchText,
+    //                         parentElement));
+    //             });
+    //
+    //     default:
+    //         throw Error(`Selector ${locator.selectorType} not implemented for framework WebDriverJS`);
+    // }
+    // }
 }

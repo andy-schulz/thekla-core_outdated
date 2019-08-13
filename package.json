@@ -9,12 +9,11 @@
     "test": "tsc & jasmine --config=app/test/support/jasmine.json",
     "build": "./node_modules/.bin/del-cli dist/**/* & tsc",
     "postversion": "git push --tags",
-    "test-all": "tsc & run-p test:wdjs test:wdio test:scpl test:rapi test:tlib",
-    "test:wdjs": "jasmine --config=app/test/support/jasmine_parallel.json dist/test/wdjs_wrapper/**/*[sS]pec.js",
-    "test:wdio": "jasmine --config=app/test/support/jasmine_parallel.json dist/test/wdio_wrapper/**/*[sS]pec.js",
-    "test:scpl": "jasmine --config=app/test/support/jasmine_parallel.json dist/test/screenplay/**/*[sS]pec.js",
-    "test:rapi": "jasmine --config=app/test/support/jasmine_parallel.json dist/test/rest_api/**/*[sS]pec.js",
-    "test:tlib": "jasmine --config=app/test/support/jasmine_parallel.json dist/test/lib_test/**/*[sS]pec.js"
+    "test-all": "tsc & run-p test:wdio:ch",
+    "test:wdio:ff": "jasmine --config=app/test/support/jasmine_wdio_firefox.json --helpers=dist/test/support/helpers/wdio_firefox.js",
+    "test:wdio:ch": "jasmine --config=app/test/support/jasmine_wdio_chrome.json",
+    "test:wdjs:ff": "jasmine --config=app/test/support/jasmine_wdjs_firefox.json",
+    "test:wdjs:ch": "jasmine --config=app/test/support/jasmine_wdjs_chrome.json"
   },
   "repository": {
     "type": "git",

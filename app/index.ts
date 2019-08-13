@@ -17,12 +17,12 @@ export {Browser}                          from "./driver/interface/Browser";
 export {BrowserScreenshotData}            from "./driver/interface/Browser";
 export {WebElementFinder}                 from "./driver/interface/WebElements";
 
-export {RunningBrowser} from "./driver/lib/RunningBrowser";
-export {BrowserHelper}  from "./driver/lib/BrowserHelper";
-export {By}             from "./driver/lib/Locator";
+export {RunningBrowser} from "./driver/lib/client/RunningBrowser";
+export {ClientHelper}  from "./driver/lib/client/ClientHelper";
+export {By}             from "./driver/lib/element/Locator";
 export {Key}            from "./driver/lib/Key";
 export {until}          from "./driver/lib/Condition";
-export {UntilElement}   from "./driver/lib/ElementConditions";
+export {UntilElement}   from "./driver/lib/element/ElementConditions";
 
 export {Utils}                                                       from "./driver/utils/Utils";
 

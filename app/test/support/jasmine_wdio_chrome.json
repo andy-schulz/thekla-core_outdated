@@ -1,0 +1,17 @@
+{
+  "spec_dir": "dist/test"
+  ,"spec_files": [
+      "screenplay/**/*[sS]xpec.js",
+      "wd_wrapper/**/web*[sS]pec.js",
+      "lib_test/**/*[sS]xpec.js",
+      "rest_api/**/*[sS]xpec.js"
+]
+  ,
+  "helpers": [
+    "support/helpers/wdio_chrome.js"
+  ]
+  ,
+  "oneFailurePerSpec": false
+  ,
+  "random": true
+}

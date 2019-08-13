@@ -1,5 +1,6 @@
-import {UntilElementCondition} from "../lib/ElementConditions";
-import {By}                    from "../lib/Locator";
+import {ElementLocationInView} from "../lib/element/ElementLocation";
+import {UntilElementCondition} from "../lib/element/ElementConditions";
+import {By}                    from "../lib/element/Locator";
 
 export interface FrameFinder {
     frame(locator: By): FrameElementFinder;
@@ -29,11 +30,14 @@ export interface WebElementFinder
     sendKeys(keySequence: string): Promise<void>;
     getText(): Promise<string>;
     getAttribute(attribute: string): Promise<string>;
+    getProperty(propertyName: string): Promise<string>;
+    getRect(): Promise<object>;
     isVisible(): Promise<boolean>;
     isDisplayed(): Promise<boolean>;
     isEnabled(): Promise<boolean>;
     clear(): Promise<void>;
     scrollIntoView(): Promise<void>;
+    getElementLocationInView(): Promise<ElementLocationInView>;
 }
 
 export interface WebElementListFinder

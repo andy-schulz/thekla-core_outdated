@@ -22,7 +22,7 @@ const seleniumConfig: ServerConfig = {
 };
 
 const capabilities: DesiredCapabilities = {
-    browserName: `chrome`,
+    browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
     proxy: {
         type: `direct`
     }

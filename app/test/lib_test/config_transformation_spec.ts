@@ -1,6 +1,6 @@
 import {DesiredCapabilities}   from "../../config/DesiredCapabilities";
 import {ServerConfig}          from "../../config/ServerConfig";
-import {transformToWdioConfig} from "../../driver/lib/config_transformation";
+import {transformToWdioConfig} from "../../driver/lib/config/config_transformation";
 
 describe(`creating the wdio config`, (): void => {
     describe(`with no serverAddress values`, (): void => {
@@ -9,11 +9,11 @@ describe(`creating the wdio config`, (): void => {
             const serverConfig: ServerConfig = {};
 
             const capabilities: DesiredCapabilities = {
-                browserName: `chrome`
+                browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`
             };
 
             expect(transformToWdioConfig(serverConfig, capabilities))
-                .toEqual({capabilities: {browserName: `chrome`}})
+                .toEqual({capabilities: {browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`}})
         });
 
         it(`should return an object only containing the capabilities (serverAddress is empty)
@@ -23,11 +23,11 @@ describe(`creating the wdio config`, (): void => {
             };
 
             const capabilities: DesiredCapabilities = {
-                browserName: `chrome`
+                browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`
             };
 
             expect(transformToWdioConfig(serverConfig, capabilities))
-                .toEqual({capabilities: {browserName: `chrome`}})
+                .toEqual({capabilities: {browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`}})
         });
 
         it(`should return an object only containing the capabilities (serverAddress contains empty values)
@@ -42,11 +42,11 @@ describe(`creating the wdio config`, (): void => {
             };
 
             const capabilities: DesiredCapabilities = {
-                browserName: `chrome`
+                browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`
             };
 
             expect(transformToWdioConfig(serverConfig, capabilities))
-                .toEqual({capabilities: {browserName: `chrome`}})
+                .toEqual({capabilities: {browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`}})
         });
     });
 
@@ -63,7 +63,7 @@ describe(`creating the wdio config`, (): void => {
             };
 
             const capabilities: DesiredCapabilities = {
-                browserName: `chrome`
+                browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`
             };
 
             expect(transformToWdioConfig(serverConfig, capabilities))
@@ -72,7 +72,7 @@ describe(`creating the wdio config`, (): void => {
                     port: 1234,
                     protocol: `https`,
                     path: `/test/all`,
-                    capabilities: {browserName: `chrome`}
+                    capabilities: {browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`}
                 })
         });
     });

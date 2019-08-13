@@ -30,7 +30,7 @@ describe(`Hover`, (): void => {
         };
 
         const capabilities: DesiredCapabilities = {
-            browserName: `chrome`,
+            browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
         };
 
         const Howard = Actor.named(`Howard`);

@@ -1,0 +1,23 @@
+{
+  "spec_dir": "dist/test"
+  ,"spec_files": [
+      "wd_wrapper/**/webelement_spec.js",
+      "wd_wrapper/**/wait_for_elements_spec.js",
+      "wd_wrapper/**/take_screenshot_spec.js",
+      "wd_wrapper/**/table_spec.js",
+      "wd_wrapper/**/selector_spec.js",
+      "wd_wrapper/**/driver_functions_spec.js",
+
+      "screenplay/**/*[sS]xpec.js",
+      "lib_test/**/*[sS]xpec.js",
+      "rest_api/**/*[sS]xpec.js"
+]
+  ,
+  "helpers": [
+    "support/helpers/wdio_firefox.js"
+  ]
+,
+  "oneFailurePerSpec": false
+  ,
+  "random": true
+}

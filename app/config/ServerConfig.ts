@@ -1,4 +1,3 @@
-export type AutomationFramework = "wdjs" | "wdio" // eslint-disable-line quotes
 
 export interface ServerConfig {
     serverAddress?: ServerAddress;
@@ -28,4 +27,10 @@ export interface ServerAddress {
     port?: number;
     path?: string;
 }
+
+export interface AutomationFramework {
+    type: "wdjs" | "wdio"; // eslint-disable-line quotes
+    logLevel?:  "trace" | "debug" | "info" | "warn" | "error" | "silent"; // eslint-disable-line quotes
+}
+
 

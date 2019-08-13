@@ -1,7 +1,7 @@
 import {Browser}                                                    from "../../driver/interface/Browser";
 import {FrameElementFinder, WebElementFinder, WebElementListFinder} from "../../driver/interface/WebElements";
-import {UntilElementCondition}                                      from "../../driver/lib/ElementConditions";
-import {By}                                                         from "../../driver/lib/Locator"
+import {UntilElementCondition}                                      from "../../driver/lib/element/ElementConditions";
+import {By}                                                         from "../../driver/lib/element/Locator"
 
 // export interface FinderLocator {
 //     type: string;

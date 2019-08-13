@@ -22,7 +22,7 @@ let config: ServerConfig = {
 };
 
 const capabilities: DesiredCapabilities = {
-    browserName: `chrome`,
+    browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
 };
 
 import {getLogger, configure} from "log4js";
