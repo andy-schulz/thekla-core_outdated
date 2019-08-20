@@ -1,7 +1,8 @@
 import {WebElementListFinder}                                        from "../../../driver/interface/WebElements";
 import {UntilElementCondition}                                       from "../../../driver/lib/element/ElementConditions";
+import {ExecuteConditionWdjs}                                        from "../../../driver/wdjs/ExecuteConditionWdjs";
 import {Ability}                                                     from "../../lib/abilities/Ability";
-import {Browser, WebElementFinder}                                   from "../../../index";
+import {Browser, until, WebElementFinder}                            from "../../../index";
 import {UsesAbilities}                                               from "../../Actor";
 import {SppFinderRoot, SppWebElementFinder, SppWebElementListFinder} from "../SppWebElements";
 
@@ -36,7 +37,10 @@ export class BrowseTheWeb implements Ability {
     }
 
     public wait(condition: UntilElementCondition, element: SppWebElementFinder): Promise<string> {
-        return this.browser.wait2(condition, element.getElements(this.browser) as WebElementFinder);
+        return this.browser.wait(
+            until(condition.waiter.isFulfilledFor(element.getElements(this.browser) as WebElementFinder)),
+            condition.timeout,
+            condition.conditionHelpText);
     }
 
     public getCurrentUrl(): Promise<string> {

@@ -1,7 +1,7 @@
-import {DesiredCapabilities} from "../../../config/DesiredCapabilities";
-import {ServerConfig}        from "../../../config/ServerConfig";
-import {Browser}             from "../../../driver/interface/Browser";
-import {ClientHelper}        from "../../../driver/lib/client/ClientHelper";
+import {DesiredCapabilities}    from "../../../config/DesiredCapabilities";
+import {LogLevel, ServerConfig} from "../../../config/ServerConfig";
+import {Browser}                from "../../../driver/interface/Browser";
+import {ClientHelper}           from "../../../driver/lib/client/ClientHelper";
 
 describe(`Using the BrowserWdjs class`, () => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
@@ -9,9 +9,9 @@ describe(`Using the BrowserWdjs class`, () => {
     const conf: ServerConfig = {
         automationFramework: {
             type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel:  `warn`
+            logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
         },
-        baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://framework-tester.test-steps.de`
+        baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`
     };
 
     const capabilities: DesiredCapabilities = {

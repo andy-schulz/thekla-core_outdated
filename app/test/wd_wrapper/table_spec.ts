@@ -1,28 +1,27 @@
 import {
     Browser, By, ServerConfig, DesiredCapabilities, ClientHelper
-} from "../..";
+}                 from "../..";
+import {LogLevel} from "../../config/ServerConfig";
 
 describe(`a simple table`, (): void => {
     const conf: ServerConfig = {
         automationFramework: {
             type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel:  `warn`
+            logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
         },
         serverAddress: {
             hostname: `localhost`,
         },
-        baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://framework-tester.test-steps.de`
+        baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`
     };
 
     const capabilities: DesiredCapabilities = {
         browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
         proxy: {
-            type: `direct`
+            type: `system`
         }
     };
 
-    console.log(`process.env.BROWSERNAME ${process.env.BROWSERNAME}`);
-    console.log(capabilities);
 
     let browser: Browser;
 

@@ -5,7 +5,7 @@ import {TkWebElement}                 from "../interface/TkWebElement";
 import {FrameCreator, FrameElementWd} from "../lib/element/FrameElementWd";
 import {By}                           from "../lib/element/Locator";
 import {LocatorWdjs}                  from "./LocatorWdjs";
-import {WebElementJS}                 from "./wrapper/WedElementJS";
+import {WebElementJS}                 from "./wrapper/WebElementJS";
 
 
 export class FrameElementWdjs extends FrameElementWd<WebDriver> {

@@ -1,3 +1,4 @@
+import {LogLevel} from "../../../config/ServerConfig";
 import {
     Actor,
     RunningBrowser,
@@ -13,7 +14,7 @@ import {
     Text,
     UntilElement,
     ServerConfig, Expected
-} from "../../../index";
+}                 from "../../../index";
 
 class GooglePgo {
     // define your elements in a page object
@@ -35,6 +36,10 @@ const logger = getLogger(`DocSppExamples`);
 describe(`Using Google Search to find an online calculator`, (): void => {
     logger.trace(`Start Google Search test`);
     const conf: ServerConfig = {
+        automationFramework: {
+            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
+            logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `warn`) as LogLevel
+        },
         serverAddress: {
             hostname: `localhost`
         }

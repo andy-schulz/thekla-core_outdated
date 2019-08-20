@@ -6,15 +6,16 @@ import {
     ServerConfig,
     UntilElement,
     WebElementFinder,
-    DesiredCapabilities
-}                    from "../..";
+    DesiredCapabilities, ClientHelper
+} from "../..";
+import {LogLevel}    from "../../config/ServerConfig";
 import {BrowserWdjs} from "../../driver/wdjs/BrowserWdjs";
 
 describe(`Using Google Search to find an online calculator`, (): void => {
     const conf: ServerConfig = {
         automationFramework: {
             type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel:  `warn`
+            logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
         },
         serverAddress: {
             hostname: `localhost`
@@ -32,7 +33,7 @@ describe(`Using Google Search to find an online calculator`, (): void => {
         let calculatorInput: WebElementFinder;
 
         beforeAll((): void => {
-            b = BrowserWdjs.create(conf,capabilities);
+            b = ClientHelper.create(conf,capabilities);
             searchField = b.element(By.css(`[name='q']`))
                 .shallWait(UntilElement.is.visible().forAsLongAs(5000))
                 .called(`The Google search field (describe)`);

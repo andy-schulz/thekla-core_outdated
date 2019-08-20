@@ -1,25 +1,27 @@
 import {Browser, By, ClientHelper, DesiredCapabilities, RunningBrowser, ServerConfig} from "../..";
-
-const conf: ServerConfig = {
-    automationFramework: {
-            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel:  `warn`
-        },
-    serverAddress: {
-        hostname: `localhost`
-    },
-    baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://framework-tester.test-steps.de`,
-};
-
-const capabilities: DesiredCapabilities = {
-    browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `firefox`,
-    proxy: {
-        type: `system`
-    }
-};
+import {LogLevel}                                                                     from "../../config/ServerConfig";
 
 describe(`Locating a waiter`, (): void => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 200000;
+
+    const conf: ServerConfig = {
+        automationFramework: {
+            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
+            logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
+        },
+        serverAddress: {
+            hostname: `localhost`
+        },
+        baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`,
+    };
+
+    const capabilities: DesiredCapabilities = {
+        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `firefox`,
+        proxy: {
+            type: `system`
+        }
+    };
+
     let browser: Browser;
 
     beforeAll((): void => {

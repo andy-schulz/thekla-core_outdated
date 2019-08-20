@@ -1,26 +1,27 @@
 import {getLogger, Logger} from "@log4js-node/log4js-api";
 
-import {Builder, promise, ThenableWebDriver, WebDriver, WebElement} from "selenium-webdriver";
-import {DesiredCapabilities, ProxyConfig}                           from "../../config/DesiredCapabilities";
-import {ServerConfig}                                               from "../../config/ServerConfig";
+import {Builder, promise, Session, ThenableWebDriver, WebDriver, WebElement, Capabilities} from "selenium-webdriver";
+import {Executor, HttpClient}                                                from "selenium-webdriver/http";
+import {DesiredCapabilities, ProxyConfig}                                    from "../../config/DesiredCapabilities";
+import {ServerConfig}                                                        from "../../config/ServerConfig";
 
-import {Browser, BrowserScreenshotData}         from "../interface/Browser";
-import {BrowserWindow, WindowManager}           from "../interface/BrowserWindow";
-import {ClientCtrls}                            from "../interface/ClientCtrls";
-import {cleanupClients, executeFnOnClient}      from "../lib/client/ClientHelper";
-import {checkClientName}                        from "../lib/client/checks";
-import {saveScreenshots, takeScreenshots}       from "../lib/client/screenshots";
+import {Browser, BrowserScreenshotData, CreateClient} from "../interface/Browser";
+import {BrowserWindow, WindowManager}                 from "../interface/BrowserWindow";
+import {ClientCtrls}                                  from "../interface/ClientCtrls";
+import {TkSession}                                    from "../interface/TkSession";
+import {cleanupClients, executeFnOnClient}            from "../lib/client/ClientHelper";
+import {checkClientName}                              from "../lib/client/checks";
+import {saveScreenshots, takeScreenshots}             from "../lib/client/screenshots";
 import {waitForCondition}                       from "../lib/client/wait_actions";
 import {scrollTo}                               from "../lib/client_side_scripts/scroll_page";
-import {UntilElementCondition}                  from "../lib/element/ElementConditions";
 import {By}                                     from "../lib/element/Locator";
 import {WebElementFinder, WebElementListFinder} from "../interface/WebElements";
 import {getServerUrl}                           from "../lib/config/url_formatter";
 import {BrowserWindowWdjs}                      from "./BrowserWindowWdjs";
 import {FrameElementWdjs}                       from "./FrameElementWdjs";
-import {WebElementJS}              from "./wrapper/WedElementJS";
+import {SessionJS}                              from "./wrapper/SessionJS";
+import {WebElementJS}                           from "./wrapper/WebElementJS";
 import {LocatorWdjs}                            from "./LocatorWdjs";
-import {ExecuteConditionWdjs}                   from "./ExecuteConditionWdjs";
 import {WebElementListWdjs}                     from "./WebElementListWdjs";
 import * as path                                from "path";
 import * as fs                                  from "fs";
@@ -47,7 +48,7 @@ export class BrowserWdjs implements Browser, ClientCtrls<WebDriver>, WindowManag
     public getFrameWorkClient = (): Promise<WebDriver> => {
         return this.getDrvr()
             .then((driver: WebDriver) => {
-                if(!this.driverCreated) {
+                if (!this.driverCreated) {
                     // ignoring Promise on purpose
                     this._window.setToPreset();
                 }
@@ -77,15 +78,17 @@ export class BrowserWdjs implements Browser, ClientCtrls<WebDriver>, WindowManag
      * @returns - browser instance
      * @throws - Error in case the given browser name is empty or already exists
      */
-    public static create(
-        selConf: ServerConfig,
-        capabilities: DesiredCapabilities,
-        browserName: string = `client${this.browserMap.size + 1}`): Browser {
+    public static create( {
+        serverConfig,
+        capabilities,
+        clientName = `client${this.browserMap.size + 1}`,
+        sessionId
+    }: CreateClient): Browser {
 
-        checkClientName(browserName);
+        checkClientName(clientName);
 
-        if (this.browserMap.has(browserName)) {
-            throw new Error(`client name '${browserName}' already exists, choose another one`);
+        if (this.browserMap.has(clientName)) {
+            throw new Error(`client name '${clientName}' already exists, choose another one`);
         }
 
         let builder: Builder = new Builder();
@@ -93,7 +96,7 @@ export class BrowserWdjs implements Browser, ClientCtrls<WebDriver>, WindowManag
             // const capa: DesiredCapabilities = typeof capabilities === "function" ? capabilities() : capabilities;
             const capa: DesiredCapabilities = capabilities;
 
-            builder = builder.usingServer(getServerUrl(selConf.serverAddress));
+            builder = builder.usingServer(getServerUrl(serverConfig.serverAddress));
             builder.withCapabilities(capa);
             this.setProxy(builder, capa.proxy);
 
@@ -103,33 +106,38 @@ export class BrowserWdjs implements Browser, ClientCtrls<WebDriver>, WindowManag
                     return new Promise((resolve, reject): void => {
                         if (driver)
                             return resolve(driver);
+
+                        // if a sessionId was passed attach to this session
+                        if(sessionId) {
+                            const client: HttpClient = new HttpClient(getServerUrl(serverConfig.serverAddress));
+                            const executor: Executor = new Executor(client);
+                            const session: Session = new Session(sessionId, capabilities);
+
+                            driver = new WebDriver(session, executor);
+
+                            resolve(driver);
+                            return;
+                        }
+
+                        // create a new driver from the config
                         const drv: ThenableWebDriver = builder.build();
                         drv.then((): void => {
                             driver = drv as WebDriver;
                             resolve(driver);
                         }, reject);
+                        return;
+
                     })
                 }
             };
 
             const getTheDriver = getDriver();
 
-            const browser = new BrowserWdjs(getTheDriver, selConf, browserName);
-            const window = BrowserWindowWdjs.create(getTheDriver, capa.window);
+            const browser = new BrowserWdjs(getTheDriver, serverConfig, clientName);
+            const window = BrowserWindowWdjs.create(browser.getFrameWorkClient, capa.window);
             browser.windowManagedBy(window);
 
-            // const drv = await BrowserWdjs.buildDriver(builder);
-            // const driver = <WebDriver>drv;
-            // const browser = new BrowserWdjs(driver, selConf, capa, browserName);
-            // try {
-            //     const window = await BrowserWindowWdjs.create(driver, capa.window);
-            //     browser.windowManagedBy(window);
-            // } catch (e) {
-            //     browser.quit();
-            //     return Promise.reject(e);
-            // }
-
-            this.browserMap.set(browserName, browser);
+            this.browserMap.set(clientName, browser);
             return browser;
 
         } catch (e) {
@@ -137,27 +145,29 @@ export class BrowserWdjs implements Browser, ClientCtrls<WebDriver>, WindowManag
         }
     }
 
-    // public getLocalDriver(): Promise<WebDriver | WebDriver> {
-    //     if(this._driver) {
-    //         return Promise.resolve(this._driver as WebDriver);
-    //     }
+    // public static attachToSession(
+    //     selConf: ServerConfig,
+    //     capabilities: DesiredCapabilities,
+    //     sessionId: string,
+    //     browserName: string = `client${this.browserMap.size + 1}`): Browser {
     //
-    //     return new Promise((resolve, reject) => {
-    //         this.getFrameWorkClient()
-    //             .then((driver: WebDriver) => {
-    //                 this._driver = driver;
-    //                 resolve(driver);
+    //     const getDriver = (): () => Promise<WebDriver> => {
+    //         let driver: WebDriver;
+    //         return (): Promise<WebDriver> => {
+    //             return new Promise((resolve, reject): void => {
+    //                 if (driver)
+    //                     return resolve(driver);
+    //
     //             })
-    //             .catch(reject)
-    //     });
-    // }
-
-    // private static buildDriver(builder: Builder): Promise<WebDriver> {
-    //     return new Promise((resolve, reject) => {
-    //         const drv: WebDriver = builder.build();
+    //         }
+    //     };
     //
-    //         drv.then(() => resolve(drv), reject);
-    //     })
+    //     const browser = new BrowserWdjs(getDriver(), selConf, browserName);
+    //     const window = BrowserWindowWdjs.create(browser.getFrameWorkClient, capabilities.window);
+    //     browser.windowManagedBy(window);
+    //
+    //     this.browserMap.set(browserName, browser);
+    //     return browser;
     // }
 
     public windowManagedBy(window: BrowserWindow): void {
@@ -220,7 +230,7 @@ export class BrowserWdjs implements Browser, ClientCtrls<WebDriver>, WindowManag
      * @returns - array of the screenshots file names
      */
     public static saveScreenshots(filepath: string, baseFileName: string): Promise<string[]> {
-        return saveScreenshots(this.browserMap)(filepath,baseFileName)
+        return saveScreenshots(this.browserMap)(filepath, baseFileName)
     }
 
     /**
@@ -343,7 +353,7 @@ export class BrowserWdjs implements Browser, ClientCtrls<WebDriver>, WindowManag
      */
     public quit(): Promise<void> {
         return new Promise((fulfill, reject): void => {
-            if(!this.driverCreated) {
+            if (!this.driverCreated) {
                 return fulfill();
             }
 
@@ -372,7 +382,7 @@ export class BrowserWdjs implements Browser, ClientCtrls<WebDriver>, WindowManag
             this.getFrameWorkClient()
                 .then((driver): void => {
                     driver.getTitle()
-                        .then((title): void => fulfill(title === expectedTitle),reject)
+                        .then((title): void => fulfill(title === expectedTitle), reject)
                 })
                 .catch(reject);
         })
@@ -392,7 +402,7 @@ export class BrowserWdjs implements Browser, ClientCtrls<WebDriver>, WindowManag
                                 browserScreenshotData: data
                             };
                             return resolve(screenshotData)
-                        },reject)
+                        }, reject)
                 })
                 .catch(reject);
         })
@@ -445,48 +455,11 @@ export class BrowserWdjs implements Browser, ClientCtrls<WebDriver>, WindowManag
      */
     public wait = waitForCondition(this.logger);
 
-    public wait2(
-        condition: UntilElementCondition,
-        element: WebElementFinder): Promise<string> {
-
-        return new Promise((fulfill, reject): void => {
-            const start = Date.now();
-            const check = (): void => {
-                const worker = (workerState: boolean, error?: string): void => {
-                    const timeSpendWaiting = Date.now() - start;
-                    if (timeSpendWaiting > condition.timeout) {
-                        const message = `Waiting until element called '${element.description}' ${condition.conditionHelpText} timed out after ${condition.timeout} ms.
-                        Stack: ${Error().stack}`;
-                        this.logger.trace(message);
-                        reject(message);
-                        return;
-                    }
-                    if (workerState) {
-                        const message = `Waiting until element called '${element.description}' ${condition.conditionHelpText} was successful after ${timeSpendWaiting} ms.`;
-                        this.logger.trace(message);
-                        fulfill(message);
-                        return;
-                    }
-
-                    setTimeout(check, 0);
-
-                };
-
-                ExecuteConditionWdjs.execute(condition, element)
-                    .then(worker)
-
-                    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-                    .catch((e: any) => worker(false, `${e.toString()} \n ${Error().stack}`)) // eslint-disable-line @typescript-eslint/no-explicit-any
-            };
-            setTimeout(check, 0);
-        })
-    }
-
-    public scrollTo({x,y}: {x: number; y: number}): Promise<void> {
+    public scrollTo({x, y}: { x: number; y: number }): Promise<void> {
         return new Promise(async (resolve, reject): Promise<void> => {
             const driver = await this.getFrameWorkClient();
 
-            driver.executeScript(scrollTo,{x,y})
+            driver.executeScript(scrollTo, {x, y})
                 .then(() => {
                     resolve();
                 }, reject)
@@ -505,5 +478,14 @@ export class BrowserWdjs implements Browser, ClientCtrls<WebDriver>, WindowManag
 
     }
 
-
+    public getSession(): Promise<TkSession> {
+        return new Promise((resolve, reject) => {
+            this.getFrameWorkClient()
+                .then(async (client: WebDriver): Promise<void> => {
+                    const session = await client.getSession();
+                    resolve(SessionJS.create(session));
+                })
+                .catch(reject)
+        });
+    }
 }

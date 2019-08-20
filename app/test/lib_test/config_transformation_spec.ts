@@ -63,7 +63,7 @@ describe(`creating the wdio config`, (): void => {
             };
 
             const capabilities: DesiredCapabilities = {
-                browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`
+                browserName: `chrome`
             };
 
             expect(transformToWdioConfig(serverConfig, capabilities))
@@ -72,7 +72,55 @@ describe(`creating the wdio config`, (): void => {
                     port: 1234,
                     protocol: `https`,
                     path: `/test/all`,
-                    capabilities: {browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`}
+                    capabilities: {browserName: `chrome`}
+                })
+        });
+    });
+
+    describe(`with a proxy property`, (): void => {
+        it(`should set noproxy when direct is given 
+        - (test case id: 8d140c38-25e7-4896-8b53-043324aef4b7)`, (): void => {
+            const serverConfig: ServerConfig = {
+            };
+
+            const capabilities: DesiredCapabilities = {
+                browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
+                proxy: {
+                    type: `direct`
+                }
+            };
+
+            expect(transformToWdioConfig(serverConfig, capabilities))
+                .toEqual({
+                    capabilities: {
+                        browserName: `chrome`,
+                        proxy: {
+                            proxyType: `noproxy`
+                        }
+                    }
+                })
+        });
+
+        it(`should set system when system is given 
+        - (test case id: b4f498d9-3f51-4a74-98ea-23a3f2c988ce)`, (): void => {
+            const serverConfig: ServerConfig = {
+            };
+
+            const capabilities: DesiredCapabilities = {
+                browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
+                proxy: {
+                    type: `system`
+                }
+            };
+
+            expect(transformToWdioConfig(serverConfig, capabilities))
+                .toEqual({
+                    capabilities: {
+                        browserName: `chrome`,
+                        proxy: {
+                            proxyType: `system`
+                        }
+                    }
                 })
         });
     });

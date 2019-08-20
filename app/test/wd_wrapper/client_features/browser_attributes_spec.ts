@@ -1,29 +1,34 @@
 import * as _                                            from "lodash";
-import {WindowSize}                                      from "../../driver/interface/BrowserWindow";
-import {ClientHelper, DesiredCapabilities, ServerConfig} from "../..";
+import {LogLevel}                                        from "../../../config/ServerConfig";
+import {WindowSize}                                      from "../../../driver/interface/BrowserWindow";
+import {ClientHelper, DesiredCapabilities, ServerConfig} from "../../../index";
 
-const conf: ServerConfig = {
-    automationFramework: {
-            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel:  `warn`
-        },
-    serverAddress: {
-        hostname: `localhost`
-    },
-};
 
-const capabilities: DesiredCapabilities = {
-    browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-};
+
 
 describe(`creating a new Browser`, (): void => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+
+    const conf: ServerConfig = {
+        automationFramework: {
+            type: process.env.FRAMEWORK  === `wdio` ? `wdio` : `wdjs`,
+            logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
+        },
+        serverAddress: {
+            hostname: `localhost`
+        },
+    };
+
+    const capabilities: DesiredCapabilities = {
+        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
+    };
+
     const windowSize = function(): {} {
         return {width: window.innerWidth, height: window.innerHeight};
     };
 
-    afterAll(async (): Promise<void> => {
-        await ClientHelper.cleanup();
+    afterAll((): Promise<void[][]> => {
+        return ClientHelper.cleanup();
     });
 
     describe(`with an initial window setSize`, (): void => {
@@ -56,24 +61,20 @@ describe(`creating a new Browser`, (): void => {
 
         });
 
-        it(`it should be maximized when the config contains the "maximum" attribute 
-        - (test case id: 1b7451ac-0ca2-4bdc-8700-60b4098d5829)`, async (): Promise<void> => {
+        describe(`and changing the window size`, (): void => {
 
-            try {
+            it(`should resize the window to 500x500 pixel 
+            - (test case id: 1b7451ac-0ca2-4bdc-8700-60b4098d5829)`, async (): Promise<void> => {
+
                 const browserResize = ClientHelper.create(conf, capabilities);
                 await browserResize.window.setSize({width: 500, height: 500});
-                if(process.env.FRAMEWORK == `wdio`) {
-                    expect((await browserResize.window.getSize()).width).toBeLessThan(550);
-                    expect((await browserResize.window.getSize()).width).toBeGreaterThanOrEqual(500);
-                    expect((await browserResize.window.getSize()).height).toBeLessThan(550);
-                    expect((await browserResize.window.getSize()).height).toBeGreaterThanOrEqual(500);
-                } else {
-                    expect(true).toBeFalsy(`Bug () in Selenium Webdriver 4.0 alpha has ben fixed, rewrite the test`)
-                }
+                expect((await browserResize.window.getSize()).width).toBeLessThan(550);
+                expect((await browserResize.window.getSize()).width).toBeGreaterThanOrEqual(500);
+                expect((await browserResize.window.getSize()).height).toBeLessThan(550);
+                expect((await browserResize.window.getSize()).height).toBeGreaterThanOrEqual(500);
 
-            } catch (e) {
-                expect(e.toString()).toContain(`driver.manage(...).window(...).setSize is not a function`);
-            }
+            });
+
         });
     });
 });

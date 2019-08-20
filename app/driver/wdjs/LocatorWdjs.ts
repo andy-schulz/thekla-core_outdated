@@ -1,7 +1,7 @@
 import {By as ByWd, promise, WebDriver} from "selenium-webdriver";
 import {ClientCtrls}                    from "../interface/ClientCtrls";
 import {By}                             from "../lib/element/Locator";
-import {WebElementJS}                   from "./wrapper/WedElementJS";
+import {WebElementJS}                   from "./wrapper/WebElementJS";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 let clientSideScripts = require(`../../../res/browser/clientsidescripts`);

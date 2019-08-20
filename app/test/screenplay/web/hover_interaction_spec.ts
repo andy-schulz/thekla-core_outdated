@@ -1,3 +1,4 @@
+import {LogLevel} from "../../../config/ServerConfig";
 import {
     DesiredCapabilities,
     By,
@@ -7,9 +8,12 @@ import {
     BrowseTheWeb,
     RunningBrowser,
     Navigate, element, See, Text, Expected, Status, Hover
-} from "../../../index";
+}                 from "../../../index";
 
 describe(`Hover`, (): void => {
+
+    const testUrl = process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`;
+
     describe(`over an elements`, (): void => {
         const userIcon = element(By.css(`[data-test-id='usericon']`))
             .shallWait(UntilElement.is.visible().forAsLongAs(5000))
@@ -24,6 +28,10 @@ describe(`Hover`, (): void => {
             .called(`the general danger button in red`);
 
         const conf: ServerConfig = {
+            automationFramework: {
+                type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
+                logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `warn`) as LogLevel
+            },
             serverAddress: {
                 hostname: `localhost`
             }
@@ -43,7 +51,7 @@ describe(`Hover`, (): void => {
         it(`should display additional information 
         - (test case id: bc7ff4ef-d0ea-4ac1-b2c6-5cedefd11391)`, (): Promise<void> => {
             return Howard.attemptsTo(
-                Navigate.to(`http://framework-tester.test-steps.de`),
+                Navigate.to(testUrl),
                 See.if(Status.visible.of(userName)).is(Expected.toBe(false)),
                 Hover.over(userIcon),
                 See.if(Status.visible.of(userName)).is(Expected.toBe(true)),
@@ -54,7 +62,7 @@ describe(`Hover`, (): void => {
         it(`should not display the hover when another element is hovered upon 
         - (test case id: bc7ff4ef-d0ea-4ac1-b2c6-5cedefd11391)`, (): Promise<void> => {
             return Howard.attemptsTo(
-                Navigate.to(`http://framework-tester.test-steps.de`),
+                Navigate.to(testUrl),
                 See.if(Status.visible.of(userName)).is(Expected.toBe(false)),
                 Hover.over(userIcon),
                 See.if(Status.visible.of(userName)).is(Expected.toBe(true)),

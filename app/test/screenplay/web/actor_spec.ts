@@ -1,3 +1,4 @@
+import {LogLevel}             from "../../../config/ServerConfig";
 import {
     Actor,
     BrowseTheWeb,
@@ -9,29 +10,32 @@ import {
     Text,
     ServerConfig,
     UntilElement, Wait, DesiredCapabilities, Expected
-} from "../../../index";
-
-import {GoogleSearch}     from "../../page_objects/GoogleSearch/GoogleSearch";
-import {Add}              from "../../page_objects/GoogleCalculator/Add";
-import {GoogleCalculator} from "../../page_objects/GoogleCalculator/GoogleCalculator";
-
-let config: ServerConfig = {
-    serverAddress: {
-        hostname: `localhost`
-    },
-};
-
-const capabilities: DesiredCapabilities = {
-    browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-};
-
+}                             from "../../../index";
+import {GoogleSearch}         from "../../page_objects/GoogleSearch/GoogleSearch";
+import {Add}                  from "../../page_objects/GoogleCalculator/Add";
+import {GoogleCalculator}     from "../../page_objects/GoogleCalculator/GoogleCalculator";
 import {getLogger, configure} from "log4js";
-const logger = getLogger(`Actor`);
 configure(`res/config/log4js.json`);
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+const logger = getLogger(`Actor`);
 
 describe(`Searching on Google`, (): void => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+
+    let config: ServerConfig = {
+        automationFramework: {
+            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
+            logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `warn`) as LogLevel
+        },
+        serverAddress: {
+            hostname: `localhost`
+        },
+    };
+
+    const capabilities: DesiredCapabilities = {
+        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
+    };
+
     let John: Actor;
     logger.trace(`actor_spec stated`);
 

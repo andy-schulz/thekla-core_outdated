@@ -9,8 +9,9 @@
     "test": "tsc & jasmine --config=app/test/support/jasmine.json",
     "build": "./node_modules/.bin/del-cli dist/**/* & tsc",
     "postversion": "git push --tags",
-    "test-all": "tsc & run-p test:wdio:ch",
-    "test:wdio:ff": "jasmine --config=app/test/support/jasmine_wdio_firefox.json --helpers=dist/test/support/helpers/wdio_firefox.js",
+    "test-all": "tsc & run-p -c --silent test:wdio:ff test:wdio:ch test:wdjs:ff test:wdjs:ch",
+    "test:no-web": "jasmine --config=app/test/support/jasmine.json",
+    "test:wdio:ff": "jasmine --config=app/test/support/jasmine_wdio_firefox.json",
     "test:wdio:ch": "jasmine --config=app/test/support/jasmine_wdio_chrome.json",
     "test:wdjs:ff": "jasmine --config=app/test/support/jasmine_wdjs_firefox.json",
     "test:wdjs:ch": "jasmine --config=app/test/support/jasmine_wdjs_chrome.json"

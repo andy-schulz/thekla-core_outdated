@@ -1,3 +1,4 @@
+import {LogLevel}                                from "../../../config/ServerConfig";
 import {
     DesiredCapabilities,
     By,
@@ -7,12 +8,13 @@ import {
     BrowseTheWeb,
     RunningBrowser,
     Navigate, element, Scroll, Browser, Page
-} from "../../../index";
+}                                                from "../../../index";
 import {BoundaryCheck, boundingRect, clientRect} from "../../0_helper/browser_viewport";
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+
 
 describe(`Scroll`, (): void => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
     const lastTableRow = element(By.css(`[data-test-id='lastTableRow']`))
         .shallWait(UntilElement.is.visible().forAsLongAs(5000))
@@ -21,9 +23,14 @@ describe(`Scroll`, (): void => {
     const classNameOfLastRow = `lastTableRow`;
 
     const conf: ServerConfig = {
+        automationFramework: {
+            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
+            logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `warn`) as LogLevel
+        },
         serverAddress: {
             hostname: `localhost`
-        }
+        },
+        baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`
     };
 
     const capabilities: DesiredCapabilities = {
@@ -44,7 +51,7 @@ describe(`Scroll`, (): void => {
 
         it(`should succeed when scrolled to the end of the page 
         - (test case id: 8fc292fe-883d-48ce-878e-11fcdff579df)`, async (): Promise<void> => {
-            await Navigate.to(`http://framework-tester.test-steps.de/tables`).performAs(Sam);
+            await Navigate.to(`/tables`).performAs(Sam);
 
             const rectStart: ClientRectList = await theBrowser.executeScript(clientRect) as ClientRectList;
             expect(rectStart[0].top).toBe(0);
@@ -77,7 +84,7 @@ describe(`Scroll`, (): void => {
         it(`should move the element into the viewport 
         - (test case id: bc7ff4ef-d0ea-4ac1-b2c6-5cedefd11391)`, async (): Promise<void> => {
 
-            await Navigate.to(`http://framework-tester.test-steps.de/tables`).performAs(Sam);
+            await Navigate.to(`/tables`).performAs(Sam);
 
 
             const isOutsideViewOnFirstCheck: BoundaryCheck =

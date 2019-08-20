@@ -1,3 +1,4 @@
+import {LogLevel} from "../../../config/ServerConfig";
 import {
     RunningBrowser,
     Actor,
@@ -11,29 +12,33 @@ import {
     all,
     SppWebElementFinder,
     ServerConfig, DesiredCapabilities, Expected
-} from "../../../index";
-
-
-const seleniumConfig: ServerConfig = {
-    serverAddress: {
-        hostname: `localhost`
-    },
-    baseUrl: `http://framework-tester.test-steps.de`,
-};
-
-const capabilities: DesiredCapabilities = {
-    browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-    proxy: {
-        type: `direct`
-    }
-};
+}                 from "../../../index";
 
 import {getLogger} from "log4js";
 const logger = getLogger(`Spec: SppElementDescription`);
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL=30000;
 
 describe(`The description on an element`, (): void => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL=30000;
+
+    const seleniumConfig: ServerConfig = {
+        automationFramework: {
+            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
+            logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `warn`) as LogLevel
+        },
+        serverAddress: {
+            hostname: `localhost`
+        },
+        baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`,
+    };
+
+    const capabilities: DesiredCapabilities = {
+        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
+        proxy: {
+            type: `system`
+        }
+    };
+
     logger.trace(`Test Started`);
 
     describe(`should be attached to the element`, (): void => {

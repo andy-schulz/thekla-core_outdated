@@ -1,5 +1,6 @@
 import * as _                                                                     from "lodash";
 import {Browser, ClientHelper, DesiredCapabilities, RunningBrowser, ServerConfig} from "../..";
+import {LogLevel}                                                                 from "../../config/ServerConfig";
 import {WindowSize}                                                               from "../../driver/interface/BrowserWindow";
 
 describe(`Starting a browser instance`, (): void => {
@@ -8,7 +9,7 @@ describe(`Starting a browser instance`, (): void => {
     const conf: ServerConfig =  {
         automationFramework: {
             type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel:  `warn`
+            logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
         },
         serverAddress: {
             hostname: `localhost`
@@ -35,8 +36,10 @@ describe(`Starting a browser instance`, (): void => {
 
         it(`should start a firefox instance when the browsername is "firefox" ` +
             `- (test case id: 57480387-ed1c-43ca-8da0-0767e57d106b)`, async (): Promise<void> => {
+            const capa: DesiredCapabilities = _.cloneDeep(capabilities);
+            capa.browserName = `firefox`;
 
-            const browser: Browser = RunningBrowser.startedOn(conf).withCapabilities(capabilities);
+            const browser: Browser = RunningBrowser.startedOn(conf).withCapabilities(capa);
             const agent = await browser.executeScript(browserFunc);
             expect(agent).toContain(`Firefox`);
         });
@@ -45,6 +48,7 @@ describe(`Starting a browser instance`, (): void => {
             `- (test case id: 6936a711-f3e6-404b-aa56-94972567f8bd)`, async (): Promise<void> => {
             const capa: DesiredCapabilities = _.cloneDeep(capabilities);
             capa.browserName = `chrome`;
+
             const browser: Browser = RunningBrowser.startedOn(conf).withCapabilities(capa);
             const agent = await browser.executeScript(browserFunc);
             expect(agent).toContain(`Chrome`);
@@ -54,9 +58,10 @@ describe(`Starting a browser instance`, (): void => {
     describe(`and passing view port information as command line arguments`, (): void => {
 
         it(`it should change the viewport for the firefox browser instance` +
-            `- (test case id: 8a0d9a58-9591-43c1-89bb-d848319c90f1)`, async (): Promise<void> => {
+            `- (test case id: cd50ddb6-95d5-4111-ac92-e0d92dea2953)`, async (): Promise<void> => {
             const con = conf;
             const capa: DesiredCapabilities = _.cloneDeep(capabilities);
+            capa.browserName = `firefox`;
             (capa)[`moz:firefoxOptions`] = {
                 args: [`--width=2200`, `--height=2200`]
             };
@@ -89,19 +94,25 @@ describe(`Starting a browser instance`, (): void => {
         it(`should evaluate the binary for a firefox instance` +
             `- (test case id: b11e0c91-b84f-4ae3-b08d-7b8dad6d6c74)`, async (): Promise<void> => {
             const conf: ServerConfig =  {
+                automationFramework: {
+                    type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
+                    logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `warn`) as LogLevel
+                },
                 serverAddress: {
                     hostname: `localhost`
                 },
+                baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`
             };
 
             const capa: DesiredCapabilities = {
-                browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `firefox`,
+                browserName: `firefox`,
                 "moz:firefoxOptions": {
                     binary: `C:\\DoesNotExist`
                 }
             };
 
-            return RunningBrowser.startedOn(conf).withCapabilities(capa).get(`http://framework-tester.test-steps.de`)
+            return RunningBrowser.startedOn(conf).withCapabilities(capa)
+                .get(`/`)
                 .then((): Promise<void> => {
                     return Promise.reject(`creating a browser with a not existing binary should throw an Error, but it doesnt`);
                 })
@@ -112,26 +123,32 @@ describe(`Starting a browser instance`, (): void => {
         });
 
         it(`should evaluate the binary for a chrome instance` +
-            `- (test case id: b11e0c91-b84f-4ae3-b08d-7b8dad6d6c74)`, async (): Promise<void> => {
+            `- (test case id: 052dcc2d-38d2-4a5d-9dea-87b29302c445)`, async (): Promise<void> => {
             const seleniumConfig: ServerConfig =  {
+                automationFramework: {
+                    type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
+                    logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `warn`) as LogLevel
+                },
                 serverAddress: {
                     hostname: `localhost`
                 },
+                baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`
             };
 
             const capabilities: DesiredCapabilities = {
-                browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
+                browserName: `chrome`,
                 "goog:chromeOptions": {
                     binary: `C:\\DoesNotExist`
                 }
             };
 
-            return RunningBrowser.startedOn(seleniumConfig).withCapabilities(capabilities).get(`http://framework-tester.test-steps.de`)
+            return RunningBrowser.startedOn(seleniumConfig).withCapabilities(capabilities)
+                .get(`/`)
                 .then((): Promise<void> => {
                     return Promise.reject(`creating a browser with a not existing binary should throw an Error, but it doesnt`);
                 })
                 .catch((e): void => {
-                    expect(e.toString()).toContain(`WebDriverError: unknown error: no chrome binary at C:\\DoesNotExist`);
+                    expect(e.toString()).toContain(`unknown error: no chrome binary at C:\\DoesNotExist`);
                 });
         });
     });

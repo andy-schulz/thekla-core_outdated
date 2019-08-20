@@ -2,30 +2,30 @@ import {getLogger, Logger}                                          from "@log4j
 import * as fs                                                      from "fs";
 import fsExtra                                                      from "fs-extra";
 import * as path                                                    from "path";
-import {promise, WebElement}                                        from "selenium-webdriver";
-import {Browser, BrowserScreenshotData}                             from "../interface/Browser";
+import {Browser, BrowserScreenshotData, CreateClient}               from "../interface/Browser";
 import {BrowserWindow, WindowManager}                               from "../interface/BrowserWindow";
 import {ClientCtrls}                                                from "../interface/ClientCtrls";
+import {TkSession}                                                  from "../interface/TkSession";
 import {TkWebElement}                                               from "../interface/TkWebElement";
 import {FrameElementFinder, WebElementFinder, WebElementListFinder} from "../interface/WebElements";
-import {By, DesiredCapabilities, ServerConfig}                      from "../..";
+import {By, ServerConfig}                                           from "../..";
 import {cleanupClients, executeFnOnClient}                          from "../lib/client/ClientHelper";
 import {checkClientName}                                            from "../lib/client/checks";
 import {formatNavigateToUrl}                                        from "../lib/client/url_formatter";
 import {waitForCondition}                                           from "../lib/client/wait_actions";
 import {scrollTo}                                                   from "../lib/client_side_scripts/scroll_page";
 import {transformToWdioConfig}                                      from "../lib/config/config_transformation";
-import {UntilElementCondition}                                      from "../lib/element/ElementConditions";
-
-import WebDriver, { Client }                from 'webdriver'
-import {funcToString}                       from "../utils/Utils";
-import {FrameElementWdio}                   from "./FrameElementWdio";
-import {LocatorWdio}                        from "./LocatorWdio";
-import {ElementRefIO, WebElementIO}         from "./wrapper/WebElementIO";
-import {WebElementListWdio}                 from "./WebElementListWdio";
-import { BrowserWindowWdio }                from "./BrowserWindowWdio";
-import { takeScreenshots, saveScreenshots } from "../lib/client/screenshots";
-
+import WebDriver, {Client}                                          from 'webdriver'
+import {funcToString}                                               from "../utils/Utils";
+import {FrameElementWdio}                                           from "./FrameElementWdio";
+import {LocatorWdio}                                                from "./LocatorWdio";
+import {SessionIO}                                                  from "./wrapper/SessionIO";
+import {ElementRefIO, WebElementIO}                                 from "./wrapper/WebElementIO";
+import {WebElementListWdio}                                         from "./WebElementListWdio";
+import {BrowserWindowWdio}                                          from "./BrowserWindowWdio";
+import {takeScreenshots, saveScreenshots}                           from "../lib/client/screenshots";
+import deepmerge                                                    from "deepmerge";
+import AttachSessionOptions = WebDriver.AttachSessionOptions;
 
 
 export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
@@ -59,9 +59,13 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
     }
 
     public static create(
-        serverConfig: ServerConfig,
-        capabilities: DesiredCapabilities,
-        clientName: string = `client${this.clientMap.size + 1}`): ClientWdio {
+        {
+            serverConfig,
+            capabilities,
+            clientName = `client${this.clientMap.size + 1}`,
+            sessionId
+        }: CreateClient
+    ): ClientWdio {
 
         checkClientName(clientName);
 
@@ -74,10 +78,20 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
                     return new Promise(async (resolve, reject): Promise<void> => {
                         if (client)
                             return resolve(client);
-                        const drv: Client = await WebDriver.newSession(wdioOpts);
 
-                        client = drv as Client;
-                        resolve(client);
+                        if (sessionId) {
+                            const attachOptions: AttachSessionOptions = deepmerge(wdioOpts, {sessionId: sessionId});
+                            client = (await WebDriver.attachToSession(attachOptions)) as unknown as Client;
+                            resolve(client);
+                            return;
+                        }
+
+                        WebDriver.newSession(wdioOpts)
+                            .then((clnt: Client): void => {
+                                client = clnt as Client;
+                                resolve(client);
+                            }, reject)
+                            .catch(reject);
                     })
                 }
             };
@@ -85,7 +99,7 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
             const getTheDriver = getClient();
 
             const client = new ClientWdio(getTheDriver, serverConfig, clientName);
-            const window = BrowserWindowWdio.create(getTheDriver, capabilities.window);
+            const window = BrowserWindowWdio.create(client.getFrameWorkClient, capabilities.window);
             client.windowManagedBy(window);
 
             this.clientMap.set(clientName, client);
@@ -100,12 +114,14 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
     public getFrameWorkClient = (): Promise<Client> => {
         return this.getClnt()
             .then((driver): Client => {
-                if(!this.clientCreated) {
+                if (!this.clientCreated) {
                     // ignoring Promise on purpose
-                    // this._window.setToPreset();
+                    this._window.setToPreset();
                 }
                 this.clientCreated = true;
                 return driver;
+            }).catch((e: Error) => {
+                return Promise.reject(e)
             })
     };
 
@@ -131,7 +147,7 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
      * @returns - array of the screenshots file names
      */
     public static saveScreenshots(filepath: string, baseFileName: string): Promise<string[]> {
-        return saveScreenshots(this.clientMap)(filepath,baseFileName)
+        return saveScreenshots(this.clientMap)(filepath, baseFileName)
     }
 
     /**
@@ -171,7 +187,7 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
                     return (driver.switchToFrame(null) as unknown as Promise<void>)
                         .then((): Promise<TkWebElement[]> => {
 
-                            return (driver.findElements(loc[0],loc[1]) as unknown as Promise<ElementRefIO[]>)
+                            return (driver.findElements(loc[0], loc[1]) as unknown as Promise<ElementRefIO[]>)
                                 .then((elements: ElementRefIO[]): TkWebElement[] => {
                                     this.logger.trace(`Found ${elements ? elements.length : 0} element(s) for locator '${locator}'`);
 
@@ -199,10 +215,10 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
 
         const getFrames = async (): Promise<WebElementIO[]> => {
             return await this.getFrameWorkClient()
-                .then((driver): promise.Promise<WebElementIO[]> => {
+                .then((driver): Promise<WebElementIO[]> => {
                     return (driver.switchToFrame(null) as unknown as Promise<void>)
-                        .then((): promise.Promise<WebElementIO[]> => {
-                            return (driver.findElements(loc[0],loc[1]) as unknown as Promise<ElementRefIO[]>)
+                        .then((): Promise<WebElementIO[]> => {
+                            return (driver.findElements(loc[0], loc[1]) as unknown as Promise<ElementRefIO[]>)
                                 .then((elements: ElementRefIO[]): WebElementIO[] => {
                                     this.logger.trace(`Found ${elements ? elements.length : `undefined`} frame(s) for locator '${locator}'`);
                                     return WebElementIO.createAll(elements, driver);
@@ -233,7 +249,7 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
     }
 
     public quit(): Promise<void> {
-        if(!this.clientCreated) {
+        if (!this.clientCreated) {
             return Promise.resolve();
         }
         return executeFnOnClient(this.getFrameWorkClient, `deleteSession`, [])
@@ -279,7 +295,7 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
     public scrollTo({x, y}: { x: number; y: number }): Promise<void> {
         return this.getFrameWorkClient()
             .then((client: Client): Promise<void> => {
-                return client.executeScript(funcToString(scrollTo),[{x, y}])
+                return client.executeScript(funcToString(scrollTo), [{x, y}])
             })
     }
 
@@ -299,8 +315,14 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
 
     public wait = waitForCondition(this.logger);
 
-    public wait2(condition: UntilElementCondition, element: WebElementFinder, errorMessage?: string): Promise<string> {
-        throw new Error(`wait2() not implemented yet`)
+    public getSession(): Promise<TkSession> {
+        return new Promise((resolve, reject) => {
+            this.getFrameWorkClient()
+                .then(async (client: Client): Promise<void> => {
+                    // @ts-ignore
+                    resolve(SessionIO.create({sessionId: client.sessionId, capabilities: client.capabilities}));
+                })
+                .catch(reject)
+        });
     }
-
 }

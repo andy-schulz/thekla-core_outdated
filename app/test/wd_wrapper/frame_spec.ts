@@ -1,7 +1,8 @@
-import {configure}   from "log4js";
+import {configure} from "log4js";
 import {
     Browser, By, UntilElement, ServerConfig, DesiredCapabilities, ClientHelper
-} from "../..";
+}                  from "../..";
+import {LogLevel}  from "../../config/ServerConfig";
 configure(`res/config/log4js.json`);
 
 
@@ -10,7 +11,7 @@ describe(`trying to access a Frame`, (): void => {
     const conf: ServerConfig = {
         automationFramework: {
             type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel: `info`
+            logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
         },
         serverAddress: {
             hostname: `localhost`
@@ -20,9 +21,9 @@ describe(`trying to access a Frame`, (): void => {
 
     const capabilities: DesiredCapabilities = {
         browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `firefox`,
-        // proxy: {
-        //     type: `direct`
-        // }
+        proxy: {
+            type: `system`,
+        }
     };
 
     let browser: Browser;

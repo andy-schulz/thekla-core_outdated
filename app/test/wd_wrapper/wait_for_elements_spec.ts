@@ -1,34 +1,36 @@
 import {
     Browser, WebElementFinder, By, UntilElement, ServerConfig, DesiredCapabilities, ClientHelper
-}                    from "../..";
-import {configure}   from "log4js";
+}                  from "../..";
+import {configure} from "log4js";
+import {LogLevel}  from "../../config/ServerConfig";
 
 configure(`res/config/log4js.json`);
 
-const conf: ServerConfig = {
-    automationFramework: {
-        type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-        logLevel:  `warn`
-    },
-    serverAddress: {
-        hostname: `localhost`
-    },
-    baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://framework-tester.test-steps.de`,
-};
-
-const capabilities: DesiredCapabilities = {
-    browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-    proxy: {
-        type: `direct`
-    }
-};
-
-
 describe(`Waiting for WD Elements`, (): void => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
+
+    const conf: ServerConfig = {
+        automationFramework: {
+            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
+            logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
+        },
+        serverAddress: {
+            hostname: `localhost`
+        },
+        baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`,
+    };
+
+    const capabilities: DesiredCapabilities = {
+        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
+        proxy: {
+            type: `system`
+        }
+    };
+
+
     let browser: Browser;
     let appearButton4000ShallWait: WebElementFinder;
 
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
 
     afterAll((): Promise<void[][]> => {
         return ClientHelper.cleanup();
@@ -63,7 +65,7 @@ describe(`Waiting for WD Elements`, (): void => {
             appearButton4000ShallWait = browser.element(By.css(`[data-test-id='AppearButtonBy4000']`))
                 .shallWait(UntilElement.is.visible().forAsLongAs(11000));
 
-            await browser.get(`/redirect`);
+            await browser.get(`/redirectToDelayed`);
             expect(await appearButton4000ShallWait.isVisible()).toEqual(true)
         });
     });

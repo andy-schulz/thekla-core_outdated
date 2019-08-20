@@ -1,16 +1,17 @@
+import {TkWebElement}                                         from "../interface/TkWebElement";
 import {WebElementFinder}                                     from "../interface/WebElements";
 import {EnabledCheck, UntilElementCondition, VisibilityCheck} from "../lib/element/ElementConditions";
-import {WebElementJS}                                         from "./wrapper/WedElementJS";
 
 export class ExecuteConditionWdjs {
-    public static execute (condition: UntilElementCondition, element: WebElementJS | WebElementFinder): Promise<boolean> {
+
+    public static execute (condition: UntilElementCondition, element: TkWebElement | WebElementFinder): Promise<boolean> {
         switch (condition.waiter.constructor) {
             case VisibilityCheck:
                 return element.isDisplayed()
-                    .then(condition.negate);
+                    .then(condition.modifierFunc);
             case EnabledCheck:
                 return element.isEnabled()
-                    .then(condition.negate);
+                    .then(condition.modifierFunc);
             default:
                 return Promise.reject(`No Action for Condition ${condition.waiter.constructor.name}`)
         }

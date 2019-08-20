@@ -1,24 +1,6 @@
-import {Browser, ClientHelper, DesiredCapabilities, ServerConfig} from "../..";
-import {clientRect}                                               from "../0_helper/browser_viewport";
-
-const selConfig: ServerConfig = {
-    automationFramework: {
-            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel:  `warn`
-        },
-    serverAddress: {
-        hostname: `localhost`
-    },
-    baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://framework-tester.test-steps.de`
-};
-
-const desiredCapabilities: DesiredCapabilities =  {
-    browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`
-};
-
-const testUrl: string = process.env.BASEURL ? process.env.BASEURL : `http://framework-tester.test-steps.de`;
-
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
+import {Browser, ClientHelper, DesiredCapabilities, ServerConfig} from "../../../index";
+import {LogLevel}                                                 from "../../../config/ServerConfig";
+import {clientRect}                                               from "../../0_helper/browser_viewport";
 
 interface Rect { bottom: number;
     height: number;
@@ -31,6 +13,27 @@ interface Rect { bottom: number;
 }
 
 describe(`Using the browser object`, (): void => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
+
+    const selConfig: ServerConfig = {
+        automationFramework: {
+            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
+            logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
+        },
+        serverAddress: {
+            hostname: `localhost`
+        },
+        baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`
+    };
+
+    const testUrl: string = process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`;
+
+    const desiredCapabilities: DesiredCapabilities =  {
+        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
+        proxy: {
+            type: `system`
+        }
+    };
 
     afterAll(async (): Promise<void[][]> => {
         return ClientHelper.cleanup();
@@ -64,9 +67,8 @@ describe(`Using the browser object`, (): void => {
         it(`should succeed when page is scrolled down 
         - (test case id: 6fef0368-82c6-4d08-9bfa-a9c399c0446d)`, async (): Promise<void> => {
             const browser: Browser = ClientHelper.create(selConfig, desiredCapabilities);
+            await browser.window.setSize({width: 500, height: 900});
             await browser.get(`/tables`);
-
-
 
             const rectStart: Rect[] = (await browser.executeScript(clientRect)) as Rect[];
             expect(rectStart[0].top).toBe(0);

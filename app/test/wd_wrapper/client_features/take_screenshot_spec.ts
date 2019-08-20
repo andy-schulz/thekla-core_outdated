@@ -1,10 +1,10 @@
-import * as fs       from "fs";
-import fsExtra       from "fs-extra";
-import * as uuid     from "uuid";
+import * as fs    from "fs";
+import fsExtra    from "fs-extra";
+import * as uuid  from "uuid";
 import {
     Browser, RunningBrowser, BrowserScreenshotData, ServerConfig, DesiredCapabilities, ClientHelper
-} from "../..";
-
+}                 from "../../../index";
+import {LogLevel} from "../../../config/ServerConfig";
 
 
 describe(`Taking a screenshot`, (): void => {
@@ -12,11 +12,12 @@ describe(`Taking a screenshot`, (): void => {
     let cleanupPath = ``;
 
 
-    const frameworkTesterClockSearch = `http://framework-tester.test-steps.de/delayed`;
+    const frameworkTesterClockSearch = `${process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`}/delayed`;
+        
     const conf: ServerConfig = {
         automationFramework: {
             type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel:  `warn`
+            logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
         },
         serverAddress: {
             hostname: `localhost`
@@ -26,7 +27,7 @@ describe(`Taking a screenshot`, (): void => {
     const capabilities: DesiredCapabilities = {
         browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
         proxy: {
-            type: `direct`
+            type: `system`
         }
     };
 
@@ -41,13 +42,13 @@ describe(`Taking a screenshot`, (): void => {
     });
 
     afterEach((): void => {
-        if(cleanupPath)
+        if (cleanupPath)
             fsExtra.remove(cleanupPath);
 
-        cleanupPath =``;
+        cleanupPath = ``;
     });
     afterAll((): Promise<void[][]> => {
-        return  ClientHelper.cleanup();
+        return ClientHelper.cleanup();
     }, 20000);
 
     describe(`from a single browser as base64 string`, (): void => {
@@ -98,7 +99,7 @@ describe(`Taking a screenshot`, (): void => {
             const fn = await browser.saveScreenshot(relativeBasePath, filename);
             expect(getFilesizeInBytes(`${basePath}/${filename}`)).toBeGreaterThanOrEqual(30000);
             expect(fn).toEqual(`${basePath}/${filename}`);
-        },30000);
+        }, 30000);
 
         it(`should return the path to the saved screenshot when a relative deep path is passed  ` +
             `- (test case id: c6dceba8-2ecc-4064-b5a8-0ab13a3c2597)`, async (): Promise<void> => {
@@ -113,7 +114,7 @@ describe(`Taking a screenshot`, (): void => {
             const fn = await browser.saveScreenshot(relativeBasePath, filename);
             expect(getFilesizeInBytes(fn)).toBeGreaterThanOrEqual(30000);
             expect(fn).toEqual(`${basePath}/${filename}`);
-        },30000);
+        }, 30000);
 
         it(`should throw an error when a path with invalid characters is passed` +
             `- (test case id: 6248a1af-c3d9-4184-8de4-f785dfce50fb)`, async (): Promise<void> => {
@@ -131,7 +132,7 @@ describe(`Taking a screenshot`, (): void => {
                 .catch((error: Error): void => {
                     expect(error.toString()).toMatch(/contains invalid (.*) path characters/, `Wrong error message thrown`);
                 });
-        },30000);
+        }, 30000);
     });
 
     describe(`from multiple browser as base64 string`, (): void => {
@@ -221,7 +222,6 @@ describe(`Taking a screenshot`, (): void => {
             expect(getFilesizeInBytes(screenshots[0])).toBeGreaterThanOrEqual(30000, `Failed Size check for ${screenshots[0]}`);
         }, 60000);
     });
-
 
 
     describe(`from a single browser as base64 string by using the BrowserFactory`, (): void => {

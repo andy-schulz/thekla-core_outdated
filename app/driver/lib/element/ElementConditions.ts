@@ -1,7 +1,10 @@
+import {SppWebElementFinder} from "../../../screenplay/web/SppWebElements";
+import {WebElementFinder}    from "../../interface/WebElements";
+
 export interface UntilElementCondition {
     visible(): UntilElementCondition;
     forAsLongAs(timeout: number): UntilElementCondition;
-    readonly negate: LogicFunction<boolean>;
+    readonly modifierFunc: LogicFunction<boolean>;
     readonly waiter: ElementCondition;
     readonly timeout: number;
     readonly conditionHelpText: string;
@@ -9,18 +12,36 @@ export interface UntilElementCondition {
 
 abstract class  ElementCondition {
     public abstract helpText: string;
+    public elementText: string = ``;
+    abstract isFulfilledFor(element: WebElementFinder): () => Promise<boolean>;
 }
 
 export class VisibilityCheck extends ElementCondition{
     public constructor(
+        public modifierFunc: (result: boolean) => boolean,
         public helpText = `visible`
     ) {super()}
+
+    public isFulfilledFor(element: WebElementFinder): () => Promise<boolean> {
+        this.elementText = `Waiting until element called '${element.description}'`;
+        return () => {
+            return element.isVisible().then(this.modifierFunc)
+        };
+    }
 }
 
 export class EnabledCheck extends ElementCondition{
     public constructor(
+        public modifierFunc: (result: boolean) => boolean,
         public helpText = `enabled`
     ) {super()}
+
+    public isFulfilledFor(element: WebElementFinder): () => Promise<boolean> {
+        const helpText = `${element.description}`;
+        return () => {
+            return element.isEnabled().then(this.modifierFunc);
+        };
+    }
 }
 
 type LogicFunction<T> = (param: T) => T
@@ -41,16 +62,16 @@ export class UntilElement implements UntilElementCondition{
     }
 
     public visible(): UntilElementCondition {
-        this.waiter = new VisibilityCheck();
+        this.waiter = new VisibilityCheck(this.modifierFunc);
         return this;
     }
 
     public enabled(): UntilElementCondition {
-        this.waiter = new EnabledCheck();
+        this.waiter = new EnabledCheck(this.modifierFunc);
         return this;
     }
 
-    private constructor(public negate: LogicFunction<boolean>) {
+    private constructor(public modifierFunc: LogicFunction<boolean>) {
     }
 
     public forAsLongAs(timeout: number): UntilElementCondition {
@@ -63,7 +84,7 @@ export class UntilElement implements UntilElementCondition{
     }
 
     public get conditionHelpText(): string {
-        return `${this.negate(true) ? `is` : `is not`} ${this.waiter.helpText}`
+        return `${this.waiter.elementText} ${this.modifierFunc(true) ? `is` : `is not`} ${this.waiter.helpText}`
     }
 
     public toString(): string {
@@ -73,6 +94,6 @@ export class UntilElement implements UntilElementCondition{
             throw new Error(`ElementCondition named: '${waiter.constructor.name}' not implemented yet. ${(new Error).stack}`)
         };
 
-        return `condition until element is${this.negate(true) ? `` : ` not`} ${conditionType(this.waiter)}`
+        return `condition until element is${this.modifierFunc(true) ? `` : ` not`} ${conditionType(this.waiter)}`
     }
 }

@@ -1,12 +1,22 @@
+import {DesiredCapabilities}                      from "../../config/DesiredCapabilities";
+import {ServerConfig}                             from "../../config/ServerConfig";
 import {UntilElementCondition}                    from "../lib/element/ElementConditions";
 import {BrowserWindow}                            from "./BrowserWindow";
 import {ClientCtrls}                              from "./ClientCtrls";
+import {TkSession}                                from "./TkSession";
 import {FrameFinder, WebElementFinder, WebFinder} from "./WebElements";
 import {Condition}                                from "../lib/Condition";
 
 export interface BrowserScreenshotData {
     browserName: string;
     browserScreenshotData: string;
+}
+
+export interface CreateClient {
+    serverConfig: ServerConfig;
+    capabilities: DesiredCapabilities;
+    clientName?: string;
+    sessionId?: string;
 }
 
 export interface Browser extends WebFinder, FrameFinder {
@@ -17,7 +27,6 @@ export interface Browser extends WebFinder, FrameFinder {
 
     quit(): Promise<void>;
     wait(condition: Condition, timeout?: number, errorMessage?: string): Promise<string>;
-    wait2(condition: UntilElementCondition, element: WebElementFinder, errorMessage?: string): Promise<string>;
 
     getTitle(): Promise<string>;
     hasTitle(expectedTitle: string): Promise<boolean>;
@@ -29,5 +38,7 @@ export interface Browser extends WebFinder, FrameFinder {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     executeScript(func: Function, ...funcArgs: any[]): Promise<{}>;
+
+    getSession(): Promise<TkSession>;
 }
 

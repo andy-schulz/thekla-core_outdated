@@ -1,22 +1,26 @@
-import {Browser, ClientHelper, DesiredCapabilities, ServerConfig} from "../..";
-
-const conf: ServerConfig = {
-    automationFramework: {
-            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel:  `warn`
-        },
-    serverAddress: {
-        hostname: `localhost`
-    },
-};
-
-const capabilities: DesiredCapabilities = {
-    browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-};
+import {Browser, ClientHelper, DesiredCapabilities, ServerConfig} from "../../../index";
+import {LogLevel}                                                 from "../../../config/ServerConfig";
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
 describe(`When using the BrowserWdjs class`, (): void => {
+
+    const conf: ServerConfig = {
+        automationFramework: {
+            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
+            logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
+        },
+        serverAddress: {
+            hostname: `localhost`
+        },
+    };
+
+    const capabilities: DesiredCapabilities = {
+        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
+    };
+
+    const testUrl = process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`
+
     beforeAll(async (): Promise<void> => {
         await ClientHelper.cleanup();
     }, 10000);
@@ -73,7 +77,7 @@ describe(`When using the BrowserWdjs class`, (): void => {
         it(`with a name and an browser instance, it should set this name ` +
             `- (test case id: f2e8b6f5-d639-445c-95a6-ce2ebd82a1ed)`, async (): Promise<void> => {
             const browser: Browser = ClientHelper.create(conf, capabilities, `theNewBrowserName`);
-            await browser.get(`http://framework-tester.test-steps.de`);
+            await browser.get(testUrl);
 
             expect(ClientHelper.availableBrowser.length).toBe(1, `length check for # of browser in BrowserWdjs failed`);
             expect(ClientHelper.availableBrowser[0]).toBe(`theNewBrowserName`);

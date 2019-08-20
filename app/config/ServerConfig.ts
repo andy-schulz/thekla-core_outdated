@@ -28,9 +28,11 @@ export interface ServerAddress {
     path?: string;
 }
 
+export type LogLevel =  "trace" | "debug" | "info" | "warn" | "error" | "silent"; // eslint-disable-line quotes
+
 export interface AutomationFramework {
     type: "wdjs" | "wdio"; // eslint-disable-line quotes
-    logLevel?:  "trace" | "debug" | "info" | "warn" | "error" | "silent"; // eslint-disable-line quotes
+    logLevel?: LogLevel;
 }
 
 

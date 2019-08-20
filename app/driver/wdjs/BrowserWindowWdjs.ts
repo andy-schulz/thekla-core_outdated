@@ -33,8 +33,11 @@ export class BrowserWindowWdjs implements BrowserWindow{
     public setSize(dimension: WindowSize = {width: 500, height: 500}): Promise<void> {
         return new Promise((resolve, reject): void => {
             this.getDriver()
-                .then((driver: WebDriver): promise.Promise<void> =>
-                    driver.manage().window().setSize(dimension.width, dimension.height))
+                .then((driver: WebDriver): promise.Promise<void> => {
+                    const window = driver.manage().window();
+                    // @ts-ignore
+                    return window.setRect({x: null, y: null,width: dimension.width, height: dimension.height})
+                })
                 .then(resolve)
                 .catch(reject)
         });
@@ -43,7 +46,8 @@ export class BrowserWindowWdjs implements BrowserWindow{
     public getSize(): Promise<WindowSize> {
         return new Promise((resolve, reject): void => {
             this.getDriver()
-                .then((driver: WebDriver): promise.Promise<ISize> => driver.manage().window().getSize())
+                // @ts-ignore
+                .then((driver: WebDriver): promise.Promise<ISize> => driver.manage().window().getRect())
                 .then((s: ISize): void => resolve({width: s.width, height: s.height}))
                 .catch(reject)
         })

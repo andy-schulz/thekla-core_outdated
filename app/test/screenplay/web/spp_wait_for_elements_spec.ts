@@ -1,3 +1,4 @@
+import {LogLevel} from "../../../config/ServerConfig";
 import {
     Actor,
     RunningBrowser,
@@ -7,30 +8,36 @@ import {
     See,
     Navigate,
     Text, UntilElement, ServerConfig, Wait, DesiredCapabilities, Expected
-} from "../../../index";
+}                 from "../../../index";
 
-
-let seleniumConfig: ServerConfig = {
-    serverAddress: {
-        hostname: `localhost`
-    },
-    baseUrl: `http://framework-tester.test-steps.de`,
-};
-const capabilities: DesiredCapabilities = {
-    browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-    proxy: {
-        type: `direct`
-    },
-};
 
 import {getLogger} from "log4js";
 const logger = getLogger(`Spec: Spp wait for elements`);
 
 
 describe(`Waiting for SPP Elements`, (): void => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+
+    let seleniumConfig: ServerConfig = {
+        automationFramework: {
+            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
+            logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `warn`) as LogLevel
+        },
+        serverAddress: {
+            hostname: `localhost`
+        },
+        baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`,
+    };
+    const capabilities: DesiredCapabilities = {
+        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
+        proxy: {
+            type: `system`
+        },
+    };
+
     logger.trace(`test started`);
     let walterTheWaiter: Actor;
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+
 
     beforeAll((): void => {
         walterTheWaiter = Actor.named(`Walter`);
@@ -66,7 +73,7 @@ describe(`Waiting for SPP Elements`, (): void => {
         it(`should be possible with wait actions on an element and a redirecting page ` +
             `- (test case id: 4406f09a-5b80-4106-b46a-9f2683faefc9)`, (): Promise<void> => {
             return walterTheWaiter.attemptsTo(
-                Navigate.to(`/redirect`),
+                Navigate.to(`/redirectToDelayed`),
                 See.if(Text.of(appearingButton)).is(Expected.toEqual(`Appeared after 4 seconds`)),
             );
         });
@@ -107,7 +114,7 @@ describe(`Waiting for SPP Elements`, (): void => {
                     expect(true).toBe(false, `Action should time out after 500ms but it doesnt`)
                 })
                 .catch((e): void => {
-                    expect(e.toString()).toContain(`Waiting until element called 'The modal window' is not visible timed out after 500 ms.`)
+                    expect(e.toString()).toContain(`Wait timed out after 500 ms -> (Waiting until element called 'The modal window' is not visible).`)
                 });
 
         });

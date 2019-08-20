@@ -60,7 +60,6 @@ describe(`Trying to Add two numbers by the mathjs API`, (): void => {
             }
         };
 
-        console.log(process.env.MY_PROXY);
         if (process.env.MY_PROXY) {
             if(!restConfig.requestOptions)
                 restConfig.requestOptions = {};
@@ -187,7 +186,7 @@ describe(`Trying to Add two numbers by the mathjs API`, (): void => {
         });
 
         it(`when using the POST request` +
-            `- (test case id: 47fc1292-bb55-4de2-a7fc-313b47cf15f3)`, async (): Promise<void> => {
+            `- (test case id: 5279a3f9-ee89-4ba9-9533-69273c992aa2)`, async (): Promise<void> => {
             const req = request(On.resource(`/`))
                 .using(restConfig2);
 
@@ -369,7 +368,7 @@ describe(`Trying to Add two numbers by the mathjs API`, (): void => {
         };
 
         it(`when using the POST request` +
-            `- (test case id: ab7b185d-08f9-4277-969b-dc21dfd8091a)`, async (): Promise<void> => {
+            `- (test case id: eed39ad3-9369-4a70-a6a5-2e0503e84169)`, async (): Promise<void> => {
 
             let result: {} = {};
 
@@ -390,7 +389,7 @@ describe(`Trying to Add two numbers by the mathjs API`, (): void => {
         });
 
         it(`when using the POST request executed by the general Send Interaction` +
-            `- (test case id: ab7b185d-08f9-4277-969b-dc21dfd8091a)`, async (): Promise<void> => {
+            `- (test case id: 6cd57c7f-ce71-4774-bed2-6514cb7bc404)`, async (): Promise<void> => {
 
             let result: {} = {};
 

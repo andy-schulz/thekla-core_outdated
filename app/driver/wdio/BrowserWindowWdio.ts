@@ -31,6 +31,10 @@ export class BrowserWindowWdio implements BrowserWindow{
     public setSize(dimension: WindowSize = {width: 500, height: 500}): Promise<void> {
         return this.getClient()
             .then((client: Client): Promise<void> => {
+                // @ts-ignore
+                if(client.isW3C)
+                    return client.setWindowRect(null, null, dimension.width, dimension.height) as unknown as Promise<void>;
+
                 return client._setWindowSize(dimension.width, dimension.height) as unknown as Promise<void>
             })
     }
@@ -38,12 +42,14 @@ export class BrowserWindowWdio implements BrowserWindow{
     public getSize(): Promise<WindowSize> {
         return this.getClient()
             .then((client: Client) => {
-                return client._getWindowSize()
+                // @ts-ignore
+                if(client.isW3C)
+                    return client.getWindowRect();
+                return client._getWindowSize();
             })
             .then((s: any): any => {
                 return {width: s.width, height: s.height}
 
             })
     }
-
 }

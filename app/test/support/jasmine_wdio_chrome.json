@@ -1,11 +1,9 @@
 {
-  "spec_dir": "dist/test"
-  ,"spec_files": [
-      "screenplay/**/*[sS]xpec.js",
-      "wd_wrapper/**/web*[sS]pec.js",
-      "lib_test/**/*[sS]xpec.js",
-      "rest_api/**/*[sS]xpec.js"
-]
+  "spec_dir": "dist/test",
+  "spec_files": [
+      "wd_wrapper/**/*[sS]pec.js",
+      "screenplay/web/**/*[sS]pec.js"
+  ]
   ,
   "helpers": [
     "support/helpers/wdio_chrome.js"

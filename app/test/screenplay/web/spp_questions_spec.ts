@@ -1,3 +1,4 @@
+import {LogLevel} from "../../../config/ServerConfig";
 import {
     DesiredCapabilities,
     ServerConfig,
@@ -10,28 +11,37 @@ import {
     See,
     TheSites,
     Attribute, element, Expected, Status, all, Count, Extract, Text, Click
-} from "../../../index";
+}                 from "../../../index";
 
 import {configure} from "log4js";
 configure(`res/config/log4js.json`);
 
 
-let seleniumConfig: ServerConfig = {
-    serverAddress: {
-        hostname: `localhost`,
-    },
-    baseUrl: `http://framework-tester.test-steps.de`,
-};
-const capabilities: DesiredCapabilities ={
-    browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-    proxy: {
-        type: `direct`
-    }
-};
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+
 
 
 describe(`Using`, (): void => {
+
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+    let seleniumConfig: ServerConfig = {
+        automationFramework: {
+            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
+            logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `warn`) as LogLevel
+        },
+        serverAddress: {
+            hostname: `localhost`,
+        },
+        baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`
+    };
+    const capabilities: DesiredCapabilities ={
+        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
+        proxy: {
+            type: `system`
+        }
+    };
+
+    const testUrl = process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`
+
 
     afterAll(async (): Promise<void[][]> => {
         return RunningBrowser.cleanup();
@@ -51,7 +61,7 @@ describe(`Using`, (): void => {
             `- (test case id: 332e9252-aec9-44b5-b936-728561523e27)`, async (): Promise<void> => {
             await Joanna.attemptsTo(
                 Navigate.to(`/delayed`),
-                See.if(TheSites.url()).is(Expected.toEqual(`http://framework-tester.test-steps.de/delayed`))
+                See.if(TheSites.url()).is(Expected.toEqual(`${testUrl}/delayed`))
             )
         });
 
@@ -59,7 +69,7 @@ describe(`Using`, (): void => {
             `- (test case id: 7974c013-4234-43e4-8330-6ec788512eb8)`, async (): Promise<void> => {
             await Joanna.attemptsTo(
                 Navigate.to(`/delayed`),
-                See.if(TheSites.url()).is(Expected.toEqual(`http://framework-tester.test-steps.de/delayed`))
+                See.if(TheSites.url()).is(Expected.toEqual(`${testUrl}/delayed`))
             )
         });
     });

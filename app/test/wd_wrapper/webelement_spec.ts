@@ -10,6 +10,7 @@ import {
 }                       from "../..";
 
 import {configure}                   from "log4js";
+import {LogLevel}                    from "../../config/ServerConfig";
 import {WebElementWdio}              from "../../driver/wdio/WebElementWdio";
 import {BoundaryCheck, boundingRect} from "../0_helper/browser_viewport";
 import { WebElementWdjs }            from "../../driver/wdjs/WebElementWdjs";
@@ -17,15 +18,16 @@ configure(`res/config/log4js.json`);
 
 describe(`When using the Browser object`, (): void => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+
     const conf: ServerConfig = {
         automationFramework: {
             type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel:  `warn`
+            logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
         },
         serverAddress: {
             hostname: `localhost`
         },
-        baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://framework-tester.test-steps.de`
+        baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`
     };
 
     const capabilities: DesiredCapabilities = {
@@ -35,7 +37,7 @@ describe(`When using the Browser object`, (): void => {
         }
     };
 
-    const testurl = `http://framework-tester.test-steps.de`;
+    const testurl = process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`;
 
 
     describe(`and calling the get method `, (): void => {

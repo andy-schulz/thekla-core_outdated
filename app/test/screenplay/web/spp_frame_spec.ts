@@ -1,3 +1,4 @@
+import {LogLevel} from "../../../config/ServerConfig";
 import {
     Actor,
     RunningBrowser,
@@ -11,28 +12,32 @@ import {
     Text,
     UntilElement,
     ServerConfig, Expected
-} from "../../../index";
+}                 from "../../../index";
 
 import {configure} from "log4js";
 configure(`res/config/log4js.json`);
 
-let config: ServerConfig = {
-    serverAddress: {
-        hostname: `localhost`
-    },
-    baseUrl: `http://framework-tester.test-steps.de`,
-};
-
-const capabilities: DesiredCapabilities = {
-    browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-    proxy: {
-        type: `direct`
-    }
-};
-
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
-
 describe(`Locating Elements inside Frames`, (): void => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+
+    let config: ServerConfig = {
+        automationFramework: {
+            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
+            logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `warn`) as LogLevel
+        },
+        serverAddress: {
+            hostname: `localhost`
+        },
+        baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`,
+    };
+
+    const capabilities: DesiredCapabilities = {
+        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
+        proxy: {
+            type: `system`
+        }
+    };
+
     let Francine: Actor;
 
     beforeAll((): void => {

@@ -65,10 +65,10 @@ export interface FirefoxOptions {
     };
 
 }
-
+// eslint-disable-next-line quotes
+export type ProxyType = "direct" | "system" | "manual"
 export interface ProxyConfig {
-    // eslint-disable-next-line quotes
-    type: "direct" | "system" | "manual";
+    type: ProxyType;
     manualConfig?: ManualProxyConfig;
 }
 
