@@ -1,22 +1,28 @@
-import { Client }                  from "webdriver"
-import {TkWebElement}              from "../../interface/TkWebElement";
-import {PromiseAny}                from "../../interface/Types";
-import {ElementLocationInView}     from "../../lib/element/ElementLocation";
-import { By }                      from "../../lib/element/Locator";
-import fp                          from "lodash/fp"
-import {funcToString}              from "../../utils/Utils";
-import { findByCssContainingText } from "../../lib/client_side_scripts/locators";
+import {Client}                  from "webdriver"
+import {PointerActionSequence}   from "../../interface/Actions";
+import {TkWebElement}            from "../../interface/TkWebElement";
+import {PromiseAny}              from "../../interface/Types";
+import {ElementLocationInView}   from "../../lib/element/ElementLocation";
+import {By}                      from "../../lib/element/Locator";
+import fp                        from "lodash/fp"
+import {funcToString}            from "../../utils/Utils";
+import {findByCssContainingText} from "../../lib/client_side_scripts/locators";
 
 // @ts-ignore
 import {isElementDisplayed} from "../../lib/client_side_scripts/is_displayedness";
 
-export interface ElementRefIO {[key: string]: string}
-interface ElementIODimension { x: number;
+export interface ElementRefIO {
+    [key: string]: string;
+}
+
+interface ElementIODimension {
+    x: number;
     y: number;
     width: number;
-    height: number; };
+    height: number;
+};
 
-export class WebElementIO implements TkWebElement{
+export class WebElementIO implements TkWebElement {
 
     private constructor(
         private htmlElement: ElementRefIO,
@@ -41,7 +47,7 @@ export class WebElementIO implements TkWebElement{
         return this.htmlElement[this.getElementKey()]
     }
 
-    public getFrWkElement(): any {
+    public getFrWkElement(): ElementRefIO {
         return this.htmlElement;
     }
 
@@ -57,10 +63,13 @@ export class WebElementIO implements TkWebElement{
 
         // chrome driver 2.4x required to send the text as an array not as a string
         // @ts-ignore
-        if(this.client.isChrome && !this.client.isW3C)
-            return this.client.elementSendKeys(this.getElementId(),[keySequence]) as unknown as Promise<void>;
+        if (this.client.isChrome && !this.client.isW3C)
+            return this.client.elementSendKeys(this.getElementId(), [keySequence]) as unknown as Promise<void>;
+        // @ts-ignore
+        if (this.client.isMobile)
+            return this.client.elementSendKeys(this.getElementId(), keySequence, keySequence.split(``)) as unknown as Promise<void>;
 
-        return this.client.elementSendKeys(this.getElementId(),keySequence) as unknown as Promise<void>
+        return this.client.elementSendKeys(this.getElementId(), keySequence) as unknown as Promise<void>
     }
 
     public getAttribute(attributeName: string): Promise<string> {
@@ -73,8 +82,8 @@ export class WebElementIO implements TkWebElement{
 
     public isDisplayed(): Promise<boolean> {
         // @ts-ignore
-        if(this.client.isW3C)
-            return this.client.executeScript(funcToString(isElementDisplayed),[this.htmlElement]);
+        if (this.client.isW3C && !this.client.isMobile)
+            return this.client.executeScript(funcToString(isElementDisplayed), [this.htmlElement]);
 
         return this.client.isElementDisplayed(this.getElementId()) as unknown as Promise<boolean>
     }
@@ -85,12 +94,12 @@ export class WebElementIO implements TkWebElement{
 
     public scrollIntoView = (pr?: PromiseAny): Promise<void> => {
 
-        const scrollIntoView = (element: any) => {
+        const scrollIntoView = (element: any): void => {
             // @ts-ignore
             return element.scrollIntoView();
         };
 
-        if(pr)
+        if (pr)
             return pr.then((): Promise<void> => {
                 return this.client.executeScript(funcToString(scrollIntoView), [this.htmlElement]);
             });
@@ -110,42 +119,40 @@ export class WebElementIO implements TkWebElement{
         return this.client.executeScript(func, [this.htmlElement]);
     };
 
-    public move(): Promise<void> {
+    public move(pr?: Promise<void>): Promise<void> {
         return fp.flow(
             this.scrollIntoView,
-            this.moveToPoint(this.htmlElement),
-        )();
+            this.moveToElement(this.htmlElement),
+        )(pr);
     }
 
-    private moveToPoint = (element: ElementRefIO): (pr: Promise<void>) => Promise<void> => {
+    private moveToElement = (element: ElementRefIO): (pr: Promise<void>) => Promise<void> => {
         return (pr: Promise<void>): Promise<void> => {
-            const actions1 =   [
+            const actions1: PointerActionSequence[] = [
                 {
-                    "type": `pointer`,
-                    "id": `moveMouse`,
-                    "parameters": {"pointerType": `mouse`},
-                    "actions": [
-                        {
-                            "type": `pointerMove`,
-                            "duration": 0,
-                            "origin": element,
-                            "x": 0,
-                            "y": 0,
-                        }
-                    ]
+                    type: `pointer`,
+                    id: `myMouse`,
+                    parameters: {"pointerType": `mouse`},
+                    actions: [{
+                        type: `pointerMove`,
+                        duration: 1000,
+                        origin: element,
+                        x: 0,
+                        y: 0,
+                    }]
                 }
             ];
 
-            return pr.then((): Promise<void> => {
-                return this.client.performActions(actions1) as unknown as Promise<void>;
-            })
+            return pr.then((): Promise<void> => this.client.performActions(actions1) as unknown as Promise<void>)
+                .then(() => {
+                    console.log(JSON.stringify(actions1))
+                })
         }
     };
 
     public getRect(): Promise<object> {
         return this.client.getElementRect(this.getElementId()) as unknown as Promise<object>;
     }
-
 
     public findElements(locator: By): Promise<TkWebElement[]> {
         switch (locator.selectorType) {
@@ -154,26 +161,26 @@ export class WebElementIO implements TkWebElement{
                     this.getElementId(),
                     `css selector`,
                     locator.selector) as unknown as Promise<ElementRefIO[]>)
-                    .then((elements: ElementRefIO[]): TkWebElement[] => WebElementIO.createAll(elements,this.client));
+                    .then((elements: ElementRefIO[]): TkWebElement[] => WebElementIO.createAll(elements, this.client));
 
             case `byXpath`:
                 return (this.client.findElementsFromElement(
                     this.getElementId(),
                     `xpath`,
                     locator.selector) as unknown as Promise<ElementRefIO[]>)
-                    .then((elements: ElementRefIO[]): TkWebElement[] => WebElementIO.createAll(elements,this.client));
+                    .then((elements: ElementRefIO[]): TkWebElement[] => WebElementIO.createAll(elements, this.client));
 
             case `byJs`:
                 return this.client.executeScript(
                     funcToString(locator.function),
                     [...locator.args, this.htmlElement])
-                    .then((elements: ElementRefIO[]): TkWebElement[] => WebElementIO.createAll(elements,this.client));
+                    .then((elements: ElementRefIO[]): TkWebElement[] => WebElementIO.createAll(elements, this.client));
 
             case `byCssContainingText`:
                 return this.client.executeScript(
                     funcToString(findByCssContainingText),
-                    [locator.selector,locator.searchText, this.htmlElement])
-                    .then((elements: ElementRefIO[]): TkWebElement[] => WebElementIO.createAll(elements,this.client));
+                    [locator.selector, locator.searchText, this.htmlElement])
+                    .then((elements: ElementRefIO[]): TkWebElement[] => WebElementIO.createAll(elements, this.client));
 
             default:
                 throw Error(`Selector ${locator.selectorType} not implemented for framework WebDriverJS`);

@@ -1,15 +1,16 @@
-import {getLogger, Logger}                                          from "@log4js-node/log4js-api";
-import * as fs                                                      from "fs";
-import fsExtra                                                      from "fs-extra";
-import * as path                                                    from "path";
-import {Browser, BrowserScreenshotData, CreateClient}               from "../interface/Browser";
-import {BrowserWindow, WindowManager}                               from "../interface/BrowserWindow";
-import {ClientCtrls}                                                from "../interface/ClientCtrls";
-import {TkSession}                                                  from "../interface/TkSession";
-import {TkWebElement}                                               from "../interface/TkWebElement";
+import {getLogger, Logger}                            from "@log4js-node/log4js-api";
+import * as fs                                        from "fs";
+import fsExtra                                        from "fs-extra";
+import * as path                                      from "path";
+import {PointerActionSequence}                        from "../interface/Actions";
+import {Browser, BrowserScreenshotData, CreateClient} from "../interface/Browser";
+import {BrowserWindow, WindowManager}                 from "../interface/BrowserWindow";
+import {ClientCtrls}                                  from "../interface/ClientCtrls";
+import {TkSession}                                    from "../interface/TkSession";
+import {TkWebElement}                                 from "../interface/TkWebElement";
 import {FrameElementFinder, WebElementFinder, WebElementListFinder} from "../interface/WebElements";
 import {By, ServerConfig}                                           from "../..";
-import {cleanupClients, executeFnOnClient}                          from "../lib/client/ClientHelper";
+import {cleanupClients, executeFnOnClient, switchToMasterFrame}     from "../lib/client/ClientHelper";
 import {checkClientName}                                            from "../lib/client/checks";
 import {formatNavigateToUrl}                                        from "../lib/client/url_formatter";
 import {waitForCondition}                                           from "../lib/client/wait_actions";
@@ -26,7 +27,6 @@ import {BrowserWindowWdio}                                          from "./Brow
 import {takeScreenshots, saveScreenshots}                           from "../lib/client/screenshots";
 import deepmerge                                                    from "deepmerge";
 import AttachSessionOptions = WebDriver.AttachSessionOptions;
-
 
 export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
     private static logger: Logger = getLogger(`ClientWdioClass`);
@@ -125,6 +125,64 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
             })
     };
 
+    public pointerButtonDown = (button: number): (pr: Promise<void>) => Promise<void> => {
+        return (pr: Promise<void>): Promise<void> => {
+
+            const buttonPress: PointerActionSequence[] = [{
+                type: `pointer`,
+                id: `myMouse`,
+                parameters: {pointerType: `mouse`},
+                actions: [{
+                    type: `pointerDown`,
+                    button: button
+                }, {
+                    type: `pause`,
+                    duration: 200
+                }]
+            }];
+
+            return pr.then(this.getFrameWorkClient)
+                .then((client: Client): Promise<void> => {
+                    return client.performActions(buttonPress) as unknown as Promise<void>
+                }).then(() => {
+                    console.log(JSON.stringify(buttonPress))
+                });
+        }
+    };
+
+    public pointerButtonUp = (button: number): (pr: Promise<void>) => Promise<void> => {
+        return (pr: Promise<void>): Promise<void> => {
+
+            const buttonUp: PointerActionSequence[] = [{
+                type: `pointer`,
+                id: `myMouse`,
+                parameters: {pointerType: `mouse`},
+                actions: [{
+                    type: `pointerUp`,
+                    button: button
+                }, {
+                    type: `pause`,
+                    duration: 200
+                }]
+            }];
+
+            return pr.then(this.getFrameWorkClient)
+                .then((client: Client): Promise<void> => {
+                    return client.performActions(buttonUp) as unknown as Promise<void>
+                })
+                .then(() => {
+                    console.log(JSON.stringify(buttonUp))
+                });
+        }
+    };
+
+    public releaseActions = (pr: Promise<void>): Promise<void> => {
+        return pr
+            .then(this.getFrameWorkClient)
+            .then((client: Client): Promise<void> => client.releaseActions() as unknown as Promise<void>)
+
+    };
+
     public static cleanup(clientsToClean?: Browser[]): Promise<void[]> {
         return cleanupClients(this.clientMap, clientsToClean)
     }
@@ -184,7 +242,7 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
             // frame(By.css("locator")).element(By.css("locator"))
             return await this.getFrameWorkClient()
                 .then((driver): Promise<TkWebElement[]> => {
-                    return (driver.switchToFrame(null) as unknown as Promise<void>)
+                    return (switchToMasterFrame(driver))
                         .then((): Promise<TkWebElement[]> => {
 
                             return (driver.findElements(loc[0], loc[1]) as unknown as Promise<ElementRefIO[]>)
@@ -216,7 +274,7 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
         const getFrames = async (): Promise<WebElementIO[]> => {
             return await this.getFrameWorkClient()
                 .then((driver): Promise<WebElementIO[]> => {
-                    return (driver.switchToFrame(null) as unknown as Promise<void>)
+                    return switchToMasterFrame(driver)
                         .then((): Promise<WebElementIO[]> => {
                             return (driver.findElements(loc[0], loc[1]) as unknown as Promise<ElementRefIO[]>)
                                 .then((elements: ElementRefIO[]): WebElementIO[] => {
@@ -274,7 +332,6 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
         } catch (e) {
             return Promise.reject(e)
         }
-
 
         const fpn = `${fp}/${filename}`;
 

@@ -1,7 +1,7 @@
 import {Question}                from "../../lib/questions/Question";
 import {UsesAbilities}           from "../../Actor";
+import {FindElements}            from "../abilities/FindElements";
 import {SppWebElementListFinder} from "../SppWebElements";
-import {BrowseTheWeb}            from "../../../index";
 
 export class Count implements Question<void, number> {
 
@@ -14,7 +14,7 @@ export class Count implements Question<void, number> {
     ) {}
 
     public answeredBy(actor: UsesAbilities): Promise<number> {
-        return BrowseTheWeb.as(actor).findElements(this.elements).count();
+        return FindElements.as(actor).findElements(this.elements).count();
     }
 
     public toString(): string {

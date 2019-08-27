@@ -38,6 +38,8 @@ export interface WebElementFinder
     clear(): Promise<void>;
     scrollIntoView(): Promise<void>;
     getElementLocationInView(): Promise<ElementLocationInView>;
+    dragToElement(element: WebElementFinder): Promise<void>;
+    movePointerTo(pr?: Promise<any>): Promise<void>;
 }
 
 export interface WebElementListFinder

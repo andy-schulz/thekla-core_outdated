@@ -28,12 +28,19 @@ describe(`Searching on Google`, (): void => {
             logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `warn`) as LogLevel
         },
         serverAddress: {
-            hostname: `localhost`
+            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
         },
     };
 
     const capabilities: DesiredCapabilities = {
         browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
+        proxy: process.env.PROXY_TYPE === `manual` ? {
+            proxyType: `manual`,
+            httpProxy: process.env.PROXY_SERVER,
+            sslProxy: process.env.PROXY_SERVER,
+        } : {
+            proxyType: `system`
+        }
     };
 
     let John: Actor;
@@ -58,7 +65,7 @@ describe(`Searching on Google`, (): void => {
 
     }, 20000);
 
-    afterAll((): Promise<void[][]> => {
+    afterAll((): Promise<void[]> => {
         return  RunningBrowser.cleanup();
     })
 });

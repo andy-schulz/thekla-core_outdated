@@ -1,12 +1,24 @@
 import {WebElementListFinder}                                        from "../../../driver/interface/WebElements";
 import {UntilElementCondition}                                       from "../../../driver/lib/element/ElementConditions";
-import {ExecuteConditionWdjs}                                        from "../../../driver/wdjs/ExecuteConditionWdjs";
-import {Ability}                                                     from "../../lib/abilities/Ability";
+import {AbilitySet, Ability}                                         from "../../lib/abilities/Ability";
 import {Browser, until, WebElementFinder}                            from "../../../index";
 import {UsesAbilities}                                               from "../../Actor";
 import {SppFinderRoot, SppWebElementFinder, SppWebElementListFinder} from "../SppWebElements";
+import {FindElements}                                                from "./FindElements";
+import {UseBrowserFeatures}                                          from "./UseBrowserFeatures";
 
-export class BrowseTheWeb implements Ability {
+export class BrowseTheWeb implements AbilitySet {
+
+    private abilities: Ability[] = [];
+
+
+    public isAbilityList(): boolean {
+        return true;
+    }
+
+    public getAbilities(): Ability[] {
+        return this.abilities;
+    }
 
     public static using(browser: Browser): BrowseTheWeb {
         return new BrowseTheWeb(browser);
@@ -16,42 +28,43 @@ export class BrowseTheWeb implements Ability {
         return actor.withAbilityTo(BrowseTheWeb) as BrowseTheWeb;
     }
 
-    public constructor(private browser: Browser) {
-
+    public constructor(private client: Browser) {
+        this.abilities.push(FindElements.using(client) as Ability);
+        this.abilities.push(UseBrowserFeatures.using(client));
     }
 
-    public findElement(spe: SppWebElementFinder): WebElementFinder {
-        return this.find(spe) as WebElementFinder;
-    }
-
-    public findElements(spes: SppWebElementListFinder): WebElementListFinder {
-        return this.find(spes) as WebElementListFinder;
-    }
-
-    public find(spe: SppFinderRoot): WebElementFinder | WebElementListFinder {
-        return spe.getElements(this.browser)
-    }
-
-    public navigate(url: string): Promise<void> {
-        return this.browser.get(url);
-    }
-
-    public wait(condition: UntilElementCondition, element: SppWebElementFinder): Promise<string> {
-        return this.browser.wait(
-            until(condition.waiter.isFulfilledFor(element.getElements(this.browser) as WebElementFinder)),
-            condition.timeout,
-            condition.conditionHelpText);
-    }
-
-    public getCurrentUrl(): Promise<string> {
-        return this.browser.getCurrentUrl();
-    }
-
-    public getTitle(): Promise<string> {
-        return this.browser.getTitle()
-    }
-
-    public scrollTo({x,y}: {x: number; y: number}): Promise<void> {
-        return this.browser.scrollTo({x,y});
-    }
+    // public findElement(spe: SppWebElementFinder): WebElementFinder {
+    //     return this.find(spe) as WebElementFinder;
+    // }
+    //
+    // public findElements(spes: SppWebElementListFinder): WebElementListFinder {
+    //     return this.find(spes) as WebElementListFinder;
+    // }
+    //
+    // public find(spe: SppFinderRoot): WebElementFinder | WebElementListFinder {
+    //     return spe.getElements(this.client)
+    // }
+    //
+    // public navigate(url: string): Promise<void> {
+    //     return this.client.get(url);
+    // }
+    //
+    // public wait(condition: UntilElementCondition, element: SppWebElementFinder): Promise<string> {
+    //     return this.client.wait(
+    //         until(condition.waiter.isFulfilledFor(element.getElements(this.client) as WebElementFinder)),
+    //         condition.timeout,
+    //         condition.conditionHelpText);
+    // }
+    //
+    // public getCurrentUrl(): Promise<string> {
+    //     return this.client.getCurrentUrl();
+    // }
+    //
+    // public getTitle(): Promise<string> {
+    //     return this.client.getTitle()
+    // }
+    //
+    // public scrollTo({x,y}: {x: number; y: number}): Promise<void> {
+    //     return this.client.scrollTo({x,y});
+    // }
 }

@@ -15,7 +15,7 @@ describe(`creating a new Browser`, (): void => {
             logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
         },
         serverAddress: {
-            hostname: `localhost`
+            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
         },
     };
 
@@ -27,11 +27,16 @@ describe(`creating a new Browser`, (): void => {
         return {width: window.innerWidth, height: window.innerHeight};
     };
 
-    afterAll((): Promise<void[][]> => {
+    afterAll((): Promise<void[]> => {
         return ClientHelper.cleanup();
     });
 
     describe(`with an initial window setSize`, (): void => {
+
+        afterEach((): Promise<void[]> => {
+            return ClientHelper.cleanup()
+        });
+
         it(`it should be maximized when the config contains the "maximum" attribute 
         - (test case id: 8a0d9a58-9591-43c1-89bb-d848319c90f1)`, async (): Promise<void> => {
             const con: ServerConfig = _.cloneDeep(conf);
@@ -62,6 +67,10 @@ describe(`creating a new Browser`, (): void => {
         });
 
         describe(`and changing the window size`, (): void => {
+
+            afterEach((): Promise<void[]> => {
+                return ClientHelper.cleanup()
+            });
 
             it(`should resize the window to 500x500 pixel 
             - (test case id: 1b7451ac-0ca2-4bdc-8700-60b4098d5829)`, async (): Promise<void> => {

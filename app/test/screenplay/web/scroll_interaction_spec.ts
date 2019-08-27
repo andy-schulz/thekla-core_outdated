@@ -28,13 +28,20 @@ describe(`Scroll`, (): void => {
             logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `warn`) as LogLevel
         },
         serverAddress: {
-            hostname: `localhost`
+            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
         },
         baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`
     };
 
     const capabilities: DesiredCapabilities = {
         browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
+        proxy: process.env.PROXY_TYPE === `manual` ? {
+            proxyType: `manual`,
+            httpProxy: process.env.PROXY_SERVER,
+            sslProxy: process.env.PROXY_SERVER,
+        } : {
+            proxyType: `system`
+        }
     };
 
 
@@ -43,14 +50,16 @@ describe(`Scroll`, (): void => {
         let theBrowser: Browser;
         const Sam = Actor.named(`Sam`);
 
-        beforeAll((): void => {
+        beforeAll(async (): Promise<void> => {
             // and give him the ability to browse the web using a browser of your choice
             theBrowser = RunningBrowser.startedOn(conf).withCapabilities(capabilities);
+            await theBrowser.window.setSize({width: 500, height: 900});
             Sam.whoCan(BrowseTheWeb.using(theBrowser));
         });
 
         it(`should succeed when scrolled to the end of the page 
         - (test case id: 8fc292fe-883d-48ce-878e-11fcdff579df)`, async (): Promise<void> => {
+
             await Navigate.to(`/tables`).performAs(Sam);
 
             const rectStart: ClientRectList = await theBrowser.executeScript(clientRect) as ClientRectList;
@@ -101,7 +110,7 @@ describe(`Scroll`, (): void => {
         });
     });
 
-    afterAll((): Promise<void[][]> => {
+    afterAll((): Promise<void[]> => {
         return RunningBrowser.cleanup();
     })
 });

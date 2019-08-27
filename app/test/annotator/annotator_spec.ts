@@ -1,9 +1,10 @@
-import {BrowserWdjs}                                                      from "../../driver/wdjs/BrowserWdjs";
+import {ProxyType}                                                        from "../../config/DesiredCapabilities";
+import {ClientWdio}                                                       from "../../driver/wdio/ClientWdio";
 import {Browser, DesiredCapabilities, WebElementFinder, ServerConfig, By} from "../../index";
 
 const conf: ServerConfig = {
     serverAddress: {
-        hostname: `localhost`
+        hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
     },
     baseUrl: `http://framework-tester.test-steps.de`,
 };
@@ -11,7 +12,9 @@ const conf: ServerConfig = {
 const capabilities: DesiredCapabilities = {
     browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
     proxy: {
-        type: `direct`
+        proxyType: (process.env.PROXY_TYPE ? process.env.PROXY_TYPE : `system`) as ProxyType,
+        httpProxy: process.env.PROXY_SERVER ? process.env.PROXY_SERVER : ``,
+        sslProxy: process.env.PROXY_SERVER ? process.env.PROXY_SERVER : ``,
     }
 };
 
@@ -26,7 +29,7 @@ describe(`When annotating`, (): void => {
         let emailField: WebElementFinder;
 
         beforeAll((): void => {
-            browser = BrowserWdjs.create({serverConfig: confAnnotate, capabilities: capabilities});
+            browser = ClientWdio.create({serverConfig: confAnnotate, capabilities: capabilities});
 
             passwordField = browser.element(By.css(`#examplePassword`));
             emailField = browser.element(By.css(`#exampleEmail`));
@@ -118,7 +121,7 @@ describe(`When annotating`, (): void => {
         let browser: Browser;
 
         beforeAll((): void => {
-            browser = BrowserWdjs.create({serverConfig: confAnnotate, capabilities: capabilities});
+            browser = ClientWdio.create({serverConfig: confAnnotate, capabilities: capabilities});
         });
 
         it(`a test message should be displayed`
@@ -143,6 +146,6 @@ describe(`When annotating`, (): void => {
     });
 
     afterAll(async (): Promise<void[]> => {
-        return BrowserWdjs.cleanup();
+        return ClientWdio.cleanup();
     })
 });

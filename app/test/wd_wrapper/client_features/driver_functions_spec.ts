@@ -1,3 +1,4 @@
+import {ProxyType}                                                from "../../../config/DesiredCapabilities";
 import {Browser, ClientHelper, DesiredCapabilities, ServerConfig} from "../../../index";
 import {LogLevel}                                                 from "../../../config/ServerConfig";
 import {clientRect}                                               from "../../0_helper/browser_viewport";
@@ -21,7 +22,7 @@ describe(`Using the browser object`, (): void => {
             logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
         },
         serverAddress: {
-            hostname: `localhost`
+            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
         },
         baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`
     };
@@ -30,16 +31,25 @@ describe(`Using the browser object`, (): void => {
 
     const desiredCapabilities: DesiredCapabilities =  {
         browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-        proxy: {
-            type: `system`
+        proxy: process.env.PROXY_TYPE === `manual` ? {
+            proxyType: `manual`,
+            httpProxy: process.env.PROXY_SERVER,
+            sslProxy: process.env.PROXY_SERVER,
+        } : {
+            proxyType: `system`
         }
     };
 
-    afterAll(async (): Promise<void[][]> => {
+    afterAll(async (): Promise<void[]> => {
         return ClientHelper.cleanup();
     });
 
     describe(`to retrieve the title`, (): void => {
+
+        afterEach((): Promise<void[]> => {
+            return ClientHelper.cleanup()
+        });
+
         it(`should equal the site title 
         - (test case id: 5411140d-4b1a-408b-ab9a-995ab200825d)`, async (): Promise<void> => {
             const title = `React App`;
@@ -52,6 +62,11 @@ describe(`Using the browser object`, (): void => {
     });
 
     describe(`to retrieve the url`, (): void => {
+
+        afterEach((): Promise<void[]> => {
+            return ClientHelper.cleanup()
+        });
+
         it(`should equal the sites url 
         - (test case id: 9603e1c2-bfe2-4243-b0a3-401096ad31ff)`, async (): Promise<void> => {
             const url = `${testUrl}/delayed`;
@@ -64,6 +79,11 @@ describe(`Using the browser object`, (): void => {
     });
 
     describe(`to scroll the page`, (): void => {
+
+        afterEach((): Promise<void[]> => {
+            return ClientHelper.cleanup()
+        });
+
         it(`should succeed when page is scrolled down 
         - (test case id: 6fef0368-82c6-4d08-9bfa-a9c399c0446d)`, async (): Promise<void> => {
             const browser: Browser = ClientHelper.create(selConfig, desiredCapabilities);

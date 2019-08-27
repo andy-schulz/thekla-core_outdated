@@ -2,12 +2,9 @@
  * Configurations
  */
 
-import {SkipTask} from "./screenplay/lib/tasks/SkipTask";
-
 export {ServerConfig}                                            from "./config/ServerConfig"
 export {DesiredCapabilities}                                       from "./config/DesiredCapabilities"
 export {RestClientConfig}                                          from "./config/RestClientConfig";
-
 
 /**
  * WebDriver Wrapper
@@ -17,7 +14,7 @@ export {Browser}                          from "./driver/interface/Browser";
 export {BrowserScreenshotData}            from "./driver/interface/Browser";
 export {WebElementFinder}                 from "./driver/interface/WebElements";
 
-export {RunningBrowser} from "./driver/lib/client/RunningBrowser";
+export {RunningBrowser} from "./driver/lib/client/RunningBrowser1";
 export {ClientHelper}  from "./driver/lib/client/ClientHelper";
 export {By}             from "./driver/lib/element/Locator";
 export {Key}            from "./driver/lib/Key";
@@ -48,8 +45,7 @@ export {SppWebElementFinder, SppWebElementListFinder}                         fr
 export {Actor}                                                                from "./screenplay/Actor";
 export {request, SppRestRequest}                                              from "./screenplay/rest/SppRestRequests";
 
-
-// Abilities
+// AbilitySet
 export {Ability}                                                from "./screenplay/lib/abilities/Ability";
 export {BrowseTheWeb}                                           from "./screenplay/web/abilities/BrowseTheWeb";
 export {Authenticate, AuthenticationInfo}                       from "./screenplay/web/abilities/Authenticate";
@@ -58,7 +54,6 @@ export {UseTheRestApi}                                          from "./screenpl
 // Tasks
 export {PerformsTask}                                 from "./screenplay/Actor";
 export {ReturnTaskValue}                              from "./screenplay/lib/actions/ReturnTaskValue";
-
 
 // Activities
 export {Activity, Task, Interaction}            from "./screenplay/lib/actions/Activities";
@@ -69,7 +64,6 @@ export {Navigate}                               from "./screenplay/web/actions/N
 export {Wait}                                   from "./screenplay/web/actions/Wait";
 export {Scroll, Page}                           from "./screenplay/web/actions/Scroll";
 export {Sleep}                                  from "./screenplay/lib/actions/Sleep";
-
 
 // Oracle
 export {See}     from "./screenplay/lib/matcher/See";
@@ -93,10 +87,16 @@ export {Status}                               from "./screenplay/web/questions/S
 // Rest Questions
 export {Response}                             from "./screenplay/rest/questions/Response";
 
+/**
+ * Errors
+ */
 // Custom Errors
 export {DoesNotHave}        from "./screenplay/errors/DoesNotHave";
 export {DidNotFind}         from "./driver/errors/DidNotFind";
 
+/**
+ * Matcher
+ */
 //Function Matcher
 export {Expected} from "./screenplay/lib/matcher/FunctionMatcher/Expected"
 
@@ -105,3 +105,6 @@ export {stepDetails, step} from "./screenplay/lib/decorators/step_decorators"
 
 // Tasks
 export {SkipTask} from "./screenplay/lib/tasks/SkipTask";
+
+// eslint-disable-next-line
+export { Actions } from "./driver/interface/Actions";

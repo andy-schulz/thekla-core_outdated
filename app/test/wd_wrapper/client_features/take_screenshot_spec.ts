@@ -1,10 +1,10 @@
-import * as fs    from "fs";
-import fsExtra    from "fs-extra";
-import * as uuid  from "uuid";
+import * as fs     from "fs";
+import fsExtra     from "fs-extra";
+import * as uuid   from "uuid";
 import {
     Browser, RunningBrowser, BrowserScreenshotData, ServerConfig, DesiredCapabilities, ClientHelper
-}                 from "../../../index";
-import {LogLevel} from "../../../config/ServerConfig";
+}                  from "../../..";
+import {LogLevel}  from "../../../config/ServerConfig";
 
 
 describe(`Taking a screenshot`, (): void => {
@@ -20,14 +20,18 @@ describe(`Taking a screenshot`, (): void => {
             logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
         },
         serverAddress: {
-            hostname: `localhost`
+            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
         },
     };
 
     const capabilities: DesiredCapabilities = {
         browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-        proxy: {
-            type: `system`
+        proxy: process.env.PROXY_TYPE === `manual` ? {
+            proxyType: `manual`,
+            httpProxy: process.env.PROXY_SERVER,
+            sslProxy: process.env.PROXY_SERVER,
+        } : {
+            proxyType: `system`
         }
     };
 
@@ -47,7 +51,8 @@ describe(`Taking a screenshot`, (): void => {
 
         cleanupPath = ``;
     });
-    afterAll((): Promise<void[][]> => {
+
+    afterAll((): Promise<void[]> => {
         return ClientHelper.cleanup();
     }, 20000);
 
@@ -142,7 +147,7 @@ describe(`Taking a screenshot`, (): void => {
             browser2 = ClientHelper.create(conf, capabilities);
         });
 
-        afterEach((): Promise<void[][]> => {
+        afterEach((): Promise<void[]> => {
             return ClientHelper.cleanup([browser2]);
         });
 
@@ -175,7 +180,7 @@ describe(`Taking a screenshot`, (): void => {
             browser2 = ClientHelper.create(conf, capabilities);
         });
 
-        afterEach((): Promise<void[][]> => {
+        afterEach((): Promise<void[]> => {
             return ClientHelper.cleanup([browser2]);
         });
 
@@ -222,7 +227,6 @@ describe(`Taking a screenshot`, (): void => {
             expect(getFilesizeInBytes(screenshots[0])).toBeGreaterThanOrEqual(30000, `Failed Size check for ${screenshots[0]}`);
         }, 60000);
     });
-
 
     describe(`from a single browser as base64 string by using the BrowserFactory`, (): void => {
 

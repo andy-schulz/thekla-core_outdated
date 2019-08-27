@@ -1,7 +1,7 @@
 import {Question}            from "../../lib/questions/Question";
 import {UsesAbilities}       from "../../Actor";
+import {FindElements}        from "../abilities/FindElements";
 import {SppWebElementFinder} from "../SppWebElements";
-import {BrowseTheWeb}        from "../../../index";
 
 export class Value implements Question<void, string> {
 
@@ -14,7 +14,7 @@ export class Value implements Question<void, string> {
     ) {}
 
     public answeredBy(actor: UsesAbilities): Promise<string> {
-        return BrowseTheWeb.as(actor).findElement(this.element).getAttribute(`value`);
+        return FindElements.as(actor).findElement(this.element).getAttribute(`value`);
     }
 
     public toString(): string {

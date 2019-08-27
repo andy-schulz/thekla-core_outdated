@@ -1,8 +1,9 @@
-import {BrowseTheWeb, Interaction} from "../../../index";
-import {stepDetails}               from "../../lib/decorators/step_decorators";
-import {SppWebElementFinder}       from "../SppWebElements";
-import {UsesAbilities}             from "../../Actor";
-import {getLogger, Logger}         from "@log4js-node/log4js-api";
+import {Interaction}         from "../../../index";
+import {stepDetails}         from "../../lib/decorators/step_decorators";
+import {FindElements}        from "../abilities/FindElements";
+import {SppWebElementFinder} from "../SppWebElements";
+import {UsesAbilities}       from "../../Actor";
+import {getLogger, Logger}   from "@log4js-node/log4js-api";
 
 
 export class Enter implements Interaction<void, void> {
@@ -14,7 +15,8 @@ export class Enter implements Interaction<void, void> {
         return new Enter(inputString);
     }
 
-    private constructor(private keySequence: string | undefined) {}
+    private constructor(private keySequence: string | undefined) {
+    }
 
     public into(element: SppWebElementFinder): Enter {
         this.inputField = element;
@@ -30,15 +32,15 @@ export class Enter implements Interaction<void, void> {
     public performAs(actor: UsesAbilities): Promise<void> {
         // if undefined do nothing,
         // it makes it possible to work with data structures on forms
-        if(this.keySequence === undefined) {
+        if (this.keySequence === undefined) {
             this.logger.debug(`KeySequence is undefined so nothing is entered into ${this.inputField.toString()}`);
             return Promise.resolve();
         }
         return Promise.resolve()
             .then((): Promise<void> | void => {
-                if(this.clearBeforeFill)
-                    return BrowseTheWeb.as(actor).findElement(this.inputField).clear();
+                if (this.clearBeforeFill)
+                    return FindElements.as(actor).findElement(this.inputField).clear();
             })
-            .then((): Promise<void> => BrowseTheWeb.as(actor).findElement(this.inputField).sendKeys(this.keySequence as string));
+            .then((): Promise<void> => FindElements.as(actor).findElement(this.inputField).sendKeys(this.keySequence as string));
     }
 }

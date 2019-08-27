@@ -30,6 +30,7 @@
     "rules": {
         "@typescript-eslint/no-parameter-properties": "off",
         "@typescript-eslint/restrict-plus-operands": "error",
-        "quotes": ["error", "backtick", { "avoidEscape": true }]
+        "quotes": ["error", "backtick", { "avoidEscape": true }],
+        "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 1 }]
     }
 }

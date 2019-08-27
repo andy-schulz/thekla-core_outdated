@@ -29,4 +29,5 @@ export interface TkWebElement {
     getLocationInView(): Promise<ElementLocationInView>;
 
     scrollIntoView(pr?: Promise<any>): Promise<void>;
+
 }

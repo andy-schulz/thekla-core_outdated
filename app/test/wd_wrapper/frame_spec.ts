@@ -2,6 +2,7 @@ import {configure} from "log4js";
 import {
     Browser, By, UntilElement, ServerConfig, DesiredCapabilities, ClientHelper
 }                  from "../..";
+import {ProxyType} from "../../config/DesiredCapabilities";
 import {LogLevel}  from "../../config/ServerConfig";
 configure(`res/config/log4js.json`);
 
@@ -14,15 +15,19 @@ describe(`trying to access a Frame`, (): void => {
             logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
         },
         serverAddress: {
-            hostname: `localhost`
+            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
         },
         baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`,
     };
 
     const capabilities: DesiredCapabilities = {
         browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `firefox`,
-        proxy: {
-            type: `system`,
+        proxy: process.env.PROXY_TYPE === `manual` ? {
+            proxyType: `manual`,
+            httpProxy: process.env.PROXY_SERVER,
+            sslProxy: process.env.PROXY_SERVER,
+        } : {
+            proxyType: `system`
         }
     };
 
@@ -32,7 +37,7 @@ describe(`trying to access a Frame`, (): void => {
         browser = ClientHelper.create(conf, capabilities);
     });
 
-    afterAll(async (): Promise<void[][]> => {
+    afterAll(async (): Promise<void[]> => {
         return ClientHelper.cleanup();
     });
 

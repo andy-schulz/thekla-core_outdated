@@ -1,20 +1,61 @@
-export interface DesiredCapabilities {
+/* eslint-disable quotes */
+export interface DesiredCapabilities extends FirefoxOptions, ChromeOptions{
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any;
 
-    browserName: string;
-    version?: string;
-
-
+    // https://w3c.github.io/webdriver/#capabilities
+    browserName?: string;
+    browserVersion?: string;
+    platformName?: string;
+    acceptInsecureCerts?: boolean;
+    pageLoadStrategy?: PageLoadStrategy;
     proxy?: ProxyConfig;
-
-    // eslint-disable-next-line quotes
-    "moz:firefoxOptions"?: FirefoxOptions;
-    // eslint-disable-next-line quotes
-    "goog:chromeOptions"?: ChromeOptions;
+    timeout?: Timeouts;
+    setWindowRect?: boolean;
+    strictFileInteractability?: boolean;
+    unhandledPromptBehavior?: boolean;
 
     window?: WindowConfig;
 
+    appium?: AppiumOptions;
+}
+
+//https://w3c.github.io/webdriver/#navigation
+export type PageLoadStrategy = "none" | "eager" | "normal";
+
+// https://w3c.github.io/webdriver/#timeouts
+export interface Timeouts {
+    script: number;
+    pageLoad: number;
+    implicit: number;
+}
+
+export interface AppiumOptions {
+    [key: string]: any;
+    deviceName?: string;
+    udid?: string;
+    app?: string;
+
+    android?:  AppiumAndroidOptions;
+
+    ios?: AppiumIOSOptions;
+}
+
+export interface AppiumAndroidOptions {
+    appPackage?: string;
+    appActivity?: string;
+}
+
+export interface AppiumIOSOptions {
+    appName: string;
+}
+
+export interface FirefoxOptions {
+    "moz:firefoxOptions"?: FirefoxBrowserOptions;
+}
+
+export interface ChromeOptions {
+    "goog:chromeOptions"?: ChromeBrowserOptions;
 }
 
 
@@ -36,7 +77,7 @@ export interface WindowConfig {
  * @property {object} log           - log object to increase the log level, default: info
  * @property {object} prefs         - preferense map with key name as name of preference and value as value of preference
  */
-export interface ChromeOptions {
+export interface ChromeBrowserOptions {
     binary?: string;
     args?: string[];
     prefs?: {
@@ -52,24 +93,29 @@ export interface ChromeOptions {
  * @property {object} log           - log object to increase the log level, default: info
  * @property {object} prefs         - preferense map with key name as name of preference and value as value of preference
  */
-export interface FirefoxOptions {
+export interface FirefoxBrowserOptions {
     binary?: string;
     args?: string[];
     profile?: string;
     log?: {
-        // eslint-disable-next-line quotes
         level: "trace" | "debug" | "config" | "info" | "warn" | "error" | "fatal";
     };
     prefs?: {
         [key: string]: string | boolean | number;
     };
-
 }
-// eslint-disable-next-line quotes
-export type ProxyType = "direct" | "system" | "manual"
+
+export type ProxyType = "autodetect" | "direct" | "manual" | "pac" | "system"
 export interface ProxyConfig {
-    type: ProxyType;
-    manualConfig?: ManualProxyConfig;
+    proxyType: ProxyType;
+    proxyAutoconfigUrl?: string;
+    ftpProxy?: string;
+    httpProxy?: string;
+    noProxy?: string;
+    sslProxy?: string;
+    socksProxy?: string;
+    socksVersion?: string;
+    // manualConfig?: ManualProxyConfig;
 }
 
 export interface ManualProxyConfig {

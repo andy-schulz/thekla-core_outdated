@@ -7,24 +7,15 @@ import {
     UntilElement,
     WebElementFinder,
     DesiredCapabilities, ClientHelper
-} from "../..";
-import {LogLevel}    from "../../config/ServerConfig";
-import {BrowserWdjs} from "../../driver/wdjs/BrowserWdjs";
+}                                                                 from "../..";
+import {LogLevel}                                                 from "../../config/ServerConfig";
+import {standardCapabilities, standardServerConfig} from "../0_helper/config";
 
 describe(`Using Google Search to find an online calculator`, (): void => {
-    const conf: ServerConfig = {
-        automationFramework: {
-            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
-        },
-        serverAddress: {
-            hostname: `localhost`
-        },
-    };
 
-    const capabilities: DesiredCapabilities = {
-        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-    };
+    const conf: ServerConfig = standardServerConfig;
+    const capabilities: DesiredCapabilities = standardCapabilities;
+
     describe(`with the WebdriverJS wrapper,`, (): void => {
         // define your elements preferably in a separate class like a page object
         let b: Browser;
@@ -56,7 +47,7 @@ describe(`Using Google Search to find an online calculator`, (): void => {
         }, 20000);
     });
 
-    afterAll(async (): Promise<void[][]> => {
+    afterAll(async (): Promise<void[]> => {
         return  RunningBrowser.cleanup();
     })
 });

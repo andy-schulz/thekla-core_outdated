@@ -1,12 +1,12 @@
 import {UsesAbilities}       from "../../Actor";
 import {Question}            from "../../lib/questions/Question";
-import {BrowseTheWeb}        from "../abilities/BrowseTheWeb";
+import {FindElements}        from "../abilities/FindElements";
 import {SppWebElementFinder} from "../SppWebElements";
 
 class VisibleStatus implements Question<void, boolean>{
 
     public answeredBy(actor: UsesAbilities): Promise<boolean> {
-        return BrowseTheWeb.as(actor).findElement(this.element).isVisible();
+        return FindElements.as(actor).findElement(this.element).isVisible();
     }
 
     public constructor(private element: SppWebElementFinder) {
@@ -22,7 +22,7 @@ class VisibleStatus implements Question<void, boolean>{
 class EnableStatus implements Question<void, boolean>{
 
     public answeredBy(actor: UsesAbilities): Promise<boolean> {
-        return BrowseTheWeb.as(actor).findElement(this.element).isEnabled();
+        return FindElements.as(actor).findElement(this.element).isEnabled();
     }
 
     public constructor(private element: SppWebElementFinder) {

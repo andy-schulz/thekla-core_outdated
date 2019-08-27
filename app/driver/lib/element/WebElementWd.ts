@@ -9,11 +9,9 @@ import {By}                                     from "../../../index";
 import {getLogger, Logger}                      from "log4js";
 import fp                                       from "lodash/fp"
 
-
 export class WebElementWd<WD> implements WebElementFinder {
     private _description: string = ``;
     private logger: Logger = getLogger(`WebElementWd`);
-
 
     public constructor(
         private elementList: WebElementListWd<WD>,
@@ -30,7 +28,6 @@ export class WebElementWd<WD> implements WebElementFinder {
 
     protected getWebElement = (): Promise<TkWebElement> => {
         return new Promise(async (resolve, reject): Promise<void> => {
-
 
             const elements = await this.elementList.getElements()
                 .catch((e): void => {
@@ -65,11 +62,28 @@ export class WebElementWd<WD> implements WebElementFinder {
         return this.getWebElement().then((element: any): Promise<void> => element.click())
     }
 
-    public hover(): Promise<void> {
-        return this.getWebElement()
+    public movePointerTo  = (pr?: Promise<void>): Promise<void> => {
+        return (pr ? pr : Promise.resolve())
+            .then(() => {
+                return this.getWebElement()
+            })
             .then((element: TkWebElement): Promise<void> => {
                 return element.move();
             })
+    };
+
+    public dragToElement(element: WebElementFinder): Promise<void> {
+        return fp.flow(
+            this.movePointerTo,
+            this.browser.pointerButtonDown(0),
+            element.movePointerTo,
+            this.browser.pointerButtonUp(0),
+            this.browser.releaseActions
+        )()
+    }
+
+    public hover(): Promise<void> {
+        return this.movePointerTo();
     }
 
     public sendKeys(keySequence: string): Promise<void> {
@@ -146,7 +160,6 @@ export class WebElementWd<WD> implements WebElementFinder {
         })
     }
 
-
     public clear(): Promise<void> {
         return new Promise((resolve, reject): void => {
             this.getWebElement()
@@ -169,7 +182,6 @@ export class WebElementWd<WD> implements WebElementFinder {
     public toString(): string {
         return `'${this.elementList.description ? this.elementList.description : `Element`}' selected by: >>${this.elementList.locatorDescription}<<`;
     }
-
 
     public shallWait(condition: UntilElementCondition): WebElementFinder {
         return (this.elementList.shallWait(condition) as WebElementListWd<WD>).toWebElement() as WebElementFinder;

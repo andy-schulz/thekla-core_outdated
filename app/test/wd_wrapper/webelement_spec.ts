@@ -13,7 +13,6 @@ import {configure}                   from "log4js";
 import {LogLevel}                    from "../../config/ServerConfig";
 import {WebElementWdio}              from "../../driver/wdio/WebElementWdio";
 import {BoundaryCheck, boundingRect} from "../0_helper/browser_viewport";
-import { WebElementWdjs }            from "../../driver/wdjs/WebElementWdjs";
 configure(`res/config/log4js.json`);
 
 describe(`When using the Browser object`, (): void => {
@@ -25,15 +24,19 @@ describe(`When using the Browser object`, (): void => {
             logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
         },
         serverAddress: {
-            hostname: `localhost`
+            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
         },
         baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`
     };
 
     const capabilities: DesiredCapabilities = {
         browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-        proxy: {
-            type: `system`
+        proxy: process.env.PROXY_TYPE === `manual` ? {
+            proxyType: `manual`,
+            httpProxy: process.env.PROXY_SERVER,
+            sslProxy: process.env.PROXY_SERVER,
+        } : {
+            proxyType: `system`
         }
     };
 
@@ -62,15 +65,15 @@ describe(`When using the Browser object`, (): void => {
             return browser.get(testurl);
         });
 
+        afterAll((): Promise<void[]> => {
+            return RunningBrowser.cleanup()
+        });
+
         it(`it should return a WebElement object  
         - (test case id: 3dbab3b5-a403-41ea-ad20-465c03c8f9aa)`, (): void => {
             const element: WebElementFinder = browser.element(By.css(`[data-test-id='buttonDropDown']`));
-            expect(element.constructor.name).toEqual(
-                conf.automationFramework && conf.automationFramework.type === `wdio`? WebElementWdio.name : WebElementWdjs.name,
-                `constructor did not match`);
-            expect(element).toEqual(
-                conf.automationFramework && conf.automationFramework.type === `wdio`? jasmine.any(WebElementWdio) : jasmine.any(WebElementWdjs),
-                `object type did not match`);
+            expect(element.constructor.name).toEqual(WebElementWdio.name,`constructor did not match`);
+            expect(element).toEqual(jasmine.any(WebElementWdio),`object type did not match`);
         }, 10000);
 
         it(`without a description a standard description should be printed 
@@ -99,6 +102,10 @@ describe(`When using the Browser object`, (): void => {
             browser = RunningBrowser.startedOn(conf).withCapabilities(capabilities);
             optionList = browser.element(By.css(`[data-test-id='buttonDropDown']`));
             return browser.get(testurl);
+        });
+
+        afterAll((): Promise<void[]> => {
+            return RunningBrowser.cleanup()
         });
 
         it(`the optionList should be found and opened 
@@ -144,6 +151,10 @@ describe(`When using the Browser object`, (): void => {
             return browser.get(testurl);
         });
 
+        afterAll((): Promise<void[]> => {
+            return RunningBrowser.cleanup()
+        });
+
         it(`the hover element should be displayed 
         - (test case id: 25dbd2a2-b2ae-4ef2-860f-48cca1dac5d6)`, async (): Promise<void> => {
 
@@ -165,6 +176,10 @@ describe(`When using the Browser object`, (): void => {
             browser = RunningBrowser.startedOn(conf).withCapabilities(capabilities);
             hoverElement = browser.element(By.css(`[data-test-id='usericon']`));
             return browser.get(`/`);
+        });
+
+        afterAll((): Promise<void[]> => {
+            return RunningBrowser.cleanup()
         });
 
         it(`the location object should not be empty
@@ -195,7 +210,9 @@ describe(`When using the Browser object`, (): void => {
             return browser.get(`/tables`);
         });
 
-
+        afterAll((): Promise<void[]> => {
+            return RunningBrowser.cleanup()
+        });
 
         it(`it should scroll to the element 
         - (test case id: 8284b313-f35f-4841-931f-2927d848d138)`, async () => {
@@ -224,6 +241,10 @@ describe(`When using the Browser object`, (): void => {
 
         afterEach((): Promise<void> => {
             return  browser.get(`/`);
+        });
+
+        afterAll((): Promise<void[]> => {
+            return RunningBrowser.cleanup()
         });
 
         it(`the string should be found on the value attribute 
@@ -259,6 +280,10 @@ describe(`When using the Browser object`, (): void => {
 
         beforeEach((): Promise<void> => {
             return  browser.get(testurl + `/delayed`);
+        });
+
+        afterAll((): Promise<void[]> => {
+            return RunningBrowser.cleanup()
         });
 
         it(`the system should wait for 5 Seconds and then timout 
@@ -328,6 +353,10 @@ describe(`When using the Browser object`, (): void => {
             return  browser.get(testurl + `/delayed`);
         });
 
+        afterAll((): Promise<void[]> => {
+            return RunningBrowser.cleanup()
+        });
+
         it(`the system should wait for 5 Seconds for the element to appear 
         - (test case id: c8d3d65d-63a5-41de-8407-b9a506c2f478)`, async (): Promise<void> => {
             expect(await appearButton4000.isVisible()).toEqual(false);
@@ -362,6 +391,10 @@ describe(`When using the Browser object`, (): void => {
             return browser.get(testurl + `/delayed`);
         });
 
+        afterAll((): Promise<void[]> => {
+            return RunningBrowser.cleanup()
+        });
+
         it(`the system should wait for 5 Seconds for the element to be enabled 
             - (test case id: a1558fb9-fdee-4775-b44d-8cd848d517b2)`, async (): Promise<void> => {
             // expect(await delayButton5000.isVisible()).toEqual(true);
@@ -382,7 +415,7 @@ describe(`When using the Browser object`, (): void => {
 
     });
 
-    afterAll(async (): Promise<void[][]> => {
+    afterAll(async (): Promise<void[]> => {
         return RunningBrowser.cleanup();
     })
 

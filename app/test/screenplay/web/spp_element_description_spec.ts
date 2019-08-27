@@ -1,4 +1,4 @@
-import {LogLevel} from "../../../config/ServerConfig";
+import {LogLevel}  from "../../../config/ServerConfig";
 import {
     RunningBrowser,
     Actor,
@@ -12,7 +12,7 @@ import {
     all,
     SppWebElementFinder,
     ServerConfig, DesiredCapabilities, Expected
-}                 from "../../../index";
+}                  from "../../../index";
 
 import {getLogger} from "log4js";
 const logger = getLogger(`Spec: SppElementDescription`);
@@ -27,15 +27,19 @@ describe(`The description on an element`, (): void => {
             logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `warn`) as LogLevel
         },
         serverAddress: {
-            hostname: `localhost`
+            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
         },
         baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`,
     };
 
     const capabilities: DesiredCapabilities = {
         browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-        proxy: {
-            type: `system`
+        proxy: process.env.PROXY_TYPE === `manual` ? {
+            proxyType: `manual`,
+            httpProxy: process.env.PROXY_SERVER,
+            sslProxy: process.env.PROXY_SERVER,
+        } : {
+            proxyType: `system`
         }
     };
 
@@ -119,7 +123,7 @@ describe(`The description on an element`, (): void => {
             Edward.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(seleniumConfig).withCapabilities(capabilities)));
         });
 
-        afterAll(async (): Promise<void[][]> => {
+        afterAll(async (): Promise<void[]> => {
             return RunningBrowser.cleanup();
         });
 

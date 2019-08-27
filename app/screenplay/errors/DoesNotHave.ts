@@ -1,9 +1,9 @@
-import {Actor}   from "../Actor";
-import {Ability} from "../lib/abilities/Ability";
+import {Actor}                 from "../Actor";
+import {Ability, AbilityClass} from "../lib/abilities/Ability";
 
 class DoesNotHaveTheAbility extends Error{
     public constructor(
-        private _ability: Ability,
+        private _ability: AbilityClass,
         private _actor: Actor) {
 
         super(`
@@ -18,7 +18,7 @@ class DoesNotHaveTheAbility extends Error{
         return this._actor
     }
 
-    public get ability(): Ability {
+    public get ability(): AbilityClass {
         return this._ability;
     }
 }
@@ -26,7 +26,7 @@ class DoesNotHaveTheAbility extends Error{
 
 export class DoesNotHave {
 
-    public static theAbility(theAbility: Ability): DoesNotHave {
+    public static theAbility(theAbility: AbilityClass): DoesNotHave {
         return new DoesNotHave(theAbility)
     }
 
@@ -34,7 +34,7 @@ export class DoesNotHave {
         return new DoesNotHaveTheAbility(this.theAbility, theActor);
     }
 
-    private constructor(private theAbility: Ability) {
+    private constructor(private theAbility: AbilityClass) {
     }
 }
 

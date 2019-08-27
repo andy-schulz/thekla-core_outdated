@@ -1,12 +1,12 @@
 import {Logger}                                                     from "@log4js-node/log4js-api";
 import {ClientCtrls}                                                from "../../interface/ClientCtrls";
 import {FrameElementFinder, WebElementFinder, WebElementListFinder} from "../../interface/WebElements";
-import {WebElementWdjs}                                             from "../../wdjs/WebElementWdjs";
 import {UntilElementCondition}                                      from "./ElementConditions";
 import {TkWebElement}                                               from "../../interface/TkWebElement";
 import {Browser, By}                                                from "../../..";
 import {waitForCondition}                                           from "./shall_wait";
 import {WebElementListWd}                                           from "./WebElementListWd";
+import { WebElementWdio } from "../../wdio/WebElementWdio";
 
 
 export type FrameCreator<WD> = (getFrames: () => Promise<TkWebElement[]>,
@@ -66,7 +66,7 @@ export abstract class FrameElementWd<WD> implements FrameElementFinder {
                 })
         };
 
-        return new WebElementListWd(getElements, locator, this.browser as any, WebElementWdjs.create);
+        return new WebElementListWd(getElements, locator, this.browser as any, WebElementWdio.create);
     }
 
     public shallWait(condition: UntilElementCondition): FrameElementFinder {

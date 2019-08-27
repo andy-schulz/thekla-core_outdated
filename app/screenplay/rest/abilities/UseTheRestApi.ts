@@ -12,6 +12,14 @@ import {SppRestRequest}   from "../SppRestRequests";
  */
 export class UseTheRestApi implements Ability {
 
+    public getAbilities(): Ability[] {
+        return [this];
+    }
+
+    public isAbilityList(): boolean {
+        return false;
+    }
+
     public static with(restClient: RestClient): UseTheRestApi {
         return new UseTheRestApi(restClient);
     }

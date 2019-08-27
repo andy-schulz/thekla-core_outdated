@@ -13,10 +13,10 @@
  *
  * each relationship has its own interface
  */
-import {Ability, AbilityClass} from "./lib/abilities/Ability";
-import {Activity}              from "./lib/actions/Activities";
-import {DoesNotHave}           from "./errors/DoesNotHave";
-import {Question}              from "./lib/questions/Question";
+import {AbilitySet, Ability, AbilityClass} from "./lib/abilities/Ability";
+import {Activity}                          from "./lib/actions/Activities";
+import {DoesNotHave}                       from "./errors/DoesNotHave";
+import {Question}                          from "./lib/questions/Question";
 
 
 export interface AnswersQuestions {
@@ -61,9 +61,14 @@ export class Actor implements AnswersQuestions, PerformsTask, UsesAbilities{
      * assigns an ability to the actor, like Browser, SFT-Client, HTTP-Client ... you name it.
      * @param abilities the ability the actor is able to use
      */
-    public whoCan(...abilities: Ability[]): Actor {
-        for(let ability of abilities) {
-            this.abilityMap.set(ability.constructor.name, ability);
+    public whoCan(...abilities: Ability[] | AbilitySet[]): Actor {
+        for(let element of abilities) {
+            if(element.isAbilityList()) {
+                this.whoCan(...element.getAbilities());
+            }
+            else {
+                this.abilityMap.set(element.constructor.name, element);
+            }
         }
         return this;
     }
@@ -110,8 +115,8 @@ export class Actor implements AnswersQuestions, PerformsTask, UsesAbilities{
      * Enables the Actor to do something ... Gives him the Ability
      * @param ability the ability to do something
      */
-    public can(ability: Ability): void{
-        this.abilityMap.set(ability.constructor.name, ability);
+    public can(ability: Ability): Actor {
+        return this.whoCan(ability)
     }
 
     /**
@@ -129,5 +134,4 @@ export class Actor implements AnswersQuestions, PerformsTask, UsesAbilities{
     public toAnswer<PT,RT>(question: Question<PT,RT>, activityResult: PT): Promise<RT> {
         return question.answeredBy(this, activityResult);
     }
-
 }

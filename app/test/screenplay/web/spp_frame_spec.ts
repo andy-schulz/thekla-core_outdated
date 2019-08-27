@@ -1,4 +1,4 @@
-import {LogLevel} from "../../../config/ServerConfig";
+import {LogLevel}  from "../../../config/ServerConfig";
 import {
     Actor,
     RunningBrowser,
@@ -12,7 +12,7 @@ import {
     Text,
     UntilElement,
     ServerConfig, Expected
-}                 from "../../../index";
+}                  from "../../../index";
 
 import {configure} from "log4js";
 configure(`res/config/log4js.json`);
@@ -26,15 +26,19 @@ describe(`Locating Elements inside Frames`, (): void => {
             logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `warn`) as LogLevel
         },
         serverAddress: {
-            hostname: `localhost`
+            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
         },
         baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`,
     };
 
     const capabilities: DesiredCapabilities = {
         browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-        proxy: {
-            type: `system`
+        proxy: process.env.PROXY_TYPE === `manual` ? {
+            proxyType: `manual`,
+            httpProxy: process.env.PROXY_SERVER,
+            sslProxy: process.env.PROXY_SERVER,
+        } : {
+            proxyType: `system`
         }
     };
 
@@ -45,7 +49,7 @@ describe(`Locating Elements inside Frames`, (): void => {
         Francine.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(config).withCapabilities(capabilities)));
     });
 
-    afterAll(async (): Promise<void[][]> => {
+    afterAll(async (): Promise<void[]> => {
         return RunningBrowser.cleanup();
     });
 

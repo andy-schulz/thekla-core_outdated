@@ -2,7 +2,7 @@
  * Wait until a condition is met on a given element
  */
 import {stepDetails}           from "../../lib/decorators/step_decorators";
-import {BrowseTheWeb}          from "../abilities/BrowseTheWeb";
+import {UseBrowserFeatures}    from "../abilities/UseBrowserFeatures";
 import {SppWebElementFinder}   from "../SppWebElements";
 import {Interaction}           from "../../lib/actions/Activities";
 import {UsesAbilities}         from "../../Actor";
@@ -20,7 +20,7 @@ export class Wait implements Interaction<void, void> {
     public performAs(actor: UsesAbilities): Promise<void> {
 
         return new Promise((resolve, reject): void => {
-            BrowseTheWeb.as(actor).wait(this.condition, this.awaitingElement)
+            UseBrowserFeatures.as(actor).wait(this.condition, this.awaitingElement)
                 .then((message: string): void => {
                     this.logger.debug(message);
                     resolve();

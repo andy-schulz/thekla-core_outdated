@@ -1,4 +1,5 @@
 import {Browser, By, ClientHelper, DesiredCapabilities, RunningBrowser, ServerConfig} from "../..";
+import {ProxyType}                                                                    from "../../config/DesiredCapabilities";
 import {LogLevel}                                                                     from "../../config/ServerConfig";
 
 describe(`Locating a waiter`, (): void => {
@@ -10,15 +11,19 @@ describe(`Locating a waiter`, (): void => {
             logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
         },
         serverAddress: {
-            hostname: `localhost`
+            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
         },
         baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`,
     };
 
     const capabilities: DesiredCapabilities = {
         browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `firefox`,
-        proxy: {
-            type: `system`
+        proxy: process.env.PROXY_TYPE === `manual` ? {
+            proxyType: `manual`,
+            httpProxy: process.env.PROXY_SERVER,
+            sslProxy: process.env.PROXY_SERVER,
+        } : {
+            proxyType: `system`
         }
     };
 
@@ -33,7 +38,7 @@ describe(`Locating a waiter`, (): void => {
         it(`and klicking on a drop down should change the value of the drop down 
         - (test case id: f5f57f3e-9cf5-45c2-a990-5014a1854844)`, async (): Promise<void> => {
             const dropDown = browser.element(By.css(`#exampleSelect`));
-            const fourthElement = dropDown.element(By.cssContainingText(`option`, `4`));
+            const fourthElement = dropDown.element(By.xpath(`./option[text()='${4}']`));
 
             await browser.get(`/`);
 
@@ -123,7 +128,7 @@ describe(`Locating a waiter`, (): void => {
         });
     });
 
-    afterAll(async (): Promise<void[][]> => {
+    afterAll(async (): Promise<void[]> => {
         return RunningBrowser.cleanup();
     })
 });

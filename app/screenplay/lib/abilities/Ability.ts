@@ -10,6 +10,16 @@ export interface AbilityClass {
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface Ability {
+    isAbilityList(): boolean;
+    getAbilities(): Ability[];
+    // right now I cant declare static methods on interfaces
+    // as(actor: UsesAbilities): Ability;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface AbilitySet {
+    isAbilityList(): boolean;
+    getAbilities(): Ability[];
     // right now I cant declare static methods on interfaces
     // as(actor: UsesAbilities): Ability;
 }

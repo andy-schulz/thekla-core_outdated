@@ -2,20 +2,20 @@ import {DesiredCapabilities}    from "../../../config/DesiredCapabilities";
 import {LogLevel, ServerConfig} from "../../../config/ServerConfig";
 import {Browser}                from "../../../driver/interface/Browser";
 import {ClientHelper}           from "../../../driver/lib/client/ClientHelper";
-import {RunningBrowser}         from "../../../driver/lib/client/RunningBrowser";
+import {RunningBrowser}         from "../../..";
 
 
-describe(`using the browser instance`, () => {
+describe(`using the browser instance`, (): void => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
 
     const conf: ServerConfig = {
         automationFramework: {
-            type: process.env.FRAMEWORK  === `wdio` ? `wdio` : `wdjs`,
-            logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
+            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
+            logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
         },
         serverAddress: {
-            hostname: `localhost`,
+            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`,
             path: `/wd/hub/`,
             port: 4444,
             protocol: `http`
@@ -24,6 +24,13 @@ describe(`using the browser instance`, () => {
 
     const capabilities: DesiredCapabilities = {
         browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `firefox`,
+        proxy: process.env.PROXY_TYPE === `manual` ? {
+            proxyType: `manual`,
+            httpProxy: process.env.PROXY_SERVER,
+            sslProxy: process.env.PROXY_SERVER,
+        } : {
+            proxyType: `system`
+        }
     };
 
     let origBrowser: Browser;
@@ -33,8 +40,11 @@ describe(`using the browser instance`, () => {
             origBrowser = ClientHelper.create(conf, capabilities)
         });
 
-        afterAll((): Promise<void[][]> => {
-            return RunningBrowser.cleanup();
+        afterAll((): Promise<void[]> => {
+            return RunningBrowser.cleanup().catch((e: Error) => {
+                console.log(e);
+                return Promise.resolve([]);
+            });
         });
 
         it(`should open a new URL an the existing session 
@@ -47,14 +57,12 @@ describe(`using the browser instance`, () => {
             const session = await origBrowser.getSession();
             const id = await session.getId();
 
-            const secondBrowser = ClientHelper.attachToSession(conf, capabilities, id, `test`, );
+            const secondBrowser = ClientHelper.attachToSession(conf, capabilities, id, `test`,);
 
             const testUrl2 = `https://www.google.com/`;
             await secondBrowser.get(testUrl2);
             expect(await secondBrowser.getCurrentUrl()).toEqual(testUrl2);
             expect(await origBrowser.getCurrentUrl()).toEqual(testUrl2);
-
         });
-
     });
 });

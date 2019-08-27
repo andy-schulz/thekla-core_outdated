@@ -33,12 +33,19 @@ describe(`Hover`, (): void => {
                 logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `warn`) as LogLevel
             },
             serverAddress: {
-                hostname: `localhost`
+                hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
             }
         };
 
         const capabilities: DesiredCapabilities = {
             browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
+            proxy: process.env.PROXY_TYPE === `manual` ? {
+                proxyType: `manual`,
+                httpProxy: process.env.PROXY_SERVER,
+                sslProxy: process.env.PROXY_SERVER,
+            } : {
+                proxyType: `system`
+            }
         };
 
         const Howard = Actor.named(`Howard`);
@@ -49,7 +56,7 @@ describe(`Hover`, (): void => {
         });
 
         it(`should display additional information 
-        - (test case id: bc7ff4ef-d0ea-4ac1-b2c6-5cedefd11391)`, (): Promise<void> => {
+        - (test case id: f45a3fa4-896c-47d7-bc2f-d77d07a046d3)`, (): Promise<void> => {
             return Howard.attemptsTo(
                 Navigate.to(testUrl),
                 See.if(Status.visible.of(userName)).is(Expected.toBe(false)),
@@ -60,7 +67,7 @@ describe(`Hover`, (): void => {
         });
 
         it(`should not display the hover when another element is hovered upon 
-        - (test case id: bc7ff4ef-d0ea-4ac1-b2c6-5cedefd11391)`, (): Promise<void> => {
+        - (test case id: 6347d82f-c2a2-4bdb-8913-9633f0849352)`, (): Promise<void> => {
             return Howard.attemptsTo(
                 Navigate.to(testUrl),
                 See.if(Status.visible.of(userName)).is(Expected.toBe(false)),
@@ -72,7 +79,7 @@ describe(`Hover`, (): void => {
             )
         });
 
-        afterAll((): Promise<void[][]> => {
+        afterAll((): Promise<void[]> => {
             return RunningBrowser.cleanup();
         })
     });

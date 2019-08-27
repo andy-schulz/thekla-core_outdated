@@ -1,9 +1,23 @@
-import {Browser}               from "../../interface/Browser";
-import {TkWebElement}          from "../../interface/TkWebElement";
-import {ExecuteConditionWdjs}  from "../../wdjs/ExecuteConditionWdjs";
-import {until}                 from "../Condition";
-import {UntilElementCondition} from "./ElementConditions";
-import { Logger } from "@log4js-node/log4js-api";
+import {Browser}                                              from "../../interface/Browser";
+import {TkWebElement}                                         from "../../interface/TkWebElement";
+import {until}                                                from "../Condition";
+import {EnabledCheck, UntilElementCondition, VisibilityCheck} from "./ElementConditions";
+import { Logger }                                             from "@log4js-node/log4js-api";
+import { WebElementFinder }                                   from "../../..";
+
+
+const execute = (condition: UntilElementCondition, element: TkWebElement | WebElementFinder): Promise<boolean> => {
+    switch (condition.waiter.constructor) {
+        case VisibilityCheck:
+            return element.isDisplayed()
+                .then(condition.modifierFunc);
+        case EnabledCheck:
+            return element.isEnabled()
+                .then(condition.modifierFunc);
+        default:
+            return Promise.reject(`No Action for Condition ${condition.waiter.constructor.name}`)
+    }
+};
 
 export const waitForCondition = (
     browser: Browser,
@@ -35,7 +49,7 @@ export const waitForCondition = (
                     logger.trace(`LOOP CONDITIONS(${condition.conditionHelpText}): outerHTML: ${await elem.getAttribute(`outerHTML`)}`);
                     logger.trace(`LOOP CONDITIONS(${condition.conditionHelpText}): innerHTML: ${await elem.getAttribute(`innerHTML`)}`);
                 }
-                return ExecuteConditionWdjs.execute(condition, elem);
+                return execute(condition, elem);
             };
 
             const arr: Promise<boolean>[] = elements.map(applyCondition);

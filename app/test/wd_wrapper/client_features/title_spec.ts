@@ -11,11 +11,21 @@ describe(`Using the BrowserWdjs class`, () => {
             type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
             logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
         },
+        serverAddress: {
+            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
+        },
         baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`
     };
 
     const capabilities: DesiredCapabilities = {
         browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `firefox`,
+        proxy: process.env.PROXY_TYPE === `manual` ? {
+            proxyType: `manual`,
+            httpProxy: process.env.PROXY_SERVER,
+            sslProxy: process.env.PROXY_SERVER,
+        } : {
+            proxyType: `system`
+        }
     };
 
     describe(`and work with the title`, (): void => {
@@ -45,7 +55,7 @@ describe(`Using the BrowserWdjs class`, () => {
         });
     });
 
-    afterAll(async (): Promise<void[][]> => {
+    afterAll(async (): Promise<void[]> => {
         return ClientHelper.cleanup();
     })
 });

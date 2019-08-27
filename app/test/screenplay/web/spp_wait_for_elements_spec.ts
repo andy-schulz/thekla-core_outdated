@@ -1,14 +1,13 @@
-import {LogLevel} from "../../../config/ServerConfig";
+import {LogLevel}        from "../../../config/ServerConfig";
 import {
     Actor,
-    RunningBrowser,
     BrowseTheWeb,
     By,
     element,
     See,
     Navigate,
-    Text, UntilElement, ServerConfig, Wait, DesiredCapabilities, Expected
-}                 from "../../../index";
+    Text, UntilElement, ServerConfig, Wait, DesiredCapabilities, Expected, RunningBrowser, ClientHelper
+}                        from "../../../index";
 
 
 import {getLogger} from "log4js";
@@ -24,15 +23,19 @@ describe(`Waiting for SPP Elements`, (): void => {
             logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `warn`) as LogLevel
         },
         serverAddress: {
-            hostname: `localhost`
+            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
         },
         baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`,
     };
     const capabilities: DesiredCapabilities = {
         browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-        proxy: {
-            type: `system`
-        },
+        proxy: process.env.PROXY_TYPE === `manual` ? {
+            proxyType: `manual`,
+            httpProxy: process.env.PROXY_SERVER,
+            sslProxy: process.env.PROXY_SERVER,
+        } : {
+            proxyType: `system`
+        }
     };
 
     logger.trace(`test started`);
@@ -41,11 +44,12 @@ describe(`Waiting for SPP Elements`, (): void => {
 
     beforeAll((): void => {
         walterTheWaiter = Actor.named(`Walter`);
-        walterTheWaiter.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(seleniumConfig).withCapabilities(capabilities)));
+        const browser = RunningBrowser.startedOn(seleniumConfig).withCapabilities(capabilities);
+        walterTheWaiter.whoCan(BrowseTheWeb.using(browser));
     });
 
-    afterAll(async (): Promise<void[][]> => {
-        return RunningBrowser.cleanup()
+    afterAll(async (): Promise<void[]> => {
+        return ClientHelper.cleanup()
     });
 
     describe(`on the element itself`, (): void => {
@@ -65,8 +69,8 @@ describe(`Waiting for SPP Elements`, (): void => {
         it(`should be possible with wait actions on an element ` +
             `- (test case id: 7fd0c550-e31c-42fd-96f8-4ceb50e6cf3b)`, (): Promise<void> => {
             return walterTheWaiter.attemptsTo(
-                Navigate.to(`/delayed`),
-                See.if(Text.of(appearingButton)).is(Expected.toEqual(`Appeared after 4 seconds`)),
+                // Navigate.to(`/delayed`),
+                // See.if(Text.of(appearingButton)).is(Expected.toEqual(`Appeared after 4 seconds`)),
             );
         });
 

@@ -1,6 +1,7 @@
-import {BrowseTheWeb, Interaction} from "../../../index";
-import {UsesAbilities}             from "../../Actor";
-import {stepDetails}               from "../../lib/decorators/step_decorators";
+import {Interaction}        from "../../../index";
+import {UsesAbilities}      from "../../Actor";
+import {stepDetails}        from "../../lib/decorators/step_decorators";
+import {UseBrowserFeatures} from "../abilities/UseBrowserFeatures";
 
 export class Navigate implements Interaction<void, void> {
 
@@ -8,10 +9,11 @@ export class Navigate implements Interaction<void, void> {
         return new Navigate(url);
     }
 
-    private constructor(private url: string) {}
+    private constructor(private url: string) {
+    }
 
     @stepDetails<UsesAbilities, void, void>(`navigate to: <<url>>`)
     public performAs(actor: UsesAbilities): Promise<void> {
-        return BrowseTheWeb.as(actor).navigate(this.url);
+        return UseBrowserFeatures.as(actor).navigate(this.url);
     }
 }

@@ -2,10 +2,11 @@
  * Action to click on a web element
  */
 
-import {BrowseTheWeb, Interaction, SppWebElementFinder} from "../../../index";
-import {stepDetails}                                    from "../../lib/decorators/step_decorators";
-import {SppWebElementListFinder}                        from "../SppWebElements";
-import {UsesAbilities}                                  from "../../Actor";
+import {Interaction, SppWebElementFinder} from "../../../index";
+import {stepDetails}                      from "../../lib/decorators/step_decorators";
+import {FindElements}                     from "../abilities/FindElements";
+import {SppWebElementListFinder}          from "../SppWebElements";
+import {UsesAbilities}                    from "../../Actor";
 
 export class Click implements Interaction<void, void> {
 
@@ -14,7 +15,7 @@ export class Click implements Interaction<void, void> {
      */
     @stepDetails<UsesAbilities, void, void>(`click on element: '<<element>>'`)
     public performAs(actor: UsesAbilities): Promise<void> {
-        return BrowseTheWeb.as(actor).findElement(this.element).click();
+        return FindElements.as(actor).findElement(this.element).click();
     }
 
     /**

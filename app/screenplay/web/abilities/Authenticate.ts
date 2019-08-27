@@ -8,6 +8,15 @@ export interface AuthenticationInfo{
 
 export class Authenticate implements Ability {
 
+    public getAbilities(): Ability[] {
+        return [this];
+    }
+
+    public isAbilityList(): boolean {
+        return false;
+    }
+
+
     public static using(authInfo: AuthenticationInfo): Authenticate {
         return new Authenticate(authInfo);
     }
