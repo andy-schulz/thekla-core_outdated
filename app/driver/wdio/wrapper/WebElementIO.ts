@@ -10,6 +10,7 @@ import {findByCssContainingText} from "../../lib/client_side_scripts/locators";
 
 // @ts-ignore
 import {isElementDisplayed} from "../../lib/client_side_scripts/is_displayedness";
+import {LocatorWdio}        from "../LocatorWdio";
 
 export interface ElementRefIO {
     [key: string]: string;
@@ -152,35 +153,6 @@ export class WebElementIO implements TkWebElement {
     }
 
     public findElements(locator: By): Promise<TkWebElement[]> {
-        switch (locator.selectorType) {
-            case `byCss`:
-                return (this.client.findElementsFromElement(
-                    this.getElementId(),
-                    `css selector`,
-                    locator.selector) as unknown as Promise<ElementRefIO[]>)
-                    .then((elements: ElementRefIO[]): TkWebElement[] => WebElementIO.createAll(elements, this.client));
-
-            case `byXpath`:
-                return (this.client.findElementsFromElement(
-                    this.getElementId(),
-                    `xpath`,
-                    locator.selector) as unknown as Promise<ElementRefIO[]>)
-                    .then((elements: ElementRefIO[]): TkWebElement[] => WebElementIO.createAll(elements, this.client));
-
-            case `byJs`:
-                return this.client.executeScript(
-                    funcToString(locator.function),
-                    [...locator.args, this.htmlElement])
-                    .then((elements: ElementRefIO[]): TkWebElement[] => WebElementIO.createAll(elements, this.client));
-
-            case `byCssContainingText`:
-                return this.client.executeScript(
-                    funcToString(findByCssContainingText),
-                    [locator.selector, locator.searchText, this.htmlElement])
-                    .then((elements: ElementRefIO[]): TkWebElement[] => WebElementIO.createAll(elements, this.client));
-
-            default:
-                throw Error(`Selector ${locator.selectorType} not implemented for framework WebDriverJS`);
-        }
+        return LocatorWdio.findElements(locator, this.client, this.htmlElement)
     }
 }

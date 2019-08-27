@@ -9,6 +9,7 @@ export const standardServerConfig: ServerConfig = {
     serverAddress: {
         hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
     },
+    baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`
 };
 if(process.env.BASEURL) standardServerConfig.baseUrl = process.env.BASEURL;
 

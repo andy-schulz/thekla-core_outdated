@@ -1,6 +1,4 @@
 import {Browser, By, ClientHelper, DesiredCapabilities, RunningBrowser, ServerConfig} from "../..";
-import {ProxyType}                                                                    from "../../config/DesiredCapabilities";
-import {LogLevel}                                                                     from "../../config/ServerConfig";
 import {standardCapabilities, standardServerConfig}                                   from "../0_helper/config";
 
 describe(`Locating a waiter`, (): void => {

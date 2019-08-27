@@ -1,3 +1,5 @@
+import {findByCssContainingText} from "../client_side_scripts/locators";
+
 export const ByType = {
     css: `byCss`,
     xpath: `byXpath`,
@@ -35,7 +37,8 @@ export class By{
 
     public static cssContainingText(selector: string, searchText: string): By {
         let by = new By(`byCssContainingText`, selector);
-        by.searchText = searchText;
+        by.function = findByCssContainingText;
+        by.args = [selector, searchText];
         return by;
     }
 

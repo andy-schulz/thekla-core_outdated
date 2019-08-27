@@ -1,4 +1,3 @@
-import {LogLevel}  from "../../../config/ServerConfig";
 import {
     Actor,
     RunningBrowser,
@@ -14,37 +13,17 @@ import {
     UntilElement, Expected
 }                  from "../../../index";
 
-import {configure} from "log4js";
+import {configure}                                  from "log4js";
+import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
 
 configure(`res/config/log4js.json`);
-
-
-
 
 describe(`When locating an element,`, (): void => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL=30000;
 
-    let config: ServerConfig = {
-        automationFramework: {
-            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `warn`) as LogLevel
-        },
-        serverAddress: {
-            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
-        },
-        baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`,
-    };
+    let config: ServerConfig = standardServerConfig;
 
-    const capabilities: DesiredCapabilities = {
-        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-        proxy: process.env.PROXY_TYPE === `manual` ? {
-            proxyType: `manual`,
-            httpProxy: process.env.PROXY_SERVER,
-            sslProxy: process.env.PROXY_SERVER,
-        } : {
-            proxyType: `system`
-        }
-    };
+    const capabilities: DesiredCapabilities = standardCapabilities;
 
     let john: Actor;
 
@@ -58,6 +37,18 @@ describe(`When locating an element,`, (): void => {
         it(`the button name should be found 
         - (test case id: 9a383bbf-9db9-41c5-b903-7f8d61bea88a)`,(): Promise<void> => {
             const button = element(By.xpath(`//button[contains(text(),'Danger!')]`))
+                .shallWait(UntilElement.is.visible());
+
+            return  john.attemptsTo(
+                Navigate.to(`/`),
+                See.if(Text.of(button)).is(Expected.toEqual(`Danger!`)),
+                Click.on(button),
+            );
+        }, 100000);
+
+        it(`the button name should be found 
+        - (test case id: 9a383bbf-9db9-41c5-b903-7f8d61bea88a)`,(): Promise<void> => {
+            const button = element(By.cssContainingText(`button`, `Danger!`))
                 .shallWait(UntilElement.is.visible());
 
             return  john.attemptsTo(

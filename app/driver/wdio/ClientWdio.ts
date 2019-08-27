@@ -230,7 +230,6 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
 
     public all(locator: By): WebElementListFinder {
 
-        const loc = LocatorWdio.getSelectorParams(locator);
         let getElements = async (): Promise<TkWebElement[]> => {
             // always switch to the main Window
             // if you want to deal with an element in a frame DO:
@@ -239,13 +238,13 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
                 .then((driver): Promise<TkWebElement[]> => {
                     return (switchToMasterFrame(driver))
                         .then((): Promise<TkWebElement[]> => {
-
-                            return (driver.findElements(loc[0], loc[1]) as unknown as Promise<ElementRefIO[]>)
-                                .then((elements: ElementRefIO[]): TkWebElement[] => {
-                                    this.logger.trace(`Found ${elements ? elements.length : 0} element(s) for locator '${locator}'`);
-
-                                    return WebElementIO.createAll(elements, driver);
-                                })
+                            return LocatorWdio.findElements(locator, driver)
+                            // return (driver.findElements(loc[0], loc[1]) as unknown as Promise<ElementRefIO[]>)
+                            //     .then((elements: ElementRefIO[]): TkWebElement[] => {
+                            //         this.logger.trace(`Found ${elements ? elements.length : 0} element(s) for locator '${locator}'`);
+                            //
+                            //         return WebElementIO.createAll(elements, driver);
+                            //     })
                         });
                 })
             // return await this._driver.findElements(loc);
