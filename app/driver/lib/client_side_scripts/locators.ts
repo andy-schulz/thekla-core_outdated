@@ -14,7 +14,7 @@ export const findByCssContainingText = function(cssSelector: string, searchText:
             elementText.indexOf(searchText) > -1;
 
         if (elementMatches) {
-            matches.push(i);
+            matches.push(element);
         }
     }
     return matches;
