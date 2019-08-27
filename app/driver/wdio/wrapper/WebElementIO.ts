@@ -143,10 +143,7 @@ export class WebElementIO implements TkWebElement {
                 }
             ];
 
-            return pr.then((): Promise<void> => this.client.performActions(actions1) as unknown as Promise<void>)
-                .then(() => {
-                    console.log(JSON.stringify(actions1))
-                })
+            return pr.then((): Promise<void> => this.client.performActions(actions1) as unknown as Promise<void>);
         }
     };
 

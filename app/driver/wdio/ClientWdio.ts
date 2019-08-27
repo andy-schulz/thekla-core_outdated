@@ -144,8 +144,6 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
             return pr.then(this.getFrameWorkClient)
                 .then((client: Client): Promise<void> => {
                     return client.performActions(buttonPress) as unknown as Promise<void>
-                }).then(() => {
-                    console.log(JSON.stringify(buttonPress))
                 });
         }
     };
@@ -169,9 +167,6 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
             return pr.then(this.getFrameWorkClient)
                 .then((client: Client): Promise<void> => {
                     return client.performActions(buttonUp) as unknown as Promise<void>
-                })
-                .then(() => {
-                    console.log(JSON.stringify(buttonUp))
                 });
         }
     };

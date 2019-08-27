@@ -12,7 +12,7 @@
     "test-all": "tsc & run-p -c --silent test:wdio:ff test:wdio:ch",
     "test:no-web": "jasmine --config=app/test/support/jasmine.json",
     "test:wdio:ff": "jasmine --config=app/test/support/jasmine_wdio_firefox.json",
-    "test:wdio:ch": "jasmine --config=app/test/support/jasmine_wdio_chrome.json",
+    "test:wdio:ch": "jasmine --config=app/test/support/jasmine_wdio_chrome.json"
   },
   "repository": {
     "type": "git",
@@ -28,8 +28,8 @@
     "@log4js-node/log4js-api": "^1.0.2",
     "@types/deep-diff": "^1.0.0",
     "@types/fs-extra": "^5.1.0",
-    "@types/lodash": "^4.14.133",
-    "@types/node": "^10.14.8",
+    "@types/lodash": "^4.14.137",
+    "@types/node": "^10.14.16",
     "@types/request-promise-native": "^1.0.16",
     "@types/yargs": "^12.0.12",
     "axios": "^0.18.1",
@@ -41,24 +41,23 @@
     "log4js": "^3.0.6",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
-    "typescript": "^3.5.1",
-    "webdriver": "^5.11.13",
-    "webdriverjs_annotator": "^1.1.4",
+    "typescript": "^3.5.3",
+    "webdriver": "^5.12.1",
     "yargs": "^12.0.5"
   },
   "devDependencies": {
     "@types/jasmine": "^2.8.16",
-    "@types/uuid": "^3.4.4",
-    "@typescript-eslint/eslint-plugin": "^1.8.0",
-    "@typescript-eslint/parser": "^1.8.0",
+    "@types/uuid": "^3.4.5",
+    "@typescript-eslint/eslint-plugin": "^1.13.0",
+    "@typescript-eslint/parser": "^1.13.0",
     "eslint": "^5.16.0",
     "eslint-config-standard": "^12.0.0",
-    "eslint-plugin-import": "^2.17.3",
+    "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-node": "^9.1.0",
-    "eslint-plugin-promise": "^4.1.1",
-    "eslint-plugin-standard": "^4.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
     "jasmine": "^3.4.0",
     "npm-run-all": "^4.1.5",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.3"
   }
 }
