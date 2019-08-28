@@ -6,38 +6,31 @@ import {funcToString}            from "../utils/Utils";
 import {ElementRefIO, WebElementIO}            from "./wrapper/WebElementIO";
 
 export class LocatorWdio {
-    public static elementKey = `element-6066-11e4-a52e-4f735466cecf`;
 
-    private static typeMap = new Map([
-        [`byCss`, `css selector`],
-        [`byXpath`, `xpath`],
-    ]);
+    private static getElementID = (element: ElementRefIO): string => {
+        return element[Object.keys(element)[0]]
+    };
 
-    public static getSelectorParams(locator: By): string[] {
-        if(LocatorWdio.typeMap.has(locator.selectorType))
-            return [LocatorWdio.typeMap.get(locator.selectorType) as string, locator.selector];
-
-        throw new Error(`selector ${locator.selectorType} cant be found`);
-    }
-
-    public static findElements = (locator: By, client: Client, element?: ElementRefIO): Promise<TkWebElement[]> => {
-        switch (locator.selectorType) {
-            case `byCss`:
-                return LocatorWdio.findElemsFromElem(client, `css selector`, locator.selector, element);
-            case `byXpath`:
-                return LocatorWdio.findElemsFromElem(client, `xpath`, locator.selector, element);
-            case `byJs`:
-            case `byCssContainingText`:
-                return LocatorWdio.findElemsFromElemByJs(client, locator, element);
-            default:
-                throw Error(`Selector ${locator.selectorType} not implemented for framework WebDriverJS`);
-        }
+    public static retrieveElements = (locator: By, element?: ElementRefIO): (client: Client) => Promise<TkWebElement[]>  => {
+        return (client: Client): Promise<TkWebElement[]> => {
+            switch (locator.selectorType) {
+                case `byCss`:
+                    return LocatorWdio.findElemsFromElem(client, `css selector`, locator.selector, element);
+                case `byXpath`:
+                    return LocatorWdio.findElemsFromElem(client, `xpath`, locator.selector, element);
+                case `byJs`:
+                case `byCssContainingText`:
+                    return LocatorWdio.findElemsFromElemByJs(client, locator, element);
+                default:
+                    throw Error(`Selector ${locator.selectorType} not implemented for framework WebDriverJS`);
+            }
+        };
     };
 
     private static findElemsFromElem = (client: Client, strategy: string, selector: string, element?: ElementRefIO): Promise<TkWebElement[]> => {
         return (element ?
             (client.findElementsFromElement(
-                element[LocatorWdio.elementKey],
+                LocatorWdio.getElementID(element),
                 strategy,
                 selector) as unknown as Promise<ElementRefIO[]>) :
             (client.findElements(

@@ -26,16 +26,8 @@ export class FrameElementWdio extends FrameElementWd<Client> {
     };
 
     protected findElementsDriver(locator: By): Promise<TkWebElement[]> {
-        // const loc = LocatorWdio.getSelectorParams(locator);
         return this._browser.getFrameWorkClient()
-            .then((driver: Client) => {
-                return LocatorWdio.findElements(locator, driver)
-                // return (driver.findElements(loc[0],loc[1]) as unknown as Promise<ElementRefIO[]>)
-                //     .then((elements) => {
-                //         this.logger.trace(`Found ${elements.length} chained frame(s) with locator ${this.__locator.toString()}`);
-                //         return WebElementIO.createAll(elements, driver);
-                //     })
-            })
+            .then(LocatorWdio.retrieveElements(locator))
     }
 
     protected switchFrameDriver(driver: Client, element: ElementRefIO): Promise<void> {

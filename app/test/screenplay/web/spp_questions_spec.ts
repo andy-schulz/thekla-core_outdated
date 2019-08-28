@@ -120,6 +120,8 @@ describe(`Using`, (): void => {
             )
         });
 
+
+
         it(`with the visibility state should be successful, when the button is displayed after 5 Seconds` +
             `- (test case id: 6eaa9c48-b786-467e-8f70-8196de34ea52)`, async (): Promise<void> => {
             const delayedButton =

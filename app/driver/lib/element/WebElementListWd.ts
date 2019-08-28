@@ -57,6 +57,7 @@ export class WebElementListWd<WD> implements WebElementListFinder {
         let getElements = async (): Promise<TkWebElement[]> => {
             this.logger.debug(`Getting ALL elements for locator ${locator.toString()}`);
             const elements = await this.getElements();
+            this.logger.debug(`Got ${elements.length} elements for locator ${locator.toString()}`);
 
             // TODO: Check if this can be done in parallel
             // get all subelements of each element in elements list and put it into an array
@@ -95,7 +96,6 @@ export class WebElementListWd<WD> implements WebElementListFinder {
 
         return new WebElementListWd(getElements, this._locator, this.browser, this.createWebElementFromList).called(this.description);
     }
-
 
     public count(): Promise<number> {
         return new Promise((fulfill, reject): void => {

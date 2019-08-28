@@ -234,20 +234,9 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
             // always switch to the main Window
             // if you want to deal with an element in a frame DO:
             // frame(By.css("locator")).element(By.css("locator"))
-            return await this.getFrameWorkClient()
-                .then((driver): Promise<TkWebElement[]> => {
-                    return (switchToMasterFrame(driver))
-                        .then((): Promise<TkWebElement[]> => {
-                            return LocatorWdio.findElements(locator, driver)
-                            // return (driver.findElements(loc[0], loc[1]) as unknown as Promise<ElementRefIO[]>)
-                            //     .then((elements: ElementRefIO[]): TkWebElement[] => {
-                            //         this.logger.trace(`Found ${elements ? elements.length : 0} element(s) for locator '${locator}'`);
-                            //
-                            //         return WebElementIO.createAll(elements, driver);
-                            //     })
-                        });
-                })
-            // return await this._driver.findElements(loc);
+            return this.getFrameWorkClient()
+                .then(switchToMasterFrame)
+                .then(LocatorWdio.retrieveElements(locator))
         };
 
         return new WebElementListWdio(getElements, locator, this);
@@ -263,20 +252,11 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
     }
 
     public frame(locator: By): FrameElementFinder {
-        const loc = LocatorWdio.getSelectorParams(locator);
 
-        const getFrames = async (): Promise<WebElementIO[]> => {
-            return await this.getFrameWorkClient()
-                .then((driver): Promise<WebElementIO[]> => {
-                    return switchToMasterFrame(driver)
-                        .then((): Promise<WebElementIO[]> => {
-                            return (driver.findElements(loc[0], loc[1]) as unknown as Promise<ElementRefIO[]>)
-                                .then((elements: ElementRefIO[]): WebElementIO[] => {
-                                    this.logger.trace(`Found ${elements ? elements.length : `undefined`} frame(s) for locator '${locator}'`);
-                                    return WebElementIO.createAll(elements, driver);
-                                })
-                        });
-                })
+        const getFrames = (): Promise<TkWebElement[]> => {
+            return this.getFrameWorkClient()
+                .then(switchToMasterFrame)
+                .then(LocatorWdio.retrieveElements(locator));
         };
 
         return new FrameElementWdio(getFrames, locator, this, FrameElementWdio.create);
@@ -367,13 +347,7 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
     public wait = waitForCondition(this.logger);
 
     public getSession(): Promise<TkSession> {
-        return new Promise((resolve, reject) => {
-            this.getFrameWorkClient()
-                .then(async (client: Client): Promise<void> => {
-                    // @ts-ignore
-                    resolve(SessionIO.create({sessionId: client.sessionId, capabilities: client.capabilities}));
-                })
-                .catch(reject)
-        });
+        return this.getFrameWorkClient()
+            .then(SessionIO.create)
     }
 }

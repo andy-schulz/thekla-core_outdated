@@ -1,3 +1,4 @@
+import {getLogger}               from "@log4js-node/log4js-api";
 import {Client}                  from "webdriver"
 import {PointerActionSequence}   from "../../interface/Actions";
 import {TkWebElement}            from "../../interface/TkWebElement";
@@ -6,7 +7,6 @@ import {ElementLocationInView}   from "../../lib/element/ElementLocation";
 import {By}                      from "../../lib/element/Locator";
 import fp                        from "lodash/fp"
 import {funcToString}            from "../../utils/Utils";
-import {findByCssContainingText} from "../../lib/client_side_scripts/locators";
 
 // @ts-ignore
 import {isElementDisplayed} from "../../lib/client_side_scripts/is_displayedness";
@@ -24,7 +24,7 @@ interface ElementIODimension {
 };
 
 export class WebElementIO implements TkWebElement {
-
+    private logger = getLogger(`WebElementIO`);
     private constructor(
         private htmlElement: ElementRefIO,
         private client: Client) {
@@ -153,6 +153,8 @@ export class WebElementIO implements TkWebElement {
     }
 
     public findElements(locator: By): Promise<TkWebElement[]> {
-        return LocatorWdio.findElements(locator, this.client, this.htmlElement)
+        if (this.logger.isDebugEnabled())
+            this.logger.debug(`finding child Elements for locator ${locator} and element ${JSON.stringify(this.htmlElement)}`)
+        return LocatorWdio.retrieveElements(locator, this.htmlElement)(this.client)
     }
 }
