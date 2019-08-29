@@ -1,35 +1,16 @@
-import {configure} from "log4js";
+import {configure}                                  from "log4js";
 import {
     Browser, By, UntilElement, ServerConfig, DesiredCapabilities, ClientHelper
-}                  from "../..";
-import {ProxyType} from "../../config/DesiredCapabilities";
-import {LogLevel}  from "../../config/ServerConfig";
+}                                                   from "../..";
+import {LogLevel}                                   from "../../config/ServerConfig";
+import {standardCapabilities, standardServerConfig} from "../0_helper/config";
 configure(`res/config/log4js.json`);
 
-
 describe(`trying to access a Frame`, (): void => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
-    const conf: ServerConfig = {
-        automationFramework: {
-            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
-        },
-        serverAddress: {
-            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
-        },
-        baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`,
-    };
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 200000;
 
-    const capabilities: DesiredCapabilities = {
-        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `firefox`,
-        proxy: process.env.PROXY_TYPE === `manual` ? {
-            proxyType: `manual`,
-            httpProxy: process.env.PROXY_SERVER,
-            sslProxy: process.env.PROXY_SERVER,
-        } : {
-            proxyType: `system`
-        }
-    };
+    const conf: ServerConfig = standardServerConfig;
+    const capabilities: DesiredCapabilities = standardCapabilities;
 
     let browser: Browser;
 
@@ -105,7 +86,6 @@ describe(`trying to access a Frame`, (): void => {
             // try to access the first button again to check that the frameswitch works
             expect(await button1.getText()).toEqual(`Button inside single frame`);
         });
-
 
         it(`css and explicit waiting -> the button in frame of frame should be found. 
         - (test case id: 53675bf6-eea9-46f0-b487-b969a7629e27)`, async (): Promise<void> => {

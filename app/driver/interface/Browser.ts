@@ -31,8 +31,6 @@ export interface Browser extends WebFinder, FrameFinder {
 
     getTitle(): Promise<string>;
 
-    hasTitle(expectedTitle: string): Promise<boolean>;
-
     takeScreenshot(): Promise<BrowserScreenshotData>;
 
     saveScreenshot(filepath: string, filename: string): Promise<string>;

@@ -1,13 +1,16 @@
+import * as _                                   from "lodash";
+import {Client}                                 from "webdriver";
 import {DidNotFind}                             from "../../errors/DidNotFind";
 import {ClientCtrls}                            from "../../interface/ClientCtrls";
 import {TkWebElement}                           from "../../interface/TkWebElement";
 import {WebElementFinder, WebElementListFinder} from "../../interface/WebElements";
+import {AnnotatorWdio}                          from "../AnnotatorWdio";
 import {UntilElementCondition}                  from "./ElementConditions";
 import {ElementLocationInView}                  from "./ElementLocation";
 import {WebElementListWd}                       from "./WebElementListWd";
 import {By}                                     from "../../../index";
 import {getLogger, Logger}                      from "log4js";
-import fp                                       from "lodash/fp"
+import fp, {identity}                           from "lodash/fp"
 
 export class WebElementWd<WD> implements WebElementFinder {
     private _description: string = ``;
@@ -26,34 +29,51 @@ export class WebElementWd<WD> implements WebElementFinder {
         return this.elementList.element(locator);
     };
 
+    private annotateElement = _.curry((shallAnnotateElement: boolean | undefined, client: Client): (element: TkWebElement) => Promise<TkWebElement> => {
+        return shallAnnotateElement ?
+            AnnotatorWdio.highlight(client) :
+            (element) => Promise.resolve(element)
+    });
+
+    private displayTestMessage = _.curry((shallPrintTestMessage: boolean | undefined, testMessage: string): (client: Client) => Promise<Client> => {
+        return shallPrintTestMessage ?
+            AnnotatorWdio.displayTestMessage(testMessage) :
+            (client) => Promise.resolve(client)
+    });
+
+    private hideTestMessage = (shallPrintTestMessage: boolean | undefined): (client: Client) => Promise<Client> => {
+        return shallPrintTestMessage ?
+            AnnotatorWdio.hideTestMessage :
+            (client) => Promise.resolve(client)
+    };
+
     protected getWebElement = (): Promise<TkWebElement> => {
-        return new Promise(async (resolve, reject): Promise<void> => {
 
-            const elements = await this.elementList.getElements()
-                .catch((e): void => {
-                    reject(e);
-                });
-
-            this.logger.trace(`Found ${elements ? elements.length : 0} element(s) for ${this.elementList.locatorDescription}`);
-
-            // if getElements is rejected just leave the function
-            if (!elements) {
-                return;
+        const head = (elements: TkWebElement[]): () => Promise<TkWebElement> => {
+            return () => {
+                if (elements.length === 0) return Promise.reject(DidNotFind.theElement(this));
+                if (elements.length > 1) {
+                    this.logger.trace(`Found ${elements ? elements.length : 0} element(s) for ${this.elementList.locatorDescription}`)
+                }
+                return Promise.resolve(elements[0])
             }
+        };
 
-            if (elements.length === 0) {
-                // const message = `Element not found: ${this.toString()}`;
+        return this.browser.getFrameWorkClient()
+            .then((client: WD): Promise<TkWebElement> => {
+                const clnt = client as unknown as Client;
+                const elements: TkWebElement[] = [];
 
-                // throw DidNotFind.theElement(this);
-
-                reject(DidNotFind.theElement(this));
-                // return;
-            } else if (elements.length >= 2) {
-                const message = `More than one Element found of: ${this.toString()}. I am going to select the first one.`;
-                this.logger.warn(message);
-            }
-            resolve(elements[0])
-        })
+                return this.displayTestMessage(this.browser.serverConfig.displayTestMessages)
+                (`Trying to find ${this.toString()}`)
+                (clnt)
+                    .then((): Promise<TkWebElement[]> => this.elementList.getElements())
+                    .then((elems: TkWebElement[]) =>  { elements.push(...elems); return clnt; })
+                    .then(this.hideTestMessage(this.browser.serverConfig.displayTestMessages))
+                    .then(head(elements))
+                    .then(this.annotateElement(this.browser.serverConfig.annotateElement)(clnt))
+                    .then(() => elements[0])
+            });
     };
 
     protected parentGetWebElement = this.getWebElement;
@@ -155,9 +175,10 @@ export class WebElementWd<WD> implements WebElementFinder {
     }
 
     public scrollIntoView(): Promise<void> {
-        return this.getWebElement().then((element): Promise<void> => {
-            return element.scrollIntoView();
-        })
+        return this.getWebElement()
+            .then((element): Promise<void> => {
+                return element.scrollIntoView();
+            })
     }
 
     public clear(): Promise<void> {

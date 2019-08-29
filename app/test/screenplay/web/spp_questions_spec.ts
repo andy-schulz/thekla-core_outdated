@@ -16,10 +16,6 @@ import {
 import {configure} from "log4js";
 configure(`res/config/log4js.json`);
 
-
-
-
-
 describe(`Using`, (): void => {
 
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
@@ -165,7 +161,6 @@ describe(`Using`, (): void => {
     describe(`the Attribute question`, (): void => {
         let Jonathan: Actor = Actor.named(`Jonathan`);
 
-
         beforeAll((): void => {
             const browser = RunningBrowser.startedOn(seleniumConfig).withCapabilities(capabilities);
             Jonathan.can(BrowseTheWeb.using(browser));
@@ -203,7 +198,7 @@ describe(`Using`, (): void => {
         });
 
         it(`on the tags attribute should return the tags value 
-        - (test case id: b9b77405-54c1-48dc-8e2e-036d9382f192)`, async (): Promise<void> => {
+        - (test case id: 7e0e83eb-8744-4d1a-985f-20cc5eb24907)`, async (): Promise<void> => {
 
             const elementHtmlAttribute = element(By.css(`[data-test-id='htmlAttribute']`));
             const divWithText = element(By.css(`[data-test-id='innerHtmlTextOfDiv']`));

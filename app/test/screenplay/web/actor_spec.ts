@@ -1,4 +1,4 @@
-import {LogLevel}             from "../../../config/ServerConfig";
+import {LogLevel}                                   from "../../../config/ServerConfig";
 import {
     Actor,
     BrowseTheWeb,
@@ -10,11 +10,12 @@ import {
     Text,
     ServerConfig,
     UntilElement, Wait, DesiredCapabilities, Expected
-}                             from "../../../index";
-import {GoogleSearch}         from "../../page_objects/GoogleSearch/GoogleSearch";
-import {Add}                  from "../../page_objects/GoogleCalculator/Add";
-import {GoogleCalculator}     from "../../page_objects/GoogleCalculator/GoogleCalculator";
-import {getLogger, configure} from "log4js";
+}                                                   from "../../../index";
+import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import {GoogleSearch}                               from "../../page_objects/GoogleSearch/GoogleSearch";
+import {Add}                                        from "../../page_objects/GoogleCalculator/Add";
+import {GoogleCalculator}                           from "../../page_objects/GoogleCalculator/GoogleCalculator";
+import {getLogger, configure}                       from "log4js";
 configure(`res/config/log4js.json`);
 
 const logger = getLogger(`Actor`);
@@ -22,26 +23,8 @@ const logger = getLogger(`Actor`);
 describe(`Searching on Google`, (): void => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
-    let config: ServerConfig = {
-        automationFramework: {
-            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `warn`) as LogLevel
-        },
-        serverAddress: {
-            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
-        },
-    };
-
-    const capabilities: DesiredCapabilities = {
-        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-        proxy: process.env.PROXY_TYPE === `manual` ? {
-            proxyType: `manual`,
-            httpProxy: process.env.PROXY_SERVER,
-            sslProxy: process.env.PROXY_SERVER,
-        } : {
-            proxyType: `system`
-        }
-    };
+    let config: ServerConfig = standardServerConfig;
+    const capabilities: DesiredCapabilities = standardCapabilities;
 
     let John: Actor;
     logger.trace(`actor_spec stated`);

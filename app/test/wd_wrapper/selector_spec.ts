@@ -2,7 +2,7 @@ import {Browser, By, ClientHelper, DesiredCapabilities, RunningBrowser, ServerCo
 import {standardCapabilities, standardServerConfig}                                   from "../0_helper/config";
 
 describe(`Locating a waiter`, (): void => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 200000;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
 
     const conf: ServerConfig = standardServerConfig;
 

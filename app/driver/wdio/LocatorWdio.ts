@@ -1,9 +1,10 @@
-import {Client}                  from "webdriver";
-import {TkWebElement}            from "../interface/TkWebElement";
-import {findByCssContainingText} from "../lib/client_side_scripts/locators";
-import {By}                      from "../lib/element/Locator";
-import {funcToString}            from "../utils/Utils";
-import {ElementRefIO, WebElementIO}            from "./wrapper/WebElementIO";
+import {Client}                     from "webdriver";
+import {TkWebElement}               from "../interface/TkWebElement";
+import {AnnotatorWdio}              from "../lib/AnnotatorWdio";
+import {findByCssContainingText}    from "../lib/client_side_scripts/locators";
+import {By}                         from "../lib/element/Locator";
+import {funcToString}               from "../utils/Utils";
+import {ElementRefIO, WebElementIO} from "./wrapper/WebElementIO";
 
 export class LocatorWdio {
 
@@ -22,7 +23,7 @@ export class LocatorWdio {
                 case `byCssContainingText`:
                     return LocatorWdio.findElemsFromElemByJs(client, locator, element);
                 default:
-                    throw Error(`Selector ${locator.selectorType} not implemented for framework WebDriverJS`);
+                    return Promise.reject(`Selector ${locator.selectorType} not implemented for framework WebDriverJS`);
             }
         };
     };

@@ -1,15 +1,16 @@
-import {getLogger, Logger}                            from "@log4js-node/log4js-api";
-import * as fs                                        from "fs";
-import fsExtra                                        from "fs-extra";
-import * as path                                      from "path";
-import {PointerActionSequence}                        from "../interface/Actions";
-import {Browser, BrowserScreenshotData, CreateClient} from "../interface/Browser";
-import {BrowserWindow, WindowManager}                 from "../interface/BrowserWindow";
-import {ClientCtrls}                                  from "../interface/ClientCtrls";
-import {TkSession}                                    from "../interface/TkSession";
-import {TkWebElement}                                 from "../interface/TkWebElement";
+import {getLogger, Logger}                                          from "@log4js-node/log4js-api";
+import * as fs                                                      from "fs";
+import fsExtra                                                      from "fs-extra";
+import * as path                                                    from "path";
+import {PointerActionSequence}                                      from "../interface/Actions";
+import {Browser, BrowserScreenshotData, CreateClient}               from "../interface/Browser";
+import {BrowserWindow, WindowManager}                               from "../interface/BrowserWindow";
+import {ClientCtrls}                                                from "../interface/ClientCtrls";
+import {TkSession}                                                  from "../interface/TkSession";
+import {TkWebElement}                                               from "../interface/TkWebElement";
 import {FrameElementFinder, WebElementFinder, WebElementListFinder} from "../interface/WebElements";
 import {By, ServerConfig}                                           from "../..";
+import {AnnotatorWdio}                                              from "../lib/AnnotatorWdio";
 import {cleanupClients, executeFnOnClient, switchToMasterFrame}     from "../lib/client/ClientHelper";
 import {checkClientName}                                            from "../lib/client/checks";
 import {formatNavigateToUrl}                                        from "../lib/client/url_formatter";
@@ -21,12 +22,13 @@ import {funcToString}                                               from "../uti
 import {FrameElementWdio}                                           from "./FrameElementWdio";
 import {LocatorWdio}                                                from "./LocatorWdio";
 import {SessionIO}                                                  from "./wrapper/SessionIO";
-import {ElementRefIO, WebElementIO}                                 from "./wrapper/WebElementIO";
 import {WebElementListWdio}                                         from "./WebElementListWdio";
 import {BrowserWindowWdio}                                          from "./BrowserWindowWdio";
 import {takeScreenshots, saveScreenshots}                           from "../lib/client/screenshots";
 import deepmerge                                                    from "deepmerge";
 import AttachSessionOptions = WebDriver.AttachSessionOptions;
+import {identity}                                                   from "lodash/fp";
+import * as _                                                       from "lodash";
 
 export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
     private static logger: Logger = getLogger(`ClientWdioClass`);
@@ -42,6 +44,12 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
         private browserName: string = ``) {
     }
 
+    private resetAnnotator = (shallAnnotate: boolean | undefined): (driver: Client) => Promise<Client> => {
+        return (driver: Client): Promise<Client> => {
+            return shallAnnotate ? AnnotatorWdio.resetHighlighter(driver) : Promise.resolve(driver)
+        };
+    };
+
     public get window(): BrowserWindow {
         return this._window;
     }
@@ -50,80 +58,9 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
         this._window = window;
     }
 
-    public get annotateElement(): boolean | undefined {
-        return this._selConfig.annotateElement
+    public get serverConfig() {
+        return this._selConfig;
     }
-
-    public get displayTestMessages(): boolean | undefined {
-        return this._selConfig.displayTestMessages
-    }
-
-    public static create(
-        {
-            serverConfig,
-            capabilities,
-            clientName = `client${this.clientMap.size + 1}`,
-            sessionId
-        }: CreateClient
-    ): ClientWdio {
-
-        checkClientName(clientName);
-
-        try {
-            const wdioOpts = transformToWdioConfig(serverConfig, capabilities);
-
-            const getClient = (): () => Promise<Client> => {
-                let client: Client;
-                return (): Promise<Client> => {
-                    return new Promise(async (resolve, reject): Promise<void> => {
-                        if (client)
-                            return resolve(client);
-
-                        if (sessionId) {
-                            const attachOptions: AttachSessionOptions = deepmerge(wdioOpts, {sessionId: sessionId});
-                            client = (await WebDriver.attachToSession(attachOptions)) as unknown as Client;
-                            resolve(client);
-                            return;
-                        }
-
-                        WebDriver.newSession(wdioOpts)
-                            .then((clnt: Client): void => {
-                                client = clnt as Client;
-                                resolve(client);
-                            }, reject)
-                            .catch(reject);
-                    })
-                }
-            };
-
-            const getTheDriver = getClient();
-
-            const client = new ClientWdio(getTheDriver, serverConfig, clientName);
-            const window = BrowserWindowWdio.create(client.getFrameWorkClient, capabilities.window);
-            client.windowManagedBy(window);
-
-            this.clientMap.set(clientName, client);
-            return client;
-
-        } catch (e) {
-            throw ` ${e} ${Error().stack}`;
-        }
-
-    }
-
-    public getFrameWorkClient = (): Promise<Client> => {
-        return this.getClnt()
-            .then((driver): Client => {
-                if (!this.clientCreated) {
-                    // ignoring Promise on purpose
-                    this._window.setToPreset();
-                }
-                this.clientCreated = true;
-                return driver;
-            }).catch((e: Error) => {
-                return Promise.reject(e)
-            })
-    };
 
     public pointerButtonDown = (button: number): (pr: Promise<void>) => Promise<void> => {
         return (pr: Promise<void>): Promise<void> => {
@@ -178,6 +115,70 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
 
     };
 
+    public getFrameWorkClient = (): Promise<Client> => {
+        return this.getClnt()
+            .then((driver): Client => {
+                if (!this.clientCreated) {
+                    // ignoring Promise on purpose
+                    this._window.setToPreset();
+                }
+                this.clientCreated = true;
+                return driver;
+            }).catch((e: Error) => {
+                return Promise.reject(e)
+            })
+    };
+
+    public static create({ serverConfig,
+        capabilities,
+        clientName = `client${this.clientMap.size + 1}`,
+        sessionId }: CreateClient): ClientWdio {
+
+        checkClientName(clientName);
+
+        try {
+            const wdioOpts = transformToWdioConfig(serverConfig, capabilities);
+
+            const getClient = (): () => Promise<Client> => {
+                let client: Client;
+                return (): Promise<Client> => {
+                    return new Promise(async (resolve, reject): Promise<void> => {
+                        if (client)
+                            return resolve(client);
+
+                        // if a session is passed attatch to the session
+                        if (sessionId) {
+                            const attachOptions: AttachSessionOptions = deepmerge(wdioOpts, {sessionId: sessionId});
+                            client = (await WebDriver.attachToSession(attachOptions)) as unknown as Client;
+                            return resolve(client);
+                        }
+
+                        // otherwise create a new Session
+                        WebDriver.newSession(wdioOpts)
+                            .then((clnt: Client): void => {
+                                client = clnt as Client;
+                                resolve(client);
+                            }, reject)
+                            .catch(reject);
+                    })
+                }
+            };
+
+            const getTheDriver = getClient();
+
+            const client = new ClientWdio(getTheDriver, serverConfig, clientName);
+            const window = BrowserWindowWdio.create(client.getFrameWorkClient, capabilities.window);
+            client.windowManagedBy(window);
+
+            this.clientMap.set(clientName, client);
+            return client;
+
+        } catch (e) {
+            throw ` ${e} ${Error().stack}`;
+        }
+
+    }
+
     public static cleanup(clientsToClean?: Browser[]): Promise<void[]> {
         return cleanupClients(this.clientMap, clientsToClean)
     }
@@ -220,12 +221,16 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
      *
      * @throws - an Error in case no client instance was found for the given client name
      */
-    public static getClient(clientName: string): Browser {
+    public static getClientByName(clientName: string): Browser {
         const client = this.clientMap.get(clientName);
         if (client)
             return client;
         else
             throw new Error(`cant find name client with name '${clientName}'`);
+    }
+
+    public element(locator: By): WebElementFinder {
+        return (this.all(locator) as WebElementListWdio).toWebElement();
     }
 
     public all(locator: By): WebElementListFinder {
@@ -242,29 +247,24 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
         return new WebElementListWdio(getElements, locator, this);
     }
 
-    public element(locator: By): WebElementFinder {
-        return (this.all(locator) as WebElementListWdio).toWebElement();
-    }
-
-    public executeScript(func: Function, ...funcArgs: any[]): Promise<{}> {
-        const funcString = `return (${func}).apply(null, arguments);`;
-        return executeFnOnClient(this.getFrameWorkClient, `executeScript`, [funcString, funcArgs])
-    }
-
     public frame(locator: By): FrameElementFinder {
 
         const getFrames = (): Promise<TkWebElement[]> => {
             return this.getFrameWorkClient()
                 .then(switchToMasterFrame)
-                .then(LocatorWdio.retrieveElements(locator));
-        };
+                .then(LocatorWdio.retrieveElements(locator))
 
+        };
         return new FrameElementWdio(getFrames, locator, this, FrameElementWdio.create);
     }
 
     public get(url: string): Promise<void> {
         const destination = formatNavigateToUrl(this._selConfig, url);
-        return executeFnOnClient(this.getFrameWorkClient, `navigateTo`, [destination])
+        return this.getFrameWorkClient()
+            .then(this.resetAnnotator(this.serverConfig.annotateElement))
+            .then((): Promise<void> => {
+                return executeFnOnClient(this.getFrameWorkClient, `navigateTo`, [destination])
+            })
     }
 
     public getCurrentUrl(): Promise<string> {
@@ -275,9 +275,9 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
         return executeFnOnClient(this.getFrameWorkClient, `getTitle`)
     }
 
-    public hasTitle(expectedTitle: string): Promise<boolean> {
-        return this.getTitle()
-            .then((title): boolean => (title === expectedTitle))
+    public executeScript(func: Function, ...funcArgs: any[]): Promise<{}> {
+        const funcString = `return (${func}).apply(null, arguments);`;
+        return executeFnOnClient(this.getFrameWorkClient, `executeScript`, [funcString, funcArgs])
     }
 
     public quit(): Promise<void> {

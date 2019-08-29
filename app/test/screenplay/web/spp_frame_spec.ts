@@ -14,33 +14,15 @@ import {
     ServerConfig, Expected
 }                  from "../../../index";
 
-import {configure} from "log4js";
+import {configure}                                  from "log4js";
+import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
 configure(`res/config/log4js.json`);
 
 describe(`Locating Elements inside Frames`, (): void => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
-    let config: ServerConfig = {
-        automationFramework: {
-            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `warn`) as LogLevel
-        },
-        serverAddress: {
-            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
-        },
-        baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`,
-    };
-
-    const capabilities: DesiredCapabilities = {
-        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-        proxy: process.env.PROXY_TYPE === `manual` ? {
-            proxyType: `manual`,
-            httpProxy: process.env.PROXY_SERVER,
-            sslProxy: process.env.PROXY_SERVER,
-        } : {
-            proxyType: `system`
-        }
-    };
+    let config: ServerConfig = standardServerConfig
+    const capabilities: DesiredCapabilities = standardCapabilities;
 
     let Francine: Actor;
 

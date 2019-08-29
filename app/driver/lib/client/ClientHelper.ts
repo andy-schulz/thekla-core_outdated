@@ -43,7 +43,7 @@ export class ClientHelper {
     }
 
     public static getClient(clientName: string): Browser | undefined {
-        return ClientWdio.getClient(clientName)
+        return ClientWdio.getClientByName(clientName)
     }
 
     public static takeScreenshots(): Promise<BrowserScreenshotData[]> {

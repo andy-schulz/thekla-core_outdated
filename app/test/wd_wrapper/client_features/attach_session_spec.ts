@@ -42,7 +42,6 @@ describe(`using the browser instance`, (): void => {
 
         afterAll((): Promise<void[]> => {
             return RunningBrowser.cleanup().catch((e: Error) => {
-                console.log(e);
                 return Promise.resolve([]);
             });
         });
