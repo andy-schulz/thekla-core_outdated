@@ -1,27 +1,13 @@
 import * as _                                            from "lodash";
-import {LogLevel}                                        from "../../../config/ServerConfig";
 import {WindowSize}                                      from "../../../driver/interface/BrowserWindow";
 import {ClientHelper, DesiredCapabilities, ServerConfig} from "../../../index";
-
-
-
+import {standardCapabilities, standardServerConfig}      from "../../0_helper/config";
 
 describe(`creating a new Browser`, (): void => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
-    const conf: ServerConfig = {
-        automationFramework: {
-            type: process.env.FRAMEWORK  === `wdio` ? `wdio` : `wdjs`,
-            logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
-        },
-        serverAddress: {
-            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
-        },
-    };
-
-    const capabilities: DesiredCapabilities = {
-        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-    };
+    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
     const windowSize = function(): {} {
         return {width: window.innerWidth, height: window.innerHeight};

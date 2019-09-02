@@ -2,7 +2,7 @@
  * Configurations
  */
 
-export {ServerConfig}                                            from "./config/ServerConfig"
+export {ServerConfig}                                              from "./config/ServerConfig"
 export {DesiredCapabilities}                                       from "./config/DesiredCapabilities"
 export {RestClientConfig}                                          from "./config/RestClientConfig";
 
@@ -15,7 +15,7 @@ export {BrowserScreenshotData}            from "./driver/interface/Browser";
 export {WebElementFinder}                 from "./driver/interface/WebElements";
 
 export {RunningBrowser} from "./driver/lib/client/RunningBrowser1";
-export {ClientHelper}  from "./driver/lib/client/ClientHelper";
+export {ClientHelper}   from "./driver/lib/client/ClientHelper";
 export {By}             from "./driver/lib/element/Locator";
 export {Key}            from "./driver/lib/Key";
 export {until}          from "./driver/lib/Condition";
@@ -63,11 +63,12 @@ export {Enter}                                  from "./screenplay/web/actions/E
 export {Navigate}                               from "./screenplay/web/actions/Navigate";
 export {Wait}                                   from "./screenplay/web/actions/Wait";
 export {Scroll, Page}                           from "./screenplay/web/actions/Scroll";
+export {Drag}                                   from "./screenplay/web/actions/Drag";
 export {Sleep}                                  from "./screenplay/lib/actions/Sleep";
 
 // Oracle
-export {See}     from "./screenplay/lib/matcher/See";
-export {Extract} from "./screenplay/lib/matcher/Extract";
+export {See}                                  from "./screenplay/lib/matcher/See";
+export {Extract}                              from "./screenplay/lib/matcher/Extract";
 
 /**
  * Questions
@@ -76,7 +77,7 @@ export {Extract} from "./screenplay/lib/matcher/Extract";
 export {Question}                             from "./screenplay/lib/questions/Question";
 // Basic Questions
 export {ReturnedResult}                       from "./screenplay/lib/questions/ReturnedResult";
-export {DelayedResult}                       from "./screenplay/lib/questions/DelayedResult";
+export {DelayedResult}                        from "./screenplay/lib/questions/DelayedResult";
 // Web Questions
 export {Text}                                 from "./screenplay/web/questions/Text";
 export {Value}                                from "./screenplay/web/questions/Value";
@@ -91,14 +92,14 @@ export {Response}                             from "./screenplay/rest/questions/
  * Errors
  */
 // Custom Errors
-export {DoesNotHave}        from "./screenplay/errors/DoesNotHave";
-export {DidNotFind}         from "./driver/errors/DidNotFind";
+export {DoesNotHave}                          from "./screenplay/errors/DoesNotHave";
+export {DidNotFind}                           from "./driver/errors/DidNotFind";
 
 /**
  * Matcher
  */
 //Function Matcher
-export {Expected} from "./screenplay/lib/matcher/FunctionMatcher/Expected"
+export {Expected}                             from "./screenplay/lib/matcher/FunctionMatcher/Expected"
 
 // Decorators
 export {stepDetails, step} from "./screenplay/lib/decorators/step_decorators"
@@ -107,4 +108,4 @@ export {stepDetails, step} from "./screenplay/lib/decorators/step_decorators"
 export {SkipTask} from "./screenplay/lib/tasks/SkipTask";
 
 // eslint-disable-next-line
-export { Actions } from "./driver/interface/Actions";
+export {Actions} from "./driver/interface/Actions";

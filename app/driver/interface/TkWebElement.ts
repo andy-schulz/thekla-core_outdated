@@ -1,7 +1,8 @@
-import {ElementLocationInView} from "../lib/element/ElementLocation";
-import {By}                    from "../lib/element/Locator";
+import {ElementLocationInView, Point, ElementDimensions} from "../lib/element/ElementLocation";
+import {By}                                              from "../lib/element/Locator";
+import {ElementRefIO}                                    from "../wdio/wrapper/WebElementIO";
 
-export interface TkWebElement {
+export interface TkWebElement<WD> {
     // [key: string]: (...args: any[]) => Promise<any>;
 
     getFrWkElement(): any;
@@ -10,7 +11,7 @@ export interface TkWebElement {
 
     getProperty(propertyName: string): Promise<string>;
 
-    findElements(locator: By): Promise<TkWebElement[]>;
+    findElements(locator: By): Promise<TkWebElement<WD>[]>;
 
     isDisplayed(): Promise<boolean>;
 
@@ -22,12 +23,14 @@ export interface TkWebElement {
 
     getText(): Promise<string>;
 
-    move(): Promise<void>;
+    move(): (client: WD) => Promise<WD>;
 
-    getRect(): Promise<object>;
+    getRect(): Promise<ElementDimensions>;
+
+    getCenterPoint(): Promise<Point>;
 
     getLocationInView(): Promise<ElementLocationInView>;
 
-    scrollIntoView(pr?: Promise<any>): Promise<void>;
+    scrollIntoView(): Promise<void>;
 
 }

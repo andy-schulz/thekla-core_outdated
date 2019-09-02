@@ -1,4 +1,3 @@
-import {LogLevel}        from "../../../config/ServerConfig";
 import {
     Actor,
     BrowseTheWeb,
@@ -7,40 +6,22 @@ import {
     See,
     Navigate,
     Text, UntilElement, ServerConfig, Wait, DesiredCapabilities, Expected, RunningBrowser, ClientHelper
-}                        from "../../../index";
+} from "../../../index";
 
+import {getLogger}                                  from "log4js";
+import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import _                                            from "lodash";
 
-import {getLogger} from "log4js";
 const logger = getLogger(`Spec: Spp wait for elements`);
-
 
 describe(`Waiting for SPP Elements`, (): void => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
-    let seleniumConfig: ServerConfig = {
-        automationFramework: {
-            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `warn`) as LogLevel
-        },
-        serverAddress: {
-            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
-        },
-        baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`,
-    };
-    const capabilities: DesiredCapabilities = {
-        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-        proxy: process.env.PROXY_TYPE === `manual` ? {
-            proxyType: `manual`,
-            httpProxy: process.env.PROXY_SERVER,
-            sslProxy: process.env.PROXY_SERVER,
-        } : {
-            proxyType: `system`
-        }
-    };
+    let seleniumConfig: ServerConfig = _.cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
     logger.trace(`test started`);
     let walterTheWaiter: Actor;
-
 
     beforeAll((): void => {
         walterTheWaiter = Actor.named(`Walter`);
@@ -92,7 +73,7 @@ describe(`Waiting for SPP Elements`, (): void => {
 
         it(`should be possible with wait actions on an to be disabled element ` +
             `- (test case id: a0899cd4-6548-4f15-ab19-579bd6ca1ccd)`, (): Promise<void> => {
-            return  walterTheWaiter.attemptsTo(
+            return walterTheWaiter.attemptsTo(
                 Navigate.to(`/delayed`),
                 See.if(Text.of(toBeDisabledButton)).is(Expected.toEqual(`Disabled after 4 seconds`)),
             );
@@ -124,7 +105,7 @@ describe(`Waiting for SPP Elements`, (): void => {
         });
 
         it(`should succeed after 5 seconds when the modal view is gone  ` +
-            `- (test case id: c93f9af5-b5ea-49d2-99ba-45e7b31018b0)`,(): Promise<void> => {
+            `- (test case id: c93f9af5-b5ea-49d2-99ba-45e7b31018b0)`, (): Promise<void> => {
             return walterTheWaiter.attemptsTo(
                 Navigate.to(`/modals`),
                 See.if(Text.of(button)).is(Expected.toEqual(`Danger!`)),

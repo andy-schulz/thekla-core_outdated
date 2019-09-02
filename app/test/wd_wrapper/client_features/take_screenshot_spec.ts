@@ -1,44 +1,24 @@
-import * as fs     from "fs";
-import fsExtra     from "fs-extra";
-import * as uuid   from "uuid";
+import * as fs                                      from "fs";
+import fsExtra                                      from "fs-extra";
+import * as uuid                                    from "uuid";
 import {
     Browser, RunningBrowser, BrowserScreenshotData, ServerConfig, DesiredCapabilities, ClientHelper
-}                  from "../../..";
-import {LogLevel}  from "../../../config/ServerConfig";
-
+}                                                   from "../../..";
+import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import _                                            from "lodash";
 
 describe(`Taking a screenshot`, (): void => {
     let browser: Browser;
     let cleanupPath = ``;
 
-
     const frameworkTesterClockSearch = `${process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`}/delayed`;
-        
-    const conf: ServerConfig = {
-        automationFramework: {
-            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
-        },
-        serverAddress: {
-            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
-        },
-    };
 
-    const capabilities: DesiredCapabilities = {
-        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-        proxy: process.env.PROXY_TYPE === `manual` ? {
-            proxyType: `manual`,
-            httpProxy: process.env.PROXY_SERVER,
-            sslProxy: process.env.PROXY_SERVER,
-        } : {
-            proxyType: `system`
-        }
-    };
+    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
     const getFilesizeInBytes = (filename: string): number => {
         return fs.statSync(filename)[`size`];
     };
-
 
     beforeAll(async (): Promise<void> => {
         await ClientHelper.cleanup();

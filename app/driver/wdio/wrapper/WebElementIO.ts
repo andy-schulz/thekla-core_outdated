@@ -1,12 +1,18 @@
-import {getLogger}               from "@log4js-node/log4js-api";
-import {Client}                  from "webdriver"
-import {PointerActionSequence}   from "../../interface/Actions";
-import {TkWebElement}            from "../../interface/TkWebElement";
-import {PromiseAny}              from "../../interface/Types";
-import {ElementLocationInView}   from "../../lib/element/ElementLocation";
-import {By}                      from "../../lib/element/Locator";
-import fp                        from "lodash/fp"
-import {funcToString}            from "../../utils/Utils";
+import {getLogger}                                                       from "@log4js-node/log4js-api";
+import {Client}                                                          from "webdriver"
+import {PointerActionSequence, PointerMoveAction}                        from "../../interface/Actions";
+import {TkWebElement}                                                    from "../../interface/TkWebElement";
+import {PromiseAny}                                                      from "../../interface/Types";
+import {
+    centerDistance,
+    ElementDimensions,
+    ElementLocationInView,
+    getCenterPoint,
+    Point
+} from "../../lib/element/ElementLocation";
+import {By}                                                              from "../../lib/element/Locator";
+import fp                                                                from "lodash/fp"
+import {funcToString}                                                    from "../../utils/Utils";
 
 // @ts-ignore
 import {isElementDisplayed} from "../../lib/client_side_scripts/is_displayedness";
@@ -16,14 +22,7 @@ export interface ElementRefIO {
     [key: string]: string;
 }
 
-interface ElementIODimension {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-};
-
-export class WebElementIO implements TkWebElement {
+export class WebElementIO implements TkWebElement<Client> {
     private logger = getLogger(`WebElementIO`);
     private constructor(
         private htmlElement: ElementRefIO,
@@ -93,18 +92,15 @@ export class WebElementIO implements TkWebElement {
         return this.client.isElementEnabled(this.getElementId()) as unknown as Promise<boolean>
     }
 
-    public scrollIntoView = (pr?: PromiseAny): Promise<void> => {
+    public scrollIntoView = (): Promise<void> => {
 
         const scrollIntoView = (element: any): void => {
             // @ts-ignore
             return element.scrollIntoView();
         };
 
-        if (pr)
-            return pr.then((): Promise<void> => {
-                return this.client.executeScript(funcToString(scrollIntoView), [this.htmlElement]);
-            });
-        return this.client.executeScript(funcToString(scrollIntoView), [this.htmlElement]);
+        return this.client.executeScript(funcToString(scrollIntoView), [this.htmlElement])
+            .then(() => this.htmlElement);
     };
 
     public getLocationInView = (): Promise<ElementLocationInView> => {
@@ -120,39 +116,55 @@ export class WebElementIO implements TkWebElement {
         return this.client.executeScript(func, [this.htmlElement]);
     };
 
-    public move(pr?: Promise<void>): Promise<void> {
-        return fp.flow(
-            this.scrollIntoView,
-            this.moveToElement(this.htmlElement),
-        )(pr);
+    public move(): (client: Client) => Promise<Client> {
+        return this.moveToElement(this.htmlElement);
     }
 
-    private moveToElement = (element: ElementRefIO): (pr: Promise<void>) => Promise<void> => {
-        return (pr: Promise<void>): Promise<void> => {
-            const actions1: PointerActionSequence[] = [
-                {
-                    type: `pointer`,
-                    id: `myMouse`,
-                    parameters: {"pointerType": `mouse`},
-                    actions: [{
-                        type: `pointerMove`,
-                        duration: 1000,
-                        origin: element,
-                        x: 0,
-                        y: 0,
-                    }]
-                }
-            ];
-
-            return pr.then((): Promise<void> => this.client.performActions(actions1) as unknown as Promise<void>);
+    private moveToElement = (element: ElementRefIO): (client: Client) => Promise<Client> => {
+        return (client: Client) => {
+            return this.scrollIntoView()
+                .then(() => {
+                    return this.getCenterPointInView()
+                })
+                .then((centerPoint: Point) => {
+                    return [{
+                        type: `pointer`,
+                        id: `myMouse`,
+                        parameters: {"pointerType": `mouse`},
+                        actions: [{
+                            type: `pointerMove`,
+                            duration: 500,
+                            origin: `viewport`,
+                            x: centerPoint.x,
+                            y: centerPoint.y,
+                        }]
+                    }] as PointerActionSequence[];
+                })
+                .then((actions: PointerActionSequence[]): Promise<void> => client.performActions(actions) as unknown as Promise<void>)
+                .then(() => client);
         }
     };
 
-    public getRect(): Promise<object> {
-        return this.client.getElementRect(this.getElementId()) as unknown as Promise<object>;
+    public getRect(): Promise<ElementDimensions> {
+        return this.client.getElementRect(this.getElementId()) as unknown as Promise<ElementDimensions>;
     }
 
-    public findElements(locator: By): Promise<TkWebElement[]> {
+    public getCenterPointInView(): Promise<Point> {
+
+        const getDimension = (location: ElementLocationInView) => {
+            return location.boundingRect
+        };
+
+        return this.getLocationInView()
+            .then(getDimension)
+            .then(getCenterPoint)
+    }
+
+    public getCenterPoint(): Promise<Point> {
+        return this.getRect().then(getCenterPoint)
+    }
+
+    public findElements(locator: By): Promise<TkWebElement<Client>[]> {
         if (this.logger.isDebugEnabled())
             this.logger.debug(`finding child Elements for locator ${locator} and element ${JSON.stringify(this.htmlElement)}`)
         return LocatorWdio.retrieveElements(locator, this.htmlElement)(this.client)

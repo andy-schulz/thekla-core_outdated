@@ -1,9 +1,10 @@
-import {ProxyType}                                                from "../../../config/DesiredCapabilities";
 import {Browser, ClientHelper, DesiredCapabilities, ServerConfig} from "../../../index";
-import {LogLevel}                                                 from "../../../config/ServerConfig";
 import {clientRect}                                               from "../../0_helper/browser_viewport";
+import {standardCapabilities, standardServerConfig}               from "../../0_helper/config";
+import _                                                          from "lodash";
 
-interface Rect { bottom: number;
+interface Rect {
+    bottom: number;
     height: number;
     left: number;
     right: number;
@@ -16,29 +17,9 @@ interface Rect { bottom: number;
 describe(`Using the browser object`, (): void => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
 
-    const selConfig: ServerConfig = {
-        automationFramework: {
-            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
-        },
-        serverAddress: {
-            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
-        },
-        baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`
-    };
-
+    const selConfig: ServerConfig = _.cloneDeep(standardServerConfig);
+    const desiredCapabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
     const testUrl: string = process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`;
-
-    const desiredCapabilities: DesiredCapabilities =  {
-        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-        proxy: process.env.PROXY_TYPE === `manual` ? {
-            proxyType: `manual`,
-            httpProxy: process.env.PROXY_SERVER,
-            sslProxy: process.env.PROXY_SERVER,
-        } : {
-            proxyType: `system`
-        }
-    };
 
     afterAll(async (): Promise<void[]> => {
         return ClientHelper.cleanup();
@@ -94,13 +75,13 @@ describe(`Using the browser object`, (): void => {
             expect(rectStart[0].top).toBe(0);
             expect(rectStart[0].bottom).toBeGreaterThanOrEqual(7000);
 
-            await browser.scrollTo({x:0,y:-1});
+            await browser.scrollTo({x: 0, y: -1});
 
             const rectEnd: Rect[] = await browser.executeScript(clientRect) as Rect[];
             expect(rectEnd[0].top).toBeLessThanOrEqual(6000);
             expect(rectEnd[0].bottom).toBeLessThanOrEqual(1000);
 
-            await browser.scrollTo({x:0,y:0});
+            await browser.scrollTo({x: 0, y: 0});
 
             const rectStart2: Rect[] = (await browser.executeScript(clientRect)) as Rect[];
             expect(rectStart2[0].top).toBe(0);

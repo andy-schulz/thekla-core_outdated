@@ -8,7 +8,7 @@ import { WebElementWdio } from "./WebElementWdio";
 
 export class WebElementListWdio extends WebElementListWd<Client> {
     public constructor(
-        getElements: () => Promise<TkWebElement[]>,
+        getElements: () => Promise<TkWebElement<Client>[]>,
         _locator: By,
         browser: ClientWdio,
         createWebElementFromList: (elementList: WebElementListWdio,

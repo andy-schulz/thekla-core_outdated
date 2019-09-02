@@ -1,14 +1,19 @@
+export interface ElementDimensions {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+
+interface BoundingRect extends ElementDimensions {
+    top: number;
+    bottom: number;
+    left: number;
+    right: number;
+}
+
 export interface ElementLocationInView {
-    boundingRect: {
-        top: number;
-        bottom: number;
-        left: number;
-        right: number;
-        height: number;
-        width: number;
-        x: number;
-        y: number;
-    };
+    boundingRect: BoundingRect;
     innerHeight: number;
     innerWidth: number;
 }
@@ -34,11 +39,22 @@ export const isElementInViewPort = (loc: ElementLocationInView): boolean => {
     return true;
 };
 
+export const getCenterPoint = (dimension: ElementDimensions): Point => {
+    return {
+        x: Math.trunc(dimension.x + dimension.width/2),
+        y: Math.trunc(dimension.y + dimension.height/2)
+    }
+};
+
+export const centerDistance = (point1: Point, point2: Point): Point => {
+    return {
+        x: point2.x - point1.x,
+        y: point2.y - point1.y
+    }
+};
+
 export const getElementsCG = (loc: Promise<ElementLocationInView>): Promise<Point> => {
     return loc.then((loc: ElementLocationInView): Point => {
-        return {
-            x: Math.trunc(loc.boundingRect.x + loc.boundingRect.width/2),
-            y: Math.trunc(loc.boundingRect.y + loc.boundingRect.height/2)
-        }
+        return getCenterPoint(loc.boundingRect)
     })
 };

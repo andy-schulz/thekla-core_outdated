@@ -6,29 +6,28 @@ import {TkWebElement}                                               from "../../
 import {Browser, By}                                                from "../../..";
 import {waitForCondition}                                           from "./shall_wait";
 import {WebElementListWd}                                           from "./WebElementListWd";
-import { WebElementWdio } from "../../wdio/WebElementWdio";
+import {WebElementWd}                                               from "./WebElementWd";
 
-
-export type FrameCreator<WD> = (getFrames: () => Promise<TkWebElement[]>,
+export type FrameCreator<WD> = (getFrames: () => Promise<TkWebElement<WD>[]>,
     _locator: By,
     browser: ClientCtrls<WD>) => FrameElementWd<WD>
-
 
 export abstract class FrameElementWd<WD> implements FrameElementFinder {
     private _description = ``;
     protected abstract logger: Logger;
     private conditions: UntilElementCondition[] = [];
 
-    public constructor(
-        public getFrames: () => Promise<TkWebElement[]>,
+    protected constructor(
+        public getFrames: () => Promise<TkWebElement<WD>[]>,
         private _locator: By,
         private browser: ClientCtrls<WD>,
-        private createFrameElement: FrameCreator<WD>) {
+        private createFrameElement: FrameCreator<WD>,
+        private createWebElement: (elementList: WebElementListWd<WD>, browser: ClientCtrls<WD>) => WebElementWd<WD>) {
     }
 
     protected abstract switchFrameDriver(driver: WD, element: any): Promise<void>;
 
-    protected abstract findElementsDriver(locator: By): Promise<TkWebElement[]>;
+    protected abstract findElementsDriver(locator: By): Promise<TkWebElement<WD>[]>;
 
     public element(
         locator: By): WebElementFinder {
@@ -38,7 +37,7 @@ export abstract class FrameElementWd<WD> implements FrameElementFinder {
 
     private switchFrame() {
         return this.getFrames()
-            .then((element: TkWebElement[]) => {
+            .then((element: TkWebElement<WD>[]) => {
                 if (element.length === 0) {
                     const message = `not Frame found for locator ${this._locator}! Abort Frame Switch.`;
                     this.logger.debug(message);
@@ -59,19 +58,19 @@ export abstract class FrameElementWd<WD> implements FrameElementFinder {
         locator: By): WebElementListFinder {
         this.logger.debug(`Chains all element from frame: ${locator.toString()}`);
 
-        let getElements = (): Promise<TkWebElement[]> => {
+        let getElements = (): Promise<TkWebElement<WD>[]> => {
             return this.switchFrame()
                 .then(() => {
                     return this.findElementsDriver(locator);
                 })
         };
 
-        return new WebElementListWd(getElements, locator, this.browser as any, WebElementWdio.create);
+        return new WebElementListWd(getElements, locator, this.browser as any, this.createWebElement);
     }
 
     public shallWait(condition: UntilElementCondition): FrameElementFinder {
 
-        const getFrame = async (): Promise<TkWebElement[]> => {
+        const getFrame = async (): Promise<TkWebElement<WD>[]> => {
             this.logger.debug(`shallWait - Start getting elements from function chain: ${this._locator.toString()}`);
 
             return waitForCondition(
@@ -86,12 +85,10 @@ export abstract class FrameElementWd<WD> implements FrameElementFinder {
         return this.createFrameElement(getFrame, this._locator, this.browser).called(this.description);
     }
 
-
     public frame(locator: By): FrameElementFinder {
         this.logger.debug(`Chains all frames from frame: ${locator.toString()}`);
 
-
-        const getFrames = (): Promise<TkWebElement[]> => {
+        const getFrames = (): Promise<TkWebElement<WD>[]> => {
             return this.switchFrame()
                 .then(() => {
                     return this.findElementsDriver(locator);
@@ -100,7 +97,6 @@ export abstract class FrameElementWd<WD> implements FrameElementFinder {
 
         return this.createFrameElement(getFrames, locator, this.browser);
     }
-
 
     public get description(): string {
         return this._description;

@@ -10,25 +10,26 @@ import {TkSession}                                                  from "../int
 import {TkWebElement}                                               from "../interface/TkWebElement";
 import {FrameElementFinder, WebElementFinder, WebElementListFinder} from "../interface/WebElements";
 import {By, ServerConfig}                                           from "../..";
-import {AnnotatorWdio}                                              from "../lib/AnnotatorWdio";
 import {cleanupClients, executeFnOnClient, switchToMasterFrame}     from "../lib/client/ClientHelper";
 import {checkClientName}                                            from "../lib/client/checks";
-import {formatNavigateToUrl}                                        from "../lib/client/url_formatter";
-import {waitForCondition}                                           from "../lib/client/wait_actions";
-import {scrollTo}                                                   from "../lib/client_side_scripts/scroll_page";
-import {transformToWdioConfig}                                      from "../lib/config/config_transformation";
-import WebDriver, {Client}                                          from 'webdriver'
-import {funcToString}                                               from "../utils/Utils";
-import {FrameElementWdio}                                           from "./FrameElementWdio";
-import {LocatorWdio}                                                from "./LocatorWdio";
-import {SessionIO}                                                  from "./wrapper/SessionIO";
-import {WebElementListWdio}                                         from "./WebElementListWdio";
-import {BrowserWindowWdio}                                          from "./BrowserWindowWdio";
-import {takeScreenshots, saveScreenshots}                           from "../lib/client/screenshots";
-import deepmerge                                                    from "deepmerge";
+import {formatNavigateToUrl}              from "../lib/client/url_formatter";
+import {waitForCondition}                 from "../lib/client/wait_actions";
+import {scrollTo}                         from "../lib/client_side_scripts/scroll_page";
+import {transformToWdioConfig}            from "../lib/config/config_transformation";
+import WebDriver, {Client}                from 'webdriver'
+import {Point}                            from "../lib/element/ElementLocation";
+import {WebElementWd}                     from "../lib/element/WebElementWd";
+import {funcToString}                     from "../utils/Utils";
+import {FrameElementWdio}                 from "./FrameElementWdio";
+import {LocatorWdio}                      from "./LocatorWdio";
+import {SessionIO}                        from "./wrapper/SessionIO";
+import {WebElementListWdio}               from "./WebElementListWdio";
+import {BrowserWindowWdio}                from "./BrowserWindowWdio";
+import {takeScreenshots, saveScreenshots} from "../lib/client/screenshots";
+import deepmerge                          from "deepmerge";
 import AttachSessionOptions = WebDriver.AttachSessionOptions;
-import {identity}                                                   from "lodash/fp";
-import * as _                                                       from "lodash";
+
+import { AnnotatorWdio } from "../../packages/annotator/AnnotatorWdio";
 
 export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
     private static logger: Logger = getLogger(`ClientWdioClass`);
@@ -62,8 +63,8 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
         return this._selConfig;
     }
 
-    public pointerButtonDown = (button: number): (pr: Promise<void>) => Promise<void> => {
-        return (pr: Promise<void>): Promise<void> => {
+    public pointerButtonDown = (button: number): (client: Client) => Promise<Client> => {
+        return (client: Client): Promise<Client> => {
 
             const buttonPress: PointerActionSequence[] = [{
                 type: `pointer`,
@@ -72,21 +73,17 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
                 actions: [{
                     type: `pointerDown`,
                     button: button
-                }, {
-                    type: `pause`,
-                    duration: 200
                 }]
             }];
 
-            return pr.then(this.getFrameWorkClient)
-                .then((client: Client): Promise<void> => {
-                    return client.performActions(buttonPress) as unknown as Promise<void>
-                });
+            return (client.performActions(buttonPress) as unknown as Promise<void>)
+                .then(() => client)
+
         }
     };
 
-    public pointerButtonUp = (button: number): (pr: Promise<void>) => Promise<void> => {
-        return (pr: Promise<void>): Promise<void> => {
+    public pointerButtonUp = (button: number): (client: Client) => Promise<Client> => {
+        return (client: Client): Promise<Client> => {
 
             const buttonUp: PointerActionSequence[] = [{
                 type: `pointer`,
@@ -95,24 +92,40 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
                 actions: [{
                     type: `pointerUp`,
                     button: button
-                }, {
-                    type: `pause`,
-                    duration: 200
                 }]
             }];
 
-            return pr.then(this.getFrameWorkClient)
-                .then((client: Client): Promise<void> => {
-                    return client.performActions(buttonUp) as unknown as Promise<void>
-                });
+            return (client.performActions(buttonUp) as unknown as Promise<void>)
+                .then(() => client)
         }
     };
 
-    public releaseActions = (pr: Promise<void>): Promise<void> => {
-        return pr
-            .then(this.getFrameWorkClient)
-            .then((client: Client): Promise<void> => client.releaseActions() as unknown as Promise<void>)
+    public movePointerTo = (point: Point): (client: Client) => Promise<Client> => {
+        return (client: Client): Promise<Client> => {
 
+            const moveTo: PointerActionSequence[] = [{
+                type: `pointer`,
+                id: `myMouse`,
+                parameters: {pointerType: `mouse`},
+                actions: [{
+                    type: `pointerMove`,
+                    origin: `pointer`,
+                    duration: 200,
+                    x: point.x,
+                    y: point.y
+                }]
+            }];
+
+            return (client.performActions(moveTo) as unknown as Promise<void>)
+                .then(() => client)
+        }
+    };
+
+    public releaseActions = (): (client: Client) => Promise<Client> => {
+        return (client: Client): Promise<Client> => {
+            return (client.releaseActions() as unknown as Promise<void>)
+                .then((): Client => client)
+        }
     };
 
     public getFrameWorkClient = (): Promise<Client> => {
@@ -235,7 +248,7 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
 
     public all(locator: By): WebElementListFinder {
 
-        let getElements = async (): Promise<TkWebElement[]> => {
+        let getElements = async (): Promise<TkWebElement<Client>[]> => {
             // always switch to the main Window
             // if you want to deal with an element in a frame DO:
             // frame(By.css("locator")).element(By.css("locator"))
@@ -249,7 +262,7 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
 
     public frame(locator: By): FrameElementFinder {
 
-        const getFrames = (): Promise<TkWebElement[]> => {
+        const getFrames = (): Promise<TkWebElement<Client>[]> => {
             return this.getFrameWorkClient()
                 .then(switchToMasterFrame)
                 .then(LocatorWdio.retrieveElements(locator))

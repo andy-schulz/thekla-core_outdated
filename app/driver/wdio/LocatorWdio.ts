@@ -1,6 +1,5 @@
 import {Client}                     from "webdriver";
 import {TkWebElement}               from "../interface/TkWebElement";
-import {AnnotatorWdio}              from "../lib/AnnotatorWdio";
 import {findByCssContainingText}    from "../lib/client_side_scripts/locators";
 import {By}                         from "../lib/element/Locator";
 import {funcToString}               from "../utils/Utils";
@@ -12,8 +11,8 @@ export class LocatorWdio {
         return element[Object.keys(element)[0]]
     };
 
-    public static retrieveElements = (locator: By, element?: ElementRefIO): (client: Client) => Promise<TkWebElement[]>  => {
-        return (client: Client): Promise<TkWebElement[]> => {
+    public static retrieveElements = (locator: By, element?: ElementRefIO): (client: Client) => Promise<TkWebElement<Client>[]>  => {
+        return (client: Client): Promise<TkWebElement<Client>[]> => {
             switch (locator.selectorType) {
                 case `byCss`:
                     return LocatorWdio.findElemsFromElem(client, `css selector`, locator.selector, element);
@@ -28,7 +27,7 @@ export class LocatorWdio {
         };
     };
 
-    private static findElemsFromElem = (client: Client, strategy: string, selector: string, element?: ElementRefIO): Promise<TkWebElement[]> => {
+    private static findElemsFromElem = (client: Client, strategy: string, selector: string, element?: ElementRefIO): Promise<TkWebElement<Client>[]> => {
         return (element ?
             (client.findElementsFromElement(
                 LocatorWdio.getElementID(element),
@@ -37,13 +36,13 @@ export class LocatorWdio {
             (client.findElements(
                 strategy,
                 selector) as unknown as Promise<ElementRefIO[]>))
-            .then((elements: ElementRefIO[]): TkWebElement[] => WebElementIO.createAll(elements, client));
+            .then((elements: ElementRefIO[]): TkWebElement<Client>[] => WebElementIO.createAll(elements, client));
     };
 
-    private static findElemsFromElemByJs = (client: Client, locator: By, element?: ElementRefIO): Promise<TkWebElement[]> => {
+    private static findElemsFromElemByJs = (client: Client, locator: By, element?: ElementRefIO): Promise<TkWebElement<Client>[]> => {
         return client.executeScript(
             funcToString(findByCssContainingText),
             [...locator.args, element])
-            .then((elements: ElementRefIO[]): TkWebElement[] => WebElementIO.createAll(elements, client));
+            .then((elements: ElementRefIO[]): TkWebElement<Client>[] => WebElementIO.createAll(elements, client));
     };
 }

@@ -1,4 +1,3 @@
-import {LogLevel}                                   from "../../../config/ServerConfig";
 import {
     Actor,
     BrowseTheWeb,
@@ -16,6 +15,8 @@ import {GoogleSearch}                               from "../../page_objects/Goo
 import {Add}                                        from "../../page_objects/GoogleCalculator/Add";
 import {GoogleCalculator}                           from "../../page_objects/GoogleCalculator/GoogleCalculator";
 import {getLogger, configure}                       from "log4js";
+import _                                            from "lodash";
+
 configure(`res/config/log4js.json`);
 
 const logger = getLogger(`Actor`);
@@ -23,8 +24,8 @@ const logger = getLogger(`Actor`);
 describe(`Searching on Google`, (): void => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
-    let config: ServerConfig = standardServerConfig;
-    const capabilities: DesiredCapabilities = standardCapabilities;
+    let config: ServerConfig = _.cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
     let John: Actor;
     logger.trace(`actor_spec stated`);
@@ -49,6 +50,6 @@ describe(`Searching on Google`, (): void => {
     }, 20000);
 
     afterAll((): Promise<void[]> => {
-        return  RunningBrowser.cleanup();
+        return RunningBrowser.cleanup();
     })
 });

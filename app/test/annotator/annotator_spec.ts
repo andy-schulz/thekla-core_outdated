@@ -4,7 +4,7 @@ import {standardCapabilities, standardServerConfig}                       from "
 import _ from "lodash";
 
 describe(`The annotation`, (): void => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 200000;
     const conf: ServerConfig = _.cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
@@ -58,7 +58,7 @@ describe(`The annotation`, (): void => {
 
             const styleAfterHighlight = await browser.executeScript(getStyle);
             expect(styleAfterHighlight).not.toBeNull(`styleAfterHighlight should not be null`);
-            expect(styleAfterHighlight.toString().toLowerCase()).toBe(`color: red; border: 2px solid red;`);
+            expect(styleAfterHighlight.toString().toLowerCase()).toContain(`/* annotation start */ color: red; border: 2px solid red; /* annotation end */`);
         });
 
         it(`it should reset the style after execution to null 

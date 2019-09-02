@@ -1,4 +1,3 @@
-import {LogLevel} from "../../../config/ServerConfig";
 import {
     Actor,
     RunningBrowser,
@@ -30,31 +29,17 @@ class GooglePgo {
         .shallWait(UntilElement.is.visible().forAsLongAs(5000));
 }
 
-import {getLogger} from "log4js";
+import {getLogger}                                  from "log4js";
+import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import _                                            from "lodash";
+
 const logger = getLogger(`DocSppExamples`);
 
 describe(`Using Google Search to find an online calculator`, (): void => {
     logger.trace(`Start Google Search test`);
-    const conf: ServerConfig = {
-        automationFramework: {
-            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `warn`) as LogLevel
-        },
-        serverAddress: {
-            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
-        }
-    };
 
-    const capabilities: DesiredCapabilities = {
-        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-        proxy: process.env.PROXY_TYPE === `manual` ? {
-            proxyType: `manual`,
-            httpProxy: process.env.PROXY_SERVER,
-            sslProxy: process.env.PROXY_SERVER,
-        } : {
-            proxyType: `system`
-        }
-    };
+    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
     describe(`with the screenplay pattern implementation,`, (): void => {
         // define your actor

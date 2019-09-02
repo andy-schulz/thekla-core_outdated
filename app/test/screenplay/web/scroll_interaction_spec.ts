@@ -1,4 +1,3 @@
-import {LogLevel}                                from "../../../config/ServerConfig";
 import {
     DesiredCapabilities,
     By,
@@ -8,43 +7,22 @@ import {
     BrowseTheWeb,
     RunningBrowser,
     Navigate, element, Scroll, Browser, Page
-}                                                from "../../../index";
-import {BoundaryCheck, boundingRect, clientRect} from "../../0_helper/browser_viewport";
-
-
+}                                                   from "../../../index";
+import {BoundaryCheck, boundingRect, clientRect}    from "../../0_helper/browser_viewport";
+import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import _                                            from "lodash";
 
 describe(`Scroll`, (): void => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
+    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
+
     const lastTableRow = element(By.css(`[data-test-id='lastTableRow']`))
         .shallWait(UntilElement.is.visible().forAsLongAs(5000))
-        .called(`Ththe last row element inside the large table`);
+        .called(`the last row element inside the large table`);
 
     const classNameOfLastRow = `lastTableRow`;
-
-    const conf: ServerConfig = {
-        automationFramework: {
-            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `warn`) as LogLevel
-        },
-        serverAddress: {
-            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
-        },
-        baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`
-    };
-
-    const capabilities: DesiredCapabilities = {
-        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-        proxy: process.env.PROXY_TYPE === `manual` ? {
-            proxyType: `manual`,
-            httpProxy: process.env.PROXY_SERVER,
-            sslProxy: process.env.PROXY_SERVER,
-        } : {
-            proxyType: `system`
-        }
-    };
-
-
 
     describe(`to a pages position`, (): void => {
         let theBrowser: Browser;
@@ -95,9 +73,8 @@ describe(`Scroll`, (): void => {
 
             await Navigate.to(`/tables`).performAs(Sam);
 
-
             const isOutsideViewOnFirstCheck: BoundaryCheck =
-                await theBrowser.executeScript(boundingRect,classNameOfLastRow) as BoundaryCheck;
+                await theBrowser.executeScript(boundingRect, classNameOfLastRow) as BoundaryCheck;
 
             expect(isOutsideViewOnFirstCheck.any).toBeTruthy();
 

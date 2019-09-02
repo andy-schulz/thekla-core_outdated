@@ -1,6 +1,6 @@
 import {Client}       from "webdriver"
 import * as uuid      from "uuid"
-import {TkWebElement} from "../interface/TkWebElement";
+import {TkWebElement} from "../../driver/interface/TkWebElement";
 import {getLogger}    from "@log4js-node/log4js-api";
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
@@ -84,7 +84,6 @@ export class AnnotatorWdio {
     };
 
     private readonly unHighlightElement = function(): void {
-        console.log(`unhighlighting`);
         try {
             if(arguments[0] && document.body.contains(arguments[0]) && arguments[1] !== undefined) {
                 arguments[0].removeAttribute(`style`);
@@ -99,7 +98,9 @@ export class AnnotatorWdio {
         if(arguments[0] && document.body.contains(arguments[0])) {
             const oldStyle = arguments[0].getAttribute(`style`);
 
-            arguments[0].setAttribute(`style`, `color: red; border: 2px solid red;`);
+            const newStyle = `${oldStyle ? oldStyle : ``} /* annotation start */ color: red; border: 2px solid red; /* annotation end */`;
+            
+            arguments[0].setAttribute(`style`, newStyle);
 
             return oldStyle
         }
@@ -229,13 +230,13 @@ export class AnnotatorWdio {
      * @param driver
      * @param element
      */
-    public static highlight(driver: Client): (element: TkWebElement) => Promise<TkWebElement> {
-        return (element: TkWebElement): Promise<TkWebElement> => {
+    public static highlight(element: TkWebElement<Client>): (driver: Client) => Promise<TkWebElement<Client>> {
+        return (driver: Client): Promise<TkWebElement<Client>> => {
             if (!element)
                 return Promise.reject(`cant annotate an empty element`);
             const hl: AnnotatorWdio = AnnotatorWdio.hl(driver);
             return hl.hlight(driver, element.getFrWkElement())
-                .then((): TkWebElement => element)
+                .then((): TkWebElement<Client> => element)
         }
     }
 

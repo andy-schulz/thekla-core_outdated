@@ -4,13 +4,14 @@ import {
 }                                                   from "../..";
 import {LogLevel}                                   from "../../config/ServerConfig";
 import {standardCapabilities, standardServerConfig} from "../0_helper/config";
+import _ from "lodash";
 configure(`res/config/log4js.json`);
 
 describe(`trying to access a Frame`, (): void => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 200000;
 
-    const conf: ServerConfig = standardServerConfig;
-    const capabilities: DesiredCapabilities = standardCapabilities;
+    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
     let browser: Browser;
 

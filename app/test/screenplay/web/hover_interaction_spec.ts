@@ -1,4 +1,3 @@
-import {LogLevel} from "../../../config/ServerConfig";
 import {
     DesiredCapabilities,
     By,
@@ -8,10 +7,14 @@ import {
     BrowseTheWeb,
     RunningBrowser,
     Navigate, element, See, Text, Expected, Status, Hover
-}                 from "../../../index";
+}                                                   from "../../../index";
+import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import _                                            from "lodash";
 
 describe(`Hover`, (): void => {
 
+    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
     const testUrl = process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`;
 
     describe(`over an elements`, (): void => {
@@ -26,27 +29,6 @@ describe(`Hover`, (): void => {
         const button = element(By.css(`[data-test-id='button']`))
             .shallWait(UntilElement.is.visible().forAsLongAs(5000))
             .called(`the general danger button in red`);
-
-        const conf: ServerConfig = {
-            automationFramework: {
-                type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-                logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `warn`) as LogLevel
-            },
-            serverAddress: {
-                hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
-            }
-        };
-
-        const capabilities: DesiredCapabilities = {
-            browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-            proxy: process.env.PROXY_TYPE === `manual` ? {
-                proxyType: `manual`,
-                httpProxy: process.env.PROXY_SERVER,
-                sslProxy: process.env.PROXY_SERVER,
-            } : {
-                proxyType: `system`
-            }
-        };
 
         const Howard = Actor.named(`Howard`);
 

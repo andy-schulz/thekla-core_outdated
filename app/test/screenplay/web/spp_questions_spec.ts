@@ -1,4 +1,3 @@
-import {LogLevel}  from "../../../config/ServerConfig";
 import {
     DesiredCapabilities,
     ServerConfig,
@@ -11,42 +10,26 @@ import {
     See,
     TheSites,
     Attribute, element, Expected, Status, all, Count, Extract, Text, Click
-}                  from "../../../index";
+}                 from "../../../index";
 
-import {configure} from "log4js";
+import {configure}                                  from "log4js";
+import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import _                                            from "lodash";
+
 configure(`res/config/log4js.json`);
 
 describe(`Using`, (): void => {
 
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
-    let seleniumConfig: ServerConfig = {
-        automationFramework: {
-            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `warn`) as LogLevel
-        },
-        serverAddress: {
-            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`,
-        },
-        baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`
-    };
-    const capabilities: DesiredCapabilities ={
-        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-        proxy: process.env.PROXY_TYPE === `manual` ? {
-            proxyType: `manual`,
-            httpProxy: process.env.PROXY_SERVER,
-            sslProxy: process.env.PROXY_SERVER,
-        } : {
-            proxyType: `system`
-        }
-    };
 
-    const testUrl = process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`
+    let seleniumConfig: ServerConfig = _.cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
+    const testUrl = process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`;
 
     afterAll(async (): Promise<void[]> => {
         return RunningBrowser.cleanup();
     });
-
 
     describe(`the Site question`, (): void => {
         const Joanna: Actor = Actor.named(`Joanna`);
@@ -115,8 +98,6 @@ describe(`Using`, (): void => {
                     .is(Expected.toBe(true))
             )
         });
-
-
 
         it(`with the visibility state should be successful, when the button is displayed after 5 Seconds` +
             `- (test case id: 6eaa9c48-b786-467e-8f70-8196de34ea52)`, async (): Promise<void> => {

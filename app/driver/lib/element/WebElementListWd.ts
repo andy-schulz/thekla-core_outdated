@@ -16,7 +16,7 @@ export class WebElementListWd<WD> implements WebElementListFinder {
     private logger: Logger = getLogger(`WebElementListWd`);
 
     public constructor(
-        public getElements: () => Promise<TkWebElement[]>,
+        public getElements: () => Promise<TkWebElement<WD>[]>,
         private _locator: By,
         public readonly browser: ClientCtrls<WD>,
         private createWebElementFromList: (elementList: WebElementListWd<WD>,
@@ -54,20 +54,18 @@ export class WebElementListWd<WD> implements WebElementListFinder {
     ): WebElementListFinder {
         this.logger.debug(`Chains all Elements: ${locator.toString()}`);
 
-        let getElements = async (): Promise<TkWebElement[]> => {
+        let getElements = async (): Promise<TkWebElement<WD>[]> => {
             this.logger.debug(`Getting ALL elements for locator ${locator.toString()}`);
             const elements = await this.getElements();
             this.logger.debug(`Got ${elements.length} elements for locator ${locator.toString()}`);
 
             // TODO: Check if this can be done in parallel
             // get all subelements of each element in elements list and put it into an array
-            return elements.reduce(async (accPromise, elem): Promise<TkWebElement[]> => {
-                const acc: TkWebElement[] = await accPromise;
-                // const elemsList: TkWebElement[] = await LocatorWdjs.executeSelector(locator, elem, this.browser);
-                // const elemsList: TkWebElement[] = await this.executeSelector(locator, elem, this.browser);
-                const elemsList: TkWebElement[] = await elem.findElements(locator);
+            return elements.reduce(async (accPromise, elem): Promise<TkWebElement<WD>[]> => {
+                const acc: TkWebElement<WD>[] = await accPromise;
+                const elemsList: TkWebElement<WD>[] = await elem.findElements(locator);
                 return [...acc, ...elemsList];
-            }, Promise.resolve([] as TkWebElement[])).then((elements: TkWebElement[]) => {
+            }, Promise.resolve([] as TkWebElement<WD>[])).then((elements: TkWebElement<WD>[]) => {
                 this.logger.trace(`Found ${elements ? elements.length : 0} element(s) for locator '${locator}'`);
                 return elements
             });
@@ -82,7 +80,7 @@ export class WebElementListWd<WD> implements WebElementListFinder {
     public shallWait(condition: UntilElementCondition): WebElementListFinder {
         this.logger.debug(`Shall Wait for Element: ${this.toString()}`);
 
-        const getElements = async (): Promise<TkWebElement[]> => {
+        const getElements = async (): Promise<TkWebElement<WD>[]> => {
             this.logger.debug(`shallWait - Start getting elements from function chain: ${this._locator.toString()}`);
 
             return waitForCondition(
@@ -99,7 +97,7 @@ export class WebElementListWd<WD> implements WebElementListFinder {
 
     public count(): Promise<number> {
         return new Promise((fulfill, reject): void => {
-            this.getElements().then((elems: TkWebElement[]): void => {
+            this.getElements().then((elems: TkWebElement<WD>[]): void => {
                 fulfill(elems.length);
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
             }).catch((e: any): void => {
@@ -111,7 +109,7 @@ export class WebElementListWd<WD> implements WebElementListFinder {
     public getText(): Promise<string[]> {
         return new Promise((fulfill, reject): void => {
             this.getElements()
-                .then((elems: TkWebElement[]): void => {
+                .then((elems: TkWebElement<WD>[]): void => {
                     fulfill(Promise.all(
                         elems.map((elem: any): Promise<string> => elem.getText())
                     ))
@@ -130,8 +128,8 @@ export class WebElementListWd<WD> implements WebElementListFinder {
 
         const oldGetElements = this.getElements;
 
-        const reducer = (acc: Promise<TkWebElement[]>, element: any): Promise<TkWebElement[]> => {
-            return acc.then((arr: TkWebElement[]): Promise<TkWebElement[]> => {
+        const reducer = (acc: Promise<TkWebElement<WD>[]>, element: any): Promise<TkWebElement<WD>[]> => {
+            return acc.then((arr: TkWebElement<WD>[]): Promise<TkWebElement<WD>[]> => {
                 return new Promise((resolve, reject) => {
                     element.getText()
                         .then((text: string) => {
@@ -144,7 +142,7 @@ export class WebElementListWd<WD> implements WebElementListFinder {
             })
         };
 
-        let getElements = async (): Promise<TkWebElement[]> => {
+        let getElements = async (): Promise<TkWebElement<WD>[]> => {
             const elements = await oldGetElements();
             return elements.reduce(reducer, Promise.resolve([]));
         };

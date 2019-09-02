@@ -1,41 +1,20 @@
 import {
     Browser, WebElementFinder, By, UntilElement, ServerConfig, DesiredCapabilities, ClientHelper
-}                  from "../..";
-import {configure} from "log4js";
-import {ProxyType} from "../../config/DesiredCapabilities";
-import {LogLevel}  from "../../config/ServerConfig";
+}                                                   from "../..";
+import {configure}                                  from "log4js";
+import {standardCapabilities, standardServerConfig} from "../0_helper/config";
+import _                                            from "lodash";
 
 configure(`res/config/log4js.json`);
 
 describe(`Waiting for WD Elements`, (): void => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
 
-    const conf: ServerConfig = {
-        automationFramework: {
-            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
-        },
-        serverAddress: {
-            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
-        },
-        baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`,
-    };
-
-    const capabilities: DesiredCapabilities = {
-        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-        proxy: process.env.PROXY_TYPE === `manual` ? {
-            proxyType: `manual`,
-            httpProxy: process.env.PROXY_SERVER,
-            sslProxy: process.env.PROXY_SERVER,
-        } : {
-            proxyType: `system`
-        }
-    };
-
+    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
     let browser: Browser;
     let appearButton4000ShallWait: WebElementFinder;
-
 
     afterAll((): Promise<void[]> => {
         return ClientHelper.cleanup();
@@ -43,9 +22,9 @@ describe(`Waiting for WD Elements`, (): void => {
 
     beforeAll((): void => {
         browser = ClientHelper.create(conf, capabilities);
-    },20000);
+    }, 20000);
 
-    describe(`and try to implicitly wait for an Element`,(): void => {
+    describe(`and try to implicitly wait for an Element`, (): void => {
 
         it(`the system should wait for a second 
         - (test case id: d106ba43-542c-44c7-959e-f64dcdc6943d)`, async (): Promise<void> => {

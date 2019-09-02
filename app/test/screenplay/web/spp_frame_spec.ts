@@ -1,4 +1,3 @@
-import {LogLevel}  from "../../../config/ServerConfig";
 import {
     Actor,
     RunningBrowser,
@@ -12,17 +11,19 @@ import {
     Text,
     UntilElement,
     ServerConfig, Expected
-}                  from "../../../index";
+}                 from "../../../index";
 
 import {configure}                                  from "log4js";
 import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import _                                            from "lodash";
+
 configure(`res/config/log4js.json`);
 
 describe(`Locating Elements inside Frames`, (): void => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
-    let config: ServerConfig = standardServerConfig
-    const capabilities: DesiredCapabilities = standardCapabilities;
+    let config: ServerConfig = _.cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
     let Francine: Actor;
 
@@ -56,7 +57,6 @@ describe(`Locating Elements inside Frames`, (): void => {
         );
 
     });
-
 
     it(`should be possible with wait actions on each frame 
     - (test case id: 19b9fce2-c15b-4b52-a9d5-4211b26602da)`, async (): Promise<void> => {

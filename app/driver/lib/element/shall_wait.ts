@@ -5,8 +5,7 @@ import {EnabledCheck, UntilElementCondition, VisibilityCheck} from "./ElementCon
 import { Logger }                                             from "@log4js-node/log4js-api";
 import { WebElementFinder }                                   from "../../..";
 
-
-const execute = (condition: UntilElementCondition, element: TkWebElement | WebElementFinder): Promise<boolean> => {
+const execute = <WD>(condition: UntilElementCondition, element: TkWebElement<WD> | WebElementFinder): Promise<boolean> => {
     switch (condition.waiter.constructor) {
         case VisibilityCheck:
             return element.isDisplayed()
@@ -19,14 +18,14 @@ const execute = (condition: UntilElementCondition, element: TkWebElement | WebEl
     }
 };
 
-export const waitForCondition = (
+export const waitForCondition = <WD>(
     browser: Browser,
-    getElements: () => Promise<TkWebElement[]>,
+    getElements: () => Promise<TkWebElement<WD>[]>,
     waitMessage: string,
     locatorString: string,
-    logger: Logger): ( condition: UntilElementCondition) => Promise<TkWebElement[]> => {
+    logger: Logger): ( condition: UntilElementCondition) => Promise<TkWebElement<WD>[]> => {
 
-    let elements: TkWebElement[] = [];
+    let elements: TkWebElement<WD>[] = [];
 
     const createLoop = (condition: UntilElementCondition): () => Promise<boolean> => {
         return async (): Promise<boolean> => {
@@ -65,9 +64,8 @@ export const waitForCondition = (
         }
     };
 
-
-    return ( condition: UntilElementCondition): Promise<TkWebElement[]> => {
+    return ( condition: UntilElementCondition): Promise<TkWebElement<WD>[]> => {
         return browser.wait(until(createLoop(condition)), condition.timeout, waitMessage)
-            .then((): TkWebElement[] => elements)
+            .then((): TkWebElement<WD>[] => elements)
     }
 };

@@ -1,30 +1,13 @@
 import {Browser, ClientHelper, DesiredCapabilities, ServerConfig} from "../../../index";
-import {LogLevel}                                                 from "../../../config/ServerConfig";
+import {standardCapabilities, standardServerConfig}               from "../../0_helper/config";
+import _                                                          from "lodash";
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
 describe(`When using the BrowserWdjs class`, (): void => {
 
-    const conf: ServerConfig = {
-        automationFramework: {
-            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
-        },
-        serverAddress: {
-            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
-        },
-    };
-
-    const capabilities: DesiredCapabilities = {
-        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-        proxy: process.env.PROXY_TYPE === `manual` ? {
-            proxyType: `manual`,
-            httpProxy: process.env.PROXY_SERVER,
-            sslProxy: process.env.PROXY_SERVER,
-        } : {
-            proxyType: `system`
-        }
-    };
+    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
     const testUrl = process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`;
 
@@ -40,7 +23,7 @@ describe(`When using the BrowserWdjs class`, (): void => {
         it(`with an empty browser name, it should throw an invalid browser name error ` +
             `- (test case id: f25ffac2-c583-458b-9ee1-db22a6ef0423)`, (): void => {
             try {
-                ClientHelper.create(conf,capabilities, ``);
+                ClientHelper.create(conf, capabilities, ``);
                 expect(true).toBeFalsy(`Creating a client with an empty string should throw an error, but it doesnt`);
             } catch (e) {
                 expect(e.toString()).toContain(`invalid client name ''`);
@@ -54,9 +37,10 @@ describe(`When using the BrowserWdjs class`, (): void => {
             browserNames.map(async (browserName: string): Promise<void> => {
                 try {
                     ClientHelper.create(conf, capabilities, browserName);
-                    expect(true). toBeFalsy(`Creating a browser with invalid characters should throw an error, but it doesnt!`);
+                    expect(true).toBeFalsy(`Creating a browser with invalid characters should throw an error, but it doesnt!`);
+                } catch (e) {
+                    expect(e.toString()).toMatch(/^Error: client name (.*) contains invalid characters. Allowed characters are: (.*)/)
                 }
-                catch (e) {expect(e.toString()).toMatch(/^Error: client name (.*) contains invalid characters. Allowed characters are: (.*)/)}
 
             });
         }, 20000);
@@ -95,7 +79,7 @@ describe(`When using the BrowserWdjs class`, (): void => {
 
     describe(`to startedOn multiple browser`, (): void => {
         it(`without a name, they should be created with a default name ` +
-            `- (test case id: 126d1e0a-1b89-4d74-8774-69c0f446084c)`,(): void => {
+            `- (test case id: 126d1e0a-1b89-4d74-8774-69c0f446084c)`, (): void => {
             const browser1: Browser = ClientHelper.create(conf, capabilities);
             const browser2: Browser = ClientHelper.create(conf, capabilities);
 
@@ -129,12 +113,12 @@ describe(`When using the BrowserWdjs class`, (): void => {
             expect(ClientHelper.availableBrowser[1]).toBe(`theSecondBrowser`);
             expect(ClientHelper.getClient(`client1`)).toEqual(browser1);
             expect(ClientHelper.getClient(`theSecondBrowser`)).toEqual(browser2);
-        },20000);
+        }, 20000);
 
         it(`and both browser get a name, they should be set ` +
             `- (test case id: 436904a1-447f-496a-ba14-9c5aee9beb80)`, (): void => {
-            const browser1: Browser = ClientHelper.create(conf, capabilities,`theFirstBrowser`);
-            const browser2: Browser = ClientHelper.create(conf, capabilities,`theSecondBrowser`);
+            const browser1: Browser = ClientHelper.create(conf, capabilities, `theFirstBrowser`);
+            const browser2: Browser = ClientHelper.create(conf, capabilities, `theSecondBrowser`);
 
             expect(ClientHelper.availableBrowser.length).toBe(2, `length check for # of browser in BrowserWdjs failed`);
             expect(ClientHelper.availableBrowser[0]).toBe(`theFirstBrowser`);
@@ -198,7 +182,7 @@ describe(`When using the BrowserWdjs class`, (): void => {
             await ClientHelper.cleanup([browser2]);
             expect(ClientHelper.availableBrowser.length).toEqual(3,
                 `deleting 1 of 4 browser shall lead to 3 remaining browser`);
-            expect(ClientHelper.availableBrowser).toEqual([`browser_1`, `browser_3`,`browser_4`]);
+            expect(ClientHelper.availableBrowser).toEqual([`browser_1`, `browser_3`, `browser_4`]);
 
             // remove the second browser
             await ClientHelper.cleanup([browser4]);
@@ -212,7 +196,6 @@ describe(`When using the BrowserWdjs class`, (): void => {
                 `deleting 1 of 2 browser shall lead to 1 remaining browser`);
             expect(ClientHelper.availableBrowser).toEqual([`browser_3`]);
         }, 20000);
-
 
         it(`which dont exist, should not change the browser map ` +
             `- (test case id: 8e74188b-0a1a-41d0-ad2b-188a9a5884e4)`, async (): Promise<void> => {

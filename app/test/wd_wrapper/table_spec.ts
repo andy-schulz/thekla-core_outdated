@@ -1,32 +1,14 @@
 import {
     Browser, By, ServerConfig, DesiredCapabilities, ClientHelper
-}                  from "../..";
-import {ProxyType} from "../../config/DesiredCapabilities";
-import {LogLevel}  from "../../config/ServerConfig";
+}                                                   from "../..";
+import {standardCapabilities, standardServerConfig} from "../0_helper/config";
+import _                                            from "lodash";
 
 describe(`a simple table`, (): void => {
-    const conf: ServerConfig = {
-        automationFramework: {
-            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
-        },
-        serverAddress: {
-            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`,
-        },
-        baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`
-    };
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000;
 
-    const capabilities: DesiredCapabilities = {
-        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-        proxy: process.env.PROXY_TYPE === `manual` ? {
-            proxyType: `manual`,
-            httpProxy: process.env.PROXY_SERVER,
-            sslProxy: process.env.PROXY_SERVER,
-        } : {
-            proxyType: `system`
-        }
-    };
-
+    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
     let browser: Browser;
 
@@ -47,5 +29,5 @@ describe(`a simple table`, (): void => {
         expect(await list.count()).toBe(2);
         expect(tableText.length).toBe(2);
         expect(tableText.toString()).toContain(`James`);
-    }, 60000);
+    });
 });

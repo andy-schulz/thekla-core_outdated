@@ -8,13 +8,13 @@ import {
     WebElementFinder,
     DesiredCapabilities, ClientHelper
 }                                                                 from "../..";
-import {LogLevel}                                                 from "../../config/ServerConfig";
 import {standardCapabilities, standardServerConfig} from "../0_helper/config";
+import _ from "lodash";
 
 describe(`Using Google Search to find an online calculator`, (): void => {
 
-    const conf: ServerConfig = standardServerConfig;
-    const capabilities: DesiredCapabilities = standardCapabilities;
+    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
     describe(`with the WebdriverJS wrapper,`, (): void => {
         // define your elements preferably in a separate class like a page object

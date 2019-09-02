@@ -7,41 +7,24 @@ import {
     until,
     Utils,
     ServerConfig, DesiredCapabilities
-}                       from "../..";
+} from "../..";
 
-import {configure}                   from "log4js";
-import {LogLevel}                    from "../../config/ServerConfig";
-import {WebElementWdio}              from "../../driver/wdio/WebElementWdio";
-import {BoundaryCheck, boundingRect} from "../0_helper/browser_viewport";
+import {configure}                                  from "log4js";
+import {WebElementWdio}                             from "../../driver/wdio/WebElementWdio";
+import {BoundaryCheck, boundingRect}                from "../0_helper/browser_viewport";
+import {standardCapabilities, standardServerConfig} from "../0_helper/config";
+import _                                            from "lodash";
+
 configure(`res/config/log4js.json`);
 
 describe(`When using the Browser object`, (): void => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
-    const conf: ServerConfig = {
-        automationFramework: {
-            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
-        },
-        serverAddress: {
-            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
-        },
-        baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`
-    };
+    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
 
-    const capabilities: DesiredCapabilities = {
-        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-        proxy: process.env.PROXY_TYPE === `manual` ? {
-            proxyType: `manual`,
-            httpProxy: process.env.PROXY_SERVER,
-            sslProxy: process.env.PROXY_SERVER,
-        } : {
-            proxyType: `system`
-        }
-    };
+    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
     const testurl = process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`;
-
 
     describe(`and calling the get method `, (): void => {
         let browser: Browser;
@@ -51,13 +34,13 @@ describe(`When using the Browser object`, (): void => {
         });
 
         it(`with ${testurl}, it should open the URL in the browser.  
-        - (test case id: 7767cdde-846e-40c8-9476-adb133516cb0)`,async (): Promise<void> => {
-            await  browser.get(testurl);
+        - (test case id: 7767cdde-846e-40c8-9476-adb133516cb0)`, async (): Promise<void> => {
+            await browser.get(testurl);
             expect(await browser.getCurrentUrl()).toContain(testurl);
         });
     });
 
-    describe(`and calling the element function`,(): void => {
+    describe(`and calling the element function`, (): void => {
         let browser: Browser;
 
         beforeAll((): Promise<void> => {
@@ -72,8 +55,8 @@ describe(`When using the Browser object`, (): void => {
         it(`it should return a WebElement object  
         - (test case id: 3dbab3b5-a403-41ea-ad20-465c03c8f9aa)`, (): void => {
             const element: WebElementFinder = browser.element(By.css(`[data-test-id='buttonDropDown']`));
-            expect(element.constructor.name).toEqual(WebElementWdio.name,`constructor did not match`);
-            expect(element).toEqual(jasmine.any(WebElementWdio),`object type did not match`);
+            expect(element.constructor.name).toEqual(WebElementWdio.name, `constructor did not match`);
+            expect(element).toEqual(jasmine.any(WebElementWdio), `object type did not match`);
         }, 10000);
 
         it(`without a description a standard description should be printed 
@@ -94,7 +77,7 @@ describe(`When using the Browser object`, (): void => {
         });
     });
 
-    describe(`and try to click on an element`,(): void => {
+    describe(`and try to click on an element`, (): void => {
         let browser: Browser;
         let optionList: WebElementFinder;
 
@@ -115,13 +98,13 @@ describe(`When using the Browser object`, (): void => {
         });
 
         it(`an error should be thrown when no element is found 
-        - (test case id: f1f7e78c-6627-4014-9ed2-10ae559f22b3)`,(): Promise<void> => {
+        - (test case id: f1f7e78c-6627-4014-9ed2-10ae559f22b3)`, (): Promise<void> => {
             const optionListNotFound = browser.element(By.css(`[data-test-id='DoesNotExistTestId-f1f7e78c']`));
 
             return optionListNotFound.click()
                 .then((): void => {
-                    expect(true).toBe(false,`The click Promise should not be fulfilled`)
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    expect(true).toBe(false, `The click Promise should not be fulfilled`)
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 }).catch((e: any): void => {
                     expect(e.toString()).toContain(`Did not find the Element:`)
                 });
@@ -157,7 +140,6 @@ describe(`When using the Browser object`, (): void => {
 
         it(`the hover element should be displayed 
         - (test case id: 25dbd2a2-b2ae-4ef2-860f-48cca1dac5d6)`, async (): Promise<void> => {
-
             expect(await userName.isVisible()).toBe(false);
             await hoverElement.hover();
             expect(await userName.isVisible()).toBe(true);
@@ -232,7 +214,6 @@ describe(`When using the Browser object`, (): void => {
         let browser: Browser;
         let emailInput: WebElementFinder;
 
-
         beforeAll((): Promise<void> => {
             browser = RunningBrowser.startedOn(conf).withCapabilities(capabilities);
             emailInput = browser.element(By.css(`[data-test-id='exampleEmail']`));
@@ -240,7 +221,7 @@ describe(`When using the Browser object`, (): void => {
         });
 
         afterEach((): Promise<void> => {
-            return  browser.get(`/`);
+            return browser.get(`/`);
         });
 
         afterAll((): Promise<void[]> => {
@@ -279,7 +260,7 @@ describe(`When using the Browser object`, (): void => {
         });
 
         beforeEach((): Promise<void> => {
-            return  browser.get(testurl + `/delayed`);
+            return browser.get(testurl + `/delayed`);
         });
 
         afterAll((): Promise<void[]> => {
@@ -297,7 +278,7 @@ describe(`When using the Browser object`, (): void => {
         it(`the system should wait for 5 Seconds and then timout 
         - (test case id: c004412c-9e79-4df4-8af6-ea079318769d)`, async (): Promise<void> => {
             expect(await enabledButton4000.isEnabled()).toEqual(false);
-            await browser.wait(until((): Promise<boolean> => enabledButton4000.isEnabled()),2000)
+            await browser.wait(until((): Promise<boolean> => enabledButton4000.isEnabled()), 2000)
                 .catch((e): string => e);
             expect(await enabledButton4000.isEnabled()).toEqual(false);
 
@@ -309,7 +290,12 @@ describe(`When using the Browser object`, (): void => {
             let error = ``;
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const callback = {catchfn: (e: any): any => {error = e; return e}};
+            const callback = {
+                catchfn: (e: any): any => {
+                    error = e;
+                    return e
+                }
+            };
             spyOn(callback, `catchfn`).and.callThrough();
             await browser.wait(until((): Promise<boolean> => buttonNeverExists.isVisible())).catch(callback.catchfn);
             const errorMessage = `Wait timed out after 5000 ms`;
@@ -325,7 +311,12 @@ describe(`When using the Browser object`, (): void => {
             let error = ``;
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const callback = {catchfn: (e: any): any => {error = e; return e}};
+            const callback = {
+                catchfn: (e: any): any => {
+                    error = e;
+                    return e
+                }
+            };
             spyOn(callback, `catchfn`).and.callThrough();
 
             await browser.wait(until.not((): Promise<boolean> => disappearButton10000.isVisible())).catch(callback.catchfn);
@@ -342,7 +333,6 @@ describe(`When using the Browser object`, (): void => {
         let appearButton4000: WebElementFinder;
         let disappearButton4000: WebElementFinder;
 
-
         beforeAll((): void => {
             browser = RunningBrowser.startedOn(conf).withCapabilities(capabilities);
             appearButton4000 = browser.element(By.css(`[data-test-id='AppearButtonBy4000']`));
@@ -350,7 +340,7 @@ describe(`When using the Browser object`, (): void => {
         });
 
         beforeEach((): Promise<void> => {
-            return  browser.get(testurl + `/delayed`);
+            return browser.get(testurl + `/delayed`);
         });
 
         afterAll((): Promise<void[]> => {
@@ -379,7 +369,6 @@ describe(`When using the Browser object`, (): void => {
         let browser: Browser;
         let enabledButton4000: WebElementFinder;
         let disabledButton4000: WebElementFinder;
-
 
         beforeAll((): void => {
             browser = RunningBrowser.startedOn(conf).withCapabilities(capabilities);
@@ -411,7 +400,7 @@ describe(`When using the Browser object`, (): void => {
             await browser.wait(until.not((): Promise<boolean> => disabledButton4000.isEnabled()));
             expect(await disabledButton4000.isEnabled()).toEqual(false, `the button should be disabled after 5 seconds`);
 
-        }, 7000);
+        });
 
     });
 

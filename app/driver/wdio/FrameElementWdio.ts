@@ -4,28 +4,29 @@ import {TkWebElement}                 from "../interface/TkWebElement";
 import {FrameCreator, FrameElementWd} from "../lib/element/FrameElementWd";
 import {By}                           from "../lib/element/Locator";
 import {LocatorWdio}                  from "./LocatorWdio";
-import {ElementRefIO, WebElementIO}   from "./wrapper/WebElementIO";
+import {WebElementWdio}               from "./WebElementWdio";
+import {ElementRefIO}   from "./wrapper/WebElementIO";
 import Client = WebDriver.Client;
 
 export class FrameElementWdio extends FrameElementWd<Client> {
     protected logger: Logger = getLogger(`FrameElementWdjs`);
     public constructor(
-        private _getFrames: () => Promise<TkWebElement[]>,
+        private _getFrames: () => Promise<TkWebElement<Client>[]>,
         private __locator: By,
         private _browser: ClientCtrls<Client>,
         private _createFrameElement: FrameCreator<Client>) {
-        super(_getFrames, __locator, _browser, _createFrameElement);
+        super(_getFrames, __locator, _browser, _createFrameElement, WebElementWdio.create);
     }
 
     public static create = (
-        _getFrames: () => Promise<TkWebElement[]>,
+        _getFrames: () => Promise<TkWebElement<Client>[]>,
         __locator: By,
         _browser: ClientCtrls<Client>
     ): FrameElementWdio => {
         return new FrameElementWdio(_getFrames, __locator, _browser, FrameElementWdio.create)
     };
 
-    protected findElementsDriver(locator: By): Promise<TkWebElement[]> {
+    protected findElementsDriver(locator: By): Promise<TkWebElement<Client>[]> {
         return this._browser.getFrameWorkClient()
             .then(LocatorWdio.retrieveElements(locator))
     }

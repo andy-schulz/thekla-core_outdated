@@ -2,19 +2,12 @@ import * as _                                                                   
 import {Browser, ClientHelper, DesiredCapabilities, RunningBrowser, ServerConfig} from "../../..";
 import {LogLevel}                                                                 from "../../../config/ServerConfig";
 import {WindowSize}                                                               from "../../../driver/interface/BrowserWindow";
+import {standardServerConfig}                                                     from "../../0_helper/config";
 
 describe(`Starting a browser instance`, (): void => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
-    const conf: ServerConfig =  {
-        automationFramework: {
-            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
-        },
-        serverAddress: {
-            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
-        },
-    };
+    const conf: ServerConfig =  _.cloneDeep(standardServerConfig);
 
     const capabilities: DesiredCapabilities ={
         browserName: `firefox`

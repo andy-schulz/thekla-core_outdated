@@ -1,24 +1,25 @@
 import {DesiredCapabilities}                        from "../../../config/DesiredCapabilities";
-import {LogLevel, ServerConfig}                     from "../../../config/ServerConfig";
+import {ServerConfig}                               from "../../../config/ServerConfig";
 import {Browser}                                    from "../../../driver/interface/Browser";
 import {ClientHelper}                               from "../../../driver/lib/client/ClientHelper";
 import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import _                                            from "lodash";
 
 describe(`Using the BrowserWdjs class`, (): void => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
-    const conf: ServerConfig = standardServerConfig;
-    const capabilities: DesiredCapabilities = standardCapabilities;
+    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
     describe(`and work with the title`, (): void => {
         let browser: Browser;
 
-        beforeAll( (): void => {
+        beforeAll((): void => {
             browser = ClientHelper.create(conf, capabilities);
         });
 
-        beforeEach( (): Promise<void> => {
-            return  browser.get(`/`);
+        beforeEach((): Promise<void> => {
+            return browser.get(`/`);
         });
 
         it(`the getTitle method should get the correct title 

@@ -1,4 +1,3 @@
-import {LogLevel}  from "../../../config/ServerConfig";
 import {
     RunningBrowser,
     Actor,
@@ -12,36 +11,19 @@ import {
     all,
     SppWebElementFinder,
     ServerConfig, DesiredCapabilities, Expected
-}                  from "../../../index";
+}                 from "../../../index";
 
-import {getLogger} from "log4js";
+import {getLogger}                                  from "log4js";
+import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import _                                            from "lodash";
+
 const logger = getLogger(`Spec: SppElementDescription`);
 
-
 describe(`The description on an element`, (): void => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL=30000;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
-    const seleniumConfig: ServerConfig = {
-        automationFramework: {
-            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `warn`) as LogLevel
-        },
-        serverAddress: {
-            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
-        },
-        baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`,
-    };
-
-    const capabilities: DesiredCapabilities = {
-        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
-        proxy: process.env.PROXY_TYPE === `manual` ? {
-            proxyType: `manual`,
-            httpProxy: process.env.PROXY_SERVER,
-            sslProxy: process.env.PROXY_SERVER,
-        } : {
-            proxyType: `system`
-        }
-    };
+    const seleniumConfig: ServerConfig = _.cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
     logger.trace(`Test Started`);
 
@@ -73,7 +55,6 @@ describe(`The description on an element`, (): void => {
                     .called(`Test Button description on level one`)
                     .shallWait(UntilElement.is.visible());
 
-
             expect(testButton.toString()).toEqual(`Test Button description on level one located by >>byCss: #doesNotExistOnLevelOne<<`)
         });
 
@@ -85,7 +66,6 @@ describe(`The description on an element`, (): void => {
                     .shallWait(UntilElement.is.visible())
                     .called(`The second description of the Test Button description on level one`);
 
-
             expect(testButton.toString()).toEqual(`Test Button description on level one -> The second description of the Test Button description on level one located by >>byCss: #doesNotExistOnLevelOne<<`)
         });
 
@@ -98,7 +78,6 @@ describe(`The description on an element`, (): void => {
                     .shallWait(UntilElement.is.visible())
                     .called(`The second description of the Test Button description on level one`);
 
-
             expect(testButton.toString()).toEqual(`Test Button description on level one -> The second description of the Test Button description on level one located by >>byCss: #doesNotExistOnLevelOne<<`)
         });
 
@@ -109,7 +88,6 @@ describe(`The description on an element`, (): void => {
                     .called(`Test Button description on level one`)
                     .element(By.css(`#doesNotExistOnLevelOne`))
                     .shallWait(UntilElement.is.visible());
-
 
             expect(testButton.toString()).toEqual(`Test Button description on level one located by >>byCss: #doesNotExistOnLevelOne<<`)
         });
@@ -195,6 +173,4 @@ describe(`The description on an element`, (): void => {
         }, 20000);
 
     });
-
-
 });

@@ -1,12 +1,15 @@
 import {Browser, By, ClientHelper, DesiredCapabilities, RunningBrowser, ServerConfig} from "../..";
 import {standardCapabilities, standardServerConfig}                                   from "../0_helper/config";
+import _                                                                              from "lodash";
+import {configure, getLogger}                                                         from "log4js";
+configure(`res/config/log4js.json`);
 
 describe(`Locating a waiter`, (): void => {
+    const logger = getLogger(`WD Wrapper selector spec`);
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
 
-    const conf: ServerConfig = standardServerConfig;
-
-    const capabilities: DesiredCapabilities = standardCapabilities;
+    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
     let browser: Browser;
 
@@ -23,9 +26,22 @@ describe(`Locating a waiter`, (): void => {
 
             await browser.get(`/`);
 
-            await fourthElement.click();
+            await fourthElement.click()
+                .then(async () => {
+                    return dropDown.getAttribute(`value`);
+                }).then((text: string) => {
+                    expect(text).toBe(`4`);
+                })
+                .catch((e: Error) => {
+                    if(e.name === `javascript error` && e.message === `TypeError: cyclic object value`) {
+                        logger.error(`Bug in FF version < 62 encountered ... ignoring for now. 
+                        Not using FF version < 62? Check test case with id: f5f57f3e-9cf5-45c2-a990-5014a1854844`);
+                        return Promise.resolve();
+                    }
+                    return Promise.reject(e)
+                });
 
-            expect(await dropDown.getAttribute(`value`)).toBe(`4`);
+
         });
     });
 

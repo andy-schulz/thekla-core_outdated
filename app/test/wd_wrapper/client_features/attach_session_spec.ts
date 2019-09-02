@@ -1,37 +1,22 @@
-import {DesiredCapabilities}    from "../../../config/DesiredCapabilities";
-import {LogLevel, ServerConfig} from "../../../config/ServerConfig";
-import {Browser}                from "../../../driver/interface/Browser";
-import {ClientHelper}           from "../../../driver/lib/client/ClientHelper";
-import {RunningBrowser}         from "../../..";
-
+import {DesiredCapabilities}                        from "../../../config/DesiredCapabilities";
+import {LogLevel, ServerConfig}                     from "../../../config/ServerConfig";
+import {Browser}                                    from "../../../driver/interface/Browser";
+import {ClientHelper}                               from "../../../driver/lib/client/ClientHelper";
+import {RunningBrowser}                             from "../../..";
+import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import _                                            from "lodash";
 
 describe(`using the browser instance`, (): void => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
+    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
-    const conf: ServerConfig = {
-        automationFramework: {
-            type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
-            logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
-        },
-        serverAddress: {
-            hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`,
-            path: `/wd/hub/`,
-            port: 4444,
-            protocol: `http`
-        },
-    };
-
-    const capabilities: DesiredCapabilities = {
-        browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `firefox`,
-        proxy: process.env.PROXY_TYPE === `manual` ? {
-            proxyType: `manual`,
-            httpProxy: process.env.PROXY_SERVER,
-            sslProxy: process.env.PROXY_SERVER,
-        } : {
-            proxyType: `system`
-        }
-    };
+    if(conf.serverAddress) {
+        conf.serverAddress.path = `/wd/hub/`;
+        conf.serverAddress.protocol = `http`;
+        conf.serverAddress.port = 4444;
+    }
 
     let origBrowser: Browser;
 
