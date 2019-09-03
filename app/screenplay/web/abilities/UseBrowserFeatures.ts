@@ -31,13 +31,6 @@ export class UseBrowserFeatures implements Ability {
         return this.client.get(url);
     }
 
-    public wait(condition: UntilElementCondition, element: SppWebElementFinder): Promise<string> {
-        return this.client.wait(
-            until(condition.waiter.isFulfilledFor(element.getElements(this.client) as WebElementFinder)),
-            condition.timeout,
-            condition.conditionHelpText);
-    }
-
     public getCurrentUrl(): Promise<string> {
         return this.client.getCurrentUrl();
     }

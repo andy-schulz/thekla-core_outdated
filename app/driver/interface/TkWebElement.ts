@@ -19,6 +19,8 @@ export interface TkWebElement<WD> {
 
     sendKeys(keySequence: string): Promise<void>;
 
+    clear(): Promise<void>;
+
     click(): Promise<void>;
 
     getText(): Promise<string>;

@@ -6,6 +6,7 @@ import {UsesAbilities}                                               from "../..
 import {SppFinderRoot, SppWebElementFinder, SppWebElementListFinder} from "../SppWebElements";
 import {FindElements}                                                from "./FindElements";
 import {UseBrowserFeatures}                                          from "./UseBrowserFeatures";
+import {WaitOnElements}                                              from "./WaitOnElements";
 
 export class BrowseTheWeb implements AbilitySet {
 
@@ -30,6 +31,7 @@ export class BrowseTheWeb implements AbilitySet {
 
     public constructor(private client: Browser) {
         this.abilities.push(FindElements.using(client) as Ability);
+        this.abilities.push(WaitOnElements.using(client) as Ability);
         this.abilities.push(UseBrowserFeatures.using(client));
     }
 

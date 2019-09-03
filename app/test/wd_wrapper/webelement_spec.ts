@@ -244,6 +244,30 @@ describe(`When using the Browser object`, (): void => {
         });
     });
 
+    describe(`and try to clear an element`, (): void => {
+        let browser: Browser;
+        let filledInputField: WebElementFinder;
+
+        beforeAll((): Promise<void> => {
+            browser = RunningBrowser.startedOn(conf).withCapabilities(capabilities);
+            filledInputField = browser.element(By.css(`[data-test-id='htmlInitiallyAttributeSet']`));
+            return browser.get(`/`);
+        });
+
+        afterAll((): Promise<void[]> => {
+            return RunningBrowser.cleanup()
+        });
+
+        it(`should clear the input field 
+        - (test case id: 62d9941b-f4ce-479f-a295-625c90c675fb)`, async (): Promise<void> => {
+            const text = `<tag value=''> html attribute is initially set`;
+            expect(await filledInputField.getAttribute(`value`)).toEqual(text);
+            await filledInputField.clear();
+            expect(await filledInputField.getAttribute(`value`)).toEqual(``);
+
+        });
+    });
+
     describe(`and try to wait for an element state`, (): void => {
         let browser: Browser;
         let appearButton10000: WebElementFinder;

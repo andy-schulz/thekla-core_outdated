@@ -1,9 +1,10 @@
 import {Client}                     from "webdriver";
 import {TkWebElement}               from "../interface/TkWebElement";
 import {findByCssContainingText}    from "../lib/client_side_scripts/locators";
-import {By}                         from "../lib/element/Locator";
+import {By, ByType}                 from "../lib/element/Locator";
 import {funcToString}               from "../utils/Utils";
 import {ElementRefIO, WebElementIO} from "./wrapper/WebElementIO";
+
 
 export class LocatorWdio {
 
@@ -14,12 +15,14 @@ export class LocatorWdio {
     public static retrieveElements = (locator: By, element?: ElementRefIO): (client: Client) => Promise<TkWebElement<Client>[]>  => {
         return (client: Client): Promise<TkWebElement<Client>[]> => {
             switch (locator.selectorType) {
-                case `byCss`:
+                case ByType.css:
                     return LocatorWdio.findElemsFromElem(client, `css selector`, locator.selector, element);
-                case `byXpath`:
+                case ByType.xpath:
                     return LocatorWdio.findElemsFromElem(client, `xpath`, locator.selector, element);
-                case `byJs`:
-                case `byCssContainingText`:
+                case ByType.accessibilityId:
+                    return LocatorWdio.findElemsFromElem(client, `accessibility id`, locator.selector, element);
+                case ByType.js:
+                case ByType.cssContainingText:
                     return LocatorWdio.findElemsFromElemByJs(client, locator, element);
                 default:
                     return Promise.reject(`Selector ${locator.selectorType} not implemented for framework WebDriverJS`);

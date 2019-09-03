@@ -1,8 +1,8 @@
-import {AbilitySet, Ability}                                         from "../../lib/abilities/Ability";
-import {Browser}                            from "../../../index";
-import {UsesAbilities}                                               from "../../Actor";
-import {FindElements}                                                from "./FindElements";
-import {UseBrowserFeatures}                                          from "./UseBrowserFeatures";
+import {AbilitySet, Ability} from "../../lib/abilities/Ability";
+import {Browser}             from "../../../index";
+import {UsesAbilities}       from "../../Actor";
+import {FindElements}        from "./FindElements";
+import {WaitOnElements}      from "./WaitOnElements";
 
 export class OperateOnMobileDevice implements AbilitySet {
 
@@ -27,5 +27,6 @@ export class OperateOnMobileDevice implements AbilitySet {
 
     public constructor(private client: Browser) {
         this.abilities.push(FindElements.using(client));
+        this.abilities.push(WaitOnElements.using(client));
     }
 }

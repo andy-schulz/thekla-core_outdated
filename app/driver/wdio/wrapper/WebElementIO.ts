@@ -59,6 +59,10 @@ export class WebElementIO implements TkWebElement<Client> {
         return this.client.getElementText(this.getElementId()) as unknown as Promise<string>
     }
 
+    public clear(): Promise<void> {
+        return this.client.elementClear(this.getElementId()) as unknown as Promise<void>
+    }
+
     public sendKeys(keySequence: string): Promise<void> {
 
         // chrome driver 2.4x required to send the text as an array not as a string
