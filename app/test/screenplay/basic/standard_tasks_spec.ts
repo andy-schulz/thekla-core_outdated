@@ -280,14 +280,14 @@ describe(`Using the task`, (): void => {
                 description: `Logan starts Testing`,
                 activityNodes: [{
                     name: `Sleep`,
-                    description: `Logan attempts to wait for '<<not found>>' ms`,
+                    description: `Logan attempts to stop all actions for '1' ms`,
                     activityNodes: []
                 }]
             };
 
             const expectedStructuredLog =
                 `[START] - Logan starts Testing
-....[Sleep] - Logan attempts to wait for '<<not found>>' ms`;
+....[Sleep] - Logan attempts to stop all actions for '1' ms`;
 
             expect(logan.activityLog.getLogTree()).toEqual(expected);
             expect(logan.activityLog.getStructuredLog(`....`)).toEqual(expectedStructuredLog);
@@ -308,7 +308,7 @@ describe(`Using the task`, (): void => {
                 activityNodes: [
                     {
                         name: `Sleep`,
-                        description: `Logan attempts to wait for '<<not found>>' ms`,
+                        description: `Logan attempts to stop all actions for '1' ms`,
                         activityNodes: []
                     },
                     {
@@ -317,7 +317,7 @@ describe(`Using the task`, (): void => {
                         activityNodes: [
                             {
                                 name: `Sleep`,
-                                description: `Logan attempts to wait for '<<not found>>' ms`,
+                                description: `Logan attempts to stop all actions for '1' ms`,
                                 activityNodes: []
                             }
                         ]
@@ -326,9 +326,9 @@ describe(`Using the task`, (): void => {
 
             const expectedStructuredLog =
 `[START] - Logan starts Testing
-....[Sleep] - Logan attempts to wait for '<<not found>>' ms
+....[Sleep] - Logan attempts to stop all actions for '1' ms
 ....[MySleepTask] - Logan attempts to execute the sleep task
-........[Sleep] - Logan attempts to wait for '<<not found>>' ms`;
+........[Sleep] - Logan attempts to stop all actions for '1' ms`;
 
             expect(logan.activityLog.getLogTree()).toEqual(expected);
             expect(logan.activityLog.getStructuredLog(`....`)).toEqual(expectedStructuredLog);
