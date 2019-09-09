@@ -14,7 +14,7 @@ export class Sleep implements Interaction<void, void> {
     private constructor(private sleepTime: number) {
     }
 
-    @stepDetails<UsesAbilities, void, void>(`wait for '<<url>>' ms`)
+    @stepDetails<UsesAbilities, void, void>(`stop all actions for '<<sleepTime>>' ms`)
     // parameter is needed for stepDetails typing
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public performAs(actor: UsesAbilities): Promise<void> {
