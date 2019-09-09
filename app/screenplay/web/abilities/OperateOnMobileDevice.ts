@@ -8,7 +8,6 @@ export class OperateOnMobileDevice implements AbilitySet {
 
     private abilities: Ability[] = [];
 
-
     public isAbilityList(): boolean {
         return true;
     }

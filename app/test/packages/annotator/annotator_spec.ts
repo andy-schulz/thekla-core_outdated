@@ -1,12 +1,16 @@
-import {ClientWdio}                                                       from "../../driver/wdio/ClientWdio";
-import {Browser, DesiredCapabilities, WebElementFinder, ServerConfig, By} from "../../index";
-import {standardCapabilities, standardServerConfig}                       from "../0_helper/config";
-import _ from "lodash";
+import {ClientWdio}                                                       from "../../../driver/wdio/ClientWdio";
+import {Browser, DesiredCapabilities, WebElementFinder, ServerConfig, By} from "../../../index";
+import {standardCapabilities, standardServerConfig}                       from "../../0_helper/config";
+import _                                                                  from "lodash";
 
 describe(`The annotation`, (): void => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 200000;
+
     const conf: ServerConfig = _.cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
+
+    beforeAll((): void => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
+    });
 
     describe(`for a not set annotation parameter`, (): void => {
         const confAnnotate: ServerConfig = conf;

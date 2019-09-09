@@ -6,7 +6,6 @@ export class SkipTask extends Task<void, void> {
     private myTaskName = ``;
     private myMessage = ``;
 
-
     @skip<PerformsTask,void,void>(`the task '<<taskName>>' with reason: '<<message>>'`)
     public performAs(actor: PerformsTask): Promise<void> {
         return Promise.resolve();

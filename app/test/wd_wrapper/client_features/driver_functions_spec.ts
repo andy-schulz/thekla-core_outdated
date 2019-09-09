@@ -15,11 +15,14 @@ interface Rect {
 }
 
 describe(`Using the browser object`, (): void => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
 
     const selConfig: ServerConfig = _.cloneDeep(standardServerConfig);
     const desiredCapabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
     const testUrl: string = process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`;
+
+    beforeAll((): void => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
+    });
 
     afterAll(async (): Promise<void[]> => {
         return ClientHelper.cleanup();

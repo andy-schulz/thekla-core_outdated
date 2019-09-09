@@ -7,7 +7,6 @@ import {standardCapabilities, standardServerConfig} from "../../0_helper/config"
 import _                                            from "lodash";
 
 describe(`using the browser instance`, (): void => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
     const conf: ServerConfig = _.cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
@@ -19,6 +18,10 @@ describe(`using the browser instance`, (): void => {
     }
 
     let origBrowser: Browser;
+
+    beforeAll((): void => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+    });
 
     describe(`to attach to an existing session`, (): void => {
         beforeAll((): void => {

@@ -17,6 +17,10 @@ describe(`Hover`, (): void => {
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
     const testUrl = process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`;
 
+    beforeAll((): void => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
+    });
+
     describe(`over an elements`, (): void => {
         const userIcon = element(By.css(`[data-test-id='usericon']`))
             .shallWait(UntilElement.is.visible().forAsLongAs(5000))

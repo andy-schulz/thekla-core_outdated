@@ -15,7 +15,6 @@ import _                                            from "lodash";
 const logger = getLogger(`Spec: Spp wait for elements`);
 
 describe(`Waiting for SPP Elements`, (): void => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
     let seleniumConfig: ServerConfig = _.cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
@@ -24,6 +23,7 @@ describe(`Waiting for SPP Elements`, (): void => {
     let walterTheWaiter: Actor;
 
     beforeAll((): void => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
         walterTheWaiter = Actor.named(`Walter`);
         const browser = RunningBrowser.startedOn(seleniumConfig).withCapabilities(capabilities);
         walterTheWaiter.whoCan(BrowseTheWeb.using(browser));

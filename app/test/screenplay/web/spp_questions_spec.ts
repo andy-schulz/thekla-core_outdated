@@ -20,12 +20,14 @@ configure(`res/config/log4js.json`);
 
 describe(`Using`, (): void => {
 
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
-
     let seleniumConfig: ServerConfig = _.cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
     const testUrl = process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`;
+
+    beforeAll((): void => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+    });
 
     afterAll(async (): Promise<void[]> => {
         return RunningBrowser.cleanup();

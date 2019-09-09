@@ -34,5 +34,3 @@ export interface AutomationFramework {
     type: "wdjs" | "wdio"; // eslint-disable-line quotes
     logLevel?: LogLevel;
 }
-
-

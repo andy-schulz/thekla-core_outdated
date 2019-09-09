@@ -2,7 +2,7 @@
  * Configurations
  */
 
-export {ServerConfig}                                              from "./config/ServerConfig"
+export {ServerConfig, AutomationFramework, LogLevel}               from "./config/ServerConfig"
 export {DesiredCapabilities}                                       from "./config/DesiredCapabilities"
 export {RestClientConfig}                                          from "./config/RestClientConfig";
 
@@ -46,10 +46,11 @@ export {Actor}                                                                fr
 export {request, SppRestRequest}                                              from "./screenplay/rest/SppRestRequests";
 
 // AbilitySet
-export {Ability}                                                from "./screenplay/lib/abilities/Ability";
-export {BrowseTheWeb}                                           from "./screenplay/web/abilities/BrowseTheWeb";
-export {Authenticate, AuthenticationInfo}                       from "./screenplay/web/abilities/Authenticate";
-export {UseTheRestApi}                                          from "./screenplay/rest/abilities/UseTheRestApi";
+export {Ability}                            from "./screenplay/lib/abilities/Ability";
+export {BrowseTheWeb}                       from "./screenplay/web/abilities/BrowseTheWeb";
+export {OperateOnMobileDevice}              from "./screenplay/web/abilities/OperateOnMobileDevice";
+export {Authenticate, AuthenticationInfo}   from "./screenplay/web/abilities/Authenticate";
+export {UseTheRestApi}                      from "./screenplay/rest/abilities/UseTheRestApi";
 
 // Tasks
 export {PerformsTask}                                 from "./screenplay/Actor";

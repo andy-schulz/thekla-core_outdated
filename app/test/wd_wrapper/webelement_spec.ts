@@ -18,13 +18,16 @@ import _                                            from "lodash";
 configure(`res/config/log4js.json`);
 
 describe(`When using the Browser object`, (): void => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
     const conf: ServerConfig = _.cloneDeep(standardServerConfig);
 
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
     const testurl = process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`;
+
+    beforeAll((): void => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+    });
 
     describe(`and calling the get method `, (): void => {
         let browser: Browser;

@@ -4,7 +4,6 @@ import {ClientHelper, DesiredCapabilities, ServerConfig} from "../../../index";
 import {standardCapabilities, standardServerConfig}      from "../../0_helper/config";
 
 describe(`creating a new Browser`, (): void => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
     const conf: ServerConfig = _.cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
@@ -12,6 +11,10 @@ describe(`creating a new Browser`, (): void => {
     const windowSize = function(): {} {
         return {width: window.innerWidth, height: window.innerHeight};
     };
+
+    beforeAll((): void => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+    });
 
     afterAll((): Promise<void[]> => {
         return ClientHelper.cleanup();

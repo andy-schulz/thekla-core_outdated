@@ -8,7 +8,6 @@ import _                                            from "lodash";
 configure(`res/config/log4js.json`);
 
 describe(`Waiting for WD Elements`, (): void => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
 
     const conf: ServerConfig = _.cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
@@ -16,13 +15,14 @@ describe(`Waiting for WD Elements`, (): void => {
     let browser: Browser;
     let appearButton4000ShallWait: WebElementFinder;
 
+    beforeAll((): void => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
+        browser = ClientHelper.create(conf, capabilities);
+    }, 20000);
+
     afterAll((): Promise<void[]> => {
         return ClientHelper.cleanup();
     });
-
-    beforeAll((): void => {
-        browser = ClientHelper.create(conf, capabilities);
-    }, 20000);
 
     describe(`and try to implicitly wait for an Element`, (): void => {
 
@@ -51,7 +51,7 @@ describe(`Waiting for WD Elements`, (): void => {
 
             await browser.get(`/redirectToDelayed`);
             expect(await appearButton4000ShallWait.isVisible()).toEqual(true)
-        });
+        }, 20000);
     });
 
     describe(`which are chained by xpath`, (): void => {

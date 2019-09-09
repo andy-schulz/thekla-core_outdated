@@ -5,7 +5,6 @@ import {WindowSize}                                                             
 import {standardServerConfig}                                                     from "../../0_helper/config";
 
 describe(`Starting a browser instance`, (): void => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
     const conf: ServerConfig =  _.cloneDeep(standardServerConfig);
 
@@ -20,6 +19,10 @@ describe(`Starting a browser instance`, (): void => {
     const browserFunc = (): string => {
         return navigator.userAgent;
     };
+
+    beforeAll((): void => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+    });
 
     afterEach(async (): Promise<void[]> => {
         return ClientHelper.cleanup();

@@ -15,7 +15,6 @@ import {
 import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
 
 describe(`Drag an Element`, (): void => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
 
     const conf: ServerConfig = standardServerConfig;
     const caps: DesiredCapabilities = standardCapabilities;
@@ -28,6 +27,7 @@ describe(`Drag an Element`, (): void => {
         dragIndicator: SppWebElementFinder;
 
     beforeAll((): void => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
         theBrowser = RunningBrowser.startedOn(conf).withCapabilities(caps);
         Donnie = Actor.named(`Donnie`);
         Donnie.whoCan(BrowseTheWeb.using(theBrowser));

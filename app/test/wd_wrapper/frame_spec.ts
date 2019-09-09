@@ -8,7 +8,6 @@ import _ from "lodash";
 configure(`res/config/log4js.json`);
 
 describe(`trying to access a Frame`, (): void => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 200000;
 
     const conf: ServerConfig = _.cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
@@ -16,6 +15,7 @@ describe(`trying to access a Frame`, (): void => {
     let browser: Browser;
 
     beforeAll((): void => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
         browser = ClientHelper.create(conf, capabilities);
     });
 

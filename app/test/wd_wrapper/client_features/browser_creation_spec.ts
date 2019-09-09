@@ -2,8 +2,6 @@ import {Browser, ClientHelper, DesiredCapabilities, ServerConfig} from "../../..
 import {standardCapabilities, standardServerConfig}               from "../../0_helper/config";
 import _                                                          from "lodash";
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
-
 describe(`When using the BrowserWdjs class`, (): void => {
 
     const conf: ServerConfig = _.cloneDeep(standardServerConfig);
@@ -12,6 +10,7 @@ describe(`When using the BrowserWdjs class`, (): void => {
     const testUrl = process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`;
 
     beforeAll(async (): Promise<void> => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
         await ClientHelper.cleanup();
     }, 10000);
 

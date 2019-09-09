@@ -20,7 +20,6 @@ export class Get implements Interaction<void, RestRequestResult>, MethodActions 
             .catch(catchAndSaveOnError(this.saveTo)(this.catchError))
     }
 
-
     public static from(request: SppRestRequest): Get {
         return new Get(request);
     }

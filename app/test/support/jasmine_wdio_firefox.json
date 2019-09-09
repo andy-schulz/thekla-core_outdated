@@ -1,10 +1,12 @@
 {
   "spec_dir": "dist/test",
   "spec_files": [
+    "packages/**/*[sS]pec.js",
     "wd_wrapper/**/*[sS]pec.js",
-    "annotator/**/*[sS]pec.js",
     "!wd_wrapper/chrome/**/*[sS]pec.js",
-    "screenplay/web/**/*[sS]pec.js"
+    "screenplay/web/**/*[sS]pec.js",
+    "screenplay/basic/**/*[sS]pec.js",
+    "screenplay/rest/**/*[sS]pec.js"
   ]
 ,
   "helpers": [

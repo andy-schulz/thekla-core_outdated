@@ -20,7 +20,6 @@ import _                                            from "lodash";
 configure(`res/config/log4js.json`);
 
 describe(`When locating an element,`, (): void => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
     const config: ServerConfig = _.cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
@@ -28,6 +27,7 @@ describe(`When locating an element,`, (): void => {
     let john: Actor;
 
     beforeAll((): void => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
         john = Actor.named(`John`);
         john.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(config).withCapabilities(capabilities)));
     });

@@ -13,7 +13,6 @@ import {standardCapabilities, standardServerConfig} from "../../0_helper/config"
 import _                                            from "lodash";
 
 describe(`Scroll`, (): void => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
     const conf: ServerConfig = _.cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
@@ -23,6 +22,10 @@ describe(`Scroll`, (): void => {
         .called(`the last row element inside the large table`);
 
     const classNameOfLastRow = `lastTableRow`;
+
+    beforeAll((): void => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+    });
 
     describe(`to a pages position`, (): void => {
         let theBrowser: Browser;

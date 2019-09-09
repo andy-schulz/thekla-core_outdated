@@ -20,7 +20,6 @@ import _                                            from "lodash";
 configure(`res/config/log4js.json`);
 
 describe(`Locating Elements inside Frames`, (): void => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
     let config: ServerConfig = _.cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
@@ -28,6 +27,7 @@ describe(`Locating Elements inside Frames`, (): void => {
     let Francine: Actor;
 
     beforeAll((): void => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
         Francine = Actor.named(`Francine`);
         Francine.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(config).withCapabilities(capabilities)));
     });

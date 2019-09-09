@@ -3,8 +3,6 @@ import {Question}                       from "../questions/Question";
 import {Activity, Oracle}               from "../actions/Activities";
 import {stepDetails}              from "../decorators/step_decorators";
 
-// import {step}                           from "../../..";
-
 export class See<PT, MPT> implements Oracle<PT, void> {
     private matcher: (value: MPT) => boolean | Promise<boolean>;
     private repeater: number = 1;
@@ -12,7 +10,6 @@ export class See<PT, MPT> implements Oracle<PT, void> {
 
     private thenActivities: Activity<PT, void>[] = [];
     private otherwiseActivities: Activity<PT, void>[] = [];
-
 
     @stepDetails<AnswersQuestions, PT, void>(`ask if '<<question>>' fulfills the matcher`)
     public async performAs(actor: AnswersQuestions | PerformsTask, activityResult?: PT): Promise<void> {

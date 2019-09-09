@@ -22,7 +22,6 @@ configure(`res/config/log4js.json`);
 const logger = getLogger(`Actor`);
 
 describe(`Searching on Google`, (): void => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
     let config: ServerConfig = _.cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
@@ -31,6 +30,8 @@ describe(`Searching on Google`, (): void => {
     logger.trace(`actor_spec stated`);
 
     beforeAll((): void => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+
         John = Actor.named(`John`);
         John.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(config).withCapabilities(capabilities)));
     });

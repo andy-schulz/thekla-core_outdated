@@ -13,13 +13,18 @@
  *
  * each relationship has its own interface
  */
+import {ActivityLog}                       from "../packages/ActivityLog/ActivityLog";
 import {AbilitySet, Ability, AbilityClass} from "./lib/abilities/Ability";
 import {Activity}                          from "./lib/actions/Activities";
 import {DoesNotHave}                       from "./errors/DoesNotHave";
 import {Question}                          from "./lib/questions/Question";
 
+export interface LogsActivity {
+    readonly name: string;
+    readonly activityLog: ActivityLog;
+}
 
-export interface AnswersQuestions {
+export interface AnswersQuestions extends LogsActivity {
     toAnswer<PT, RT>(question: Question<PT,RT>, activityResult: PT): Promise<RT>;
 }
 
@@ -35,12 +40,12 @@ export interface AnswersQuestions {
 //     //     a3: Activity<R2,R3>): Promise<R2>;
 // }
 
-export interface PerformsTask {
+export interface PerformsTask extends LogsActivity {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     attemptsTo<PT,RT>(...activities: Activity<any, any>[]): Promise<RT>;
 }
 
-export interface UsesAbilities {
+export interface UsesAbilities extends LogsActivity {
     // abilityTo(Ability: AbilityClass): Ability;
     withAbilityTo(Ability: AbilityClass): Ability;
     can(ability: Ability): void;
@@ -48,6 +53,7 @@ export interface UsesAbilities {
 
 export class Actor implements AnswersQuestions, PerformsTask, UsesAbilities{
     private abilityMap: Map<string, Ability> = new Map();
+    public  activityLog: ActivityLog = new ActivityLog(this.name);
 
     public static named(name: string): Actor {
         return new Actor(name)

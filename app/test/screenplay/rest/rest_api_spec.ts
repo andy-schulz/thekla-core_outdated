@@ -1,4 +1,3 @@
-import * as yargs from "yargs";
 import {
     Actor, RestClientConfig, UseTheRestApi, Get, Post, On, Send, Method, See, Response, ExecutingRestClient, request
 }                 from "../../../index";
@@ -6,8 +5,6 @@ import {
 import {configure} from "log4js";
 import {curry}     from "lodash";
 import fp          from "lodash/fp";
-
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
 const config = {
     levels: {
@@ -31,6 +28,7 @@ configure(config);
 // @ts-ignore
 
 describe(`Trying to Add two numbers by the mathjs API`, (): void => {
+
     const a = 5;
     const b = -3;
     const calculationResult = 2;
@@ -41,8 +39,7 @@ describe(`Trying to Add two numbers by the mathjs API`, (): void => {
     let Richard: Actor;
 
     beforeAll((): void => {
-
-
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
         restConfig = {
             restClientName: `request`,
             requestOptions: {
@@ -92,7 +89,6 @@ describe(`Trying to Add two numbers by the mathjs API`, (): void => {
             } catch (e) {
                 console.error(e);
             }
-
 
             expect(result[0].statusCode).toEqual(200);
             expect(result[0].body).toEqual(`${calculationResult}`);

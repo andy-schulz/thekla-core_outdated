@@ -6,10 +6,13 @@ import {standardCapabilities, standardServerConfig} from "../../0_helper/config"
 import _                                            from "lodash";
 
 describe(`Using the BrowserWdjs class`, (): void => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
     const conf: ServerConfig = _.cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
+
+    beforeAll((): void => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+    });
 
     describe(`and work with the title`, (): void => {
         let browser: Browser;

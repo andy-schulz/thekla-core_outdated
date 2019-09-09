@@ -20,16 +20,19 @@ import _                                            from "lodash";
 const logger = getLogger(`Spec: SppElementDescription`);
 
 describe(`The description on an element`, (): void => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
     const seleniumConfig: ServerConfig = _.cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
     logger.trace(`Test Started`);
 
+    beforeAll((): void => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+    });
+
     describe(`should be attached to the element`, (): void => {
 
-        it(`on a simple element 
+        it(`by using the  
         - (test case id: 161de6a4-2f53-4864-832a-2e291fc250d6)`, (): void => {
             const testButton =
                 element(By.css(`#doesNotExistOnLevelOne`))

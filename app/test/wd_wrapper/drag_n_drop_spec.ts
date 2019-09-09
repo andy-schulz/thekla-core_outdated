@@ -9,7 +9,6 @@ import _                                            from "lodash";
 import { WebElementFinder } from "../..";
 
 describe(`drag an element`, (): void => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 300000;
 
     const conf: ServerConfig = _.cloneDeep(standardServerConfig);
     const caps: DesiredCapabilities = _.cloneDeep(standardCapabilities);
@@ -24,7 +23,8 @@ describe(`drag an element`, (): void => {
         dragIndicator: WebElementFinder,
         infoMessage: WebElementFinder;
 
-    beforeAll(() => {
+    beforeAll((): void => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
         browser = ClientHelper.create(conf, caps);
         dragElement0 = browser.element(By.css(`[data-test-id='item-0']`));
         dragElement1 = browser.element(By.css(`[data-test-id='item-1']`));
