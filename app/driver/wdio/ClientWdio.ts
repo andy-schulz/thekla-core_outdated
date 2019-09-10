@@ -18,7 +18,6 @@ import {scrollTo}                         from "../lib/client_side_scripts/scrol
 import {transformToWdioConfig}            from "../lib/config/config_transformation";
 import WebDriver, {Client}                from 'webdriver'
 import {Point}                            from "../lib/element/ElementLocation";
-import {WebElementWd}                     from "../lib/element/WebElementWd";
 import {funcToString}                     from "../utils/Utils";
 import {FrameElementWdio}                 from "./FrameElementWdio";
 import {LocatorWdio}                      from "./LocatorWdio";
@@ -38,6 +37,7 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
     private clientCreated: boolean = false;
     private _window: BrowserWindow;
     private static clientMap: Map<string, Browser> = new Map<string, Browser>();
+    private static attachedClientMap: Map<string, Browser> = new Map<string, Browser>();
 
     private constructor(
         private getClnt: () => Promise<Client>,
@@ -144,10 +144,19 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
 
     public static create({ serverConfig,
         capabilities,
-        clientName = `client${this.clientMap.size + 1}`,
+        clientName = undefined,
         sessionId }: CreateClient): ClientWdio {
 
-        checkClientName(clientName);
+        // tsc always complains that clntName is undefined, the if statement is not taken into account as it seems
+        let clntName: string = clientName ? clientName : ``;
+
+        if(clientName === undefined || clientName === null) {
+            clntName = sessionId ?
+                `client${this.attachedClientMap.size + 1}` :
+                `client${this.clientMap.size + 1}`;
+        }
+
+        checkClientName(clntName);
 
         try {
             const wdioOpts = transformToWdioConfig(serverConfig, capabilities);
@@ -179,11 +188,15 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
 
             const getTheDriver = getClient();
 
-            const client = new ClientWdio(getTheDriver, serverConfig, clientName);
+            const client = new ClientWdio(getTheDriver, serverConfig, clntName);
             const window = BrowserWindowWdio.create(client.getFrameWorkClient, capabilities.window);
             client.windowManagedBy(window);
 
-            this.clientMap.set(clientName, client);
+            if(sessionId) {
+                this.attachedClientMap.set(clntName, client);
+            } else {
+                this.clientMap.set(clntName, client);
+            }
             return client;
 
         } catch (e) {
@@ -192,8 +205,16 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
 
     }
 
-    public static cleanup(clientsToClean?: Browser[]): Promise<void[]> {
+    public static cleanup(clientsToClean?: Browser[], cleanAttachedSessions: boolean = false): Promise<void[]> {
         return cleanupClients(this.clientMap, clientsToClean)
+            .then((promiseArr: void[]) => {
+                if(cleanAttachedSessions)
+                    return cleanupClients(this.attachedClientMap, clientsToClean)
+                        .then((prArr: void[]): void[] => {
+                            return [...promiseArr, ...prArr]
+                        });
+                return promiseArr
+            })
     }
 
     /**
@@ -218,12 +239,21 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
     }
 
     /**
-     * return all names of currently available clients
+     * return all names of newly created sessions
      *
      * @returns - Array of client names
      */
-    public static get availableClients(): string[] {
+    public static get availableNewClients(): string[] {
         return [...this.clientMap.keys()];
+    }
+
+    /**
+     * return all names of attached sessions
+     *
+     * @returns - Array of client names
+     */
+    public static get availableAttachedClients(): string[] {
+        return [...this.attachedClientMap.keys()];
     }
 
     /**

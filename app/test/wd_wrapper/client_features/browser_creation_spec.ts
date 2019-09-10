@@ -2,7 +2,7 @@ import {Browser, ClientHelper, DesiredCapabilities, ServerConfig} from "../../..
 import {standardCapabilities, standardServerConfig}               from "../../0_helper/config";
 import _                                                          from "lodash";
 
-describe(`When using the BrowserWdjs class`, (): void => {
+describe(`When using the ClientWdio class`, (): void => {
 
     const conf: ServerConfig = _.cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
@@ -18,7 +18,7 @@ describe(`When using the BrowserWdjs class`, (): void => {
         await ClientHelper.cleanup();
     }, 10000);
 
-    describe(`to startedOn a single browser`, (): void => {
+    describe(`to start a single browser`, (): void => {
         it(`with an empty browser name, it should throw an invalid browser name error ` +
             `- (test case id: f25ffac2-c583-458b-9ee1-db22a6ef0423)`, (): void => {
             try {
@@ -48,8 +48,8 @@ describe(`When using the BrowserWdjs class`, (): void => {
         - (test case id: 92f1df53-f16e-4e7d-9def-340910a2d054)`, (): void => {
             const browser: Browser = ClientHelper.create(conf, capabilities);
 
-            expect(ClientHelper.availableBrowser.length).toBe(1, `length check for # of browser in BrowserWdjs failed`);
-            expect((ClientHelper.availableBrowser[0]) as string).toBe(`client1`);
+            expect(ClientHelper.availableSessions.length).toBe(1, `length check for # of browser in ClientWdio failed`);
+            expect((ClientHelper.availableSessions[0]) as string).toBe(`client1`);
             expect(ClientHelper.getClient(`client1`)).toEqual(browser);
         }, 20000);
 
@@ -58,8 +58,8 @@ describe(`When using the BrowserWdjs class`, (): void => {
 
             const browser: Browser = ClientHelper.create(conf, capabilities, `theNewBrowserName`);
 
-            expect(ClientHelper.availableBrowser.length).toBe(1, `length check for # of browser in BrowserWdjs failed`);
-            expect(ClientHelper.availableBrowser[0]).toBe(`theNewBrowserName`);
+            expect(ClientHelper.availableSessions.length).toBe(1, `length check for # of browser in ClientWdio failed`);
+            expect(ClientHelper.availableSessions[0]).toBe(`theNewBrowserName`);
             expect(ClientHelper.getClient(`theNewBrowserName`)).toEqual(browser);
 
         }, 20000);
@@ -69,22 +69,33 @@ describe(`When using the BrowserWdjs class`, (): void => {
             const browser: Browser = ClientHelper.create(conf, capabilities, `theNewBrowserName`);
             await browser.get(testUrl);
 
-            expect(ClientHelper.availableBrowser.length).toBe(1, `length check for # of browser in BrowserWdjs failed`);
-            expect(ClientHelper.availableBrowser[0]).toBe(`theNewBrowserName`);
+            expect(ClientHelper.availableSessions.length).toBe(1, `length check for # of browser in ClientWdio failed`);
+            expect(ClientHelper.availableSessions[0]).toBe(`theNewBrowserName`);
             expect(ClientHelper.getClient(`theNewBrowserName`)).toEqual(browser);
 
         }, 20000);
     });
 
-    describe(`to startedOn multiple browser`, (): void => {
+    describe(`to attach a single browser`, (): void => {
+        fit(` it should create a new browser in the attachedClientMap
+        - (test case id: 95c7191b-f45b-4c9b-b544-0dcdad9133de)`, (): void => {
+            const browser: Browser = ClientHelper.attachToSession(conf, capabilities, `123`)
+
+            expect(ClientHelper.availableSessions.length).toBe(0, `length check for # of newly created browser in ClientWdio failed`);
+            expect(ClientHelper.availableAttachedSessions.length).toBe(1, `length check for # of attached browser in ClientWdio failed`);
+            expect(ClientHelper.availableAttachedSessions[0]).toBe(`client1`);
+        });
+    });
+
+    describe(`to start multiple browser`, (): void => {
         it(`without a name, they should be created with a default name ` +
             `- (test case id: 126d1e0a-1b89-4d74-8774-69c0f446084c)`, (): void => {
             const browser1: Browser = ClientHelper.create(conf, capabilities);
             const browser2: Browser = ClientHelper.create(conf, capabilities);
 
-            expect(ClientHelper.availableBrowser.length).toBe(2, `length check for # of browser in BrowserWdjs failed`);
-            expect(ClientHelper.availableBrowser[0]).toBe(`client1`);
-            expect(ClientHelper.availableBrowser[1]).toBe(`client2`);
+            expect(ClientHelper.availableSessions.length).toBe(2, `length check for # of browser in ClientWdio failed`);
+            expect(ClientHelper.availableSessions[0]).toBe(`client1`);
+            expect(ClientHelper.availableSessions[1]).toBe(`client2`);
             expect(ClientHelper.getClient(`client1`)).toEqual(browser1);
             expect(ClientHelper.getClient(`client2`)).toEqual(browser2);
         }, 20000);
@@ -94,9 +105,9 @@ describe(`When using the BrowserWdjs class`, (): void => {
             const browser1: Browser = ClientHelper.create(conf, capabilities, `theFirstBrowser`);
             const browser2: Browser = ClientHelper.create(conf, capabilities);
 
-            expect(ClientHelper.availableBrowser.length).toBe(2, `length check for # of browser in BrowserWdjs failed`);
-            expect(ClientHelper.availableBrowser[0]).toBe(`theFirstBrowser`);
-            expect(ClientHelper.availableBrowser[1]).toBe(`client2`);
+            expect(ClientHelper.availableSessions.length).toBe(2, `length check for # of browser in ClientWdio failed`);
+            expect(ClientHelper.availableSessions[0]).toBe(`theFirstBrowser`);
+            expect(ClientHelper.availableSessions[1]).toBe(`client2`);
             expect(ClientHelper.getClient(`theFirstBrowser`)).toEqual(browser1);
             expect(ClientHelper.getClient(`client2`)).toEqual(browser2);
 
@@ -107,9 +118,9 @@ describe(`When using the BrowserWdjs class`, (): void => {
             const browser1: Browser = ClientHelper.create(conf, capabilities);
             const browser2: Browser = ClientHelper.create(conf, capabilities, `theSecondBrowser`);
 
-            expect(ClientHelper.availableBrowser.length).toBe(2, `length check for # of browser in BrowserWdjs failed`);
-            expect(ClientHelper.availableBrowser[0]).toBe(`client1`);
-            expect(ClientHelper.availableBrowser[1]).toBe(`theSecondBrowser`);
+            expect(ClientHelper.availableSessions.length).toBe(2, `length check for # of browser in ClientWdio failed`);
+            expect(ClientHelper.availableSessions[0]).toBe(`client1`);
+            expect(ClientHelper.availableSessions[1]).toBe(`theSecondBrowser`);
             expect(ClientHelper.getClient(`client1`)).toEqual(browser1);
             expect(ClientHelper.getClient(`theSecondBrowser`)).toEqual(browser2);
         }, 20000);
@@ -119,9 +130,9 @@ describe(`When using the BrowserWdjs class`, (): void => {
             const browser1: Browser = ClientHelper.create(conf, capabilities, `theFirstBrowser`);
             const browser2: Browser = ClientHelper.create(conf, capabilities, `theSecondBrowser`);
 
-            expect(ClientHelper.availableBrowser.length).toBe(2, `length check for # of browser in BrowserWdjs failed`);
-            expect(ClientHelper.availableBrowser[0]).toBe(`theFirstBrowser`);
-            expect(ClientHelper.availableBrowser[1]).toBe(`theSecondBrowser`);
+            expect(ClientHelper.availableSessions.length).toBe(2, `length check for # of browser in ClientWdio failed`);
+            expect(ClientHelper.availableSessions[0]).toBe(`theFirstBrowser`);
+            expect(ClientHelper.availableSessions[1]).toBe(`theSecondBrowser`);
             expect(ClientHelper.getClient(`theFirstBrowser`)).toEqual(browser1);
             expect(ClientHelper.getClient(`theSecondBrowser`)).toEqual(browser2);
         }, 20000);
@@ -137,10 +148,10 @@ describe(`When using the BrowserWdjs class`, (): void => {
             `- (test case id: 7125c259-247f-4535-a94a-e753a82c1582)`, async (): Promise<void> => {
             const browser = ClientHelper.create(conf, capabilities);
 
-            expect(ClientHelper.availableBrowser.length).toBe(1,
+            expect(ClientHelper.availableSessions.length).toBe(1,
                 `After creating a browser the length should be 1 but its not.`);
             await ClientHelper.cleanup([browser]);
-            expect(ClientHelper.availableBrowser.length).toBe(0,
+            expect(ClientHelper.availableSessions.length).toBe(0,
                 `After deleting the sole browser the # of available browser should be 0 but its not`);
         });
     });
@@ -164,66 +175,66 @@ describe(`When using the BrowserWdjs class`, (): void => {
 
         it(`at once should remove the browser form the list ` +
             `- (test case id: f6ee38b0-22a9-4eb2-a9d6-7e98c635550f)`, async (): Promise<void> => {
-            expect(ClientHelper.availableBrowser.length).toEqual(4,
+            expect(ClientHelper.availableSessions.length).toEqual(4,
                 `4 browser should be available`);
             await ClientHelper.cleanup([browser1, browser2, browser4]);
-            expect(ClientHelper.availableBrowser.length).toEqual(1,
+            expect(ClientHelper.availableSessions.length).toEqual(1,
                 `deleting 3 of 4 browser shall lead to 1 remaining browser`);
-            expect(ClientHelper.availableBrowser).toEqual([`browser_3`]);
+            expect(ClientHelper.availableSessions).toEqual([`browser_3`]);
         }, 20000);
 
         it(`after another should remove the brower from the browser map ` +
             `- (test case id: 343a1085-4414-4e2c-8f42-c76545462dcb)`, async (): Promise<void> => {
-            expect(ClientHelper.availableBrowser.length).toEqual(4,
+            expect(ClientHelper.availableSessions.length).toEqual(4,
                 `4 browser should be available`);
 
             // remove the first browser
             await ClientHelper.cleanup([browser2]);
-            expect(ClientHelper.availableBrowser.length).toEqual(3,
+            expect(ClientHelper.availableSessions.length).toEqual(3,
                 `deleting 1 of 4 browser shall lead to 3 remaining browser`);
-            expect(ClientHelper.availableBrowser).toEqual([`browser_1`, `browser_3`, `browser_4`]);
+            expect(ClientHelper.availableSessions).toEqual([`browser_1`, `browser_3`, `browser_4`]);
 
             // remove the second browser
             await ClientHelper.cleanup([browser4]);
-            expect(ClientHelper.availableBrowser.length).toEqual(2,
+            expect(ClientHelper.availableSessions.length).toEqual(2,
                 `deleting 1 of 3 browser shall lead to 2 remaining browser`);
-            expect(ClientHelper.availableBrowser).toEqual([`browser_1`, `browser_3`]);
+            expect(ClientHelper.availableSessions).toEqual([`browser_1`, `browser_3`]);
 
             // remove the third browser
             await ClientHelper.cleanup([browser1]);
-            expect(ClientHelper.availableBrowser.length).toEqual(1,
+            expect(ClientHelper.availableSessions.length).toEqual(1,
                 `deleting 1 of 2 browser shall lead to 1 remaining browser`);
-            expect(ClientHelper.availableBrowser).toEqual([`browser_3`]);
+            expect(ClientHelper.availableSessions).toEqual([`browser_3`]);
         }, 20000);
 
         it(`which dont exist, should not change the browser map ` +
             `- (test case id: 8e74188b-0a1a-41d0-ad2b-188a9a5884e4)`, async (): Promise<void> => {
-            expect(ClientHelper.availableBrowser.length).toEqual(4,
+            expect(ClientHelper.availableSessions.length).toEqual(4,
                 `4 browser should be available`);
 
             // remove 2 browser
             await ClientHelper.cleanup([browser2, browser4]);
-            expect(ClientHelper.availableBrowser.length).toEqual(2,
+            expect(ClientHelper.availableSessions.length).toEqual(2,
                 `deleting 2 of 4 browser shall lead to 2 remaining browser`);
-            expect(ClientHelper.availableBrowser).toEqual([`browser_1`, `browser_3`]);
+            expect(ClientHelper.availableSessions).toEqual([`browser_1`, `browser_3`]);
 
             // remove the same browser
             await ClientHelper.cleanup([browser2, browser4]);
-            expect(ClientHelper.availableBrowser.length).toEqual(2,
+            expect(ClientHelper.availableSessions.length).toEqual(2,
                 `deleting non existing browser shall not change the browser list`);
-            expect(ClientHelper.availableBrowser).toEqual([`browser_1`, `browser_3`]);
+            expect(ClientHelper.availableSessions).toEqual([`browser_1`, `browser_3`]);
 
             // remove the same browser
             await ClientHelper.cleanup([browser2]);
-            expect(ClientHelper.availableBrowser.length).toEqual(2,
+            expect(ClientHelper.availableSessions.length).toEqual(2,
                 `deleting non existing browser shall not change the browser list`);
-            expect(ClientHelper.availableBrowser).toEqual([`browser_1`, `browser_3`]);
+            expect(ClientHelper.availableSessions).toEqual([`browser_1`, `browser_3`]);
 
             // remove the same browser
             await ClientHelper.cleanup([browser4]);
-            expect(ClientHelper.availableBrowser.length).toEqual(2,
+            expect(ClientHelper.availableSessions.length).toEqual(2,
                 `deleting non existing browser shall not change the browser list`);
-            expect(ClientHelper.availableBrowser).toEqual([`browser_1`, `browser_3`]);
+            expect(ClientHelper.availableSessions).toEqual([`browser_1`, `browser_3`]);
         }, 20000);
     });
 });

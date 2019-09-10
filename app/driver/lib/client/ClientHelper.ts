@@ -6,8 +6,6 @@ import {Browser, BrowserScreenshotData} from "../../interface/Browser";
 import {ClientWdio}                     from "../../wdio/ClientWdio";
 import _                                from "lodash";
 
-
-
 export class ClientHelper {
 
     public withCapabilities(capabilities: DesiredCapabilities): Browser {
@@ -38,8 +36,12 @@ export class ClientHelper {
         return ClientWdio.cleanup(browserToClean);
     }
 
-    public static get availableBrowser(): string[] {
-        return [...ClientWdio.availableClients]
+    public static get availableSessions(): string[] {
+        return [...ClientWdio.availableNewClients]
+    }
+
+    public static get availableAttachedSessions(): string[] {
+        return [...ClientWdio.availableAttachedClients]
     }
 
     public static getClient(clientName: string): Browser | undefined {

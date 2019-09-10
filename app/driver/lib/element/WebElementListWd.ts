@@ -65,10 +65,11 @@ export class WebElementListWd<WD> implements WebElementListFinder {
                 const acc: TkWebElement<WD>[] = await accPromise;
                 const elemsList: TkWebElement<WD>[] = await elem.findElements(locator);
                 return [...acc, ...elemsList];
-            }, Promise.resolve([] as TkWebElement<WD>[])).then((elements: TkWebElement<WD>[]) => {
-                this.logger.trace(`Found ${elements ? elements.length : 0} element(s) for locator '${locator}'`);
-                return elements
-            });
+            }, Promise.resolve([] as TkWebElement<WD>[]))
+                .then((elements: TkWebElement<WD>[]) => {
+                    this.logger.trace(`Found ${elements ? elements.length : 0} element(s) for locator '${locator}'`);
+                    return elements
+                });
         };
         return new WebElementListWd(getElements, locator, this.browser, this.createWebElementFromList).called(this.description);
     }
