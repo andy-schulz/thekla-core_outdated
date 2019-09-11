@@ -1,5 +1,6 @@
 import {ActivityLogEntry, ActivityLogEntryType, ActivityLogNode} from "./ActivityLogEntry";
-import {formatLogWithPrefix}                                     from "./format_log";
+import {encodeLog, formatLogWithPrefix}                          from "./format_log";
+import _                                                         from "lodash";
 
 export class ActivityLog {
     private readonly rootActivityLogEntry: ActivityLogEntry;
@@ -18,7 +19,7 @@ export class ActivityLog {
     }
 
     public reset(entry: ActivityLogEntry): void {
-        if(entry.parent)
+        if (entry.parent)
             this._currentActivity = entry.parent;
     }
 
@@ -26,14 +27,13 @@ export class ActivityLog {
         return this.rootActivityLogEntry.getLogTree();
     }
 
-    public getStructuredLog(logPrefix: string = `    `): string {
+    public getStructuredLog(logPrefix: string = `    `, encoding: string = ``): string {
         const logTree = this.rootActivityLogEntry.getLogTree();
-        return formatLogWithPrefix(`${logPrefix}`, 0, logTree)
+        return _.flow(
+            formatLogWithPrefix(`${logPrefix}`)(0),
+            encodeLog(encoding)
+        )(logTree)
     };
-
-    // public getStructuredLog(): string {
-    //     return this.rootActivityLogEntry.getStructuredLog();
-    // }
 
     public constructor(name: string) {
         this._currentActivity = new ActivityLogEntry(

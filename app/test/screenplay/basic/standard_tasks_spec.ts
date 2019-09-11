@@ -104,7 +104,10 @@ describe(`Using the task`, (): void => {
             const expectedStructuredLog = `[START] - Logan starts Testing`;
 
             expect(logan.activityLog.getLogTree()).toEqual(expected);
-            expect(logan.activityLog.getStructuredLog(`  `)).toEqual(expectedStructuredLog);
+            expect(logan.activityLog.getStructuredLog(`  `))
+                .toEqual(expectedStructuredLog);
+            expect(logan.activityLog.getStructuredLog(`  `, `base64`))
+                .toEqual(new Buffer(expectedStructuredLog).toString(`base64`))
         });
 
         it(`should create a single skip activity log for the actor when a skip task is passed
@@ -133,6 +136,8 @@ describe(`Using the task`, (): void => {
 
             expect(logan.activityLog.getLogTree()).toEqual(expected);
             expect(logan.activityLog.getStructuredLog(`  `)).toEqual(expectedStructuredLog);
+            expect(logan.activityLog.getStructuredLog(`  `, `base64`))
+                .toEqual(new Buffer(expectedStructuredLog).toString(`base64`))
 
         });
 
@@ -163,6 +168,8 @@ describe(`Using the task`, (): void => {
 
             expect(logan.activityLog.getLogTree()).toEqual(expected);
             expect(logan.activityLog.getStructuredLog(`  `)).toEqual(expectedStructuredLog);
+            expect(logan.activityLog.getStructuredLog(`  `, `base64`))
+                .toEqual(new Buffer(expectedStructuredLog).toString(`base64`))
 
         });
 
@@ -201,6 +208,8 @@ describe(`Using the task`, (): void => {
 
             expect(logan.activityLog.getLogTree()).toEqual(expected);
             expect(logan.activityLog.getStructuredLog(`  `)).toEqual(expectedStructuredLog);
+            expect(logan.activityLog.getStructuredLog(`  `, `base64`))
+                .toEqual(new Buffer(expectedStructuredLog).toString(`base64`))
 
         });
 
@@ -243,6 +252,8 @@ describe(`Using the task`, (): void => {
 
             expect(logan.activityLog.getLogTree()).toEqual(expected);
             expect(logan.activityLog.getStructuredLog(`  `)).toEqual(expectedStructuredLog);
+            expect(logan.activityLog.getStructuredLog(`  `, `base64`))
+                .toEqual(new Buffer(expectedStructuredLog).toString(`base64`))
         });
     });
 
@@ -290,7 +301,11 @@ describe(`Using the task`, (): void => {
 ....[Sleep] - Logan attempts to stop all actions for '1' ms`;
 
             expect(logan.activityLog.getLogTree()).toEqual(expected);
+
             expect(logan.activityLog.getStructuredLog(`....`)).toEqual(expectedStructuredLog);
+
+            expect(logan.activityLog.getStructuredLog(`....`, `base64`))
+                .toEqual(new Buffer(expectedStructuredLog).toString(`base64`))
         });
 
         it(`should create a hierarchical sleep activity for the actor 
@@ -332,6 +347,8 @@ describe(`Using the task`, (): void => {
 
             expect(logan.activityLog.getLogTree()).toEqual(expected);
             expect(logan.activityLog.getStructuredLog(`....`)).toEqual(expectedStructuredLog);
+            expect(logan.activityLog.getStructuredLog(`....`, `base64`))
+                .toEqual(new Buffer(expectedStructuredLog).toString(`base64`))
         });
     });
 });

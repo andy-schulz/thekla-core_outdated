@@ -77,7 +77,7 @@ describe(`When using the ClientWdio class`, (): void => {
     });
 
     describe(`to attach a single browser`, (): void => {
-        fit(` it should create a new browser in the attachedClientMap
+        it(` it should create a new browser in the attachedClientMap
         - (test case id: 95c7191b-f45b-4c9b-b544-0dcdad9133de)`, (): void => {
             const browser: Browser = ClientHelper.attachToSession(conf, capabilities, `123`)
 
