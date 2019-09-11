@@ -53,8 +53,10 @@ export {Authenticate, AuthenticationInfo}   from "./screenplay/web/abilities/Aut
 export {UseTheRestApi}                      from "./screenplay/rest/abilities/UseTheRestApi";
 
 // Tasks
-export {PerformsTask}                                 from "./screenplay/Actor";
-export {ReturnTaskValue}                              from "./screenplay/lib/actions/ReturnTaskValue";
+export {
+    PerformsTask, LogsActivity, AnswersQuestions, UsesAbilities
+}                        from "./screenplay/Actor";
+export {ReturnTaskValue} from "./screenplay/lib/actions/ReturnTaskValue";
 
 // Activities
 export {Activity, Task, Interaction}            from "./screenplay/lib/actions/Activities";
