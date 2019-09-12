@@ -1,5 +1,5 @@
 import {ActivityLogEntry, ActivityLogEntryType, ActivityLogNode} from "./ActivityLogEntry";
-import {encodeLog, formatLogWithPrefix}                          from "./format_log";
+import {encodeLog, formatLogAsHtmlTree, formatLogWithPrefix}     from "./format_log";
 import _                                                         from "lodash";
 
 export class ActivityLog {
@@ -31,6 +31,14 @@ export class ActivityLog {
         const logTree = this.rootActivityLogEntry.getLogTree();
         return _.flow(
             formatLogWithPrefix(`${logPrefix}`)(0),
+            encodeLog(encoding)
+        )(logTree)
+    };
+
+    public getStructuredHtmlLog(encoding: string = ``): string {
+        const logTree = this.rootActivityLogEntry.getLogTree();
+        return _.flow(
+            formatLogAsHtmlTree,
             encodeLog(encoding)
         )(logTree)
     };

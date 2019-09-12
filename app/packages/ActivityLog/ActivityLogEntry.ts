@@ -4,6 +4,7 @@ export type ActivityLogEntryType = "Task" | "Interaction";
 export interface ActivityLogNode {
     name: string;
     description: string;
+    logType: ActivityLogEntryType;
     activityNodes: ActivityLogNode[];
 }
 
@@ -27,6 +28,7 @@ export class ActivityLogEntry {
         return {
             name: this.activityName,
             description: this.activityDescription,
+            logType: this.activityType,
             activityNodes: this.subEntries.map((logEntry: ActivityLogEntry): ActivityLogNode => {
                 return logEntry.getLogTree();
             })
