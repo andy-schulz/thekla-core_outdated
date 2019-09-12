@@ -54,7 +54,7 @@ describe(`The ActivityLog`, (): void => {
 
         }
 
-        sit(`should create only the activity log root node when no activities are passed
+        it(`should create only the activity log root node when no activities are passed
         - (test case id: 3b452b2b-d9eb-4d23-b5d0-23eb42703755)`, async (): Promise<void> => {
             const logan = Actor.named(`Logan`);
 
