@@ -1,5 +1,10 @@
-import {ActivityLogNode}                              from "../../../packages/ActivityLog/ActivityLogEntry";
-import {encloseInTag, encodeLog, formatLogWithPrefix, formatLogWithHtmlTags} from "../../../packages/ActivityLog/format_log";
+import {ActivityLogNode} from "../../../packages/ActivityLog/ActivityLogEntry";
+import {
+    encloseInTag,
+    encodeLog,
+    formatLogWithPrefix,
+    formatLogWithHtmlTags
+}                        from "../../../packages/ActivityLog/format_log";
 
 describe(`Using the log formater`, (): void => {
 
@@ -74,9 +79,9 @@ describe(`Using the log formater`, (): void => {
                 ],
             };
 
-            expect(formatLogWithPrefix(``)( 0)(log)).toEqual(`[1] - A\n[2] - B\n[3] - C\n[4] - D`);
-            expect(formatLogWithPrefix(`\t`)( 1)(log)).toEqual(`\t[1] - A\n\t\t[2] - B\n\t\t\t[3] - C\n\t\t\t\t[4] - D`);
-            expect(formatLogWithPrefix(`\t`)( 2)(log)).toEqual(`\t\t[1] - A\n\t\t\t[2] - B\n\t\t\t\t[3] - C\n\t\t\t\t\t[4] - D`);
+            expect(formatLogWithPrefix(``)(0)(log)).toEqual(`[1] - A\n[2] - B\n[3] - C\n[4] - D`);
+            expect(formatLogWithPrefix(`\t`)(1)(log)).toEqual(`\t[1] - A\n\t\t[2] - B\n\t\t\t[3] - C\n\t\t\t\t[4] - D`);
+            expect(formatLogWithPrefix(`\t`)(2)(log)).toEqual(`\t\t[1] - A\n\t\t\t[2] - B\n\t\t\t\t[3] - C\n\t\t\t\t\t[4] - D`);
         });
 
         it(`should create a hierarchical html log tree with just tasks

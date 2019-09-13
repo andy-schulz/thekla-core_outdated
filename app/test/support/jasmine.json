@@ -2,7 +2,7 @@
   "spec_dir": "dist/test"
   ,
   "spec_files": [
-    "packages/log_formater/**/*[sS]pec.js",
+    "packages/log_formatter//**/*[sS]pec.js",
     "screenplay/basic/**/*[sS]pec.js",
     "screenplay/rest/**/*[sS]pec.js",
     "lib_test/**/*[sS]pec.js",
