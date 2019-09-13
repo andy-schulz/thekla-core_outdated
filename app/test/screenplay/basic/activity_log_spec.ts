@@ -345,7 +345,7 @@ describe(`The ActivityLog`, (): void => {
 
 });
 
-const styleFile = fs.readFileSync(`res/styles/ActivityLog.css`);
+const styleFile = fs.readFileSync(`${__dirname}/../../../../res/styles/ActivityLog.css`);
 
 const expectEmbeddedStyle = `
 <style>
