@@ -122,7 +122,7 @@ export function executeFnOnClient<T>(getClient: Function, func: string, params: 
 
 export const switchToMasterFrame = async (client: Client): Promise<Client> => {
     // @ts-ignore
-    if(client.isMobile) {
+    if(client.isMobile || client.isAndoid || client.isIOS) {
         const context = await client.getContext();
 
         if (context == `NATIVE_APP`)
