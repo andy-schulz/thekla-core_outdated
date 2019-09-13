@@ -57,7 +57,7 @@ export const encodeLog = (encoding: string = ``): (source: string) => string => 
     }
 };
 
-const activityLogStyle = fs.readFileSync(`app/packages/ActivityLog/ActivityLog.css`);
+const activityLogStyle = fs.readFileSync(`${__dirname}/ActivityLog.css`);
 
 const htmlStyle = `
 <style>
