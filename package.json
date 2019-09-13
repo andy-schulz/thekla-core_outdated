@@ -9,7 +9,7 @@
     "test": "tsc & jasmine --config=app/test/support/jasmine.json",
     "build": "./node_modules/.bin/del-cli dist/**/* & tsc",
     "postversion": "git push --tags",
-    "test-all": "tsc & run-p -c --silent test:wdio:ff test:wdio:ch",
+    "test-all": "tsc & run-p -c --silent test:no-web test:wdio:ff test:wdio:ch",
     "test:no-web": "jasmine --config=app/test/support/jasmine.json",
     "test:wdio:ff": "jasmine --config=app/test/support/jasmine_wdio_firefox.json",
     "test:wdio:ch": "jasmine --config=app/test/support/jasmine_wdio_chrome.json"
