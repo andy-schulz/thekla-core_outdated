@@ -1,3 +1,4 @@
+import * as fs               from "fs";
 import {ActivityLogNode}     from "../../../packages/ActivityLog/ActivityLogEntry";
 import {Actor, PerformsTask} from "../../../screenplay/Actor";
 import {Task}                from "../../../screenplay/lib/actions/Activities";
@@ -78,10 +79,9 @@ describe(`The ActivityLog`, (): void => {
                 .toEqual(new Buffer(expectedStructuredLog).toString(`base64`));
 
             const htmlLog = logan.activityLog.getStructuredHtmlLog();
-            console.log(htmlLog);
-            expect(htmlLog).toContain(expectStyleHtml); // eslint-disable-line @typescript-eslint/no-use-before-define
-            expect(htmlLog).toContain(functionHtml); // eslint-disable-line @typescript-eslint/no-use-before-define
-            expect(htmlLog).toContain(expectedStructuredHtmlLog); // eslint-disable-line @typescript-eslint/no-use-before-define
+            expect(htmlLog).toContain(expectEmbeddedStyle);         // eslint-disable-line @typescript-eslint/no-use-before-define
+            expect(htmlLog).toContain(functionHtml);                // eslint-disable-line @typescript-eslint/no-use-before-define
+            expect(htmlLog).toContain(expectedStructuredHtmlLog);   // eslint-disable-line @typescript-eslint/no-use-before-define
         });
 
         it(`should create a single skip activity log for the actor when a skip task is passed
@@ -345,59 +345,11 @@ describe(`The ActivityLog`, (): void => {
 
 });
 
-const expectStyleHtml = `<style>
-ul, #ActivityLog {
-  list-style-type: none;
-}
+const styleFile = fs.readFileSync(`app/packages/ActivityLog/ActivityLog.css`);
 
-#ActivityLog {
-  margin: 0;
-  padding: 0;
-}
-
-.task {
-  cursor: pointer;
-  -webkit-user-select: none; /* Safari 3.1+ */
-  -moz-user-select: none; /* Firefox 2+ */
-  -ms-user-select: none; /* IE 10+ */
-  user-select: none;
-}
-
-.task::before {
-  /*content: "\\25B6"; */
-  content: "\\25B6";
-  color: black;
-  display: inline-block;
-  margin-right: 6px;
-}
-
-.task-open::before {
-  -ms-transform: rotate(90deg); /* IE 9 */
-  -webkit-transform: rotate(90deg); /* Safari */'
-  transform: rotate(90deg);  
-}
-
-.nested {
-  display: none;
-}
-
-.active {
-  display: block;
-}
-
-.interaction::before {
-  content: "\\25B7";
-  margin-right: 6px;
-}
-
-.logMessage.fail {
-    color: red;
-}
-
-.activityName {
-  color: #ff0bb1;
-}
-
+const expectEmbeddedStyle = `
+<style>
+${styleFile.toString()}
 </style>`;
 
 const functionHtml = `<script>

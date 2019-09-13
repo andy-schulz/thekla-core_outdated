@@ -1,3 +1,4 @@
+import * as fs           from "fs";
 import {ActivityLogNode} from "./ActivityLogEntry";
 
 const formatToText = (logPrefix: string, repeat: number, logNode: ActivityLogNode) => {
@@ -56,60 +57,11 @@ export const encodeLog = (encoding: string = ``): (source: string) => string => 
     }
 };
 
+const activityLogStyle = fs.readFileSync(`app/packages/ActivityLog/ActivityLog.css`);
+
 const htmlStyle = `
 <style>
-ul, #ActivityLog {
-  list-style-type: none;
-}
-
-#ActivityLog {
-  margin: 0;
-  padding: 0;
-}
-
-.task {
-  cursor: pointer;
-  -webkit-user-select: none; /* Safari 3.1+ */
-  -moz-user-select: none; /* Firefox 2+ */
-  -ms-user-select: none; /* IE 10+ */
-  user-select: none;
-}
-
-.task::before {
-  /*content: "\\25B6"; */
-  content: "\\25B6";
-  color: black;
-  display: inline-block;
-  margin-right: 6px;
-}
-
-.task-open::before {
-  -ms-transform: rotate(90deg); /* IE 9 */
-  -webkit-transform: rotate(90deg); /* Safari */'
-  transform: rotate(90deg);  
-}
-
-.nested {
-  display: none;
-}
-
-.active {
-  display: block;
-}
-
-.interaction::before {
-  content: "\\25B7";
-  margin-right: 6px;
-}
-
-.logMessage.fail {
-    color: red;
-}
-
-.activityName {
-  color: #ff0bb1;
-}
-
+${activityLogStyle.toString()}
 </style>
 `;
 
