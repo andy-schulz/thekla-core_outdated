@@ -15,11 +15,11 @@ const formatLogContentToHtml = (node: ActivityLogNode): string => {
 
 export const formatNodeToHtml = (logNode: ActivityLogNode): string => {
     if(logNode.logType === `Task`) {
-        return `<li><span class="task">${formatLogContentToHtml(logNode)}</span><ul class="nested">${(logNode.activityNodes.map((logEntry: ActivityLogNode) => {
+        return `<li><span class="task ${logNode.status}">${formatLogContentToHtml(logNode)}</span><ul class="nested">${(logNode.activityNodes.map((logEntry: ActivityLogNode) => {
             return formatNodeToHtml(logEntry)
         })).join(``)}</ul></li>`
     } else if (logNode.logType === `Interaction`) {
-        return `<li class="interaction">${formatLogContentToHtml(logNode)}</li>`
+        return `<li class="interaction ${logNode.status}">${formatLogContentToHtml(logNode)}</li>`
     } else {
         throw new Error(`Unknown Node Type ${logNode.logType}`)
     }

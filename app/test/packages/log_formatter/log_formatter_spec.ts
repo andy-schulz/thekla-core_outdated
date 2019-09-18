@@ -15,6 +15,7 @@ describe(`Using the log formater`, (): void => {
             const log: ActivityLogNode = {
                 name: `1`,
                 logType: `Task`,
+                status: `running`,
                 description: `A`,
                 activityNodes: [],
             };
@@ -29,6 +30,7 @@ describe(`Using the log formater`, (): void => {
             const interaction: ActivityLogNode = {
                 name: `1`,
                 logType: `Interaction`,
+                status: `running`,
                 description: `A`,
                 activityNodes: [],
             };
@@ -36,14 +38,15 @@ describe(`Using the log formater`, (): void => {
             const task: ActivityLogNode = {
                 name: `1`,
                 logType: `Task`,
+                status: `running`,
                 description: `A`,
                 activityNodes: [],
             };
 
             const interactionHtml = formatLogWithHtmlTags(interaction);
             const taskHtml = formatLogWithHtmlTags(task);
-            expect(interactionHtml).toEqual(`<ul id="ActivityLog"><li class="interaction"><span class="logMessage"><span class="activityName">[1]</span> - <span class="activityDescription">A</span></span></li></ul>`);
-            expect(taskHtml).toEqual(`<ul id="ActivityLog"><li><span class="task"><span class="logMessage"><span class="activityName">[1]</span> - <span class="activityDescription">A</span></span></span><ul class="nested"></ul></li></ul>`);
+            expect(interactionHtml).toEqual(`<ul id="ActivityLog"><li class="interaction running"><span class="logMessage"><span class="activityName">[1]</span> - <span class="activityDescription">A</span></span></li></ul>`);
+            expect(taskHtml).toEqual(`<ul id="ActivityLog"><li><span class="task running"><span class="logMessage"><span class="activityName">[1]</span> - <span class="activityDescription">A</span></span></span><ul class="nested"></ul></li></ul>`);
         });
     });
 
@@ -54,21 +57,25 @@ describe(`Using the log formater`, (): void => {
             const log: ActivityLogNode = {
                 name: `1`,
                 logType: `Task`,
+                status: `running`,
                 description: `A`,
                 activityNodes: [
                     {
                         name: `2`,
                         logType: `Task`,
+                        status: `running`,
                         description: `B`,
                         activityNodes: [
                             {
                                 name: `3`,
                                 logType: `Task`,
+                                status: `running`,
                                 description: `C`,
                                 activityNodes: [
                                     {
                                         name: `4`,
                                         logType: `Task`,
+                                        status: `running`,
                                         description: `D`,
                                         activityNodes: [],
                                     }
@@ -89,21 +96,25 @@ describe(`Using the log formater`, (): void => {
             const taskTree: ActivityLogNode = {
                 name: `1`,
                 logType: `Task`,
+                status: `running`,
                 description: `A`,
                 activityNodes: [
                     {
                         name: `2`,
                         logType: `Task`,
+                        status: `running`,
                         description: `B`,
                         activityNodes: [
                             {
                                 name: `3`,
                                 logType: `Task`,
+                                status: `running`,
                                 description: `C`,
                                 activityNodes: [
                                     {
                                         name: `4`,
                                         logType: `Task`,
+                                        status: `running`,
                                         description: `D`,
                                         activityNodes: [],
                                     }
@@ -115,7 +126,7 @@ describe(`Using the log formater`, (): void => {
             };
 
             const taskLog = formatLogWithHtmlTags(taskTree);
-            expect(taskLog).toEqual(`<ul id="ActivityLog"><li><span class="task"><span class="logMessage"><span class="activityName">[1]</span> - <span class="activityDescription">A</span></span></span><ul class="nested"><li><span class="task"><span class="logMessage"><span class="activityName">[2]</span> - <span class="activityDescription">B</span></span></span><ul class="nested"><li><span class="task"><span class="logMessage"><span class="activityName">[3]</span> - <span class="activityDescription">C</span></span></span><ul class="nested"><li><span class="task"><span class="logMessage"><span class="activityName">[4]</span> - <span class="activityDescription">D</span></span></span><ul class="nested"></ul></li></ul></li></ul></li></ul></li></ul>`)
+            expect(taskLog).toEqual(`<ul id="ActivityLog"><li><span class="task running"><span class="logMessage"><span class="activityName">[1]</span> - <span class="activityDescription">A</span></span></span><ul class="nested"><li><span class="task running"><span class="logMessage"><span class="activityName">[2]</span> - <span class="activityDescription">B</span></span></span><ul class="nested"><li><span class="task running"><span class="logMessage"><span class="activityName">[3]</span> - <span class="activityDescription">C</span></span></span><ul class="nested"><li><span class="task running"><span class="logMessage"><span class="activityName">[4]</span> - <span class="activityDescription">D</span></span></span><ul class="nested"></ul></li></ul></li></ul></li></ul></li></ul>`)
         });
 
         it(`should create a hierarchical log html tree with tasks and interactions
@@ -123,22 +134,26 @@ describe(`Using the log formater`, (): void => {
             const log: ActivityLogNode = {
                 name: `1`,
                 logType: `Task`,
+                status: `running`,
                 description: `A`,
                 activityNodes: [
                     {
                         name: `2`,
                         logType: `Interaction`,
+                        status: `running`,
                         description: `B`,
                         activityNodes: [],
                     },
                     {
                         name: `3`,
                         logType: `Task`,
+                        status: `running`,
                         description: `C`,
                         activityNodes: [
                             {
                                 name: `4`,
                                 logType: `Task`,
+                                status: `running`,
                                 description: `D`,
                                 activityNodes: [],
                             }
@@ -148,7 +163,7 @@ describe(`Using the log formater`, (): void => {
             };
 
             const taskAndInteractionHtml = formatLogWithHtmlTags(log);
-            expect(taskAndInteractionHtml).toEqual(`<ul id="ActivityLog"><li><span class="task"><span class="logMessage"><span class="activityName">[1]</span> - <span class="activityDescription">A</span></span></span><ul class="nested"><li class="interaction"><span class="logMessage"><span class="activityName">[2]</span> - <span class="activityDescription">B</span></span></li><li><span class="task"><span class="logMessage"><span class="activityName">[3]</span> - <span class="activityDescription">C</span></span></span><ul class="nested"><li><span class="task"><span class="logMessage"><span class="activityName">[4]</span> - <span class="activityDescription">D</span></span></span><ul class="nested"></ul></li></ul></li></ul></li></ul>`)
+            expect(taskAndInteractionHtml).toEqual(`<ul id="ActivityLog"><li><span class="task running"><span class="logMessage"><span class="activityName">[1]</span> - <span class="activityDescription">A</span></span></span><ul class="nested"><li class="interaction running"><span class="logMessage"><span class="activityName">[2]</span> - <span class="activityDescription">B</span></span></li><li><span class="task running"><span class="logMessage"><span class="activityName">[3]</span> - <span class="activityDescription">C</span></span></span><ul class="nested"><li><span class="task running"><span class="logMessage"><span class="activityName">[4]</span> - <span class="activityDescription">D</span></span></span><ul class="nested"></ul></li></ul></li></ul></li></ul>`)
         });
     });
 

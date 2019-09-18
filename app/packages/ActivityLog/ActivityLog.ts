@@ -1,6 +1,6 @@
-import {ActivityLogEntry, ActivityLogEntryType, ActivityLogNode} from "./ActivityLogEntry";
-import {encodeLog, formatLogAsHtmlTree, formatLogWithPrefix}     from "./format_log";
-import _                                                         from "lodash";
+import {ActivityLogEntry, ActivityLogEntryType, ActivityLogNode, ActivityStatus} from "./ActivityLogEntry";
+import {encodeLog, formatLogAsHtmlTree, formatLogWithPrefix}                     from "./format_log";
+import _                                                                         from "lodash";
 
 export class ActivityLog {
     private readonly rootActivityLogEntry: ActivityLogEntry;
@@ -9,8 +9,14 @@ export class ActivityLog {
     public addActivityLogEntry(
         activityName: string,
         activityDescription: string,
-        activityType: ActivityLogEntryType): ActivityLogEntry {
-        const logEntry = new ActivityLogEntry(activityName, activityDescription, activityType, this._currentActivity);
+        activityType: ActivityLogEntryType,
+        activityStatus: ActivityStatus): ActivityLogEntry {
+        const logEntry = new ActivityLogEntry(
+            activityName,
+            activityDescription,
+            activityType,
+            activityStatus,
+            this._currentActivity);
         this._currentActivity.addActivityLogEntry(logEntry);
         this._currentActivity = logEntry;
 
@@ -24,10 +30,17 @@ export class ActivityLog {
     }
 
     public getLogTree(): ActivityLogNode {
+        this.setRootNodeStatus();
         return this.rootActivityLogEntry.getLogTree();
     }
 
+    private setRootNodeStatus() {
+        const list = this.rootActivityLogEntry.getSubTreeStatusList();
+        this.rootActivityLogEntry.status = list.includes(`failed`) ? `failed` : list.includes(`running`) ? `running` : `passed`
+    }
+
     public getStructuredLog(logPrefix: string = `    `, encoding: string = ``): string {
+        this.setRootNodeStatus();
         const logTree = this.rootActivityLogEntry.getLogTree();
         return _.flow(
             formatLogWithPrefix(`${logPrefix}`)(0),
@@ -36,6 +49,7 @@ export class ActivityLog {
     };
 
     public getStructuredHtmlLog(encoding: string = ``): string {
+        this.setRootNodeStatus();
         const logTree = this.rootActivityLogEntry.getLogTree();
         return _.flow(
             formatLogAsHtmlTree,
@@ -48,6 +62,7 @@ export class ActivityLog {
             `START`,
             `${name} starts Testing`,
             `Task`,
+            `running`,
             null);
 
         this.rootActivityLogEntry = this._currentActivity

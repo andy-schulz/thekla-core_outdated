@@ -11,19 +11,19 @@ const createLogTask = <U extends LogsActivity, PT, RT>(
     return function logTask(
         target: Activity<PT, RT>,
         propertyName: string,
-        propertyDesciptor: TypedPropertyDescriptor<((actor: U, param?: PT) => Promise<RT>)>): PropertyDescriptor {
+        propertyDescriptor: TypedPropertyDescriptor<((actor: U, param?: PT) => Promise<RT>)>): PropertyDescriptor {
         const logger: Logger = getLogger(target.constructor.name);
-        const method = propertyDesciptor.value as () => Promise<RT>;
+        const method = propertyDescriptor.value as () => Promise<RT>;
 
         target.toString = stringReplace(description);
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         // propertyDesciptor.value = function (...args: any): Promise<RT> {
-        propertyDesciptor.value = function (actor: U, param?: PT): Promise<RT> {
+        propertyDescriptor.value = function (actor: U, param?: PT): Promise<RT> {
 
             const logEntry = actor.activityLog.addActivityLogEntry(target.constructor.name,
                 `${actor.name} ${activityDetails} ${this.toString()}`,
-                activityType);
+                activityType, `running`);
             // @ts-ignore
             if (typeof logger.stepdetails == `function`) {
                 // @ts-ignore
@@ -34,12 +34,17 @@ const createLogTask = <U extends LogsActivity, PT, RT>(
             const arg = [actor, param];
             return method.apply(this, arg as [])
                 .then((value: RT): RT => {
+                    logEntry.status = `passed`;
                     actor.activityLog.reset(logEntry);
                     return value;
+                })
+                .catch((e: Error) => {
+                    logEntry.status = `failed`;
+                    return Promise.reject(e)
                 });
         };
 
-        return propertyDesciptor;
+        return propertyDescriptor;
     }
 };
 

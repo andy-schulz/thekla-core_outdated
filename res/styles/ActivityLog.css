@@ -24,6 +24,18 @@ ul, #ActivityLog {
     margin-right: 6px;
 }
 
+.task.failed::before {
+    color: red;
+}
+
+.task.passed::before {
+    color: green;
+}
+
+.task.running::before {
+    color: black;
+}
+
 .task-open::before {
     -ms-transform: rotate(90deg); /* IE 9 */
     -webkit-transform: rotate(90deg); /* Safari */'
@@ -40,7 +52,20 @@ transform: rotate(90deg);
 
 .interaction::before {
     content: "\25B7";
+    color: black;
     margin-right: 6px;
+}
+
+.interaction.failed::before {
+    color: red;
+}
+
+.interaction.passed::before {
+    color: green;
+}
+
+.interaction.running::before {
+    color: black;
 }
 
 .logMessage.fail {
