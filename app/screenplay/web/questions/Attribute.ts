@@ -1,12 +1,12 @@
-import {Question}            from "../../lib/questions/Question";
-import {UsesAbilities}       from "../../Actor";
-import {FindElements}        from "../abilities/FindElements";
-import {SppWebElementFinder} from "../SppWebElements";
+import {Question}      from "../../lib/questions/Question";
+import {UsesAbilities} from "../../Actor";
+import {FindElements}  from "../abilities/FindElements";
+import {SppElement}    from "../SppWebElements";
 
 export class Attribute implements Question<void, string> {
     private attributeName: string = ``;
 
-    public static of(element: SppWebElementFinder): Attribute  {
+    public static of(element: SppElement): Attribute  {
         return new Attribute(element)
     }
 
@@ -16,7 +16,7 @@ export class Attribute implements Question<void, string> {
     }
 
     private constructor(
-        private element: SppWebElementFinder
+        private element: SppElement
     ) {}
 
     public answeredBy(actor: UsesAbilities): Promise<string> {

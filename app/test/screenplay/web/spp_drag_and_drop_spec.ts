@@ -7,7 +7,7 @@ import {
     BrowseTheWeb,
     Navigate,
     Drag,
-    SppWebElementFinder,
+    SppElement,
     By,
     element,
     See, Expected, Text, UntilElement
@@ -22,9 +22,9 @@ describe(`Drag an Element`, (): void => {
     let theBrowser: Browser;
     let Donnie: Actor;
 
-    let element0: SppWebElementFinder,
-        element1: SppWebElementFinder,
-        dragIndicator: SppWebElementFinder;
+    let element0: SppElement,
+        element1: SppElement,
+        dragIndicator: SppElement;
 
     beforeAll((): void => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;

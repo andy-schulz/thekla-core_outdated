@@ -2,12 +2,12 @@
  * Action to click on a web element
  */
 
-import {Interaction, SppWebElementFinder} from "../../../index";
-import {stepDetails}                      from "../../lib/decorators/step_decorators";
-import {FindElements}                     from "../abilities/FindElements";
-import {UseBrowserFeatures}               from "../abilities/UseBrowserFeatures";
-import {SppWebElementListFinder}          from "../SppWebElements";
-import {UsesAbilities}                    from "../../Actor";
+import {Interaction, SppElement} from "../../../index";
+import {stepDetails}             from "../../lib/decorators/step_decorators";
+import {FindElements}            from "../abilities/FindElements";
+import {UseBrowserFeatures}      from "../abilities/UseBrowserFeatures";
+import {SppElementList}          from "../SppWebElements";
+import {UsesAbilities}           from "../../Actor";
 
 class PagePosition implements PagePositionInterface {
 
@@ -52,7 +52,7 @@ class ElementScroller implements Interaction<void, void> {
     /**
      * @ignore
      */
-    public constructor(public element: SppWebElementFinder) {
+    public constructor(public element: SppElement) {
     }
 }
 
@@ -77,10 +77,10 @@ export class Scroll {
      * specify which element or position should be scrolled to
      * @param elementOrPage - the SPP Element or PAge Position
      */
-    public static to(elementOrPage: SppWebElementFinder | SppWebElementListFinder | PagePosition): ElementScroller | PageScroller {
+    public static to(elementOrPage: SppElement | SppElementList | PagePosition): ElementScroller | PageScroller {
 
-        if (elementOrPage instanceof SppWebElementFinder)
-            return new ElementScroller(elementOrPage as SppWebElementFinder);
+        if (elementOrPage instanceof SppElement)
+            return new ElementScroller(elementOrPage as SppElement);
         else if (elementOrPage instanceof PagePosition)
             return new PageScroller(elementOrPage as PagePosition);
 

@@ -16,15 +16,15 @@ export interface SppFinderWaiter<T> {
  * Interface defining the frame creation method
  */
 export interface SppFrameFinder {
-    frame(locator: By): SppFrameElementFinder;
+    frame(locator: By): SppFrameElement;
 }
 
 /**
  * Interface defining the waiter creation methods
  */
 export interface SppFinder {
-    element(locator: By): SppWebElementFinder;
-    all(locator: By): SppWebElementListFinder;
+    element(locator: By): SppElement;
+    all(locator: By): SppElementList;
 }
 
 export interface ElementHelper extends Function {
@@ -47,22 +47,22 @@ export abstract class SppFinderRoot implements SppFinder{
         public getElements: ElementHelper | ElementListHelper) {
     }
 
-    public element(locator: By): SppWebElementFinder {
+    public element(locator: By): SppElement {
         const getElements = (browser: Browser): WebElementFinder => {
             return this.getElements(browser).element(locator);
         };
         getElements.description = this.getElements.description;
 
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        return new SppWebElementFinder(locator, getElements);
+        return new SppElement(locator, getElements);
     }
 
-    public all(locator: By): SppWebElementListFinder {
+    public all(locator: By): SppElementList {
         const getElements = (browser: Browser): WebElementListFinder => {
             return this.getElements(browser).all(locator);
         };
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        return new SppWebElementListFinder(locator, getElements)
+        return new SppElementList(locator, getElements)
     }
 
     public get description(): string {
@@ -73,14 +73,14 @@ export abstract class SppFinderRoot implements SppFinder{
 /**
  * class representing a single spp web waiter
  */
-export class SppWebElementFinder extends SppFinderRoot implements SppFinderWaiter<SppWebElementFinder>{
+export class SppElement extends SppFinderRoot implements SppFinderWaiter<SppElement>{
     public constructor(
         locator: By,
         getElements: (browser: Browser) => WebElementFinder) {
         super(locator, getElements)
     }
 
-    public called(description: string): SppWebElementFinder {
+    public called(description: string): SppElement {
         const desc = (browser: Browser): WebElementFinder => {
             return this.getElements(browser).called(description) as WebElementFinder;
         };
@@ -91,18 +91,17 @@ export class SppWebElementFinder extends SppFinderRoot implements SppFinderWaite
             return desc + description;
         };
 
-        return new SppWebElementFinder(this.locator, desc);
+        return new SppElement(this.locator, desc);
     }
 
-    public shallWait(condition: UntilElementCondition): SppWebElementFinder {
+    public shallWait(condition: UntilElementCondition): SppElement {
         const waiter = (browser: Browser): WebElementFinder => {
             return (this.getElements(browser) as WebElementFinder).shallWait(condition);
         };
         waiter.description = this.getElements.description;
 
-        return new SppWebElementFinder(this.locator,waiter);
+        return new SppElement(this.locator,waiter);
     }
-
 
     public toString(): string {
         return `${this.getElements.description ? this.getElements.description() : `'SppElement'`} located by >>${this.locator.toString()}<<`;
@@ -112,25 +111,25 @@ export class SppWebElementFinder extends SppFinderRoot implements SppFinderWaite
 /**
  * class representing an spp web waiter list
  */
-export class SppWebElementListFinder extends SppFinderRoot{
+export class SppElementList extends SppFinderRoot{
     public constructor(
         locator: By,
         getElements: (browser: Browser) => WebElementListFinder) {
         super(locator, getElements)
     }
 
-    public filteredByText(text: string): SppWebElementListFinder{
+    public filteredByText(text: string): SppElementList{
         const getElements = (browser: Browser): WebElementListFinder => {
             return (this.getElements(browser) as WebElementListFinder).filteredByText(text);
         };
-        return new SppWebElementListFinder(this.locator,getElements);
+        return new SppElementList(this.locator,getElements);
     };
 
-    public called(description: string): SppWebElementListFinder {
+    public called(description: string): SppElementList {
         const desc = (browser: Browser): WebElementListFinder => {
             return this.getElements(browser).called(description) as WebElementListFinder;
         };
-        return new SppWebElementListFinder(this.locator, desc);
+        return new SppElementList(this.locator, desc);
     }
 
     public toString(): string {
@@ -141,45 +140,45 @@ export class SppWebElementListFinder extends SppFinderRoot{
 /**
  * class representing a frame waiter
  */
-export class SppFrameElementFinder implements SppFinder, SppFrameFinder, SppFinderWaiter<SppFrameElementFinder>{
+export class SppFrameElement implements SppFinder, SppFrameFinder, SppFinderWaiter<SppFrameElement>{
     public constructor(
         private locator: By,
         private switchFrame: (browser: Browser) => FrameElementFinder) {
     }
 
-    public element(locator: By): SppWebElementFinder {
+    public element(locator: By): SppElement {
         const getElements = (browser: Browser): WebElementFinder => {
             return this.switchFrame(browser).element(locator);
         };
-        return new SppWebElementFinder(locator, getElements);
+        return new SppElement(locator, getElements);
     }
 
-    public all(locator: By): SppWebElementListFinder {
+    public all(locator: By): SppElementList {
         const getElements = (browser: Browser): WebElementListFinder => {
             return this.switchFrame(browser).all(locator);
         };
-        return new SppWebElementListFinder(locator, getElements)
+        return new SppElementList(locator, getElements)
     }
 
-    public frame(locator: By): SppFrameElementFinder {
+    public frame(locator: By): SppFrameElement {
         const switchFrame = (browser: Browser): FrameElementFinder => {
             return this.switchFrame(browser).frame(locator);
         };
-        return new SppFrameElementFinder(locator,switchFrame);
+        return new SppFrameElement(locator,switchFrame);
     }
 
-    public shallWait(condition: UntilElementCondition): SppFrameElementFinder {
+    public shallWait(condition: UntilElementCondition): SppFrameElement {
         const waiter = (browser: Browser): FrameElementFinder => {
             return this.switchFrame(browser).shallWait(condition);
         };
-        return new SppFrameElementFinder(this.locator,waiter);
+        return new SppFrameElement(this.locator,waiter);
     }
 
-    public called(description: string): SppFrameElementFinder {
+    public called(description: string): SppFrameElement {
         const desc = (browser: Browser): FrameElementFinder => {
             return this.switchFrame(browser).called(description);
         };
-        return new SppFrameElementFinder(this.locator, desc);
+        return new SppFrameElement(this.locator, desc);
     }
 
     // toString() {
@@ -191,31 +190,31 @@ export class SppFrameElementFinder implements SppFinder, SppFrameFinder, SppFind
  * creating an SppWebElement
  * @param locator - selector to find the Element
  */
-export function element(locator: By): SppWebElementFinder {
+export function element(locator: By): SppElement {
     const getElements = (browser: Browser): WebElementFinder => {
         return browser.element(locator);
     };
-    return new SppWebElementFinder(locator, getElements);
+    return new SppElement(locator, getElements);
 }
 
 /**
  * creating a list of SppWebElements
  * @param locator - selector to find the waiter list
  */
-export function all(locator: By): SppWebElementListFinder {
+export function all(locator: By): SppElementList {
     const getElements = (browser: Browser): WebElementListFinder => {
         return browser.all(locator);
     };
-    return new SppWebElementListFinder(locator, getElements);
+    return new SppElementList(locator, getElements);
 }
 
 /**
  * creating a SppFramElement
  * @param locator - selector to find the frame
  */
-export function frame(locator: By): SppFrameElementFinder {
+export function frame(locator: By): SppFrameElement {
     const switchFrame = (browser: Browser): FrameElementFinder => {
         return browser.frame(locator);
     };
-    return new SppFrameElementFinder(locator, switchFrame);
+    return new SppFrameElement(locator, switchFrame);
 }

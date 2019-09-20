@@ -1,12 +1,12 @@
-import {WebElementListFinder}                                        from "../../../driver/interface/WebElements";
-import {UntilElementCondition}                                       from "../../../driver/lib/element/ElementConditions";
-import {AbilitySet, Ability}                                         from "../../lib/abilities/Ability";
-import {Browser, until, WebElementFinder}                            from "../../../index";
-import {UsesAbilities}                                               from "../../Actor";
-import {SppFinderRoot, SppWebElementFinder, SppWebElementListFinder} from "../SppWebElements";
-import {FindElements}                                                from "./FindElements";
-import {UseBrowserFeatures}                                          from "./UseBrowserFeatures";
-import {WaitOnElements}                                              from "./WaitOnElements";
+import {WebElementListFinder}                      from "../../../driver/interface/WebElements";
+import {UntilElementCondition}                     from "../../../driver/lib/element/ElementConditions";
+import {AbilitySet, Ability}                       from "../../lib/abilities/Ability";
+import {Browser, until, WebElementFinder}          from "../../../index";
+import {UsesAbilities}                             from "../../Actor";
+import {SppFinderRoot, SppElement, SppElementList} from "../SppWebElements";
+import {FindElements}                              from "./FindElements";
+import {UseBrowserFeatures}                        from "./UseBrowserFeatures";
+import {WaitOnElements}                            from "./WaitOnElements";
 
 export class BrowseTheWeb implements AbilitySet {
 
@@ -35,11 +35,11 @@ export class BrowseTheWeb implements AbilitySet {
         this.abilities.push(UseBrowserFeatures.using(client));
     }
 
-    // public findElement(spe: SppWebElementFinder): WebElementFinder {
+    // public findElement(spe: SppElement): WebElementFinder {
     //     return this.find(spe) as WebElementFinder;
     // }
     //
-    // public findElements(spes: SppWebElementListFinder): WebElementListFinder {
+    // public findElements(spes: SppElementList): WebElementListFinder {
     //     return this.find(spes) as WebElementListFinder;
     // }
     //
@@ -51,7 +51,7 @@ export class BrowseTheWeb implements AbilitySet {
     //     return this.client.get(url);
     // }
     //
-    // public wait(condition: UntilElementCondition, element: SppWebElementFinder): Promise<string> {
+    // public wait(condition: UntilElementCondition, element: SppElement): Promise<string> {
     //     return this.client.wait(
     //         until(condition.waiter.isFulfilledFor(element.getElements(this.client) as WebElementFinder)),
     //         condition.timeout,

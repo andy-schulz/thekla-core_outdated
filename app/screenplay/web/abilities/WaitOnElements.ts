@@ -1,8 +1,8 @@
-import {UntilElementCondition}                                       from "../../../driver/lib/element/ElementConditions";
-import {Ability}                                                     from "../../lib/abilities/Ability";
-import {Browser, until, WebElementFinder}                            from "../../../index";
-import {UsesAbilities}                                               from "../../Actor";
-import {SppWebElementFinder} from "../SppWebElements";
+import {UntilElementCondition}            from "../../../driver/lib/element/ElementConditions";
+import {Ability}                          from "../../lib/abilities/Ability";
+import {Browser, until, WebElementFinder} from "../../../index";
+import {UsesAbilities}                    from "../../Actor";
+import {SppElement}                       from "../SppWebElements";
 
 export class WaitOnElements implements Ability {
 
@@ -26,7 +26,7 @@ export class WaitOnElements implements Ability {
 
     }
 
-    public wait(condition: UntilElementCondition, element: SppWebElementFinder): Promise<string> {
+    public wait(condition: UntilElementCondition, element: SppElement): Promise<string> {
         return this.client.wait(
             until(condition.waiter.isFulfilledFor(element.getElements(this.client) as WebElementFinder)),
             condition.timeout,

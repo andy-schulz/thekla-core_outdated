@@ -41,7 +41,7 @@ export {ExecutingRestClient}                                                  fr
  * screenplay Elements
  */
 export {element, all, frame}                                                  from "./screenplay/web/SppWebElements";
-export {SppWebElementFinder, SppWebElementListFinder}                         from "./screenplay/web/SppWebElements";
+export {SppElement, SppElementList}                         from "./screenplay/web/SppWebElements";
 export {Actor}                                                                from "./screenplay/Actor";
 export {request, SppRestRequest}                                              from "./screenplay/rest/SppRestRequests";
 

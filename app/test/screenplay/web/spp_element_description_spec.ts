@@ -9,7 +9,7 @@ import {
     Text,
     UntilElement,
     all,
-    SppWebElementFinder,
+    SppElement,
     ServerConfig, DesiredCapabilities, Expected
 }                 from "../../../index";
 
@@ -113,7 +113,7 @@ describe(`The description on an element`, (): void => {
             return (actual: string): boolean => expect(actual).toEqual(expected);
         };
 
-        const checkErrorMessage = async (elem: SppWebElementFinder): Promise<void> => {
+        const checkErrorMessage = async (elem: SppElement): Promise<void> => {
             const callback = {catchfn: (): (actual: string) => boolean => match(description)};
             spyOn(callback, `catchfn`).and.callThrough();
 

@@ -2,11 +2,11 @@
  * Action to click on a web element
  */
 
-import {Interaction, SppWebElementFinder} from "../../../index";
-import {stepDetails}                      from "../../lib/decorators/step_decorators";
-import {FindElements}                     from "../abilities/FindElements";
-import {SppWebElementListFinder}          from "../SppWebElements";
-import {UsesAbilities}                    from "../../Actor";
+import {Interaction, SppElement} from "../../../index";
+import {stepDetails}             from "../../lib/decorators/step_decorators";
+import {FindElements}            from "../abilities/FindElements";
+import {SppElementList}          from "../SppWebElements";
+import {UsesAbilities}           from "../../Actor";
 
 export class Click implements Interaction<void, void> {
 
@@ -22,13 +22,13 @@ export class Click implements Interaction<void, void> {
      * specify which element should be clicked on
      * @param element - the SPP Element
      */
-    public static on(element: SppWebElementFinder | SppWebElementListFinder): Click {
-        return new Click(element as SppWebElementFinder);
+    public static on(element: SppElement | SppElementList): Click {
+        return new Click(element as SppElement);
     }
 
     /**
      * @ignore
      */
-    private constructor(public element: SppWebElementFinder) {
+    private constructor(public element: SppElement) {
     }
 }

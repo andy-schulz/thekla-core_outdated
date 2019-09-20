@@ -3,7 +3,7 @@
  */
 import {stepDetails}           from "../../lib/decorators/step_decorators";
 import {WaitOnElements}        from "../abilities/WaitOnElements";
-import {SppWebElementFinder}   from "../SppWebElements";
+import {SppElement}            from "../SppWebElements";
 import {Interaction}           from "../../lib/actions/Activities";
 import {UsesAbilities}         from "../../Actor";
 import {getLogger}             from "@log4js-node/log4js-api"
@@ -33,7 +33,7 @@ export class Wait implements Interaction<void, void> {
      * wait until a condition is met for the given element
      * @param awaitingElement the elements to wait for
      */
-    public static for(awaitingElement: SppWebElementFinder): Wait {
+    public static for(awaitingElement: SppElement): Wait {
         return new Wait(awaitingElement);
     }
 
@@ -49,7 +49,6 @@ export class Wait implements Interaction<void, void> {
     /**
      * @ignore
      */
-    private constructor(private awaitingElement: SppWebElementFinder) {}
-
+    private constructor(private awaitingElement: SppElement) {}
 
 }

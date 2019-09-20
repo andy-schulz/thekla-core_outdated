@@ -1,13 +1,13 @@
-import {Interaction}         from "../../../index";
-import {stepDetails}         from "../../lib/decorators/step_decorators";
-import {FindElements}        from "../abilities/FindElements";
-import {SppWebElementFinder} from "../SppWebElements";
-import {UsesAbilities}       from "../../Actor";
-import {getLogger, Logger}   from "@log4js-node/log4js-api";
+import {Interaction}       from "../../../index";
+import {stepDetails}       from "../../lib/decorators/step_decorators";
+import {FindElements}      from "../abilities/FindElements";
+import {SppElement}        from "../SppWebElements";
+import {UsesAbilities}     from "../../Actor";
+import {getLogger, Logger} from "@log4js-node/log4js-api";
 
 
 export class Enter implements Interaction<void, void> {
-    private inputField: SppWebElementFinder;
+    private inputField: SppElement;
     private clearBeforeFill: boolean = false;
     private logger: Logger = getLogger(`Enter`);
 
@@ -18,7 +18,7 @@ export class Enter implements Interaction<void, void> {
     private constructor(private keySequence: string | undefined) {
     }
 
-    public into(element: SppWebElementFinder): Enter {
+    public into(element: SppElement): Enter {
         this.inputField = element;
         return this;
     }

@@ -1,5 +1,5 @@
-import {SppWebElementFinder} from "../../../screenplay/web/SppWebElements";
-import {WebElementFinder}    from "../../interface/WebElements";
+import {SppElement}       from "../../../screenplay/web/SppWebElements";
+import {WebElementFinder} from "../../interface/WebElements";
 
 export interface UntilElementCondition {
     visible(): UntilElementCondition;

@@ -1,16 +1,16 @@
-import {Question}                from "../../lib/questions/Question";
-import {UsesAbilities}           from "../../Actor";
-import {FindElements}            from "../abilities/FindElements";
-import {SppWebElementListFinder} from "../SppWebElements";
+import {Question}       from "../../lib/questions/Question";
+import {UsesAbilities}  from "../../Actor";
+import {FindElements}   from "../abilities/FindElements";
+import {SppElementList} from "../SppWebElements";
 
 export class Count implements Question<void, number> {
 
-    public static of(elements: SppWebElementListFinder): Count  {
+    public static of(elements: SppElementList): Count  {
         return new Count(elements)
     }
 
     private constructor(
-        private elements: SppWebElementListFinder
+        private elements: SppElementList
     ) {}
 
     public answeredBy(actor: UsesAbilities): Promise<number> {

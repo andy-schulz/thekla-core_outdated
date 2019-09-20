@@ -1,10 +1,10 @@
-import {WebElementListFinder}                                        from "../../../driver/interface/WebElements";
-import {UntilElementCondition}                                       from "../../../driver/lib/element/ElementConditions";
-import {AbilitySet, Ability}                                         from "../../lib/abilities/Ability";
-import {Browser, until, WebElementFinder}                            from "../../../index";
-import {UsesAbilities}                                               from "../../Actor";
-import {SppFinderRoot, SppWebElementFinder, SppWebElementListFinder} from "../SppWebElements";
-import {FindElements}                                                from "./FindElements";
+import {WebElementListFinder}                      from "../../../driver/interface/WebElements";
+import {UntilElementCondition}                     from "../../../driver/lib/element/ElementConditions";
+import {AbilitySet, Ability}                       from "../../lib/abilities/Ability";
+import {Browser, until, WebElementFinder}          from "../../../index";
+import {UsesAbilities}                             from "../../Actor";
+import {SppFinderRoot, SppElement, SppElementList} from "../SppWebElements";
+import {FindElements}                              from "./FindElements";
 
 export class UseBrowserFeatures implements Ability {
 

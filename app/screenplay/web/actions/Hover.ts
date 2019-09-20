@@ -2,11 +2,11 @@
  * Action to hover over a web element
  */
 
-import {Interaction, SppWebElementFinder} from "../../../index";
-import {stepDetails}                      from "../../lib/decorators/step_decorators";
-import {FindElements}                     from "../abilities/FindElements";
-import {SppWebElementListFinder}          from "../SppWebElements";
-import {UsesAbilities}                    from "../../Actor";
+import {Interaction, SppElement} from "../../../index";
+import {stepDetails}             from "../../lib/decorators/step_decorators";
+import {FindElements}            from "../abilities/FindElements";
+import {SppElementList}          from "../SppWebElements";
+import {UsesAbilities}           from "../../Actor";
 
 export class Hover implements Interaction<void, void> {
 
@@ -22,13 +22,13 @@ export class Hover implements Interaction<void, void> {
      * specify which element should be hovered over
      * @param element - the SPP Element
      */
-    public static over(element: SppWebElementFinder | SppWebElementListFinder): Hover {
-        return new Hover(element as SppWebElementFinder);
+    public static over(element: SppElement | SppElementList): Hover {
+        return new Hover(element as SppElement);
     }
 
     /**
      * @ignore
      */
-    private constructor(public element: SppWebElementFinder) {
+    private constructor(public element: SppElement) {
     }
 }

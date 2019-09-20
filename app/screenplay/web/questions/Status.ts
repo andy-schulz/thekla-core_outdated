@@ -1,7 +1,7 @@
-import {UsesAbilities}       from "../../Actor";
-import {Question}            from "../../lib/questions/Question";
-import {FindElements}        from "../abilities/FindElements";
-import {SppWebElementFinder} from "../SppWebElements";
+import {UsesAbilities} from "../../Actor";
+import {Question}      from "../../lib/questions/Question";
+import {FindElements}  from "../abilities/FindElements";
+import {SppElement}    from "../SppWebElements";
 
 class VisibleStatus implements Question<void, boolean>{
 
@@ -9,7 +9,7 @@ class VisibleStatus implements Question<void, boolean>{
         return FindElements.as(actor).findElement(this.element).isVisible();
     }
 
-    public constructor(private element: SppWebElementFinder) {
+    public constructor(private element: SppElement) {
 
     }
 
@@ -25,7 +25,7 @@ class EnableStatus implements Question<void, boolean>{
         return FindElements.as(actor).findElement(this.element).isEnabled();
     }
 
-    public constructor(private element: SppWebElementFinder) {
+    public constructor(private element: SppElement) {
 
     }
 }
@@ -33,13 +33,13 @@ class EnableStatus implements Question<void, boolean>{
 export class Status  {
 
     public static visible = {
-        of: (element: SppWebElementFinder): VisibleStatus => {
+        of: (element: SppElement): VisibleStatus => {
             return new VisibleStatus(element)
         }
     };
 
     public static enable = {
-        of: (element: SppWebElementFinder): EnableStatus => {
+        of: (element: SppElement): EnableStatus => {
             return new EnableStatus(element)
         }
     }

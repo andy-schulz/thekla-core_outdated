@@ -1,9 +1,9 @@
-import {WebElementListFinder}                                        from "../../../driver/interface/WebElements";
-import {UntilElementCondition}                                       from "../../../driver/lib/element/ElementConditions";
-import {Ability}                                                     from "../../lib/abilities/Ability";
-import {Browser, until, WebElementFinder}                            from "../../../index";
-import {UsesAbilities}                                               from "../../Actor";
-import {SppFinderRoot, SppWebElementFinder, SppWebElementListFinder} from "../SppWebElements";
+import {WebElementListFinder}                      from "../../../driver/interface/WebElements";
+import {UntilElementCondition}                     from "../../../driver/lib/element/ElementConditions";
+import {Ability}                                   from "../../lib/abilities/Ability";
+import {Browser, until, WebElementFinder}          from "../../../index";
+import {UsesAbilities}                             from "../../Actor";
+import {SppFinderRoot, SppElement, SppElementList} from "../SppWebElements";
 
 export class FindElements implements Ability {
 
@@ -27,11 +27,11 @@ export class FindElements implements Ability {
 
     }
 
-    public findElement(spe: SppWebElementFinder): WebElementFinder {
+    public findElement(spe: SppElement): WebElementFinder {
         return this.find(spe) as WebElementFinder;
     }
 
-    public findElements(spes: SppWebElementListFinder): WebElementListFinder {
+    public findElements(spes: SppElementList): WebElementListFinder {
         return this.find(spes) as WebElementListFinder;
     }
 
