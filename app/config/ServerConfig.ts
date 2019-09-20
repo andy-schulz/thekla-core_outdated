@@ -1,4 +1,4 @@
-
+/* eslint-disable quotes*/
 export interface ServerConfig {
     serverAddress?: ServerAddress;
 
@@ -22,15 +22,14 @@ export interface ServerConfig {
 
 export interface ServerAddress {
     hostname?: string;
-    // eslint-disable-next-line
     protocol?: "http" | "https";
     port?: number;
     path?: string;
 }
 
-export type LogLevel =  "trace" | "debug" | "info" | "warn" | "error" | "silent"; // eslint-disable-line quotes
+export type LogLevel =  "trace" | "debug" | "info" | "warn" | "error" | "silent";
 
 export interface AutomationFramework {
-    type: "wdjs" | "wdio"; // eslint-disable-line quotes
+    type?: "wdio";
     logLevel?: LogLevel;
 }
