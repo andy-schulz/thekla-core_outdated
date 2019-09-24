@@ -84,6 +84,7 @@ export class AnnotatorWdio {
     };
 
     private readonly unHighlightElement = function(): void {
+        /*UN-HIGHLIGHT ELEMENT*/
         try {
             if(arguments[0] && document.body.contains(arguments[0]) && arguments[1] !== undefined) {
                 arguments[0].removeAttribute(`style`);
@@ -95,6 +96,7 @@ export class AnnotatorWdio {
     };
 
     private readonly highlightElement = function () {
+        /*HIGHLIGHT ELEMENT*/
         if(arguments[0] && document.body.contains(arguments[0])) {
             const oldStyle = arguments[0].getAttribute(`style`);
 
@@ -160,7 +162,7 @@ export class AnnotatorWdio {
                     driver.executeScript(this.funcToString(this.unHighlightElement),[this.elementBefore, this.styleBefore])
                         .then(resolve, (e: Error) => {
                             if(e.name === `stale element reference`) {
-                                this.logger.warn(`stale element reference error detected while unhighlighting an old element.
+                                this.logger.debug(`stale element reference error detected while unhighlighting an old element.
                             I am going to ignore the error.`);
                                 resolve(e)
                             }
