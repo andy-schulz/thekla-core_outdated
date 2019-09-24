@@ -3,7 +3,6 @@ import {LogLevel, ServerConfig} from "../../config/ServerConfig";
 
 export const standardServerConfig: ServerConfig = {
     automationFramework: {
-        type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
         logLevel:  (process.env.LOGLEVEL ? process.env.LOGLEVEL : `info`) as LogLevel
     },
     serverAddress: {
