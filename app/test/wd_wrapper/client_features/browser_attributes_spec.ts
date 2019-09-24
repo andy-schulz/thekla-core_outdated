@@ -66,6 +66,11 @@ describe(`creating a new Browser`, (): void => {
 
                 const browserResize = ClientHelper.create(conf, capabilities);
                 await browserResize.window.setSize({width: 500, height: 500});
+                await new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve()
+                    }, 1000)
+                });
                 expect((await browserResize.window.getSize()).width).toBeLessThan(550);
                 expect((await browserResize.window.getSize()).width).toBeGreaterThanOrEqual(500);
                 expect((await browserResize.window.getSize()).height).toBeLessThan(550);
