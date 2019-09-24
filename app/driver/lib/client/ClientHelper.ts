@@ -9,27 +9,27 @@ import _                                from "lodash";
 export class ClientHelper {
 
     public withCapabilities(capabilities: DesiredCapabilities): Browser {
-        if (!this.config.automationFramework || this.config.automationFramework.type || this.config.automationFramework.type === `wdio`)
+        if (!this.config.automationFramework || !this.config.automationFramework.type || this.config.automationFramework.type === `wdio`)
             return ClientWdio.create({serverConfig: this.config, capabilities: capabilities});
 
-        throw new Error(`the client library called ${this.config.automationFramework} is not implemented yet`)
+        throw new Error(`the client library called ${JSON.stringify(this.config.automationFramework)} is not implemented yet`)
     }
 
     public constructor(private config: ServerConfig) {
     }
 
     public static create(conf: ServerConfig, capabilities: DesiredCapabilities, clientName?: string): Browser {
-        if (!conf.automationFramework || conf.automationFramework.type || conf.automationFramework.type === `wdio`)
+        if (!conf.automationFramework || !conf.automationFramework.type || conf.automationFramework.type === `wdio`)
             return ClientWdio.create({serverConfig: conf, capabilities: capabilities, clientName: clientName});
 
-        throw new Error(`the client library called ${conf.automationFramework} is not implemented yet`)
+        throw new Error(`the client library called ${JSON.stringify(conf.automationFramework)} is not implemented yet`)
     }
 
     public static attachToSession(conf: ServerConfig, capabilities: DesiredCapabilities, sessionId: string, clientName?: string): Browser {
-        if (!conf.automationFramework || conf.automationFramework.type || conf.automationFramework.type === `wdio`)
+        if (!conf.automationFramework || !conf.automationFramework.type || conf.automationFramework.type === `wdio`)
             return ClientWdio.create({serverConfig: conf, capabilities: capabilities, sessionId: sessionId, clientName: clientName});
 
-        throw new Error(`the client library called ${conf.automationFramework} is not implemented yet`)
+        throw new Error(`the client library called ${JSON.stringify(conf.automationFramework)} is not implemented yet`)
     }
 
     public static cleanup(browserToClean?: Browser[]): Promise<void[]> {
