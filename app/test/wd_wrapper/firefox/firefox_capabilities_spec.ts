@@ -66,7 +66,6 @@ describe(`Starting a browser instance`, (): void => {
             `- (test case id: b11e0c91-b84f-4ae3-b08d-7b8dad6d6c74)`, async (): Promise<void> => {
             const conf: ServerConfig =  {
                 automationFramework: {
-                    type: process.env.FRAMEWORK === `wdio` ? `wdio` : `wdjs`,
                     logLevel: (process.env.LOGLEVEL ? process.env.LOGLEVEL : `warn`) as LogLevel
                 },
                 serverAddress: {
