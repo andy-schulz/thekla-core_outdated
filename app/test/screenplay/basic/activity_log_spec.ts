@@ -379,7 +379,7 @@ describe(`The ActivityLog`, (): void => {
             const logan = Actor.named(`Logan`);
 
             await logan.attemptsTo(
-                Sleep.for(1),
+                Sleep.for(1).because(`Sleep should be executed before MySleepTask`),
                 MySleepTask.startsNow()
             );
 
@@ -393,7 +393,7 @@ describe(`The ActivityLog`, (): void => {
                         name: `Sleep`,
                         logType: `Interaction`,
                         status: `passed`,
-                        description: `Logan attempts to stop all actions for '1' ms`,
+                        description: `Logan attempts to stop all actions for '1' ms because Sleep should be executed before MySleepTask`,
                         activityNodes: []
                     },
                     {
@@ -415,7 +415,7 @@ describe(`The ActivityLog`, (): void => {
 
             const expectedStructuredLog =
                 `[START] - Logan starts Testing
-....[Sleep] - Logan attempts to stop all actions for '1' ms
+....[Sleep] - Logan attempts to stop all actions for '1' ms because Sleep should be executed before MySleepTask
 ....[MySleepTask] - Logan attempts to execute the sleep task
 ........[Sleep] - Logan attempts to stop all actions for '1' ms`;
 
