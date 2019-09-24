@@ -28,8 +28,8 @@
     "@log4js-node/log4js-api": "^1.0.2",
     "@types/deep-diff": "^1.0.0",
     "@types/fs-extra": "^5.1.0",
-    "@types/lodash": "^4.14.138",
-    "@types/node": "^10.14.17",
+    "@types/lodash": "^4.14.139",
+    "@types/node": "^10.14.18",
     "@types/request-promise-native": "^1.0.16",
     "@types/yargs": "^12.0.12",
     "axios": "^0.18.1",
@@ -41,8 +41,8 @@
     "log4js": "^3.0.6",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
-    "typescript": "^3.6.2",
-    "webdriver": "^5.12.1",
+    "typescript": "^3.6.3",
+    "webdriver": "^5.13.1",
     "yargs": "^12.0.5"
   },
   "devDependencies": {
@@ -56,7 +56,7 @@
     "eslint-plugin-node": "^9.2.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "jasmine": "^3.4.0",
+    "jasmine": "^3.5.0",
     "npm-run-all": "^4.1.5",
     "uuid": "^3.3.3"
   }
