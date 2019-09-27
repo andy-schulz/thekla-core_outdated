@@ -44,7 +44,7 @@ describe(`When locating an element,`, (): void => {
                 See.if(Text.of(button)).is(Expected.toEqual(`Danger!`)),
                 Click.on(button),
             );
-        }, 10000);
+        });
 
         it(`the button name should be found 
         - (test case id: 9a383bbf-9db9-41c5-b903-7f8d61bea88a)`, (): Promise<void> => {
