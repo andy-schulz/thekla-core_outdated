@@ -1,17 +1,13 @@
-import {WebElementListFinder}                      from "../../../driver/interface/WebElements";
-import {UntilElementCondition}                     from "../../../driver/lib/element/ElementConditions";
-import {AbilitySet, Ability}                       from "../../lib/abilities/Ability";
-import {Browser, until, WebElementFinder}          from "../../../index";
-import {UsesAbilities}                             from "../../Actor";
-import {SppFinderRoot, SppElement, SppElementList} from "../SppWebElements";
-import {FindElements}                              from "./FindElements";
-import {UseBrowserFeatures}                        from "./UseBrowserFeatures";
-import {WaitOnElements}                            from "./WaitOnElements";
+import {AbilitySet, Ability} from "../../lib/abilities/Ability";
+import {Browser}             from "../../../index";
+import {UsesAbilities}       from "../../Actor";
+import {FindElements}        from "./FindElements";
+import {UseBrowserFeatures}  from "./UseBrowserFeatures";
+import {WaitOnElements}      from "./WaitOnElements";
 
 export class BrowseTheWeb implements AbilitySet {
 
     private abilities: Ability[] = [];
-
 
     public isAbilityList(): boolean {
         return true;
@@ -34,39 +30,4 @@ export class BrowseTheWeb implements AbilitySet {
         this.abilities.push(WaitOnElements.using(client) as Ability);
         this.abilities.push(UseBrowserFeatures.using(client));
     }
-
-    // public findElement(spe: SppElement): WebElementFinder {
-    //     return this.find(spe) as WebElementFinder;
-    // }
-    //
-    // public findElements(spes: SppElementList): WebElementListFinder {
-    //     return this.find(spes) as WebElementListFinder;
-    // }
-    //
-    // public find(spe: SppFinderRoot): WebElementFinder | WebElementListFinder {
-    //     return spe.getElements(this.client)
-    // }
-    //
-    // public navigate(url: string): Promise<void> {
-    //     return this.client.get(url);
-    // }
-    //
-    // public wait(condition: UntilElementCondition, element: SppElement): Promise<string> {
-    //     return this.client.wait(
-    //         until(condition.waiter.isFulfilledFor(element.getElements(this.client) as WebElementFinder)),
-    //         condition.timeout,
-    //         condition.conditionHelpText);
-    // }
-    //
-    // public getCurrentUrl(): Promise<string> {
-    //     return this.client.getCurrentUrl();
-    // }
-    //
-    // public getTitle(): Promise<string> {
-    //     return this.client.getTitle()
-    // }
-    //
-    // public scrollTo({x,y}: {x: number; y: number}): Promise<void> {
-    //     return this.client.scrollTo({x,y});
-    // }
 }
