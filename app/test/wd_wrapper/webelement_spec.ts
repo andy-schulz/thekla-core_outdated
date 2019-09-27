@@ -153,7 +153,7 @@ describe(`When using the Browser object`, (): void => {
         });
     });
 
-    describe(`to retrieving the element location`, () => {
+    describe(`to retrieving the element location`, (): void => {
         let browser: Browser;
         let hoverElement: WebElementFinder;
 
@@ -168,7 +168,7 @@ describe(`When using the Browser object`, (): void => {
         });
 
         it(`the location object should not be empty
-        - (test case id: f2f5e618-d19d-457b-84bb-f31f423a238c)`, async () => {
+        - (test case id: f2f5e618-d19d-457b-84bb-f31f423a238c)`, async (): Promise<void> => {
             const dimension = await hoverElement.getElementLocationInView();
             expect(dimension.boundingRect.top).not.toBeUndefined();
             expect(dimension.boundingRect.bottom).not.toBeUndefined();
@@ -184,7 +184,7 @@ describe(`When using the Browser object`, (): void => {
         });
     });
 
-    describe(`and try to scroll an element into view`, () => {
+    describe(`and try to scroll an element into view`, (): void => {
         let browser: Browser;
         let lastTableRow: WebElementFinder;
 
@@ -200,7 +200,7 @@ describe(`When using the Browser object`, (): void => {
         });
 
         it(`it should scroll to the element 
-        - (test case id: 8284b313-f35f-4841-931f-2927d848d138)`, async () => {
+        - (test case id: 8284b313-f35f-4841-931f-2927d848d138)`, async (): Promise<void> => {
             const className = `lastTableRow`;
 
             const isOutOnfirstCheck: BoundaryCheck = await browser.executeScript(boundingRect, className) as BoundaryCheck;
@@ -318,8 +318,8 @@ describe(`When using the Browser object`, (): void => {
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const callback = {
-                catchfn: (e: any): any => {
-                    error = e;
+                catchfn: (e: Error): Error => {
+                    error = e.toString();
                     return e
                 }
             };
@@ -339,8 +339,8 @@ describe(`When using the Browser object`, (): void => {
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const callback = {
-                catchfn: (e: any): any => {
-                    error = e;
+                catchfn: (e: Error): Error => {
+                    error = e.toString();
                     return e
                 }
             };
