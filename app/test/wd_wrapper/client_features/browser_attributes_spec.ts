@@ -69,7 +69,7 @@ describe(`creating a new Browser`, (): void => {
                 await new Promise((resolve) => {
                     setTimeout(() => {
                         resolve()
-                    }, 1000)
+                    }, 3000)
                 });
                 expect((await browserResize.window.getSize()).width).toBeLessThan(550);
                 expect((await browserResize.window.getSize()).width).toBeGreaterThanOrEqual(500);

@@ -131,7 +131,7 @@ describe(`The description on an element`, (): void => {
             const button = element(By.css(`.elementDoesNotExist`))
                 .called(description);
             return checkErrorMessage(button)
-        }, 20000);
+        });
 
         it(`when it is attached to level two of the element chain 
         - (test case id: 13f9ee79-5755-4ad0-b77a-12dc547f7200)`, async (): Promise<void> => {
@@ -139,7 +139,7 @@ describe(`The description on an element`, (): void => {
                 .element(By.css(`.elementDoesNotExist`))
                 .called(description);
             return checkErrorMessage(button)
-        }, 20000);
+        });
 
         it(`when it is attached to level one with two levels of an element chain 
         - (test case id: 082e0f44-9dae-4283-adf2-05bba017fd10)`, async (): Promise<void> => {
@@ -147,7 +147,7 @@ describe(`The description on an element`, (): void => {
                 .called(description)
                 .element(By.css(`.elementDoesNotExist`));
             return checkErrorMessage(button)
-        }, 20000);
+        });
 
         it(`when it is attached to level one of the element list chain 
         - (test case id: d6a644fd-cfe0-42fb-b865-0b281196cd4b)`, async (): Promise<void> => {
@@ -163,7 +163,7 @@ describe(`The description on an element`, (): void => {
                 .element(By.css(`.elementDoesNotExist`))
                 .called(description);
             return checkErrorMessage(button);
-        }, 20000);
+        });
 
         it(`on different chaining stages 
         - (test case id: 51807468-c3d5-4e96-9a2e-1b89ee926ee4)`, async (): Promise<void> => {
@@ -173,7 +173,7 @@ describe(`The description on an element`, (): void => {
                 .shallWait(UntilElement.is.visible());
 
             return checkErrorMessage(button);
-        }, 20000);
+        });
 
     });
 });

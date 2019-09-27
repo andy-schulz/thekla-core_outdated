@@ -63,7 +63,7 @@ describe(`Hover`, (): void => {
                 Hover.over(button),
                 See.if(Status.visible.of(userName)).is(Expected.toBe(false)),
             )
-        });
+        }, 50000); // leave the timeout as the url resolve via proxy takes a while
 
         afterAll((): Promise<void[]> => {
             return RunningBrowser.cleanup();
