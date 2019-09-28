@@ -84,7 +84,7 @@ export class Scroll {
         else if (elementOrPage instanceof PagePosition)
             return new PageScroller(elementOrPage as PagePosition);
 
-        throw new Error(`Parameter of Scroll.to() should be SppWebElementFinder or Page!`)
+        throw new Error(`Parameter of Scroll.to() should be SppElementList or Page!`)
     }
 }
 
