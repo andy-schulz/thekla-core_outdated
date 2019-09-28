@@ -1,13 +1,12 @@
-import {Task}         from "../actions/Activities";
-import {PerformsTask} from "../../..";
-import {skip}     from "../decorators/step_decorators";
+import {Interaction}                from "../actions/Activities";
+import {stepDetails, UsesAbilities} from "../../..";
 
-export class SkipTask extends Task<void, void> {
+export class SkipTask implements Interaction<void, void> {
     private myTaskName = ``;
     private myMessage = ``;
 
-    @skip<PerformsTask,void,void>(`the task '<<taskName>>' with reason: '<<message>>'`)
-    public performAs(actor: PerformsTask): Promise<void> {
+    @stepDetails<UsesAbilities,void,void>(`skip task '<<taskName>>' with reason: '<<message>>'`)
+    public performAs(actor: UsesAbilities): Promise<void> {
         return Promise.resolve();
     }
 
@@ -39,6 +38,5 @@ export class SkipTask extends Task<void, void> {
     }
 
     private constructor(...args: any[]) {
-        super();
     }
 }
