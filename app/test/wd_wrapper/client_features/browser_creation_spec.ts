@@ -78,12 +78,34 @@ describe(`When using the ClientWdio class`, (): void => {
 
     describe(`to attach a single browser`, (): void => {
         it(` it should create a new browser in the attachedClientMap
-        - (test case id: 95c7191b-f45b-4c9b-b544-0dcdad9133de)`, (): void => {
-            const browser: Browser = ClientHelper.attachToSession(conf, capabilities, `123`)
+        - (test case id: 95c7191b-f45b-4c9b-b544-0dcdad9133de)`, async (): Promise<void> => {
+            const browser: Browser = ClientHelper.attachToSession(conf, capabilities, `123`);
 
             expect(ClientHelper.availableSessions.length).toBe(0, `length check for # of newly created browser in ClientWdio failed`);
             expect(ClientHelper.availableAttachedSessions.length).toBe(1, `length check for # of attached browser in ClientWdio failed`);
             expect(ClientHelper.availableAttachedSessions[0]).toBe(`client1`);
+
+            const browser2: Browser = ClientHelper.attachToSession(conf, capabilities, `345`);
+
+            expect(ClientHelper.availableSessions.length).toBe(0, `length check for # of newly created browser in ClientWdio failed`);
+            expect(ClientHelper.availableAttachedSessions.length).toBe(2, `length check for # of attached browser in ClientWdio failed`);
+            expect(ClientHelper.availableAttachedSessions[1]).toBe(`client2`);
+
+            await ClientHelper.cleanup();
+
+            expect(ClientHelper.availableSessions.length).toBe(0, `length check for # of newly created browser in ClientWdio failed`);
+            expect(ClientHelper.availableAttachedSessions.length).toBe(2, `length check for # of attached browser in ClientWdio failed`);
+            expect(ClientHelper.availableAttachedSessions[1]).toBe(`client2`);
+
+            await ClientHelper.cleanup([browser], true);
+
+            expect(ClientHelper.availableAttachedSessions.length).toBe(1, `attached Sessions should be 0 after cleanup`);
+            expect(ClientHelper.availableAttachedSessions[0]).toBe(`client2`);
+
+            await ClientHelper.cleanup([], true);
+
+            expect(ClientHelper.availableAttachedSessions.length).toBe(0, `attached Sessions should be 0 after cleanup`);
+
         });
     });
 

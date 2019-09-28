@@ -28,10 +28,12 @@ describe(`using the browser instance`, (): void => {
             origBrowser = ClientHelper.create(conf, capabilities)
         });
 
-        afterAll((): Promise<void[]> => {
-            return RunningBrowser.cleanup().catch((e: Error) => {
+        afterAll(async (): Promise<void[]> => {
+            await RunningBrowser.cleanup().catch((): Promise<void[]> => {
                 return Promise.resolve([]);
             });
+
+            return ClientHelper.cleanup([], true)
         });
 
         it(`should open a new URL an the existing session 

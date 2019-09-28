@@ -32,8 +32,8 @@ export class ClientHelper {
         throw new Error(`the client library called ${JSON.stringify(conf.automationFramework)} is not implemented yet`)
     }
 
-    public static cleanup(browserToClean?: Browser[]): Promise<void[]> {
-        return ClientWdio.cleanup(browserToClean);
+    public static cleanup(browserToClean: Browser[] = [], cleanAttachedSession: boolean = false): Promise<void[]> {
+        return ClientWdio.cleanup(browserToClean, cleanAttachedSession);
     }
 
     public static get availableSessions(): string[] {
@@ -67,7 +67,7 @@ export class ClientHelper {
 const cleanUpLogger = getLogger(`CLEANUP  FUNCTION`);
 export function cleanupClients(browserMap: Map<string, Browser>, browserToClean?: Browser[]): Promise<void[]> {
 
-    if (browserToClean) {
+    if (browserToClean && browserToClean.length > 0) {
         let browserCleanupPromises: Promise<void>[] = [];
 
         const entries = [...browserMap.entries()];
