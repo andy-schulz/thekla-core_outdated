@@ -16,25 +16,27 @@ describe(`creating a new Browser`, (): void => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
     });
 
-    afterAll((): Promise<void[]> => {
-        return ClientHelper.cleanup();
+    afterEach((): Promise<void[]> => {
+        return ClientHelper.cleanup()
     });
 
     describe(`with an initial window setSize`, (): void => {
 
-        afterEach((): Promise<void[]> => {
-            return ClientHelper.cleanup()
-        });
-
         it(`it should be maximized when the config contains the "maximum" attribute 
         - (test case id: 8a0d9a58-9591-43c1-89bb-d848319c90f1)`, async (): Promise<void> => {
             const con: ServerConfig = _.cloneDeep(conf);
-            ((capabilities) as DesiredCapabilities).window = {
+            const capa: DesiredCapabilities = _.cloneDeep(capabilities);
+
+            capa.window = {
                 setToMaxSize: true
             };
 
-            const browserInitialResize = ClientHelper.create(con,capabilities);
+            const browserInitialResize = ClientHelper.create(con,capa);
+
             const data = await browserInitialResize.executeScript(windowSize);
+
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+
             const dataParsed: WindowSize = JSON.parse(JSON.stringify(data));
             expect(dataParsed.height).toBeGreaterThanOrEqual(100);
             expect(dataParsed.width).toBeGreaterThanOrEqual(100);
@@ -47,6 +49,7 @@ describe(`creating a new Browser`, (): void => {
             const dataBeforeParsed: WindowSize = JSON.parse(JSON.stringify(dataBefore));
 
             await browserManualResize.window.maximize();
+
             const dataAfter = await browserManualResize.executeScript(windowSize);
             const dataAfterParsed: WindowSize = JSON.parse(JSON.stringify(dataAfter));
 
@@ -57,25 +60,17 @@ describe(`creating a new Browser`, (): void => {
 
         describe(`and changing the window size`, (): void => {
 
-            afterEach((): Promise<void[]> => {
-                return ClientHelper.cleanup()
-            });
-
             it(`should resize the window to 500x500 pixel 
             - (test case id: 1b7451ac-0ca2-4bdc-8700-60b4098d5829)`, async (): Promise<void> => {
-
                 const browserResize = ClientHelper.create(conf, capabilities);
                 await browserResize.window.setSize({width: 500, height: 500});
-                await new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve()
-                    }, 3000)
-                });
-                expect((await browserResize.window.getSize()).width).toBeLessThan(550);
-                expect((await browserResize.window.getSize()).width).toBeGreaterThanOrEqual(500);
-                expect((await browserResize.window.getSize()).height).toBeLessThan(550);
-                expect((await browserResize.window.getSize()).height).toBeGreaterThanOrEqual(500);
 
+                const size = await browserResize.window.getSize();
+
+                expect(size.width).toBeLessThan(550);
+                expect(size.width).toBeGreaterThanOrEqual(500);
+                expect(size.height).toBeLessThan(550);
+                expect(size.height).toBeGreaterThanOrEqual(500);
             });
 
         });

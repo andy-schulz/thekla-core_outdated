@@ -1,7 +1,10 @@
 import {Browser, By, ClientHelper, DesiredCapabilities, RunningBrowser, ServerConfig} from "../..";
+import {checkForFireFoxCyclicError}                                                   from "../0_helper/browser_bugs";
 import {standardCapabilities, standardServerConfig}                                   from "../0_helper/config";
 import _                                                                              from "lodash";
 import {configure, getLogger}                                                         from "log4js";
+import { parseBrowserVersion }                                                        from "../../driver/lib/client/client_utils";
+
 configure(`res/config/log4js.json`);
 
 describe(`Locating a waiter`, (): void => {
@@ -22,26 +25,23 @@ describe(`Locating a waiter`, (): void => {
         it(`and klicking on a drop down should change the value of the drop down 
         - (test case id: f5f57f3e-9cf5-45c2-a990-5014a1854844)`, async (): Promise<void> => {
             const dropDown = browser.element(By.css(`#exampleSelect`));
-            const fourthElement = dropDown.element(By.cssContainingText(`option`,`4`));
+            const fourthElement = dropDown.element(By.cssContainingText(`option`, `4`));
 
             await browser.get(`/`);
 
             await fourthElement.click()
-                .then(async () => {
+                .then(async (): Promise<string> => {
                     return dropDown.getAttribute(`value`);
-                }).then((text: string) => {
+                }).then((text: string): void => {
                     expect(text).toBe(`4`);
                 })
-                .catch((e: Error) => {
-                    if(e.name === `javascript error` && e.message === `TypeError: cyclic object value`) {
-                        logger.error(`Bug in FF version < 62 encountered ... ignoring for now. 
-                        Not using FF version < 62? Check test case with id: f5f57f3e-9cf5-45c2-a990-5014a1854844`);
-                        return Promise.resolve();
-                    }
-                    return Promise.reject(e)
+                .catch((e: Error): Promise<void> => {
+                    return checkForFireFoxCyclicError(
+                        browser.capabilities.browserName,
+                        browser.capabilities.browserVersion, e,
+                        logger,
+                        `f5f57f3e-9cf5-45c2-a990-5014a1854844`);
                 });
-
-
         });
     });
 
@@ -65,7 +65,7 @@ describe(`Locating a waiter`, (): void => {
         });
     });
 
-    describe(`by chained xpath`,  (): void => {
+    describe(`by chained xpath`, (): void => {
         it(`should locate the email1 label 
         - (test case id: 063d50fe-421b-4354-b63e-60ac495f8360)`, async (): Promise<void> => {
             const container = browser.element(By.xpath(`//*[contains(@data-test-id,'LoginExampleRow1')]`));

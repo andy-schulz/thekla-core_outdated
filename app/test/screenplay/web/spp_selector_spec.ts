@@ -1,3 +1,4 @@
+import {parseBrowserVersion}        from "../../../driver/lib/client/client_utils";
 import {
     Actor,
     RunningBrowser,
@@ -10,8 +11,9 @@ import {
     Text,
     ServerConfig,
     Click,
-    UntilElement, Expected
-} from "../../../index";
+    UntilElement, Expected, Browser
+}                                   from "../../../index";
+import {checkForFireFoxCyclicError} from "../../0_helper/browser_bugs";
 
 import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
 import _                                            from "lodash";
@@ -26,12 +28,14 @@ describe(`When locating an element,`, (): void => {
     const config: ServerConfig = _.cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
+    let aBrowser: Browser;
     let john: Actor;
 
     beforeAll((): void => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
         john = Actor.named(`John`);
-        john.whoCan(BrowseTheWeb.using(RunningBrowser.startedOn(config).withCapabilities(capabilities)));
+        aBrowser = RunningBrowser.startedOn(config).withCapabilities(capabilities);
+        john.whoCan(BrowseTheWeb.using(aBrowser));
     });
 
     describe(`by xpath`, (): void => {
@@ -49,15 +53,30 @@ describe(`When locating an element,`, (): void => {
         });
 
         it(`the button name should be found 
-        - (test case id: 9a383bbf-9db9-41c5-b903-7f8d61bea88a)`, (): Promise<void | {}> => {
+        - (test case id: 9a383bbf-9db9-41c5-b903-7f8d61bea88a)`, async (): Promise<void | {}> => {
+
             const button = element(By.cssContainingText(`button`, `Danger!`))
                 .shallWait(UntilElement.is.visible());
 
-            return john.attemptsTo(
+            await john.attemptsTo(
                 Navigate.to(`/`),
-                See.if(Text.of(button)).is(Expected.toEqual(`Danger!`)),
-                Click.on(button)
-            )
+            );
+
+            // check for firefox problem
+            const error = new Error(`TypeError: cyclic object value`);
+            error.name = `javascript error`;
+            return checkForFireFoxCyclicError(
+                aBrowser.capabilities.browserName,
+                aBrowser.capabilities.browserVersion, error,
+                logger,
+                `9a383bbf-9db9-41c5-b903-7f8d61bea88a`)
+                .catch(() => {
+                    return john.attemptsTo(
+                        See.if(Text.of(button)).is(Expected.toEqual(`Danger!`)),
+                        Click.on(button)
+                    )
+                });
+
         });
     });
 
