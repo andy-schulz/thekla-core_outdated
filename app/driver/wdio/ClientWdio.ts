@@ -42,6 +42,7 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
     private constructor(
         private getClnt: () => Promise<Client>,
         private _selConfig: ServerConfig,
+        private _capabilities: {[key: string]: any},
         private browserName: string = ``) {
     }
 
@@ -53,6 +54,10 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
 
     public get window(): BrowserWindow {
         return this._window;
+    }
+
+    public get capabilities(): {[key: string]: any} {
+        return this._capabilities;
     }
 
     public windowManagedBy(window: BrowserWindow): void {
@@ -134,6 +139,8 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
                 if (!this.clientCreated) {
                     // ignoring Promise on purpose
                     this._window.setToPreset();
+                    // @ts-ignore
+                    this._capabilities = driver.capabilities;
                 }
                 this.clientCreated = true;
                 return driver;
@@ -188,7 +195,7 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
 
             const getTheDriver = getClient();
 
-            const client = new ClientWdio(getTheDriver, serverConfig, clntName);
+            const client = new ClientWdio(getTheDriver, serverConfig, capabilities, clntName);
             const window = BrowserWindowWdio.create(client.getFrameWorkClient, capabilities.window);
             client.windowManagedBy(window);
 

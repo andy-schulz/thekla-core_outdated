@@ -20,6 +20,8 @@ export interface CreateClient {
 export interface Browser extends WebFinder, FrameFinder {
     window: BrowserWindow;
 
+    capabilities: {[key: string]: any};
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     get(url: string): Promise<any>;
 
