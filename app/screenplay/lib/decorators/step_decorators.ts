@@ -22,7 +22,7 @@ const createLogTask = <U extends LogsActivity, PT, RT>(
         propertyDescriptor.value = function (actor: U, param?: PT): Promise<RT> {
 
             const logEntry = actor.activityLog.addActivityLogEntry(target.constructor.name,
-                `${actor.name} ${activityDetails} ${this.toString()}`,
+                `${this.toString()}`,
                 activityType, `running`);
             // @ts-ignore
             if (typeof logger.stepdetails == `function`) {
@@ -54,14 +54,6 @@ export function stepDetails<U extends LogsActivity, PT, RT>(text: string): (
     propertyDesciptor: TypedPropertyDescriptor<((actor: U, param?: PT) => Promise<RT>)>) => PropertyDescriptor {
 
     return createLogTask(text, `attempts to`, `Interaction`)
-}
-
-export function skip<U extends LogsActivity, PT, RT>(text: string): (
-    target: Activity<PT, RT>,
-    propertyName: string,
-    propertyDesciptor: TypedPropertyDescriptor<((actor: U, param?: PT) => Promise<RT>)>) => PropertyDescriptor {
-
-    return createLogTask(text, `skips`, `Task`);
 }
 
 export function step<U extends LogsActivity, PT, RT>(text: string): (

@@ -60,7 +60,7 @@ export class ActivityLog {
     public constructor(name: string) {
         this._currentActivity = new ActivityLogEntry(
             `START`,
-            `${name} starts Testing`,
+            `${name} attempts to`,
             `Task`,
             `running`,
             null);

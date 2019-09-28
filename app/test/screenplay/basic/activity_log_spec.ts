@@ -82,12 +82,12 @@ describe(`The ActivityLog`, (): void => {
                 name: `START`,
                 logType: `Task`,
                 status: `passed`,
-                description: `Logan starts Testing`,
+                description: `Logan attempts to`,
                 activityNodes: []
             };
 
-            const expectedStructuredLog = `[START] - Logan starts Testing`;
-            const expectedStructuredHtmlLog = `<ul id="ActivityLog"><li><span class="task passed"><span class="logMessage"><span class="activityName">[START]</span> - <span class="activityDescription">Logan starts Testing</span></span></span><ul class="nested"></ul></li></ul>`
+            const expectedStructuredLog = `[START] - Logan attempts to`;
+            const expectedStructuredHtmlLog = `<ul id="ActivityLog"><li><span class="task passed"><span class="logMessage"><span class="activityName">[START]</span> - <span class="activityDescription">Logan attempts to</span></span></span><ul class="nested"></ul></li></ul>`;
 
             expect(logan.activityLog.getLogTree()).toEqual(expected);
             expect(logan.activityLog.getStructuredLog(`  `))
@@ -114,20 +114,20 @@ describe(`The ActivityLog`, (): void => {
                 name: `START`,
                 logType: `Task`,
                 status: `passed`,
-                description: `Logan starts Testing`,
+                description: `Logan attempts to`,
                 activityNodes: [
                     {
                         name: `SkipTask`,
-                        logType: `Task`,
+                        logType: `Interaction`,
                         status: `passed`,
-                        description: `Logan skips the task 'MyNewTask' with reason: 'no data was passed'`,
+                        description: `skip task 'MyNewTask' with reason: 'no data was passed'`,
                         activityNodes: []
                     }
                 ]
             };
             const expectedStructuredLog =
-                `[START] - Logan starts Testing
-  [SkipTask] - Logan skips the task 'MyNewTask' with reason: 'no data was passed'`;
+                `[START] - Logan attempts to
+  [SkipTask] - skip task 'MyNewTask' with reason: 'no data was passed'`;
 
             expect(logan.activityLog.getLogTree()).toEqual(expected);
             expect(logan.activityLog.getStructuredLog(`  `)).toEqual(expectedStructuredLog);
@@ -149,21 +149,21 @@ describe(`The ActivityLog`, (): void => {
                 name: `START`,
                 logType: `Task`,
                 status: `passed`,
-                description: `Logan starts Testing`,
+                description: `Logan attempts to`,
                 activityNodes: [
                     {
                         name: `MyNewTask`,
                         logType: `Task`,
                         status: `passed`,
-                        description: `Logan attempts to execute the empty task to test the log activity`,
+                        description: `execute the empty task to test the log activity`,
                         activityNodes: []
                     }
                 ]
             };
 
             const expectedStructuredLog =
-                `[START] - Logan starts Testing
-  [MyNewTask] - Logan attempts to execute the empty task to test the log activity`;
+                `[START] - Logan attempts to
+  [MyNewTask] - execute the empty task to test the log activity`;
 
             expect(logan.activityLog.getLogTree()).toEqual(expected);
             expect(logan.activityLog.getStructuredLog(`  `)).toEqual(expectedStructuredLog);
@@ -187,29 +187,29 @@ describe(`The ActivityLog`, (): void => {
                 name: `START`,
                 logType: `Task`,
                 status: `passed`,
-                description: `Logan starts Testing`,
+                description: `Logan attempts to`,
                 activityNodes: [
                     {
                         name: `MyNewTask`,
                         logType: `Task`,
                         status: `passed`,
-                        description: `Logan attempts to execute the empty task to test the log activity`,
+                        description: `execute the empty task to test the log activity`,
                         activityNodes: []
                     },
                     {
                         name: `SkipTask`,
-                        logType: `Task`,
+                        logType: `Interaction`,
                         status: `passed`,
-                        description: `Logan skips the task 'MyNewTask' with reason: 'no data was passed'`,
+                        description: `skip task 'MyNewTask' with reason: 'no data was passed'`,
                         activityNodes: []
                     }
                 ]
             };
 
             const expectedStructuredLog =
-                `[START] - Logan starts Testing
-  [MyNewTask] - Logan attempts to execute the empty task to test the log activity
-  [SkipTask] - Logan skips the task 'MyNewTask' with reason: 'no data was passed'`;
+                `[START] - Logan attempts to
+  [MyNewTask] - execute the empty task to test the log activity
+  [SkipTask] - skip task 'MyNewTask' with reason: 'no data was passed'`;
 
             expect(logan.activityLog.getLogTree()).toEqual(expected);
             expect(logan.activityLog.getStructuredLog(`  `)).toEqual(expectedStructuredLog);
@@ -232,36 +232,36 @@ describe(`The ActivityLog`, (): void => {
                 name: `START`,
                 logType: `Task`,
                 status: `passed`,
-                description: `Logan starts Testing`,
+                description: `Logan attempts to`,
                 activityNodes: [
                     {
                         name: `MyFirstTask`,
                         logType: `Task`,
                         status: `passed`,
-                        description: `Logan attempts to execute the first task`,
+                        description: `execute the first task`,
                         activityNodes: [{
                             name: `SkipTask`,
-                            logType: `Task`,
+                            logType: `Interaction`,
                             status: `passed`,
-                            description: `Logan skips the task 'MyNewTask' with reason: 'no data was passed'`,
+                            description: `skip task 'MyNewTask' with reason: 'no data was passed'`,
                             activityNodes: []
                         }]
                     },
                     {
                         name: `SkipTask`,
-                        logType: `Task`,
+                        logType: `Interaction`,
                         status: `passed`,
-                        description: `Logan skips the task 'MyNewTask' with reason: 'no data was passed'`,
+                        description: `skip task 'MyNewTask' with reason: 'no data was passed'`,
                         activityNodes: []
                     }
                 ]
             };
 
             const expectedStructuredLog =
-                `[START] - Logan starts Testing
-  [MyFirstTask] - Logan attempts to execute the first task
-    [SkipTask] - Logan skips the task 'MyNewTask' with reason: 'no data was passed'
-  [SkipTask] - Logan skips the task 'MyNewTask' with reason: 'no data was passed'`;
+                `[START] - Logan attempts to
+  [MyFirstTask] - execute the first task
+    [SkipTask] - skip task 'MyNewTask' with reason: 'no data was passed'
+  [SkipTask] - skip task 'MyNewTask' with reason: 'no data was passed'`;
 
             expect(logan.activityLog.getLogTree()).toEqual(expected);
             expect(logan.activityLog.getStructuredLog(`  `)).toEqual(expectedStructuredLog);
@@ -283,19 +283,19 @@ describe(`The ActivityLog`, (): void => {
 
             const expectedLogTree: ActivityLogNode = {
 
-                description: `Logan starts Testing`,
+                description: `Logan attempts to`,
                 logType: `Task`,
                 name: `START`,
                 status: `failed`,
                 activityNodes: [{
-                    description: `Logan attempts to stop all actions for '1' ms`,
+                    description: `stop all actions for '1' ms`,
                     logType: `Interaction`,
                     name: `Sleep`,
                     status: `passed`,
                     activityNodes: [],
                 },{
 
-                    description: `Logan attempts to execute a failing Task`,
+                    description: `execute a failing Task`,
                     logType: `Task`,
                     name: `MyFailingTask`,
                     status: `failed`,
@@ -303,11 +303,11 @@ describe(`The ActivityLog`, (): void => {
                 }],
             };
 
-            const expectedStructuredLog = `[START] - Logan starts Testing
-    [Sleep] - Logan attempts to stop all actions for '1' ms
-    [MyFailingTask] - Logan attempts to execute a failing Task`;
+            const expectedStructuredLog = `[START] - Logan attempts to
+    [Sleep] - stop all actions for '1' ms
+    [MyFailingTask] - execute a failing Task`;
 
-            const expectedStructuredHtmlLog = `<ul id="ActivityLog"><li><span class="task failed"><span class="logMessage"><span class="activityName">[START]</span> - <span class="activityDescription">Logan starts Testing</span></span></span><ul class="nested"><li class="interaction passed"><span class="logMessage"><span class="activityName">[Sleep]</span> - <span class="activityDescription">Logan attempts to stop all actions for '1' ms</span></span></li><li><span class="task failed"><span class="logMessage"><span class="activityName">[MyFailingTask]</span> - <span class="activityDescription">Logan attempts to execute a failing Task</span></span></span><ul class="nested"></ul></li></ul></li></ul>`;
+            const expectedStructuredHtmlLog = `<ul id="ActivityLog"><li><span class="task failed"><span class="logMessage"><span class="activityName">[START]</span> - <span class="activityDescription">Logan attempts to</span></span></span><ul class="nested"><li class="interaction passed"><span class="logMessage"><span class="activityName">[Sleep]</span> - <span class="activityDescription">stop all actions for '1' ms</span></span></li><li><span class="task failed"><span class="logMessage"><span class="activityName">[MyFailingTask]</span> - <span class="activityDescription">execute a failing Task</span></span></span><ul class="nested"></ul></li></ul></li></ul>`;
 
             const logTree = logan.activityLog.getLogTree();
             const structuredLog = logan.activityLog.getStructuredLog();
@@ -352,19 +352,19 @@ describe(`The ActivityLog`, (): void => {
                 name: `START`,
                 logType: `Task`,
                 status: `passed`,
-                description: `Logan starts Testing`,
+                description: `Logan attempts to`,
                 activityNodes: [{
                     name: `Sleep`,
                     logType: `Interaction`,
                     status: `passed`,
-                    description: `Logan attempts to stop all actions for '1' ms`,
+                    description: `stop all actions for '1' ms`,
                     activityNodes: []
                 }]
             };
 
             const expectedStructuredLog =
-                `[START] - Logan starts Testing
-....[Sleep] - Logan attempts to stop all actions for '1' ms`;
+                `[START] - Logan attempts to
+....[Sleep] - stop all actions for '1' ms`;
 
             expect(logan.activityLog.getLogTree()).toEqual(expected, `log node tree does not match`);
 
@@ -387,26 +387,26 @@ describe(`The ActivityLog`, (): void => {
                 name: `START`,
                 logType: `Task`,
                 status: `passed`,
-                description: `Logan starts Testing`,
+                description: `Logan attempts to`,
                 activityNodes: [
                     {
                         name: `Sleep`,
                         logType: `Interaction`,
                         status: `passed`,
-                        description: `Logan attempts to stop all actions for '1' ms because Sleep should be executed before MySleepTask`,
+                        description: `stop all actions for '1' ms because Sleep should be executed before MySleepTask`,
                         activityNodes: []
                     },
                     {
                         name: `MySleepTask`,
                         logType: `Task`,
                         status: `passed`,
-                        description: `Logan attempts to execute the sleep task`,
+                        description: `execute the sleep task`,
                         activityNodes: [
                             {
                                 name: `Sleep`,
                                 logType: `Interaction`,
                                 status: `passed`,
-                                description: `Logan attempts to stop all actions for '1' ms`,
+                                description: `stop all actions for '1' ms`,
                                 activityNodes: []
                             }
                         ]
@@ -414,10 +414,10 @@ describe(`The ActivityLog`, (): void => {
             };
 
             const expectedStructuredLog =
-                `[START] - Logan starts Testing
-....[Sleep] - Logan attempts to stop all actions for '1' ms because Sleep should be executed before MySleepTask
-....[MySleepTask] - Logan attempts to execute the sleep task
-........[Sleep] - Logan attempts to stop all actions for '1' ms`;
+                `[START] - Logan attempts to
+....[Sleep] - stop all actions for '1' ms because Sleep should be executed before MySleepTask
+....[MySleepTask] - execute the sleep task
+........[Sleep] - stop all actions for '1' ms`;
 
             expect(logan.activityLog.getLogTree()).toEqual(expected);
             expect(logan.activityLog.getStructuredLog(`....`)).toEqual(expectedStructuredLog);
