@@ -62,7 +62,8 @@ describe(`trying to access a Frame`, (): void => {
         - (test case id: 6f5efcda-10d4-43f5-8465-13e8b6eff8a3)`, async (): Promise<void> => {
             const frame = browser.frame(By.css(`.frame-button-in-single-frame`))
                 .shallWait(UntilElement.is.visible().forAsLongAs(10000));
-            const button = frame.element(By.css(`.btn-secondary`));
+            const button = frame.element(By.css(`.btn-secondary`))
+                .shallWait(UntilElement.is.visible().forAsLongAs(10000));
 
             await browser.get(`/redirectToFrames`);
             expect(await button.getText()).toEqual(`Button inside single frame`);
