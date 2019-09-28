@@ -15,7 +15,7 @@ export const checkForFireFoxCyclicError = (
         e.name === `javascript error` &&
         e.message === `TypeError: cyclic object value`) {
 
-        logger.error(`Bug in FF version < 62 encountered ... ignoring for now. 
+        logger.debug(`Bug in FF version < 62 encountered ... ignoring for now. 
                         Not using FF version < 62? Check test case with id: ${testId}`);
         return Promise.resolve();
     }
