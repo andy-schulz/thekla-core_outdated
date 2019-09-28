@@ -58,7 +58,6 @@ export interface ChromeOptions {
     "goog:chromeOptions"?: ChromeBrowserOptions;
 }
 
-
 export interface WindowConfig {
     /**
      * maximize the view port
@@ -66,9 +65,8 @@ export interface WindowConfig {
      * for chrome use options "--window-size=300,400" or "--start-maximized"
      * for firefox use options "--width=500" and "--height=500"
      */
-    setToMaxSize: true;
+    setToMaxSize: boolean;
 }
-
 
 /**
  * @property {string} binary        - Location of the Chrome Binary
