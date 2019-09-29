@@ -7,7 +7,7 @@ import {
     BrowseTheWeb,
     RunningBrowser,
     Navigate, element, See, Text, Expected, Status, Hover
-}                                                   from "../../../index";
+}                                                   from "../../..";
 import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
 import _                                            from "lodash";
 

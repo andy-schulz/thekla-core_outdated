@@ -136,8 +136,10 @@ export class WebElementIO implements TkWebElement<Client> {
                         id: `myMouse`,
                         parameters: {"pointerType": `mouse`},
                         actions: [{
-                            type: `pointerMove`,
+                            type: `pause`,
                             duration: 500,
+                        },{
+                            type: `pointerMove`,
                             origin: `viewport`,
                             x: centerPoint.x,
                             y: centerPoint.y,

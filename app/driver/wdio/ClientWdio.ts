@@ -34,7 +34,7 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
     private static logger: Logger = getLogger(`ClientWdioClass`);
     private logger: Logger = getLogger(`ClientWdio`);
 
-    private clientCreated: boolean = false;
+    private clientCreated = false;
     private _window: BrowserWindow;
     private static clientMap: Map<string, Browser> = new Map<string, Browser>();
     private static attachedClientMap: Map<string, Browser> = new Map<string, Browser>();
@@ -212,7 +212,7 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
 
     }
 
-    public static cleanup(clientsToClean?: Browser[], cleanAttachedSessions: boolean = false): Promise<void[]> {
+    public static cleanup(clientsToClean?: Browser[], cleanAttachedSessions = false): Promise<void[]> {
         return cleanupClients(this.clientMap, clientsToClean)
             .then((promiseArr: void[]) => {
                 if(cleanAttachedSessions)
@@ -285,7 +285,7 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
 
     public all(locator: By): WebElementListFinder {
 
-        let getElements = async (): Promise<TkWebElement<Client>[]> => {
+        const getElements = async (): Promise<TkWebElement<Client>[]> => {
             // always switch to the main Window
             // if you want to deal with an element in a frame DO:
             // frame(By.css("locator")).element(By.css("locator"))
