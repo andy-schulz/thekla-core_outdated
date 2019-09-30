@@ -1,4 +1,5 @@
 import {ClientHelper, ServerConfig, BrowserScreenshotData} from "../../../index";
+import {ScreenshotOptions}                                 from "../../interface/Browser";
 import {ClientWdio}                                        from "../../wdio/ClientWdio";
 import _                                                   from "lodash";
 export class RunningBrowser {
@@ -14,8 +15,8 @@ export class RunningBrowser {
         return ClientWdio.cleanup()
     }
 
-    public static takeScreenshots(): Promise<BrowserScreenshotData[]> {
-        return Promise.all([ClientWdio.takeScreenshots()])
+    public static takeScreenshots(options?: ScreenshotOptions): Promise<BrowserScreenshotData[]> {
+        return Promise.all([ClientWdio.takeScreenshots(options)])
             .then((screenshots: BrowserScreenshotData[][]): BrowserScreenshotData[] => {
                 return _.flatten(screenshots);
             });

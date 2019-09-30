@@ -1,10 +1,10 @@
-import {getLogger}                      from "@log4js-node/log4js-api";
-import {Client}                         from "webdriver";
-import {DesiredCapabilities}            from "../../../config/DesiredCapabilities";
-import {ServerConfig}                   from "../../../config/ServerConfig";
-import {Browser, BrowserScreenshotData} from "../../interface/Browser";
-import {ClientWdio}                     from "../../wdio/ClientWdio";
-import _                                from "lodash";
+import {getLogger}                                         from "@log4js-node/log4js-api";
+import {Client}                                            from "webdriver";
+import {DesiredCapabilities}                               from "../../../config/DesiredCapabilities";
+import {ServerConfig}                                      from "../../../config/ServerConfig";
+import {Browser, BrowserScreenshotData, ScreenshotOptions} from "../../interface/Browser";
+import {ClientWdio}                                        from "../../wdio/ClientWdio";
+import _                                                   from "lodash";
 
 export class ClientHelper {
 
@@ -32,7 +32,7 @@ export class ClientHelper {
         throw new Error(`the client library called ${JSON.stringify(conf.automationFramework)} is not implemented yet`)
     }
 
-    public static cleanup(browserToClean: Browser[] = [], cleanAttachedSession: boolean = false): Promise<void[]> {
+    public static cleanup(browserToClean: Browser[] = [], cleanAttachedSession = false): Promise<void[]> {
         return ClientWdio.cleanup(browserToClean, cleanAttachedSession);
     }
 
@@ -48,8 +48,8 @@ export class ClientHelper {
         return ClientWdio.getClientByName(clientName)
     }
 
-    public static takeScreenshots(): Promise<BrowserScreenshotData[]> {
-        return Promise.all([ClientWdio.takeScreenshots()])
+    public static takeScreenshots(options?: ScreenshotOptions): Promise<BrowserScreenshotData[]> {
+        return Promise.all([ClientWdio.takeScreenshots(options)])
             .then((screenshots: BrowserScreenshotData[][]) => {
                 return _.flatten(screenshots)
             });
@@ -68,7 +68,7 @@ const cleanUpLogger = getLogger(`CLEANUP  FUNCTION`);
 export function cleanupClients(browserMap: Map<string, Browser>, browserToClean?: Browser[]): Promise<void[]> {
 
     if (browserToClean && browserToClean.length > 0) {
-        let browserCleanupPromises: Promise<void>[] = [];
+        const browserCleanupPromises: Promise<void>[] = [];
 
         const entries = [...browserMap.entries()];
         browserToClean.map((browser: Browser): void => {
@@ -111,7 +111,7 @@ export function executeFnOnClient<T>(getClient: Function, func: string, params: 
                 driver[func](...params)
                     .then((param: any) => {
                         resolve(param)
-                    }, (e: any) => {
+                    }, (e: Error) => {
                         reject(e)
                     })
                 // .then(fulfill, reject)
@@ -121,7 +121,8 @@ export function executeFnOnClient<T>(getClient: Function, func: string, params: 
 }
 
 export const switchToMasterFrame = async (client: Client): Promise<Client> => {
-    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore is* Methods are not part of the typings
     if(client.isMobile || client.isAndroid || client.isIOS) {
         const context = await client.getContext();
 

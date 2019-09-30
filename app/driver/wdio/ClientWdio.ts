@@ -1,14 +1,14 @@
-import {getLogger, Logger}                                          from "@log4js-node/log4js-api";
-import * as fs                                                      from "fs";
-import fsExtra                                                      from "fs-extra";
-import * as path                                                    from "path";
-import {PointerActionSequence}                                      from "../interface/Actions";
-import {Browser, BrowserScreenshotData, CreateClient}               from "../interface/Browser";
-import {BrowserWindow, WindowManager}                               from "../interface/BrowserWindow";
-import {ClientCtrls}                                                from "../interface/ClientCtrls";
-import {TkSession}                                                  from "../interface/TkSession";
-import {TkWebElement}                                               from "../interface/TkWebElement";
-import {FrameElementFinder, WebElementFinder, WebElementListFinder} from "../interface/WebElements";
+import {getLogger, Logger}                                               from "@log4js-node/log4js-api";
+import * as fs                                                           from "fs";
+import fsExtra                                                           from "fs-extra";
+import * as path                                                         from "path";
+import {PointerActionSequence}                                           from "../interface/Actions";
+import {Browser, BrowserScreenshotData, CreateClient, ScreenshotOptions} from "../interface/Browser";
+import {BrowserWindow, WindowManager}                                    from "../interface/BrowserWindow";
+import {ClientCtrls}                                                     from "../interface/ClientCtrls";
+import {TkSession}                                                       from "../interface/TkSession";
+import {TkWebElement}                                                    from "../interface/TkWebElement";
+import {FrameElementFinder, WebElementFinder, WebElementListFinder}      from "../interface/WebElements";
 import {By, ServerConfig}                                           from "../..";
 import {cleanupClients, executeFnOnClient, switchToMasterFrame}     from "../lib/client/ClientHelper";
 import {checkClientName}                                            from "../lib/client/checks";
@@ -29,6 +29,7 @@ import deepmerge                          from "deepmerge";
 import AttachSessionOptions = WebDriver.AttachSessionOptions;
 
 import { AnnotatorWdio } from "../../packages/annotator/AnnotatorWdio";
+import { processScreenshot } from "../lib/client/client_utils";
 
 export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
     private static logger: Logger = getLogger(`ClientWdioClass`);
@@ -64,7 +65,7 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
         this._window = window;
     }
 
-    public get serverConfig() {
+    public get serverConfig(): ServerConfig {
         return this._selConfig;
     }
 
@@ -139,6 +140,7 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
                 if (!this.clientCreated) {
                     // ignoring Promise on purpose
                     this._window.setToPreset();
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
                     // @ts-ignore
                     this._capabilities = driver.capabilities;
                 }
@@ -229,8 +231,8 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
      *
      * @returns - and array of BrowserScreenshotData objects, the object contains the browser name and the screenshot data
      */
-    public static takeScreenshots(): Promise<BrowserScreenshotData[]> {
-        return takeScreenshots(this.clientMap);
+    public static takeScreenshots(options?: ScreenshotOptions): Promise<BrowserScreenshotData[]> {
+        return takeScreenshots(this.clientMap, options);
     }
 
     /**
@@ -380,11 +382,13 @@ export class ClientWdio implements Browser, ClientCtrls<Client>, WindowManager {
             })
     }
 
-    public takeScreenshot(): Promise<BrowserScreenshotData> {
+    public takeScreenshot(options?: ScreenshotOptions): Promise<BrowserScreenshotData> {
         return this.getFrameWorkClient()
             .then((client: Client): Promise<BrowserScreenshotData> => {
                 return (client.takeScreenshot() as unknown as Promise<string>)
+                    .then(processScreenshot(options))
                     .then((data: string): BrowserScreenshotData => {
+
                         const screenshotData: BrowserScreenshotData = {
                             browserName: this.browserName,
                             browserScreenshotData: data

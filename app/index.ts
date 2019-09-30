@@ -10,9 +10,9 @@ export {RestClientConfig}                                          from "./confi
  * WebDriver Wrapper
  */
 
-export {Browser}                          from "./driver/interface/Browser";
-export {BrowserScreenshotData}            from "./driver/interface/Browser";
-export {WebElementFinder}                 from "./driver/interface/WebElements";
+export {Browser}                                                             from "./driver/interface/Browser";
+export {BrowserScreenshotData, ScreenshotOptions, ScreenshotSize}            from "./driver/interface/Browser";
+export {WebElementFinder}                                                    from "./driver/interface/WebElements";
 
 export {RunningBrowser} from "./driver/lib/client/RunningBrowser1";
 export {ClientHelper}   from "./driver/lib/client/ClientHelper";
@@ -41,7 +41,7 @@ export {ExecutingRestClient}                                                  fr
  * screenplay Elements
  */
 export {element, all, frame}                                                  from "./screenplay/web/SppWebElements";
-export {SppElement, SppElementList}                         from "./screenplay/web/SppWebElements";
+export {SppElement, SppElementList}                                           from "./screenplay/web/SppWebElements";
 export {Actor}                                                                from "./screenplay/Actor";
 export {request, SppRestRequest}                                              from "./screenplay/rest/SppRestRequests";
 

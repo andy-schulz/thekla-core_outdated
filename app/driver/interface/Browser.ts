@@ -1,9 +1,19 @@
+/* eslint-disable quotes */
 import {DesiredCapabilities}    from "../../config/DesiredCapabilities";
 import {ServerConfig}           from "../../config/ServerConfig";
 import {BrowserWindow}          from "./BrowserWindow";
 import {TkSession}              from "./TkSession";
 import {FrameFinder, WebFinder} from "./WebElements";
 import {Condition}              from "../lib/Condition";
+
+export interface ScreenshotOptions {
+    size?: ScreenshotSize;
+}
+
+export interface ScreenshotSize {
+    width?: number;
+    height?: number;
+}
 
 export interface BrowserScreenshotData {
     browserName: string;
@@ -33,7 +43,7 @@ export interface Browser extends WebFinder, FrameFinder {
 
     getTitle(): Promise<string>;
 
-    takeScreenshot(): Promise<BrowserScreenshotData>;
+    takeScreenshot(options?: ScreenshotOptions): Promise<BrowserScreenshotData>;
 
     saveScreenshot(filepath: string, filename: string): Promise<string>;
 
