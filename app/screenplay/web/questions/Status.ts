@@ -18,7 +18,6 @@ class VisibleStatus implements Question<void, boolean>{
     }
 }
 
-
 class EnableStatus implements Question<void, boolean>{
 
     public answeredBy(actor: UsesAbilities): Promise<boolean> {
@@ -44,6 +43,3 @@ export class Status  {
         }
     }
 }
-
-
-

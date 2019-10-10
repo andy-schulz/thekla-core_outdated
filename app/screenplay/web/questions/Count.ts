@@ -5,6 +5,10 @@ import {SppElementList} from "../SppWebElements";
 
 export class Count implements Question<void, number> {
 
+    public answeredBy(actor: UsesAbilities): Promise<number> {
+        return FindElements.as(actor).findElements(this.elements).count();
+    }
+
     public static of(elements: SppElementList): Count  {
         return new Count(elements)
     }
@@ -12,10 +16,6 @@ export class Count implements Question<void, number> {
     private constructor(
         private elements: SppElementList
     ) {}
-
-    public answeredBy(actor: UsesAbilities): Promise<number> {
-        return FindElements.as(actor).findElements(this.elements).count();
-    }
 
     public toString(): string {
         return `count of elements '${this.elements.toString()}'`

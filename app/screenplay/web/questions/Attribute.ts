@@ -4,7 +4,11 @@ import {FindElements}  from "../abilities/FindElements";
 import {SppElement}    from "../SppWebElements";
 
 export class Attribute implements Question<void, string> {
-    private attributeName: string = ``;
+    private attributeName = ``;
+
+    public answeredBy(actor: UsesAbilities): Promise<string> {
+        return FindElements.as(actor).findElement(this.element).getAttribute(this.attributeName);
+    }
 
     public static of(element: SppElement): Attribute  {
         return new Attribute(element)
@@ -18,10 +22,6 @@ export class Attribute implements Question<void, string> {
     private constructor(
         private element: SppElement
     ) {}
-
-    public answeredBy(actor: UsesAbilities): Promise<string> {
-        return FindElements.as(actor).findElement(this.element).getAttribute(this.attributeName);
-    }
 
     public toString(): string {
         return `Attribute '${this.attributeName}' of element '${this.element.toString()}'`
