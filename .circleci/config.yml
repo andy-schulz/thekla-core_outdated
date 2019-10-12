@@ -31,16 +31,17 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
+      - run: npm run build
+
       - persist_to_workspace:
           root: ~/thekla-core
           paths: .
 
-      - run: npm run build
   test:
     <<: *defaults
     steps:
       - attach_workspace:
-          at: ~/-core
+          at: ~/thekla-core
       - run:
           name: Run tests
           command: npm run test:cov
