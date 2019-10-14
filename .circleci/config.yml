@@ -1,0 +1,86 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check {{ '/2.0/language-javascript/' | docs_url }} for more details
+#
+version: 2.1
+
+defaults: &defaults
+  working_directory: ~/thekla-core
+  docker:
+    - image: circleci/node:8
+
+orbs:
+  codecov: codecov/codecov@1.0.5
+
+jobs:
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: npm install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      - run: npm run build
+
+      - persist_to_workspace:
+          root: ~/thekla-core
+          paths: .
+
+  test:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/thekla-core
+      - run:
+          name: Run tests
+          command: npm run test:cov
+      - codecov/upload:
+          file: ./coverage/lcov.info
+#  deploy:
+#    <<: *defaults
+#    steps:
+#      - attach_workspace:
+#          at: ~/thekla-core
+#      - run:
+#          name: Authenticate with registry
+#          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/thekla/.npmrc
+#      - run:
+#          name: Publish package
+#          command: npm publish
+
+workflows:
+  version: 2
+  build-test-deploy:
+    jobs:
+      - build
+#      - build:
+#          filters:
+#            branches:
+#              ignore: /.*/
+#            tags:
+#              only: /^v.*/
+      - test:
+          requires:
+            - build
+#          filters:
+#            tags:
+#              only: /^v.*/
+#      - deploy:
+#          requires:
+#            - test
+#          filters:
+#            tags:
+#              only: /^v.*/
+#            branches:
+#              ignore: /.*/

@@ -1,0 +1,24 @@
+{
+  "extends": "@istanbuljs/nyc-config-typescript",
+  "exclude": [
+    "coverage/**",
+    "docs/**",
+    "logs/**",
+    "app/test/**",
+    "node_modules/**",
+
+    "app/test/**",
+    "dist/test/**",
+
+    "app/driver/lib/client_side_scripts/**",
+    "dist/driver/lib/client_side_scripts/**",
+
+    "app/packages/annotator/client_side_scripts/**",
+    "dist/packages/annotator/client_side_scripts/**"
+
+  ],
+  "reporter": [
+    "lcov",
+    "text"
+  ]
+}

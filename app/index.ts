@@ -21,7 +21,9 @@ export {Key}            from "./driver/lib/Key";
 export {until}          from "./driver/lib/Condition";
 export {UntilElement}   from "./driver/lib/element/ElementConditions";
 
-export {Utils}                                                       from "./driver/utils/Utils";
+export {Utils}          from "./driver/utils/Utils";
+
+export {WindowSize, WindowRect}     from "./driver/interface/BrowserWindow"
 
 /**
  *
@@ -57,6 +59,8 @@ export {
     PerformsTask, LogsActivity, AnswersQuestions, UsesAbilities
 }                        from "./screenplay/Actor";
 export {ReturnTaskValue} from "./screenplay/lib/actions/ReturnTaskValue";
+
+export {ActivityLogNode} from "./packages/ActivityLog/ActivityLogEntry";
 
 // Activities
 export {Activity, Task, Interaction}            from "./screenplay/lib/actions/Activities";

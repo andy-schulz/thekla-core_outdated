@@ -1,10 +1,6 @@
-import {DesiredCapabilities}                        from "../../../config/DesiredCapabilities";
-import {LogLevel, ServerConfig}                     from "../../../config/ServerConfig";
-import {Browser}                                    from "../../../driver/interface/Browser";
-import {ClientHelper}                               from "../../../driver/lib/client/ClientHelper";
-import {RunningBrowser}                             from "../../..";
-import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
-import _                                            from "lodash";
+import {DesiredCapabilities, ServerConfig, Browser, ClientHelper, RunningBrowser}   from "../../..";
+import {standardCapabilities, standardServerConfig}                                 from "../../0_helper/config";
+import _                                                                            from "lodash";
 
 describe(`using the browser instance`, (): void => {
 

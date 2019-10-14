@@ -1,6 +1,7 @@
 /* eslint-disable quotes */
 export type ActivityLogEntryType = "Task" | "Interaction";
 export type ActivityStatus = "running" | "failed" | "passed";
+
 export interface ActivityLogNode {
     name: string;
     description: string;

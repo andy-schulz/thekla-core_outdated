@@ -17,6 +17,7 @@ import {funcToString}                                                    from ".
 // @ts-ignore
 import {isElementDisplayed} from "../../lib/client_side_scripts/is_displayedness";
 import {LocatorWdio}        from "../LocatorWdio";
+import {boundingRect, scrollIntoView} from "../../lib/client_side_scripts/scroll_page";
 
 export interface ElementRefIO {
     [key: string]: string;
@@ -98,23 +99,11 @@ export class WebElementIO implements TkWebElement<Client> {
 
     public scrollIntoView = (): Promise<void> => {
 
-        const scrollIntoView = (element: any): void => {
-            // @ts-ignore
-            return element.scrollIntoView();
-        };
-
         return this.client.executeScript(funcToString(scrollIntoView), [this.htmlElement])
             .then(() => this.htmlElement);
     };
 
     public getLocationInView = (): Promise<ElementLocationInView> => {
-        const boundingRect = (element: any) => {
-            const locationInfo: any = {};
-            locationInfo.boundingRect = element.getBoundingClientRect();
-            locationInfo.innerWidth = window.innerWidth;
-            locationInfo.innerHeight = window.innerHeight;
-            return locationInfo
-        };
         const func = `return (${boundingRect}).apply(null, arguments);`;
 
         return this.client.executeScript(func, [this.htmlElement]);

@@ -9,6 +9,12 @@ const transformServerConfig = (serverConfig: ServerConfig): (option: Options) =>
     return (options: Options): Options => {
         const opts = options;
 
+        if(serverConfig.user)
+            opts.user = serverConfig.user;
+
+        if(serverConfig.key)
+            opts.key = serverConfig.key;
+
         if (!serverConfig.serverAddress)
             return opts;
 

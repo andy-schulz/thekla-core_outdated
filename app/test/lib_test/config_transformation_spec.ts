@@ -1,8 +1,32 @@
-import {DesiredCapabilities, ProxyType} from "../../config/DesiredCapabilities";
-import {ServerConfig}                   from "../../config/ServerConfig";
-import {transformToWdioConfig}          from "../../driver/lib/config/config_transformation";
+import {DesiredCapabilities, ServerConfig}  from "../..";
+import {transformToWdioConfig}              from "../../driver/lib/config/config_transformation";
 
 describe(`creating the wdio config`, (): void => {
+
+    describe(`with pupulated cloud information`, function () {
+
+        it(`should set user and key in wdio config
+        - (test case id: 2643fb6e-0d7c-45c1-9529-39b39a099b32)`, (): void => {
+
+            const serverConfig: ServerConfig = {
+                user: `user`,
+                key: `key`
+            };
+
+            const capabilities: DesiredCapabilities = {
+                browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`
+            };
+
+            const expected = {
+                user: `user`,
+                key: `key`,
+                capabilities: {browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`}
+            };
+
+            expect(transformToWdioConfig(serverConfig, capabilities)).toEqual(expected)
+        });
+    });
+
     describe(`with no serverAddress values`, (): void => {
         it(`should return an object only containing the capabilities (serverAddress is undefined)
         - (test case id: c84c4b74-fd06-413c-b402-5a8265c439bf)`, (): void => {
@@ -80,8 +104,7 @@ describe(`creating the wdio config`, (): void => {
     describe(`with a proxy property`, (): void => {
         it(`should set noproxy when direct is given 
         - (test case id: 8d140c38-25e7-4896-8b53-043324aef4b7)`, (): void => {
-            const serverConfig: ServerConfig = {
-            };
+            const serverConfig: ServerConfig = {};
 
             const capabilities: DesiredCapabilities = {
                 browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
@@ -103,8 +126,7 @@ describe(`creating the wdio config`, (): void => {
 
         it(`should set system when system is given 
         - (test case id: b4f498d9-3f51-4a74-98ea-23a3f2c988ce)`, (): void => {
-            const serverConfig: ServerConfig = {
-            };
+            const serverConfig: ServerConfig = {};
 
             const capabilities: DesiredCapabilities = {
                 browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
@@ -128,8 +150,7 @@ describe(`creating the wdio config`, (): void => {
     describe(`with chrome options`, (): void => {
         it(`should return the chrome options inside capabilities 
         - (test case id: e404f1b6-5171-4e47-a982-112228fb0e3a)`, (): void => {
-            const serverConfig: ServerConfig = {
-            };
+            const serverConfig: ServerConfig = {};
 
             const capabilities: DesiredCapabilities = {
                 "goog:chromeOptions": {
@@ -151,8 +172,7 @@ describe(`creating the wdio config`, (): void => {
     describe(`with firefox options`, (): void => {
         it(`should return the firefox options inside capabilities 
         - (test case id: 62ae6161-4894-4d37-83bc-00ee8cfb56cb)`, (): void => {
-            const serverConfig: ServerConfig = {
-            };
+            const serverConfig: ServerConfig = {};
 
             const capabilities: DesiredCapabilities = {
                 "moz:firefoxOptions": {
@@ -175,8 +195,7 @@ describe(`creating the wdio config`, (): void => {
 
         it(`should return the options without general appium options set
         - (test case id: e42526bc-bdf9-4d26-9ff0-4fd009617460)`, (): void => {
-            const serverConfig: ServerConfig = {
-            };
+            const serverConfig: ServerConfig = {};
 
             const capabilities: DesiredCapabilities = {
                 platformName: `android`
@@ -193,8 +212,7 @@ describe(`creating the wdio config`, (): void => {
 
         it(`should return the options when only appium options are set
         - (test case id: e42526bc-bdf9-4d26-9ff0-4fd009617460)`, (): void => {
-            const serverConfig: ServerConfig = {
-            };
+            const serverConfig: ServerConfig = {};
 
             const capabilities: DesiredCapabilities = {
                 appium: {
@@ -213,8 +231,7 @@ describe(`creating the wdio config`, (): void => {
 
         it(`should return the options when android options are set 
         - (test case id: 15127cfb-4f50-4a2a-b335-fd594995e4db)`, (): void => {
-            const serverConfig: ServerConfig = {
-            };
+            const serverConfig: ServerConfig = {};
 
             const capabilities: DesiredCapabilities = {
                 appium: {
@@ -236,8 +253,7 @@ describe(`creating the wdio config`, (): void => {
 
         it(`should return the options when iOS options are set 
         - (test case id: a76fe9b3-9a69-48b8-8d1c-e30e144f3300)`, (): void => {
-            const serverConfig: ServerConfig = {
-            };
+            const serverConfig: ServerConfig = {};
 
             const capabilities: DesiredCapabilities = {
                 appium: {

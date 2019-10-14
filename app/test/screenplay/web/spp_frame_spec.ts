@@ -11,7 +11,7 @@ import {
     Text,
     UntilElement,
     ServerConfig, Expected
-}                 from "../../../index";
+}                 from "../../..";
 
 import {configure}                                  from "log4js";
 import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
@@ -21,7 +21,7 @@ configure(`res/config/log4js.json`);
 
 describe(`Locating Elements inside Frames`, (): void => {
 
-    let config: ServerConfig = _.cloneDeep(standardServerConfig);
+    const config: ServerConfig = _.cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
     let Francine: Actor;

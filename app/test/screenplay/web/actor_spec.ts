@@ -23,7 +23,7 @@ const logger = getLogger(`Actor`);
 
 describe(`Searching on Google`, (): void => {
 
-    let config: ServerConfig = _.cloneDeep(standardServerConfig);
+    const config: ServerConfig = _.cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
     let John: Actor;

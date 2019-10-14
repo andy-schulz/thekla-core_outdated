@@ -8,6 +8,10 @@ export const standardServerConfig: ServerConfig = {
     serverAddress: {
         hostname: process.env.SERVER_HOSTNAME ? process.env.SERVER_HOSTNAME : `localhost`
     },
+
+    user: process.env.CLOUD_USER,
+    key: process.env.CLOUD_KEY,
+
     baseUrl: process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`,
     annotateElement: false
 };
