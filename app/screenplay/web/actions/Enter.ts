@@ -23,7 +23,7 @@ export class Enter implements Interaction<void, void> {
         return this;
     }
 
-    public butClearsTheFieldBefore(clear: boolean = true): Enter {
+    public butClearsTheFieldBefore(clear = true): Enter {
         this.clearBeforeFill = clear;
         return this;
     }

@@ -21,7 +21,7 @@ describe(`Hover`, (): void => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
     });
 
-    describe(`over an elements`, (): void => {
+    describe(`over a web element`, (): void => {
         const userIcon = element(By.css(`[data-test-id='usericon']`))
             .shallWait(UntilElement.is.visible().forAsLongAs(5000))
             .called(`The user icon which displays an information box when hovered upon`);
@@ -52,7 +52,7 @@ describe(`Hover`, (): void => {
             )
         });
 
-        it(`should not display the hover when another element is hovered upon 
+        it(`should hide the hover element when the pointer is moved away 
         - (test case id: 6347d82f-c2a2-4bdb-8913-9633f0849352)`, (): Promise<void> => {
             return Howard.attemptsTo(
                 Navigate.to(testUrl),
@@ -63,7 +63,7 @@ describe(`Hover`, (): void => {
                 Hover.over(button),
                 See.if(Status.visible.of(userName)).is(Expected.toBe(false)),
             )
-        }, 50000); // leave the timeout as the url resolve via proxy takes a while
+        }, 50000); // dont change the timeout, the url resolve via proxy takes a while
 
         afterAll((): Promise<void[]> => {
             return RunningBrowser.cleanup();
