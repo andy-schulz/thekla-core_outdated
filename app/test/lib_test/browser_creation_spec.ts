@@ -1,4 +1,4 @@
-import {Browser, ClientHelper, DesiredCapabilities, ServerConfig} from "../../..";
+import {Browser, ClientHelper, DesiredCapabilities, ServerConfig} from "../..";
 import {standardCapabilities, standardServerConfig}               from "../0_helper/config";
 import _                                                          from "lodash";
 

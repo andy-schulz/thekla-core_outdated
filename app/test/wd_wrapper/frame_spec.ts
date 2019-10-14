@@ -6,7 +6,7 @@ import {standardCapabilities, standardServerConfig} from "../0_helper/config";
 import _ from "lodash";
 configure(`res/config/log4js.json`);
 
-fdescribe(`trying to access a Frame`, (): void => {
+describe(`trying to access a Frame`, (): void => {
 
     const conf: ServerConfig = _.cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);

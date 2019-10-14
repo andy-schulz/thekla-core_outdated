@@ -5,10 +5,9 @@ import {SppElement}        from "../SppWebElements";
 import {UsesAbilities}     from "../../Actor";
 import {getLogger, Logger} from "@log4js-node/log4js-api";
 
-
 export class Enter implements Interaction<void, void> {
     private inputField: SppElement;
-    private clearBeforeFill: boolean = false;
+    private clearBeforeFill = false;
     private logger: Logger = getLogger(`Enter`);
 
     public static value(inputString: string | undefined): Enter {
