@@ -1,25 +1,30 @@
 import {ClientWdio}                                                       from "../../../driver/wdio/ClientWdio";
-import {Browser, DesiredCapabilities, WebElementFinder, ServerConfig, By} from "../../../index";
+import {Browser, DesiredCapabilities, WebElementFinder, ServerConfig, By} from "../../..";
 import {standardCapabilities, standardServerConfig}                       from "../../0_helper/config";
 import _                                                                  from "lodash";
 
 describe(`The annotation`, (): void => {
 
+    let browser: Browser;
     const conf: ServerConfig = _.cloneDeep(standardServerConfig);
+    conf.annotateElement = true;
+
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
     beforeAll((): void => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
+        browser = ClientWdio.create({serverConfig: conf, capabilities: capabilities});
+
     });
 
-    describe(`for a not set annotation parameter`, (): void => {
-        const confAnnotate: ServerConfig = conf;
-        confAnnotate.annotateElement = true;
-        let browser: Browser;
+    afterAll(async (): Promise<void[]> => {
+        return ClientWdio.cleanup();
+    })
+
+    describe(`without an annotation parameter`, (): void => {
         let emailField: WebElementFinder;
 
         beforeAll((): void => {
-            browser = ClientWdio.create({serverConfig: confAnnotate, capabilities: capabilities});
             emailField = browser.element(By.css(`body`)).element(By.css(`#exampleEmail`));
         });
 
@@ -31,15 +36,10 @@ describe(`The annotation`, (): void => {
     });
 
     describe(`of element`, (): void => {
-        const confAnnotate: ServerConfig = conf;
-        confAnnotate.annotateElement = true;
-        let browser: Browser;
-
         let passwordField: WebElementFinder;
         let emailField: WebElementFinder;
 
         beforeAll((): void => {
-            browser = ClientWdio.create({serverConfig: confAnnotate, capabilities: capabilities});
 
             passwordField = browser.element(By.css(`#examplePassword`));
             emailField = browser.element(By.css(`#exampleEmail`));
@@ -123,15 +123,25 @@ describe(`The annotation`, (): void => {
         }, 30000);
 
     });
+});
+
+describe(`The test search message`, function () {
+
+    let browser: Browser;
+    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
+    conf.displayTestMessages = true;
+
+    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
+
+    beforeAll((): void => {
+        browser = ClientWdio.create({serverConfig: conf, capabilities: capabilities});
+    });
+
+    afterAll(async (): Promise<void[]> => {
+        return ClientWdio.cleanup();
+    });
 
     describe(`the test with a message`, (): void => {
-        const confAnnotate: ServerConfig = conf;
-        confAnnotate.displayTestMessages = true;
-        let browser: Browser;
-
-        beforeAll((): void => {
-            browser = ClientWdio.create({serverConfig: confAnnotate, capabilities: capabilities});
-        });
 
         it(`a test message should be displayed`
             + `- (test case id: 2fe31617-3257-401b-b380-9543665f09f5)`, async (): Promise<void> => {
@@ -153,8 +163,4 @@ describe(`The annotation`, (): void => {
             }
         }, 30000);
     });
-
-    afterAll(async (): Promise<void[]> => {
-        return ClientWdio.cleanup();
-    })
 });

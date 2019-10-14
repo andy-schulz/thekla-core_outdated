@@ -1,0 +1,14 @@
+{
+  "spec_dir": "dist/test",
+  "spec_files": [
+      "./**/*[sS]pec.js"
+  ]
+  ,
+  "helpers": [
+    "support/helpers/wdio_chrome.js"
+  ]
+  ,
+  "oneFailurePerSpec": false
+  ,
+  "random": true
+}

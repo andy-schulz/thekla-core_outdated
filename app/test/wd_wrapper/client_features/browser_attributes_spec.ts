@@ -1,7 +1,6 @@
-import * as _                                            from "lodash";
-import {WindowSize}                                      from "../../../driver/interface/BrowserWindow";
-import {ClientHelper, DesiredCapabilities, ServerConfig} from "../../../index";
-import {standardCapabilities, standardServerConfig}      from "../../0_helper/config";
+import * as _                                                           from "lodash";
+import {ClientHelper, DesiredCapabilities, ServerConfig, WindowSize}    from "../../..";
+import {standardCapabilities, standardServerConfig}                     from "../../0_helper/config";
 
 describe(`creating a new Browser`, (): void => {
 

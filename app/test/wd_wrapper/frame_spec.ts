@@ -2,12 +2,11 @@ import {configure}                                  from "log4js";
 import {
     Browser, By, UntilElement, ServerConfig, DesiredCapabilities, ClientHelper
 }                                                   from "../..";
-import {LogLevel}                                   from "../../config/ServerConfig";
 import {standardCapabilities, standardServerConfig} from "../0_helper/config";
 import _ from "lodash";
 configure(`res/config/log4js.json`);
 
-describe(`trying to access a Frame`, (): void => {
+fdescribe(`trying to access a Frame`, (): void => {
 
     const conf: ServerConfig = _.cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);

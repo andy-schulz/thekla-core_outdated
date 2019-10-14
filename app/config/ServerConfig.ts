@@ -9,6 +9,16 @@ export interface ServerConfig {
     automationFramework?: AutomationFramework;
 
     /**
+     * Browserstack user
+     */
+    user?: string;
+
+    /**
+     * Browserstack key
+     */
+    key?: string;
+
+    /**
      * mark the elements the driver is about to interact with
      */
     annotateElement?: boolean;

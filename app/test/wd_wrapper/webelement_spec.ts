@@ -19,6 +19,8 @@ configure(`res/config/log4js.json`);
 
 describe(`When using the Browser object`, (): void => {
 
+    let browser: Browser;
+
     const conf: ServerConfig = _.cloneDeep(standardServerConfig);
 
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
@@ -26,15 +28,15 @@ describe(`When using the Browser object`, (): void => {
     const testurl = process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`;
 
     beforeAll((): void => {
+        browser = RunningBrowser.startedOn(conf).withCapabilities(capabilities)
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
     });
 
-    describe(`and calling the get method `, (): void => {
-        let browser: Browser;
+    afterAll(async (): Promise<void[]> => {
+        return RunningBrowser.cleanup();
+    })
 
-        beforeAll((): void => {
-            browser = RunningBrowser.startedOn(conf).withCapabilities(capabilities)
-        });
+    describe(`and calling the get method `, (): void => {
 
         it(`with ${testurl}, it should open the URL in the browser.  
         - (test case id: 7767cdde-846e-40c8-9476-adb133516cb0)`, async (): Promise<void> => {
@@ -44,15 +46,9 @@ describe(`When using the Browser object`, (): void => {
     });
 
     describe(`and calling the element function`, (): void => {
-        let browser: Browser;
 
         beforeAll((): Promise<void> => {
-            browser = RunningBrowser.startedOn(conf).withCapabilities(capabilities);
             return browser.get(testurl);
-        });
-
-        afterAll((): Promise<void[]> => {
-            return RunningBrowser.cleanup()
         });
 
         it(`it should return a WebElement object  
@@ -81,17 +77,11 @@ describe(`When using the Browser object`, (): void => {
     });
 
     describe(`and try to click on an element`, (): void => {
-        let browser: Browser;
         let optionList: WebElementFinder;
 
         beforeAll((): Promise<void> => {
-            browser = RunningBrowser.startedOn(conf).withCapabilities(capabilities);
             optionList = browser.element(By.css(`[data-test-id='buttonDropDown']`));
             return browser.get(testurl);
-        });
-
-        afterAll((): Promise<void[]> => {
-            return RunningBrowser.cleanup()
         });
 
         it(`the optionList should be found and opened 
@@ -124,21 +114,15 @@ describe(`When using the Browser object`, (): void => {
     });
 
     describe(`and try to hover an element`, (): void => {
-        let browser: Browser;
         let userName: WebElementFinder,
             hoverElement: WebElementFinder,
             button: WebElementFinder;
 
         beforeAll((): Promise<void> => {
-            browser = RunningBrowser.startedOn(conf).withCapabilities(capabilities);
             hoverElement = browser.element(By.css(`[data-test-id='usericon']`));
             userName = browser.element(By.css(`[data-test-id='hoverusername']`));
             button = browser.element(By.css(`[data-test-id='button']`));
             return browser.get(testurl);
-        });
-
-        afterAll((): Promise<void[]> => {
-            return RunningBrowser.cleanup()
         });
 
         it(`the hover element should be displayed 
@@ -154,17 +138,11 @@ describe(`When using the Browser object`, (): void => {
     });
 
     describe(`to retrieving the element location`, (): void => {
-        let browser: Browser;
         let hoverElement: WebElementFinder;
 
         beforeAll((): Promise<void> => {
-            browser = RunningBrowser.startedOn(conf).withCapabilities(capabilities);
             hoverElement = browser.element(By.css(`[data-test-id='usericon']`));
             return browser.get(`/`);
-        });
-
-        afterAll((): Promise<void[]> => {
-            return RunningBrowser.cleanup()
         });
 
         it(`the location object should not be empty
@@ -185,18 +163,12 @@ describe(`When using the Browser object`, (): void => {
     });
 
     describe(`and try to scroll an element into view`, (): void => {
-        let browser: Browser;
         let lastTableRow: WebElementFinder;
 
         beforeAll((): Promise<void> => {
-            browser = RunningBrowser.startedOn(conf).withCapabilities(capabilities);
             lastTableRow = browser.element(By.css(`[data-test-id='lastTableRow']`));
 
             return browser.get(`/tables`);
-        });
-
-        afterAll((): Promise<void[]> => {
-            return RunningBrowser.cleanup()
         });
 
         it(`it should scroll to the element 
@@ -214,21 +186,15 @@ describe(`When using the Browser object`, (): void => {
     });
 
     describe(`and try to enter a String to an element`, (): void => {
-        let browser: Browser;
         let emailInput: WebElementFinder;
 
         beforeAll((): Promise<void> => {
-            browser = RunningBrowser.startedOn(conf).withCapabilities(capabilities);
             emailInput = browser.element(By.css(`[data-test-id='exampleEmail']`));
             return browser.get(`/`);
         });
 
         afterEach((): Promise<void> => {
             return browser.get(`/`);
-        });
-
-        afterAll((): Promise<void[]> => {
-            return RunningBrowser.cleanup()
         });
 
         it(`the string should be found on the value attribute 
@@ -248,17 +214,11 @@ describe(`When using the Browser object`, (): void => {
     });
 
     describe(`and try to clear an element`, (): void => {
-        let browser: Browser;
         let filledInputField: WebElementFinder;
 
         beforeAll((): Promise<void> => {
-            browser = RunningBrowser.startedOn(conf).withCapabilities(capabilities);
             filledInputField = browser.element(By.css(`[data-test-id='htmlInitiallyAttributeSet']`));
             return browser.get(`/`);
-        });
-
-        afterAll((): Promise<void[]> => {
-            return RunningBrowser.cleanup()
         });
 
         it(`should clear the input field 
@@ -272,14 +232,12 @@ describe(`When using the Browser object`, (): void => {
     });
 
     describe(`and try to wait for an element state`, (): void => {
-        let browser: Browser;
         let appearButton10000: WebElementFinder;
         let buttonNeverExists: WebElementFinder;
         let disappearButton10000: WebElementFinder;
         let enabledButton4000: WebElementFinder;
 
         beforeAll((): void => {
-            browser = RunningBrowser.startedOn(conf).withCapabilities(capabilities);
             appearButton10000 = browser.element(By.css(`[data-test-id='AppearButtonBy10000']`));
             buttonNeverExists = browser.element(By.css(`[data-test-id='neverExists']`));
             disappearButton10000 = browser.element(By.css(`[data-test-id='DisappearButtonBy8000']`));
@@ -288,10 +246,6 @@ describe(`When using the Browser object`, (): void => {
 
         beforeEach((): Promise<void> => {
             return browser.get(testurl + `/delayed`);
-        });
-
-        afterAll((): Promise<void[]> => {
-            return RunningBrowser.cleanup()
         });
 
         it(`the system should wait for 5 Seconds and then timout 
@@ -356,22 +310,16 @@ describe(`When using the Browser object`, (): void => {
     });
 
     describe(`and try to wait for an Element to be VISIBLE`, (): void => {
-        let browser: Browser;
         let appearButton4000: WebElementFinder;
         let disappearButton4000: WebElementFinder;
 
         beforeAll((): void => {
-            browser = RunningBrowser.startedOn(conf).withCapabilities(capabilities);
             appearButton4000 = browser.element(By.css(`[data-test-id='AppearButtonBy4000']`));
             disappearButton4000 = browser.element(By.css(`[data-test-id='DisappearButtonBy4000']`));
         });
 
         beforeEach((): Promise<void> => {
             return browser.get(testurl + `/delayed`);
-        });
-
-        afterAll((): Promise<void[]> => {
-            return RunningBrowser.cleanup()
         });
 
         it(`the system should wait for 5 Seconds for the element to appear 
@@ -393,22 +341,16 @@ describe(`When using the Browser object`, (): void => {
     });
 
     describe(`and try to wait for an Element to be ENABLED`, (): void => {
-        let browser: Browser;
         let enabledButton4000: WebElementFinder;
         let disabledButton4000: WebElementFinder;
 
         beforeAll((): void => {
-            browser = RunningBrowser.startedOn(conf).withCapabilities(capabilities);
             enabledButton4000 = browser.element(By.css(`[data-test-id='EnabledButtonBy4000']`));
             disabledButton4000 = browser.element(By.css(`[data-test-id='DisabledButtonBy4000']`));
         });
 
         beforeEach((): Promise<void> => {
             return browser.get(testurl + `/delayed`);
-        });
-
-        afterAll((): Promise<void[]> => {
-            return RunningBrowser.cleanup()
         });
 
         it(`the system should wait for 5 Seconds for the element to be enabled 
@@ -430,9 +372,4 @@ describe(`When using the Browser object`, (): void => {
         });
 
     });
-
-    afterAll(async (): Promise<void[]> => {
-        return RunningBrowser.cleanup();
-    })
-
 });

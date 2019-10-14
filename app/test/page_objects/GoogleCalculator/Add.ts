@@ -1,7 +1,5 @@
-import {Activity, Task}   from "../../../screenplay/lib/actions/Activities";
-import {Click}            from "../../../screenplay/web/actions/Click";
-import {PerformsTask}     from "../../../screenplay/Actor";
-import {GoogleCalculator} from "./GoogleCalculator";
+import {Activity, Task, Click, PerformsTask}    from "../../..";
+import {GoogleCalculator}                       from "./GoogleCalculator";
 
 export class Add extends Task<void, void> {
     private secondNumber: number;
@@ -71,6 +69,4 @@ export class Add extends Task<void, void> {
         }
         return clickFlow;
     }
-
-
 }

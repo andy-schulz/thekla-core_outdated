@@ -1,9 +1,6 @@
-import {DesiredCapabilities}                        from "../../../config/DesiredCapabilities";
-import {ServerConfig}                               from "../../../config/ServerConfig";
-import {Browser}                                    from "../../../driver/interface/Browser";
-import {ClientHelper}                               from "../../../driver/lib/client/ClientHelper";
-import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
-import _                                            from "lodash";
+import {DesiredCapabilities, ServerConfig, Browser, ClientHelper}   from "../../..";
+import {standardCapabilities, standardServerConfig}                 from "../../0_helper/config";
+import _                                                            from "lodash";
 
 describe(`Using the BrowserWdjs class`, (): void => {
 

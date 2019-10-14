@@ -10,7 +10,7 @@ import {
     See,
     TheSites,
     Attribute, element, Expected, Status, all, Count, Extract, Text, Click
-}                 from "../../../index";
+}                 from "../../..";
 
 import {configure}                                  from "log4js";
 import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
@@ -20,13 +20,16 @@ configure(`res/config/log4js.json`);
 
 describe(`Using`, (): void => {
 
-    let seleniumConfig: ServerConfig = _.cloneDeep(standardServerConfig);
+    let browser: Browser;
+
+    const seleniumConfig: ServerConfig = _.cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
     const testUrl = process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`;
 
     beforeAll((): void => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+        browser = RunningBrowser.startedOn(seleniumConfig).withCapabilities(capabilities);
     });
 
     afterAll(async (): Promise<void[]> => {
@@ -35,15 +38,9 @@ describe(`Using`, (): void => {
 
     describe(`the Site question`, (): void => {
         const Joanna: Actor = Actor.named(`Joanna`);
-        let browser: Browser;
 
         beforeAll((): void => {
-            browser = RunningBrowser.startedOn(seleniumConfig).withCapabilities(capabilities);
             Joanna.can(BrowseTheWeb.using(browser))
-        });
-
-        afterAll((): Promise<void[]> => {
-            return RunningBrowser.cleanup()
         });
 
         it(`with >See<: should check for the current site url ` +
@@ -64,15 +61,10 @@ describe(`Using`, (): void => {
     });
 
     describe(`the Status question`, (): void => {
-        let John: Actor = Actor.named(`John`);
+        const John: Actor = Actor.named(`John`);
 
         beforeAll((): void => {
-            const browser = RunningBrowser.startedOn(seleniumConfig).withCapabilities(capabilities);
             John.can(BrowseTheWeb.using(browser));
-        });
-
-        afterAll((): Promise<void[]> => {
-            return RunningBrowser.cleanup()
         });
 
         it(`with the visibility state should be not be successful, when the button is not displayed` +
@@ -117,15 +109,10 @@ describe(`Using`, (): void => {
     });
 
     describe(`the Count question`, (): void => {
-        let Jonathan: Actor = Actor.named(`Jonathan`);
+        const Jonathan: Actor = Actor.named(`Jonathan`);
 
         beforeAll((): void => {
-            const browser = RunningBrowser.startedOn(seleniumConfig).withCapabilities(capabilities);
             Jonathan.can(BrowseTheWeb.using(browser));
-        });
-
-        afterAll((): Promise<void[]> => {
-            return RunningBrowser.cleanup()
         });
 
         it(`should return the correct number of table rows ` +
@@ -142,15 +129,10 @@ describe(`Using`, (): void => {
     });
 
     describe(`the Attribute question`, (): void => {
-        let Jonathan: Actor = Actor.named(`Jonathan`);
+        const Jonathan: Actor = Actor.named(`Jonathan`);
 
         beforeAll((): void => {
-            const browser = RunningBrowser.startedOn(seleniumConfig).withCapabilities(capabilities);
             Jonathan.can(BrowseTheWeb.using(browser));
-        });
-
-        afterAll((): Promise<void[]> => {
-            return RunningBrowser.cleanup()
         });
 
         it(`on the elements attribute should return the calculated value 

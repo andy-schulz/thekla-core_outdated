@@ -3,6 +3,13 @@ import * as uuid      from "uuid"
 import {TkWebElement} from "../../driver/interface/TkWebElement";
 import {getLogger}    from "@log4js-node/log4js-api";
 
+import {
+    displayMessage,
+    hideMessage,
+    highlightElement,
+    unHighlightElement
+} from "./client_side_scripts/annotator_scripts";
+
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 export class AnnotatorWdio {
@@ -19,96 +26,6 @@ export class AnnotatorWdio {
 
     private funcToString = (func: Function | string) => {
         return `return (${func}).apply(null, arguments);`
-    };
-
-    /**
-     *  hide the test message element
-     *
-     *  @param elementId id of test message element
-     *
-     *  @returns void
-     */
-    private readonly hideMessage = function () {
-        let alert = document.querySelector(`#${ arguments[0]}`);
-
-        if(alert) {
-            // @ts-ignore
-            alert.style.display = `none`;
-        }
-
-    };
-
-    /**
-     * add test message to current page
-     *
-     * @param elementId id of test message element
-     * @param displayedText text to display on the test message
-     * @param testMessageOptions options describing the style of the test message
-     *
-     * @returns void
-     */
-    private readonly displayMessage = function (): void {
-
-        var alert = document.querySelector(`#${arguments[0]}`);
-
-        if(alert) {
-            alert.textContent = arguments[1];
-
-            // @ts-ignore
-            alert.style.display = `block`;
-        } else {
-            alert = document.createElement(`div`);
-            alert.textContent = arguments[1];
-            alert.setAttribute(`id`,arguments[0]);
-            alert.setAttribute(`class`,`alert`);
-            alert.setAttribute(`style`,`` +
-                `z-index: 1000000;` + /* make it incredibly big so that its always on top of other elements */
-                `padding: 5px;` +
-                `background-color: #f96b6b; /* Red */` +
-                `color: white;` +
-                `position: fixed;` +
-                `opacity: 0.7;` +
-                `font-size: 15px;` +
-                `top: 0;` +
-                `left: 0;` +
-                `right: 0;` +
-                `margin: auto;` +
-                `text-align: center;` +
-                ``);
-            if(document.body)
-                document.body.appendChild(alert);
-            else
-                console.warn(`can't append child as document.body is missing`)
-
-        }
-    };
-
-    private readonly unHighlightElement = function(): void {
-        /*UN-HIGHLIGHT ELEMENT*/
-        try {
-            if(arguments[0] && document.body.contains(arguments[0]) && arguments[1] !== undefined) {
-                arguments[0].removeAttribute(`style`);
-                arguments[0].setAttribute(`style`,arguments[1])
-            }
-        } catch(e) {
-            console.error(`caught error`)
-        }
-    };
-
-    private readonly highlightElement = function () {
-        /*HIGHLIGHT ELEMENT*/
-        if(arguments[0] && document.body.contains(arguments[0])) {
-            const oldStyle = arguments[0].getAttribute(`style`);
-
-            const newStyle = `${oldStyle ? oldStyle : ``} /* annotation start */ color: red; border: 2px solid red; /* annotation end */`;
-            
-            arguments[0].setAttribute(`style`, newStyle);
-
-            return oldStyle
-        }
-
-        return;
-
     };
 
     /**
@@ -136,7 +53,7 @@ export class AnnotatorWdio {
      */
     private displayTM(driver: Client, testMessage: string): Promise<Client> {
         return this.promise = this.promise
-            .then(() => driver.executeScript(this.funcToString(this.displayMessage), [this.uuid, testMessage]))
+            .then(() => driver.executeScript(this.funcToString(displayMessage), [this.uuid, testMessage]))
             .then(() => driver)
     }
 
@@ -146,7 +63,7 @@ export class AnnotatorWdio {
      */
     private hideTM(driver: Client): Promise<Client> {
         return this.promise = this.promise
-            .then(() => driver.executeScript(this.funcToString(this.hideMessage),[this.uuid]))
+            .then(() => driver.executeScript(this.funcToString(hideMessage),[this.uuid]))
             .then(() => driver)
     }
 
@@ -159,7 +76,7 @@ export class AnnotatorWdio {
         return this.promise = this.promise
             .then(() => {
                 return new Promise((resolve, reject) => {
-                    driver.executeScript(this.funcToString(this.unHighlightElement),[this.elementBefore, this.styleBefore])
+                    driver.executeScript(this.funcToString(unHighlightElement),[this.elementBefore, this.styleBefore])
                         .then(resolve, (e: Error) => {
                             if(e.name === `stale element reference`) {
                                 this.logger.debug(`stale element reference error detected while unhighlighting an old element.
@@ -178,12 +95,11 @@ export class AnnotatorWdio {
             })
             .then(() => {
                 return new Promise((resolve, reject) => {
-                    driver.executeScript(this.funcToString(this.highlightElement),[element])
+                    driver.executeScript(this.funcToString(highlightElement),[element])
                         .then(resolve, reject)
                 })
             })
             .then((style: any) => {
-                // @ts-ignore
                 this.elementBefore = element;
                 this.styleBefore = style === null ? undefined : style;
             })

@@ -4,7 +4,8 @@ import {
 import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
 import _                                            from "lodash";
 
-const sizeOf = require('image-size');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const sizeOf = require(`image-size`);
 
 describe(`Taking a screenshot`, (): void => {
     let browser: Browser;
@@ -13,7 +14,6 @@ describe(`Taking a screenshot`, (): void => {
 
     const conf: ServerConfig = _.cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
-
 
     beforeAll(async (): Promise<void> => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
@@ -26,7 +26,6 @@ describe(`Taking a screenshot`, (): void => {
         return ClientHelper.cleanup();
     }, 20000);
 
-
     describe(`from a single browser as base64 string`, (): void => {
         it(`should return a 5x5 png` +
             `- (test case id: 464d2df4-2bd3-4f53-a503-159294fe086e)`, async (): Promise<void> => {
@@ -37,7 +36,6 @@ describe(`Taking a screenshot`, (): void => {
             expect(sizeOf(imageBinary).width).toEqual(20);
         });
     });
-
 
     describe(`from multiple browser as base64 string`, (): void => {
         let browser2: Browser;

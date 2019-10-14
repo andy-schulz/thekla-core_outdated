@@ -1,10 +1,5 @@
 import * as fs               from "fs";
-import {ActivityLogNode}     from "../../../packages/ActivityLog/ActivityLogEntry";
-import {Actor, PerformsTask} from "../../../screenplay/Actor";
-import {Task}                from "../../../screenplay/lib/actions/Activities";
-import {Sleep}               from "../../../screenplay/lib/actions/Sleep";
-import {step}                from "../../../screenplay/lib/decorators/step_decorators";
-import {SkipTask}            from "../../../screenplay/lib/tasks/SkipTask";
+import {ActivityLogNode, Actor, PerformsTask, Task, Sleep, step, SkipTask}     from "../../..";
 
 interface MyNewData {
     theData: string;

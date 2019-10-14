@@ -1,5 +1,4 @@
-import {element, SppElement} from "../../../screenplay/web/SppWebElements";
-import {By}                  from "../../..";
+import {By, element, SppElement} from "../../..";
 
 export class GoogleCalculator {
     public static input: SppElement =          element(By.css(`.card-section [role='presentation']`)).called(`the calculator input field`);

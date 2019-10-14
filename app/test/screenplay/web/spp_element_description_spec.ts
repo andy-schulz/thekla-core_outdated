@@ -11,7 +11,7 @@ import {
     all,
     SppElement,
     ServerConfig, DesiredCapabilities, Expected
-}                 from "../../../index";
+}                 from "../../..";
 
 import {getLogger}                                  from "log4js";
 import {standardCapabilities, standardServerConfig} from "../../0_helper/config";

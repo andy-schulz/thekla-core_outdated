@@ -16,7 +16,7 @@ const logger = getLogger(`Spec: Spp wait for elements`);
 
 describe(`Waiting for SPP Elements`, (): void => {
 
-    let seleniumConfig: ServerConfig = _.cloneDeep(standardServerConfig);
+    const seleniumConfig: ServerConfig = _.cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
 
     logger.trace(`test started`);

@@ -1,11 +1,6 @@
-import {DesiredCapabilities}                        from "../../config/DesiredCapabilities";
-import {ServerConfig}                               from "../../config/ServerConfig";
-import {Browser}                                    from "../../driver/interface/Browser";
-import {ClientHelper}                               from "../../driver/lib/client/ClientHelper";
-import {until}                                      from "../../driver/lib/Condition";
-import {By}                                         from "../../driver/lib/element/Locator";
-import {standardCapabilities, standardServerConfig} from "../0_helper/config";
-import _                                            from "lodash";
+import {DesiredCapabilities, ServerConfig, Browser, ClientHelper, By, until}    from "../..";
+import {standardCapabilities, standardServerConfig}                             from "../0_helper/config";
+import _                                                                        from "lodash";
 import { WebElementFinder } from "../..";
 
 describe(`drag an element`, (): void => {

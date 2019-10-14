@@ -56,8 +56,8 @@ describe(`Starting a browser instance`, (): void => {
             const browserInitialResize = ClientHelper.create(con, capa);
             const data = await browserInitialResize.executeScript(windowSize);
             const dataParsed: WindowSize = JSON.parse(JSON.stringify(data));
-            expect(dataParsed.height).toBeGreaterThanOrEqual(2000);
-            expect(dataParsed.width).toBeGreaterThanOrEqual(2000);
+            expect(dataParsed.height).toBeGreaterThanOrEqual(1000);
+            expect(dataParsed.width).toBeGreaterThanOrEqual(1000);
         });
     });
 
