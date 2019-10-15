@@ -330,23 +330,25 @@ describe(`creating the wdio config`, (): void => {
             expect(transformToWdioConfig(serverConfig, capabilities)).toEqual(expectedConf);
         });
 
-        it(`should ignore an empty browserstack option set 
+        fit(`should ignore an empty browserstack option set 
         - (test case id: 2feb0192-8c90-4270-a8c3-bd8f1be72cf9)`, (): void => {
             const serverConfig: ServerConfig = {};
 
             const capabilities: DesiredCapabilities = {
                 browserName: `firefox`,
-                browserStack: {
-                    user: `MyUser`,
-                    key: `MyKey`
+                "bstack:options": {
+                    userName: `MyUser`,
+                    accessKey: `MyKey`
                 }
             };
 
             const expectedConf = {
                 capabilities: {
                     browserName: `firefox`,
-                    userName: `MyUser`,
-                    accessKey: `MyKey`,
+                    "bstack:options": {
+                        userName: `MyUser`,
+                        accessKey: `MyKey`
+                    }
                 }
             };
 
