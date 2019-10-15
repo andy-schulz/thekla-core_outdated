@@ -362,7 +362,7 @@ describe(`When using the Browser object`, (): void => {
 
         });
 
-        it(`the system should wait for 5 Seconds for the element to be disabled 
+        fit(`the system should wait for 5 Seconds for the element to be disabled 
             - (test case id: 010e0544-4852-4258-9729-30a2ff5ca063)`, async (): Promise<void> => {
             // expect(await delayButton5000.isVisible()).toEqual(true);
             expect(await disabledButton4000.isEnabled()).toEqual(true, `the button should be enabled at first check`);
