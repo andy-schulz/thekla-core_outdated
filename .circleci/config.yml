@@ -45,6 +45,7 @@ jobs:
       - run:
           name: Run tests
           command: npm run test:cov
+          no_output_timeout: 30m
       - codecov/upload:
           file: ./coverage/lcov.info
 #  deploy:
