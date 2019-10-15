@@ -1,4 +1,3 @@
-import {parseBrowserVersion}        from "../../../driver/lib/client/client_utils";
 import {
     Actor,
     RunningBrowser,
@@ -12,21 +11,20 @@ import {
     ServerConfig,
     Click,
     UntilElement, Expected, Browser
-}                                   from "../../../index";
-import {checkForFireFoxCyclicError} from "../../0_helper/browser_bugs";
-
-import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
-import _                                            from "lodash";
-
-import {configure, getLogger} from "log4js";
+}                                                                        from "../../../index";
+import {checkForFireFoxCyclicError}                                      from "../../0_helper/browser_bugs";
+import {setBrowserStackName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import {cloneDeep}                                                       from "lodash";
+import {configure, getLogger}                                            from "log4js";
 
 configure(`res/config/log4js.json`);
 
 describe(`When locating an element,`, (): void => {
     const logger = getLogger(`spp_selector_spec`);
 
-    const config: ServerConfig = _.cloneDeep(standardServerConfig);
-    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
+    const config: ServerConfig = cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
+    setBrowserStackName(capabilities, `spp_selector_spec.ts`);
 
     let aBrowser: Browser;
     let john: Actor;

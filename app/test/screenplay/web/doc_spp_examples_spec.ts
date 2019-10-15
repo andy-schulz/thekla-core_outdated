@@ -13,7 +13,10 @@ import {
     Text,
     UntilElement,
     ServerConfig, Expected
-}                 from "../../../index";
+}                                                                        from "../../../index";
+import {getLogger}                                                       from "log4js";
+import {setBrowserStackName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import {cloneDeep}                                                       from "lodash";
 
 class GooglePgo {
     // define your elements in a page object
@@ -29,17 +32,18 @@ class GooglePgo {
         .shallWait(UntilElement.is.visible().forAsLongAs(5000));
 }
 
-import {getLogger}                                  from "log4js";
-import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
-import _                                            from "lodash";
-
 const logger = getLogger(`DocSppExamples`);
 
 describe(`Using Google Search to find an online calculator`, (): void => {
     logger.trace(`Start Google Search test`);
 
-    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
-    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
+    const conf: ServerConfig = cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
+    setBrowserStackName(capabilities, `doc_spp_examples_spec.ts`);
+
+    beforeAll(() => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 40000;
+    });
 
     describe(`with the screenplay pattern implementation,`, (): void => {
         // define your actor
@@ -58,7 +62,7 @@ describe(`Using Google Search to find an online calculator`, (): void => {
                 Click.on(GooglePgo.submitSearch),
                 See.if(Text.of(GooglePgo.calculatorInput)).is(Expected.toEqual(`0`))
             )
-        }, 20000);
+        });
     });
 
     afterAll(async (): Promise<void[]> => {

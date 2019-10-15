@@ -1,12 +1,13 @@
-import {DesiredCapabilities, ServerConfig, Browser, ClientHelper, By, until}    from "../..";
-import {standardCapabilities, standardServerConfig}                             from "../0_helper/config";
-import _                                                                        from "lodash";
-import { WebElementFinder } from "../..";
+import {DesiredCapabilities, ServerConfig, Browser, ClientHelper, By, until} from "../..";
+import {setBrowserStackName, standardCapabilities, standardServerConfig}     from "../0_helper/config";
+import {cloneDeep}                                                           from "lodash";
+import {WebElementFinder}                                                    from "../..";
 
 describe(`drag an element`, (): void => {
 
-    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
-    const caps: DesiredCapabilities = _.cloneDeep(standardCapabilities);
+    const conf: ServerConfig = cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
+    setBrowserStackName(capabilities, `drag_n_drop_spec.ts`);
 
     let browser: Browser;
     let dragElement0: WebElementFinder,
@@ -20,7 +21,7 @@ describe(`drag an element`, (): void => {
 
     beforeAll((): void => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
-        browser = ClientHelper.create(conf, caps);
+        browser = ClientHelper.create(conf, capabilities);
         dragElement0 = browser.element(By.css(`[data-test-id='item-0']`));
         dragElement1 = browser.element(By.css(`[data-test-id='item-1']`));
         dragElement2 = browser.element(By.css(`[data-test-id='item-2']`));

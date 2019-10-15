@@ -18,6 +18,8 @@ export interface DesiredCapabilities extends FirefoxOptions, ChromeOptions{
     window?: WindowConfig;
 
     appium?: AppiumOptions;
+
+    browserStack?: BrowserStackCapabilities;
 }
 
 //https://w3c.github.io/webdriver/#navigation
@@ -122,4 +124,16 @@ export interface ManualProxyConfig {
     http?: string;
     https?: string;
     bypass?: string[];
+}
+
+export interface BrowserStackCapabilities {
+    user: string;
+    key: string;
+
+    project?: string;
+    name?: string;
+    local?: boolean;
+    video?: boolean;
+    build?: string;
+    networkLogs?: boolean;
 }

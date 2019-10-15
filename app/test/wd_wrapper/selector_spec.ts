@@ -1,17 +1,17 @@
 import {Browser, By, ClientHelper, DesiredCapabilities, RunningBrowser, ServerConfig} from "../..";
 import {checkForFireFoxCyclicError}                                                   from "../0_helper/browser_bugs";
-import {standardCapabilities, standardServerConfig}                                   from "../0_helper/config";
-import _                                                                              from "lodash";
+import {setBrowserStackName, standardCapabilities, standardServerConfig}              from "../0_helper/config";
+import {cloneDeep}                                                                    from "lodash";
 import {configure, getLogger}                                                         from "log4js";
-import { parseBrowserVersion }                                                        from "../../driver/lib/client/client_utils";
 
 configure(`res/config/log4js.json`);
 
 describe(`Locating a waiter`, (): void => {
     const logger = getLogger(`WD Wrapper selector spec`);
 
-    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
-    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
+    const conf: ServerConfig = cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
+    setBrowserStackName(capabilities, `selector_spec.ts`);
 
     let browser: Browser;
 

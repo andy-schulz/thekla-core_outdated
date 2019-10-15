@@ -9,13 +9,13 @@ import {
     Text,
     ServerConfig,
     UntilElement, Wait, DesiredCapabilities, Expected
-}                                                   from "../../../index";
-import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
-import {GoogleSearch}                               from "../../page_objects/GoogleSearch/GoogleSearch";
-import {Add}                                        from "../../page_objects/GoogleCalculator/Add";
-import {GoogleCalculator}                           from "../../page_objects/GoogleCalculator/GoogleCalculator";
-import {getLogger, configure}                       from "log4js";
-import _                                            from "lodash";
+}                                                                        from "../../../index";
+import {standardCapabilities, standardServerConfig, setBrowserStackName} from "../../0_helper/config";
+import {GoogleSearch}                                                    from "../../page_objects/GoogleSearch/GoogleSearch";
+import {Add}                                                             from "../../page_objects/GoogleCalculator/Add";
+import {GoogleCalculator}                                                from "../../page_objects/GoogleCalculator/GoogleCalculator";
+import {getLogger, configure}                                            from "log4js";
+import {cloneDeep}                                                       from "lodash";
 
 configure(`res/config/log4js.json`);
 
@@ -23,8 +23,9 @@ const logger = getLogger(`Actor`);
 
 describe(`Searching on Google`, (): void => {
 
-    const config: ServerConfig = _.cloneDeep(standardServerConfig);
-    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
+    const config: ServerConfig = cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
+    setBrowserStackName(capabilities, `actor_spec.ts`);
 
     let John: Actor;
     logger.trace(`actor_spec stated`);

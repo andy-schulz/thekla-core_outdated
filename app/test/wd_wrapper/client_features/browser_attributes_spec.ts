@@ -1,13 +1,14 @@
-import * as _                                                           from "lodash";
-import {ClientHelper, DesiredCapabilities, ServerConfig, WindowSize}    from "../../..";
-import {standardCapabilities, standardServerConfig}                     from "../../0_helper/config";
+import {cloneDeep}                                                       from "lodash";
+import {ClientHelper, DesiredCapabilities, ServerConfig, WindowSize}     from "../../..";
+import {setBrowserStackName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
 
 describe(`creating a new Browser`, (): void => {
 
-    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
-    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
+    const conf: ServerConfig = cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
+    setBrowserStackName(capabilities, `browser_attributes_spec.ts`);
 
-    const windowSize = function(): {} {
+    const windowSize = function (): {} {
         return {width: window.innerWidth, height: window.innerHeight};
     };
 
@@ -23,14 +24,14 @@ describe(`creating a new Browser`, (): void => {
 
         it(`it should be maximized when the config contains the "maximum" attribute 
         - (test case id: 8a0d9a58-9591-43c1-89bb-d848319c90f1)`, async (): Promise<void> => {
-            const con: ServerConfig = _.cloneDeep(conf);
-            const capa: DesiredCapabilities = _.cloneDeep(capabilities);
+            const con: ServerConfig = cloneDeep(conf);
+            const capa: DesiredCapabilities = cloneDeep(capabilities);
 
             capa.window = {
                 setToMaxSize: true
             };
 
-            const browserInitialResize = ClientHelper.create(con,capa);
+            const browserInitialResize = ClientHelper.create(con, capa);
 
             const data = await browserInitialResize.executeScript(windowSize);
 
@@ -43,7 +44,7 @@ describe(`creating a new Browser`, (): void => {
 
         it(`it should be maximized when maximize() is called after browser creation 
         - (test case id: 1473a628-0347-41d9-b2f8-2c93f827f840)`, async (): Promise<void> => {
-            const browserManualResize = ClientHelper.create(conf,capabilities);
+            const browserManualResize = ClientHelper.create(conf, capabilities);
             const dataBefore = await browserManualResize.executeScript(windowSize);
             const dataBeforeParsed: WindowSize = JSON.parse(JSON.stringify(dataBefore));
 

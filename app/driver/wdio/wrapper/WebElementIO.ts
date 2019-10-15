@@ -1,22 +1,22 @@
-import {getLogger}                                                       from "@log4js-node/log4js-api";
-import {Client}                                                          from "webdriver"
-import {PointerActionSequence, PointerMoveAction}                        from "../../interface/Actions";
-import {TkWebElement}                                                    from "../../interface/TkWebElement";
-import {PromiseAny}                                                      from "../../interface/Types";
+import {getLogger}                                from "@log4js-node/log4js-api";
+import {Client}                                   from "webdriver"
+import {PointerActionSequence, PointerMoveAction} from "../../interface/Actions";
+import {TkWebElement}                             from "../../interface/TkWebElement";
+import {PromiseAny}                               from "../../interface/Types";
 import {
     centerDistance,
     ElementDimensions,
     ElementLocationInView,
     getCenterPoint,
     Point
-} from "../../lib/element/ElementLocation";
-import {By}                                                              from "../../lib/element/Locator";
-import fp                                                                from "lodash/fp"
-import {funcToString}                                                    from "../../utils/Utils";
+}                                                 from "../../lib/element/ElementLocation";
+import {By}                                       from "../../lib/element/Locator";
+import fp                                         from "lodash/fp"
+import {funcToString}                             from "../../utils/Utils";
 
 // @ts-ignore
-import {isElementDisplayed} from "../../lib/client_side_scripts/is_displayedness";
-import {LocatorWdio}        from "../LocatorWdio";
+import {isElementDisplayed}           from "../../lib/client_side_scripts/is_displayedness";
+import {LocatorWdio}                  from "../LocatorWdio";
 import {boundingRect, scrollIntoView} from "../../lib/client_side_scripts/scroll_page";
 
 export interface ElementRefIO {
@@ -25,6 +25,7 @@ export interface ElementRefIO {
 
 export class WebElementIO implements TkWebElement<Client> {
     private logger = getLogger(`WebElementIO`);
+
     private constructor(
         private htmlElement: ElementRefIO,
         private client: Client) {
@@ -120,20 +121,29 @@ export class WebElementIO implements TkWebElement<Client> {
                     return this.getCenterPointInView()
                 })
                 .then((centerPoint: Point) => {
-                    return [{
+                    const actions = {
                         type: `pointer`,
                         id: `myMouse`,
                         parameters: {"pointerType": `mouse`},
                         actions: [{
                             type: `pause`,
                             duration: 500,
-                        },{
+                        }, {
+                            // bugfix for firefox
+                            // have to reset the pointer and then move to the element, otherwise the mouse pointer
+                            // is not moved to the correct location
+                            type: `pointerMove`,
+                            origin: `viewport`,
+                            x: 0,
+                            y: 0,
+                        }, {
                             type: `pointerMove`,
                             origin: `viewport`,
                             x: centerPoint.x,
                             y: centerPoint.y,
                         }]
-                    }] as PointerActionSequence[];
+                    };
+                    return [actions] as PointerActionSequence[];
                 })
                 .then((actions: PointerActionSequence[]): Promise<void> => client.performActions(actions) as unknown as Promise<void>)
                 .then(() => client);

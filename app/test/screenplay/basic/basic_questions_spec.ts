@@ -14,7 +14,7 @@ describe(`Using the See interaction`, (): void => {
     const Josh = Actor.named(`Josh`);
 
     describe(`with repeater method`, (): void => {
-        let John: Actor = Actor.named(`John`);
+        const John: Actor = Actor.named(`John`);
 
         it(`should throw an error when the repeater 'times' value is 0. ` +
             `- (test case id: e0e5340d-294f-4795-ab31-08a3a71c58a4)`, async (): Promise<void> => {

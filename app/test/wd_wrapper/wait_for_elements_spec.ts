@@ -1,24 +1,25 @@
 import {
     Browser, WebElementFinder, By, UntilElement, ServerConfig, DesiredCapabilities, ClientHelper
-}                                                   from "../..";
-import {configure}                                  from "log4js";
-import {standardCapabilities, standardServerConfig} from "../0_helper/config";
-import _                                            from "lodash";
+}                                                                        from "../..";
+import {configure}                                                       from "log4js";
+import {standardCapabilities, standardServerConfig, setBrowserStackName} from "../0_helper/config";
+import {cloneDeep}                                                       from "lodash";
 
 configure(`res/config/log4js.json`);
 
 describe(`Waiting for WD Elements`, (): void => {
 
-    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
-    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
+    const conf: ServerConfig = cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
+    setBrowserStackName(capabilities, `wait_for_element_spec.ts`);
 
     let browser: Browser;
     let appearButton4000ShallWait: WebElementFinder;
 
     beforeAll((): void => {
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 40000;
         browser = ClientHelper.create(conf, capabilities);
-    }, 20000);
+    });
 
     afterAll((): Promise<void[]> => {
         return ClientHelper.cleanup();
@@ -42,7 +43,7 @@ describe(`Waiting for WD Elements`, (): void => {
 
             await browser.get(`/delayed`);
             expect(await appearButton4000ShallWait.isVisible()).toEqual(true)
-        }, 20000);
+        });
 
         it(`the system should wait for element after redirect 
         - (test case id: a86b8f45-9706-40ab-bdd2-a5319cde0d0f)`, async (): Promise<void> => {
@@ -51,7 +52,7 @@ describe(`Waiting for WD Elements`, (): void => {
 
             await browser.get(`/redirectToDelayed`);
             expect(await appearButton4000ShallWait.isVisible()).toEqual(true)
-        }, 20000);
+        });
     });
 
     describe(`which are chained by xpath`, (): void => {

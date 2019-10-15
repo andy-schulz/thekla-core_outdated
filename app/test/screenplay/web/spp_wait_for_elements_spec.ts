@@ -6,18 +6,18 @@ import {
     See,
     Navigate,
     Text, UntilElement, ServerConfig, Wait, DesiredCapabilities, Expected, RunningBrowser, ClientHelper
-} from "../../../index";
-
-import {getLogger}                                  from "log4js";
-import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
-import _                                            from "lodash";
+}                                                                        from "../../../index";
+import {getLogger}                                                       from "log4js";
+import {setBrowserStackName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import {cloneDeep}                                                       from "lodash";
 
 const logger = getLogger(`Spec: Spp wait for elements`);
 
 describe(`Waiting for SPP Elements`, (): void => {
 
-    const seleniumConfig: ServerConfig = _.cloneDeep(standardServerConfig);
-    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
+    const seleniumConfig: ServerConfig = cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
+    setBrowserStackName(capabilities, `spp_wait_for_elements_spec.ts`);
 
     logger.trace(`test started`);
     let walterTheWaiter: Actor;

@@ -1,8 +1,9 @@
 import {
     Browser, RunningBrowser, BrowserScreenshotData, ServerConfig, DesiredCapabilities, ClientHelper
-}                                                   from "../../..";
-import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
-import _                                            from "lodash";
+} from "../../..";
+
+import {setBrowserStackName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import {cloneDeep}                                                       from "lodash";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const sizeOf = require(`image-size`);
@@ -12,8 +13,9 @@ describe(`Taking a screenshot`, (): void => {
 
     const tablesPage = `${process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`}/tables`;
 
-    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
-    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
+    const conf: ServerConfig = cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
+    setBrowserStackName(capabilities, `resize_screenshot_spec.ts`);
 
     beforeAll(async (): Promise<void> => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
@@ -31,7 +33,7 @@ describe(`Taking a screenshot`, (): void => {
             `- (test case id: 464d2df4-2bd3-4f53-a503-159294fe086e)`, async (): Promise<void> => {
 
             await browser.get(tablesPage);
-            const bsd5Browser: BrowserScreenshotData = await browser.takeScreenshot({size:{width: 20}});
+            const bsd5Browser: BrowserScreenshotData = await browser.takeScreenshot({size: {width: 20}});
             const imageBinary = new Buffer(bsd5Browser.browserScreenshotData, `base64`);
             expect(sizeOf(imageBinary).width).toEqual(20);
         });
@@ -71,7 +73,12 @@ describe(`Taking a screenshot`, (): void => {
             await browser.get(tablesPage);
             await browser2.get(tablesPage);
 
-            const imagesBase64: BrowserScreenshotData[] = await RunningBrowser.takeScreenshots({size: {width: 40, height: 40}});
+            const imagesBase64: BrowserScreenshotData[] = await RunningBrowser.takeScreenshots({
+                size: {
+                    width: 40,
+                    height: 40
+                }
+            });
 
             expect(imagesBase64.length).toEqual(2);
 

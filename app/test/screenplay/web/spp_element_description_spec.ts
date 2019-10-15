@@ -11,23 +11,23 @@ import {
     all,
     SppElement,
     ServerConfig, DesiredCapabilities, Expected
-}                 from "../../..";
-
-import {getLogger}                                  from "log4js";
-import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
-import _                                            from "lodash";
+}                                                                        from "../../..";
+import {getLogger}                                                       from "log4js";
+import {setBrowserStackName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import {cloneDeep}                                                       from "lodash";
 
 const logger = getLogger(`Spec: SppElementDescription`);
 
 describe(`The description on an element`, (): void => {
 
-    const seleniumConfig: ServerConfig = _.cloneDeep(standardServerConfig);
-    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
+    const seleniumConfig: ServerConfig = cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
+    setBrowserStackName(capabilities, `spp_element_description_spec.ts`);
 
     logger.trace(`Test Started`);
 
     beforeAll((): void => {
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000;
     });
 
     describe(`should be attached to the element`, (): void => {
@@ -141,7 +141,7 @@ describe(`The description on an element`, (): void => {
             return checkErrorMessage(button)
         });
 
-        it(`when it is attached to level one with two levels of an element chain 
+        it(`when it is attached to the parent element 
         - (test case id: 082e0f44-9dae-4283-adf2-05bba017fd10)`, async (): Promise<void> => {
             const button = element(By.css(`div`))
                 .called(description)

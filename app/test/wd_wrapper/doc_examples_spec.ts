@@ -7,14 +7,15 @@ import {
     UntilElement,
     WebElementFinder,
     DesiredCapabilities, ClientHelper
-}                                                                 from "../..";
-import {standardCapabilities, standardServerConfig} from "../0_helper/config";
-import _ from "lodash";
+}                                                                        from "../..";
+import {setBrowserStackName, standardCapabilities, standardServerConfig} from "../0_helper/config";
+import {cloneDeep}                                                       from "lodash";
 
 describe(`Using Google Search to find an online calculator`, (): void => {
 
-    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
-    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
+    const conf: ServerConfig = cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
+    setBrowserStackName(capabilities, `doc_examples_spec.ts`);
 
     describe(`with the WebdriverJS wrapper,`, (): void => {
         // define your elements preferably in a separate class like a page object
@@ -24,7 +25,7 @@ describe(`Using Google Search to find an online calculator`, (): void => {
         let calculatorInput: WebElementFinder;
 
         beforeAll((): void => {
-            b = ClientHelper.create(conf,capabilities);
+            b = ClientHelper.create(conf, capabilities);
             searchField = b.element(By.css(`[name='q']`))
                 .shallWait(UntilElement.is.visible().forAsLongAs(5000))
                 .called(`The Google search field (describe)`);
@@ -48,7 +49,7 @@ describe(`Using Google Search to find an online calculator`, (): void => {
     });
 
     afterAll(async (): Promise<void[]> => {
-        return  RunningBrowser.cleanup();
+        return RunningBrowser.cleanup();
     })
 });
 

@@ -1,6 +1,6 @@
-import {Browser, ClientHelper, DesiredCapabilities, ServerConfig} from "../../..";
-import {standardCapabilities, standardServerConfig}               from "../../0_helper/config";
-import _                                                          from "lodash";
+import {Browser, ClientHelper, DesiredCapabilities, ServerConfig}        from "../../..";
+import {setBrowserStackName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import {cloneDeep}                                                       from "lodash";
 
 /**
  * check browser_creation_spec in lib_test for more test combinations
@@ -8,8 +8,9 @@ import _                                                          from "lodash";
 
 describe(`When using the ClientWdio class`, (): void => {
 
-    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
-    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
+    const conf: ServerConfig = cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
+    setBrowserStackName(capabilities, `browser_creation_spec.ts`);
 
     const testUrl = process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`;
 

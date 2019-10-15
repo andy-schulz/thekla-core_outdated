@@ -9,32 +9,32 @@ import {
     ServerConfig, DesiredCapabilities
 } from "../..";
 
-import {configure}                                  from "log4js";
-import {WebElementWdio}                             from "../../driver/wdio/WebElementWdio";
-import {BoundaryCheck, boundingRect}                from "../0_helper/browser_viewport";
-import {standardCapabilities, standardServerConfig} from "../0_helper/config";
-import _                                            from "lodash";
+import {configure}                                                       from "log4js";
+import {WebElementWdio}                                                  from "../../driver/wdio/WebElementWdio";
+import {BoundaryCheck, boundingRect}                                     from "../0_helper/browser_viewport";
+import {setBrowserStackName, standardCapabilities, standardServerConfig} from "../0_helper/config";
+import {cloneDeep}                                                       from "lodash";
 
 configure(`res/config/log4js.json`);
 
 describe(`When using the Browser object`, (): void => {
 
-    let browser: Browser;
-
-    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
-
-    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
+    const conf: ServerConfig = cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
+    setBrowserStackName(capabilities, `webelement_spec.ts`);
 
     const testurl = process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`;
 
+    let browser: Browser;
+
     beforeAll((): void => {
-        browser = RunningBrowser.startedOn(conf).withCapabilities(capabilities)
+        browser = RunningBrowser.startedOn(conf).withCapabilities(capabilities);
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
     });
 
     afterAll(async (): Promise<void[]> => {
         return RunningBrowser.cleanup();
-    })
+    });
 
     describe(`and calling the get method `, (): void => {
 
@@ -116,13 +116,13 @@ describe(`When using the Browser object`, (): void => {
     describe(`and try to hover an element`, (): void => {
         let userName: WebElementFinder,
             hoverElement: WebElementFinder,
-            button: WebElementFinder;
+            uerIcon: WebElementFinder;
 
         beforeAll((): Promise<void> => {
             hoverElement = browser.element(By.css(`[data-test-id='usericon']`));
+            uerIcon = browser.element(By.css(`[data-test-id='user-icon-no-hover']`));
             userName = browser.element(By.css(`[data-test-id='hoverusername']`));
-            button = browser.element(By.css(`[data-test-id='button']`));
-            return browser.get(testurl);
+            return browser.get(`${testurl}/pointeractions`);
         });
 
         it(`the hover element should be displayed 
@@ -130,7 +130,7 @@ describe(`When using the Browser object`, (): void => {
             expect(await userName.isVisible()).toBe(false);
             await hoverElement.hover();
             expect(await userName.isVisible()).toBe(true);
-            await button.hover();
+            await uerIcon.hover();
             expect(await userName.isVisible()).toBe(false);
 
             await Utils.wait(5000);
@@ -142,7 +142,7 @@ describe(`When using the Browser object`, (): void => {
 
         beforeAll((): Promise<void> => {
             hoverElement = browser.element(By.css(`[data-test-id='usericon']`));
-            return browser.get(`/`);
+            return browser.get(`/pointeractions`);
         });
 
         it(`the location object should not be empty

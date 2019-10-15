@@ -1,9 +1,14 @@
-import {AppiumOptions, DesiredCapabilities, ProxyConfig} from "../../../config/DesiredCapabilities";
-import {ServerConfig}                                    from "../../../config/ServerConfig";
-import {Options}                                         from "webdriver"
-import * as fp                                           from "lodash/fp"
-import {curry, set, transform}                               from "lodash"
-import deepmerge                                         from "deepmerge";
+import deepmerge               from "deepmerge";
+import {curry, set, transform} from "lodash"
+import * as fp                 from "lodash/fp"
+import {Options}               from "webdriver"
+import {
+    AppiumOptions,
+    BrowserStackCapabilities,
+    DesiredCapabilities,
+    ProxyConfig
+}                              from "../../../config/DesiredCapabilities";
+import {ServerConfig}          from "../../../config/ServerConfig";
 
 const transformServerConfig = (serverConfig: ServerConfig): (option: Options) => Options => {
     return (options: Options): Options => {
@@ -39,16 +44,18 @@ const transformServerConfig = (serverConfig: ServerConfig): (option: Options) =>
 const setMainProperties = curry((capabilities: DesiredCapabilities | undefined, options: Options): Options => {
     if(!capabilities)
         return options;
-    return transform(capabilities, (acc: Options, value: any, key: string) => {
+    const opts = transform(capabilities, (acc: Options, value: any, key: string) => {
         if(typeof value !== `object`) {
             set(acc, `capabilities["${key}"]`, value)
         }
     }, options);
+
+    return opts;
 });
 
 const setFirefoxOptions = curry((firefoxOptions: object | undefined, options: Options): Options => {
     if (firefoxOptions) {
-        return set(options, `capabilities["moz:firefoxOptions"]`, firefoxOptions)
+        set(options, `capabilities["moz:firefoxOptions"]`, firefoxOptions)
     }
     return options;
 });
@@ -56,7 +63,7 @@ const setFirefoxOptions = curry((firefoxOptions: object | undefined, options: Op
 const setChromeOptions = curry((chromeOptions: object | undefined, options: Options): Options => {
 
     if (chromeOptions) {
-        return set(options, `capabilities["goog:chromeOptions"]`, chromeOptions)
+        set(options, `capabilities["goog:chromeOptions"]`, chromeOptions);
     }
     return options
 });
@@ -72,7 +79,8 @@ const setProxy = curry((proxy: ProxyConfig | undefined, options: Options): Optio
 const setAppiumOptions = curry((appiumOptions: AppiumOptions | undefined, options: Options): Options => {
     if(!appiumOptions)
         return options;
-    return transform(appiumOptions, (acc, value, key) => {
+
+    const opts = transform(appiumOptions, (acc, value, key) => {
         if(key === `android`) {
             return transform(appiumOptions.android as object,(acc: Options, value: any, key: string): void => {
                 set(acc,`capabilities[${key}]`, value);
@@ -86,30 +94,47 @@ const setAppiumOptions = curry((appiumOptions: AppiumOptions | undefined, option
 
         set(acc,`capabilities[${key}]`, value);
 
-    }, options)
+    }, options);
+
+    return opts;
+});
+
+const setBrowserstackOptions = curry((broserstackOptions: BrowserStackCapabilities | undefined, options: Options) => {
+    if(!broserstackOptions)
+        return options;
+
+    return transform(broserstackOptions, (acc: Options, value: any, key: string) => {
+        if(key === `name` || key === `project` || key === `build`) {
+            set(acc, `capabilities[${key}]`, typeof value === `boolean` ? value.toString() : value);
+            return;
+        }
+        set(acc, `capabilities["browserstack.${key}"]`, typeof value === `boolean` ? value.toString() : value)
+    }, options);
 });
 
 const transformCapabilities = (capabilities: DesiredCapabilities): (option: Options) => Options => {
     return (options: Options): Options => {
-        return fp.flow(
+        const opts =  fp.flow(
             setMainProperties(capabilities),
             setFirefoxOptions(capabilities[`moz:firefoxOptions`]),
             setChromeOptions(capabilities[`goog:chromeOptions`]),
             setProxy(capabilities.proxy),
-            setAppiumOptions(capabilities.appium)
+            setAppiumOptions(capabilities.appium),
+            setBrowserstackOptions(capabilities.browserStack),
         )(options);
+
+        return opts;
     }
 };
 
-
 export const transformToWdioConfig =
     (serverConfig: ServerConfig, capabilities: DesiredCapabilities): Options => {
-        let options: Options = {};
+        const options: Options = {};
 
-        return fp.flow(
+        const opts = fp.flow(
             transformServerConfig(serverConfig),
             transformCapabilities(capabilities)
         )(options);
+
+        return opts;
     };
-
-

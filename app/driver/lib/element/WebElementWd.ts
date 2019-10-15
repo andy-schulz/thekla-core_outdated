@@ -72,12 +72,12 @@ export class WebElementWd<WD> implements WebElementFinder {
 
     private getCenterDistanceTo(element: WebElementFinder): Promise<Point>{
 
-        const calculate = ([p1, p2]: Point[]): Point => {
+        const calculateDistance = ([p1, p2]: Point[]): Point => {
             return centerDistance(p1,p2)
         };
 
         return Promise.all([this.getCenterPoint(), element.getCenterPoint()])
-            .then(calculate)
+            .then(calculateDistance)
     }
 
     public hover(): Promise<void> {

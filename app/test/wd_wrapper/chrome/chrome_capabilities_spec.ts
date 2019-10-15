@@ -1,14 +1,16 @@
-import * as _                                                                     from "lodash";
+import {cloneDeep}                                                                from "lodash";
 import {Browser, ClientHelper, DesiredCapabilities, RunningBrowser, ServerConfig} from "../../../index";
-import { WindowSize }                                                             from "../../../driver/interface/BrowserWindow";
-import {standardCapabilities, standardServerConfig}                               from "../../0_helper/config";
+import {WindowSize}                                                               from "../../../driver/interface/BrowserWindow";
+import {standardCapabilities, standardServerConfig, setBrowserStackName}          from "../../0_helper/config";
 
 describe(`Starting a browser instance`, (): void => {
 
-    const conf: ServerConfig =  _.cloneDeep(standardServerConfig);
-    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
+    const conf: ServerConfig = cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
+    setBrowserStackName(capabilities, `chrome_capabilities_spec.ts`);
+    capabilities.browserName = `chrome`;
 
-    const windowSize = function(): {width: number; height: number} {
+    const windowSize = function (): { width: number; height: number } {
         return {width: window.innerWidth, height: window.innerHeight};
     };
 
@@ -30,12 +32,10 @@ describe(`Starting a browser instance`, (): void => {
 
     describe(`by passing the browser name as a capabilities object`, (): void => {
 
-        it(`should start a firefox instance when the browsername is "chrome" ` +
-            `- (test case id: 2e6b37af-c7e7-4cba-8959-082ae97e4084)`, async (): Promise<void> => {
-            const capa: DesiredCapabilities = _.cloneDeep(capabilities);
-            capa.browserName = `chrome`;
+        it(`should get the user agent for a chrome browser 
+        - (test case id: 2e6b37af-c7e7-4cba-8959-082ae97e4084)`, async (): Promise<void> => {
 
-            const browser: Browser = RunningBrowser.startedOn(conf).withCapabilities(capa);
+            const browser: Browser = RunningBrowser.startedOn(conf).withCapabilities(capabilities);
             const agent = await browser.executeScript(browserFunc);
             expect(agent).toContain(`Chrome`);
         });
@@ -43,9 +43,9 @@ describe(`Starting a browser instance`, (): void => {
 
     describe(`and passing view port information as command line arguments`, (): void => {
 
-        it(`it should change the viewport for the chrome browser instance` +
-            `- (test case id: 3286d22d-3ba7-4201-acd6-503a39bc555c)`, async (): Promise<void> => {
-            const capa: DesiredCapabilities = _.cloneDeep(capabilities);
+        it(`it should change the viewport for the chrome browser instance
+        - (test case id: 3286d22d-3ba7-4201-acd6-503a39bc555c)`, async (): Promise<void> => {
+            const capa: DesiredCapabilities = cloneDeep(capabilities);
             capa[`goog:chromeOptions`] = {
                 args: [`--window-size=500,500`]
             };
@@ -59,9 +59,10 @@ describe(`Starting a browser instance`, (): void => {
     });
 
     describe(`and passing browser binary information`, (): void => {
-        it(`should evaluate the binary for a chrome instance` +
-            `- (test case id: dda17db2-96f9-4cdf-a7df-f760158aea18)`, async (): Promise<void> => {
-            const caps: DesiredCapabilities = _.cloneDeep(capabilities);
+
+        it(`should evaluate the binary for a chrome instance
+        - (test case id: dda17db2-96f9-4cdf-a7df-f760158aea18)`, async (): Promise<void> => {
+            const caps: DesiredCapabilities = cloneDeep(capabilities);
             caps[`goog:chromeOptions`] = {
                 binary: `C:\\DoesNotExist`
             };
@@ -69,6 +70,9 @@ describe(`Starting a browser instance`, (): void => {
             return RunningBrowser.startedOn(conf).withCapabilities(caps)
                 .get(`/`)
                 .then((): Promise<void> => {
+                    if (process.env.BROWSERSTACK === `enabled`) // browserstack ignores the binary option and just opens the browser
+                        return Promise.resolve();
+
                     return Promise.reject(`creating a browser with a not existing binary should throw an Error, but it doesnt`);
                 })
                 .catch((e): void => {

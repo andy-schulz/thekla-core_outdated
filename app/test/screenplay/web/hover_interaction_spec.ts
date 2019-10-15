@@ -7,14 +7,16 @@ import {
     BrowseTheWeb,
     RunningBrowser,
     Navigate, element, See, Text, Expected, Status, Hover
-}                                                   from "../../..";
-import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
-import _                                            from "lodash";
+}                                                                        from "../../..";
+import {setBrowserStackName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import {cloneDeep}                                                       from "lodash";
 
 describe(`Hover`, (): void => {
 
-    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
-    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
+    const conf: ServerConfig = cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
+    setBrowserStackName(capabilities, `Hover`);
+
     const testUrl = process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`;
 
     beforeAll((): void => {
@@ -22,17 +24,17 @@ describe(`Hover`, (): void => {
     });
 
     describe(`over a web element`, (): void => {
-        const userIcon = element(By.css(`[data-test-id='usericon']`))
+        const userIcon = element(By.css(`[data-test-id='user-icon-no-hover']`))
+            .shallWait(UntilElement.is.visible().forAsLongAs(5000))
+            .called(`The user icon which displays an information box when hovered upon`);
+
+        const userIconWithHoverInfo = element(By.css(`[data-test-id='usericon']`))
             .shallWait(UntilElement.is.visible().forAsLongAs(5000))
             .called(`The user icon which displays an information box when hovered upon`);
 
         const userName = element(By.css(`[data-test-id='hoverusername']`))
-            .shallWait(UntilElement.is.visible().forAsLongAs(5000))
+        // .shallWait(UntilElement.is.visible().forAsLongAs(5000))
             .called(`the user name inside the hover information box`);
-
-        const button = element(By.css(`[data-test-id='button']`))
-            .shallWait(UntilElement.is.visible().forAsLongAs(5000))
-            .called(`the general danger button in red`);
 
         const Howard = Actor.named(`Howard`);
 
@@ -44,9 +46,9 @@ describe(`Hover`, (): void => {
         it(`should display additional information 
         - (test case id: f45a3fa4-896c-47d7-bc2f-d77d07a046d3)`, (): Promise<void> => {
             return Howard.attemptsTo(
-                Navigate.to(testUrl),
+                Navigate.to(`${testUrl}/pointeractions`),
                 See.if(Status.visible.of(userName)).is(Expected.toBe(false)),
-                Hover.over(userIcon),
+                Hover.over(userIconWithHoverInfo),
                 See.if(Status.visible.of(userName)).is(Expected.toBe(true)),
                 See.if(Text.of(userName)).is(Expected.toBe(`Name: User Name`))
             )
@@ -55,12 +57,15 @@ describe(`Hover`, (): void => {
         it(`should hide the hover element when the pointer is moved away 
         - (test case id: 6347d82f-c2a2-4bdb-8913-9633f0849352)`, (): Promise<void> => {
             return Howard.attemptsTo(
-                Navigate.to(testUrl),
-                See.if(Status.visible.of(userName)).is(Expected.toBe(false)),
-                Hover.over(userIcon),
-                See.if(Status.visible.of(userName)).is(Expected.toBe(true)),
+                Navigate.to(`${testUrl}/pointeractions`),
+                See.if(Status.visible.of(userName))
+                    .is(Expected.toBe(false)),
+                Hover.over(userIconWithHoverInfo),
+                See.if(Status.visible.of(userName))
+                    .is(Expected.toBe(true))
+                    .repeatFor(3, 1000),
                 See.if(Text.of(userName)).is(Expected.toBe(`Name: User Name`)),
-                Hover.over(button),
+                Hover.over(userIcon),
                 See.if(Status.visible.of(userName)).is(Expected.toBe(false)),
             )
         }, 50000); // dont change the timeout, the url resolve via proxy takes a while

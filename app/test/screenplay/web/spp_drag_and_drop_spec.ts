@@ -11,13 +11,15 @@ import {
     By,
     element,
     See, Expected, Text, UntilElement
-} from "../../..";
-import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
+}                                                                        from "../../..";
+import {standardCapabilities, standardServerConfig, setBrowserStackName} from "../../0_helper/config";
+import {cloneDeep}                                                       from "lodash"
 
 describe(`Drag an Element`, (): void => {
 
-    const conf: ServerConfig = standardServerConfig;
-    const caps: DesiredCapabilities = standardCapabilities;
+    const conf: ServerConfig = cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
+    setBrowserStackName(capabilities, `spp_drag_and_drop_spec.ts`);
 
     let theBrowser: Browser;
     let Donnie: Actor;
@@ -27,8 +29,8 @@ describe(`Drag an Element`, (): void => {
         dragIndicator: SppElement;
 
     beforeAll((): void => {
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
-        theBrowser = RunningBrowser.startedOn(conf).withCapabilities(caps);
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 200000;
+        theBrowser = RunningBrowser.startedOn(conf).withCapabilities(capabilities);
         Donnie = Actor.named(`Donnie`);
         Donnie.whoCan(BrowseTheWeb.using(theBrowser));
 
@@ -49,7 +51,11 @@ describe(`Drag an Element`, (): void => {
 
             await Navigate.to(`/dragndrop`).performAs(Donnie);
 
-            await Drag.element(element0).toElement(element1).performAs(Donnie);
+            await Donnie.attemptsTo(
+                Drag.element(element0).toElement(element1)
+            );
+
+            // await Drag.element(element0).toElement(element1).performAs(Donnie);
 
             await See.if(Text.of(dragIndicator))
                 .is(Expected.toBe(`Element item-0 was moved from position 0 to position 1`))

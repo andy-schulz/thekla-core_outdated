@@ -1,5 +1,6 @@
 import {DesiredCapabilities, ServerConfig}  from "../..";
 import {transformToWdioConfig}              from "../../driver/lib/config/config_transformation";
+import Options = WebDriver.Options;
 
 describe(`creating the wdio config`, (): void => {
 
@@ -107,13 +108,14 @@ describe(`creating the wdio config`, (): void => {
             const serverConfig: ServerConfig = {};
 
             const capabilities: DesiredCapabilities = {
-                browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
+                browserName: `chrome`,
                 proxy: {
                     proxyType: `direct`
                 }
             };
 
-            // @ts-ignore // bug in webdriver direct is not defined for option ... typings says noproxy
+            // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+            // @ts-ignore // bug in webdriver: "direct" is not defined for option ... typings says "noproxy"
             expect(transformToWdioConfig(serverConfig, capabilities)).toEqual({
                 capabilities: {
                     browserName: `chrome`,
@@ -129,7 +131,7 @@ describe(`creating the wdio config`, (): void => {
             const serverConfig: ServerConfig = {};
 
             const capabilities: DesiredCapabilities = {
-                browserName: process.env.BROWSERNAME ? process.env.BROWSERNAME : `chrome`,
+                browserName: `chrome`,
                 proxy: {
                     proxyType: `system`
                 }
@@ -153,6 +155,7 @@ describe(`creating the wdio config`, (): void => {
             const serverConfig: ServerConfig = {};
 
             const capabilities: DesiredCapabilities = {
+                browserName: `chrome`,
                 "goog:chromeOptions": {
                     binary: `/doesNotExist`
                 }
@@ -160,12 +163,15 @@ describe(`creating the wdio config`, (): void => {
 
             const expectedConf = {
                 capabilities: {
+                    browserName: `chrome`,
                     "goog:chromeOptions": {
                         binary: `/doesNotExist`
                     }
                 }
             };
-            expect(transformToWdioConfig(serverConfig, capabilities)).toEqual(expectedConf)
+
+            const transformedOpts = transformToWdioConfig(serverConfig, capabilities);
+            expect(transformedOpts).toEqual(expectedConf)
         });
     });
 
@@ -270,6 +276,70 @@ describe(`creating the wdio config`, (): void => {
                     appName: `TheAppName`
                 }
             };
+            expect(transformToWdioConfig(serverConfig, capabilities)).toEqual(expectedConf)
+        });
+    });
+
+    describe(`with BrowserStack options`, (): void => {
+
+        it(`should return the options when browserstack options are set 
+        - (test case id: eed4a856-609b-4058-b795-9814affcfa89)`, (): void => {
+            const serverConfig: ServerConfig = {};
+
+            const capabilities: DesiredCapabilities = {
+                browserName: `firefox`,
+                browserStack: {
+                    user: `myUser`,
+                    key: `myKey`,
+
+                    build: `1.2.3`,
+                    name: `myName`,
+                    project: `MyProject`,
+                    video: false,
+                    local: true,
+                    networkLogs: true
+                }
+            };
+
+            const expectedConf = {
+                capabilities: {
+                    "browserstack.user": `myUser`,
+                    "browserstack.key": `myKey`,
+
+                    browserName: `firefox`,
+                    name: `myName`,
+                    project: `MyProject`,
+                    build: `1.2.3`,
+                    "browserstack.video": `false`,
+                    "browserstack.local": `true`,
+                    "browserstack.networkLogs": `true`,
+
+                }
+            };
+
+            expect(transformToWdioConfig(serverConfig, capabilities)).toEqual(expectedConf);
+        });
+
+        it(`should ignore an empty browserstack option set 
+        - (test case id: 2feb0192-8c90-4270-a8c3-bd8f1be72cf9)`, (): void => {
+            const serverConfig: ServerConfig = {};
+
+            const capabilities: DesiredCapabilities = {
+                browserName: `firefox`,
+                browserStack: {
+                    user: `MyUser`,
+                    key: `MyKey`
+                }
+            };
+
+            const expectedConf = {
+                capabilities: {
+                    browserName: `firefox`,
+                    "browserstack.user": `MyUser`,
+                    "browserstack.key": `MyKey`,
+                }
+            };
+
             expect(transformToWdioConfig(serverConfig, capabilities)).toEqual(expectedConf)
         });
     });

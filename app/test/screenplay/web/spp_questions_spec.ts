@@ -10,11 +10,10 @@ import {
     See,
     TheSites,
     Attribute, element, Expected, Status, all, Count, Extract, Text, Click
-}                 from "../../..";
-
-import {configure}                                  from "log4js";
-import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
-import _                                            from "lodash";
+}                                                                        from "../../..";
+import {configure}                                                       from "log4js";
+import {setBrowserStackName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import {cloneDeep}                                                       from "lodash";
 
 configure(`res/config/log4js.json`);
 
@@ -22,13 +21,14 @@ describe(`Using`, (): void => {
 
     let browser: Browser;
 
-    const seleniumConfig: ServerConfig = _.cloneDeep(standardServerConfig);
-    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
+    const seleniumConfig: ServerConfig = cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
+    setBrowserStackName(capabilities, `spp_questions_spec.ts`);
 
     const testUrl = process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`;
 
     beforeAll((): void => {
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000;
         browser = RunningBrowser.startedOn(seleniumConfig).withCapabilities(capabilities);
     });
 
@@ -124,8 +124,7 @@ describe(`Using`, (): void => {
                 Navigate.to(`/tables`),
                 See.if(Count.of(tableRows)).is(Expected.toEqual(107)),
             );
-        },
-        20000);
+        });
     });
 
     describe(`the Attribute question`, (): void => {

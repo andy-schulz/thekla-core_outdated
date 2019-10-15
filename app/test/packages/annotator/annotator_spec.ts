@@ -1,15 +1,16 @@
 import {ClientWdio}                                                       from "../../../driver/wdio/ClientWdio";
 import {Browser, DesiredCapabilities, WebElementFinder, ServerConfig, By} from "../../..";
-import {standardCapabilities, standardServerConfig}                       from "../../0_helper/config";
-import _                                                                  from "lodash";
+import {setBrowserStackName, standardCapabilities, standardServerConfig}  from "../../0_helper/config";
+import {cloneDeep}                                                                  from "lodash";
 
 describe(`The annotation`, (): void => {
 
     let browser: Browser;
-    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
-    conf.annotateElement = true;
 
-    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
+    const conf: ServerConfig = cloneDeep(standardServerConfig);
+    conf.annotateElement = true;
+    const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
+    setBrowserStackName(capabilities, `annotator_spec.ts`);
 
     beforeAll((): void => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
@@ -19,7 +20,7 @@ describe(`The annotation`, (): void => {
 
     afterAll(async (): Promise<void[]> => {
         return ClientWdio.cleanup();
-    })
+    });
 
     describe(`without an annotation parameter`, (): void => {
         let emailField: WebElementFinder;
@@ -128,10 +129,10 @@ describe(`The annotation`, (): void => {
 describe(`The test search message`, function () {
 
     let browser: Browser;
-    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
+    const conf: ServerConfig = cloneDeep(standardServerConfig);
     conf.displayTestMessages = true;
 
-    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
+    const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
 
     beforeAll((): void => {
         browser = ClientWdio.create({serverConfig: conf, capabilities: capabilities});

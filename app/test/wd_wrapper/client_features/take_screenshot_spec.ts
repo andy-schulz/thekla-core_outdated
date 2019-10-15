@@ -1,12 +1,12 @@
-import * as fs                                      from "fs";
-import fsExtra                                      from "fs-extra";
-import * as uuid                                    from "uuid";
+import * as fs                                                           from "fs";
+import fsExtra                                                           from "fs-extra";
+import * as uuid                                                         from "uuid";
 import {
     Browser, RunningBrowser, BrowserScreenshotData, ServerConfig, DesiredCapabilities, ClientHelper
-}                                                   from "../../..";
-import {standardCapabilities, standardServerConfig} from "../../0_helper/config";
-import _                                            from "lodash";
-import * as os from "os";
+}                                                                        from "../../..";
+import {setBrowserStackName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import {cloneDeep}                                                       from "lodash";
+import * as os                                                           from "os";
 
 describe(`Taking a screenshot`, (): void => {
     let browser: Browser;
@@ -14,8 +14,9 @@ describe(`Taking a screenshot`, (): void => {
 
     const frameworkTesterClockSearch = `${process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`}/delayed`;
 
-    const conf: ServerConfig = _.cloneDeep(standardServerConfig);
-    const capabilities: DesiredCapabilities = _.cloneDeep(standardCapabilities);
+    const conf: ServerConfig = cloneDeep(standardServerConfig);
+    const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
+    setBrowserStackName(capabilities, `take_screenshot_spec.ts`);
 
     const getFilesizeInBytes = (filename: string): number => {
         return fs.statSync(filename)[`size`];
@@ -114,7 +115,7 @@ describe(`Taking a screenshot`, (): void => {
             await browser.get(frameworkTesterClockSearch);
             await browser.saveScreenshot(characterPath, filename)
                 .then((): void => {
-                    if(!(os.platform() === `darwin`)) // On MacOS all characters are allowed
+                    if (!(os.platform() === `darwin`)) // On MacOS all characters are allowed
                         expect(false).toBeTruthy(`call to saveScreenshot should throw an error, but it doesnt`);
                 })
                 .catch((error: Error): void => {
