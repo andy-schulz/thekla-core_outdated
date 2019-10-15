@@ -1,12 +1,12 @@
-import * as fs                                                           from "fs";
-import fsExtra                                                           from "fs-extra";
-import * as uuid                                                         from "uuid";
+import * as fs                                                                  from "fs";
+import fsExtra                                                                  from "fs-extra";
+import * as uuid                                                                from "uuid";
 import {
     Browser, RunningBrowser, BrowserScreenshotData, ServerConfig, DesiredCapabilities, ClientHelper
-}                                                                        from "../../..";
-import {setBrowserStackName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
-import {cloneDeep}                                                       from "lodash";
-import * as os                                                           from "os";
+}                                                                               from "../../..";
+import {setBrowserStackSessionName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import {cloneDeep}                                                              from "lodash";
+import * as os                                                                  from "os";
 
 describe(`Taking a screenshot`, (): void => {
     let browser: Browser;
@@ -16,7 +16,7 @@ describe(`Taking a screenshot`, (): void => {
 
     const conf: ServerConfig = cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
-    setBrowserStackName(capabilities, `take_screenshot_spec.ts - browser1`);
+    setBrowserStackSessionName(capabilities, `take_screenshot_spec.ts - browser1`);
 
     const getFilesizeInBytes = (filename: string): number => {
         return fs.statSync(filename)[`size`];
@@ -128,7 +128,7 @@ describe(`Taking a screenshot`, (): void => {
         let browser2: Browser;
 
         const capabilities2 = cloneDeep(capabilities);
-        setBrowserStackName(capabilities2, `take_screenshot_spec.ts - browser2`);
+        setBrowserStackSessionName(capabilities2, `take_screenshot_spec.ts - browser2`);
 
         beforeEach((): void => {
             browser2 = ClientHelper.create(conf, capabilities2);
@@ -164,7 +164,7 @@ describe(`Taking a screenshot`, (): void => {
         let browser3: Browser;
 
         const capabilities3 = cloneDeep(capabilities);
-        setBrowserStackName(capabilities3, `take_screenshot_spec.ts - browser3`);
+        setBrowserStackSessionName(capabilities3, `take_screenshot_spec.ts - browser3`);
 
         beforeEach((): void => {
             browser3 = ClientHelper.create(conf, capabilities3);

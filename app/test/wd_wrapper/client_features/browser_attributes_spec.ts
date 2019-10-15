@@ -1,12 +1,12 @@
-import {cloneDeep}                                                       from "lodash";
-import {ClientHelper, DesiredCapabilities, ServerConfig, WindowSize}     from "../../..";
-import {setBrowserStackName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import {cloneDeep}                                                              from "lodash";
+import {ClientHelper, DesiredCapabilities, ServerConfig, WindowSize}            from "../../..";
+import {setBrowserStackSessionName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
 
 describe(`creating a new Browser`, (): void => {
 
     const conf: ServerConfig = cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
-    setBrowserStackName(capabilities, `browser_attributes_spec.ts`);
+    setBrowserStackSessionName(capabilities, `browser_attributes_spec.ts`);
 
     const windowSize = function (): {} {
         return {width: window.innerWidth, height: window.innerHeight};

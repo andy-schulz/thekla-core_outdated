@@ -1,14 +1,14 @@
 import {cloneDeep}                                                                from "lodash";
 import {Browser, ClientHelper, DesiredCapabilities, RunningBrowser, ServerConfig} from "../../..";
 import {WindowSize}                                                               from "../../../driver/interface/BrowserWindow";
-import {setBrowserStackName, standardCapabilities, standardServerConfig}          from "../../0_helper/config";
+import {setBrowserStackSessionName, standardCapabilities, standardServerConfig}   from "../../0_helper/config";
 
 describe(`Starting a browser instance`, (): void => {
 
     const conf: ServerConfig = cloneDeep(standardServerConfig);
     const capabilities = cloneDeep(standardCapabilities);
     capabilities.browserName = `firefox`;
-    setBrowserStackName(capabilities, `firefox_capabilities_spec.ts`);
+    setBrowserStackSessionName(capabilities, `firefox_capabilities_spec.ts`);
 
     const windowSize = function (): { width: number; height: number } {
         return {width: window.innerWidth, height: window.innerHeight};

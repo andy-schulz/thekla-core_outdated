@@ -5,7 +5,7 @@
   ]
   ,
   "helpers": [
-    "support/helpers/wdio_firefox.js"
+    "support/helpers/wdio_chrome.js"
   ]
   ,
   "oneFailurePerSpec": false

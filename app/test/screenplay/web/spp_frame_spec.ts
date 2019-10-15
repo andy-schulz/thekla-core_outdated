@@ -11,10 +11,10 @@ import {
     Text,
     UntilElement,
     ServerConfig, Expected
-}                                                                        from "../../..";
-import {configure}                                                       from "log4js";
-import {setBrowserStackName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
-import {cloneDeep}                                                       from "lodash";
+}                                                                               from "../../..";
+import {configure}                                                              from "log4js";
+import {setBrowserStackSessionName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import {cloneDeep}                                                              from "lodash";
 
 configure(`res/config/log4js.json`);
 
@@ -22,7 +22,7 @@ describe(`Locating Elements inside Frames`, (): void => {
 
     const config: ServerConfig = cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
-    setBrowserStackName(capabilities, `spp_frame_spec.ts`);
+    setBrowserStackSessionName(capabilities, `spp_frame_spec.ts`);
 
     let Francine: Actor;
 

@@ -11,10 +11,10 @@ import {
     all,
     SppElement,
     ServerConfig, DesiredCapabilities, Expected
-}                                                                        from "../../..";
-import {getLogger}                                                       from "log4js";
-import {setBrowserStackName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
-import {cloneDeep}                                                       from "lodash";
+}                                                                               from "../../..";
+import {getLogger}                                                              from "log4js";
+import {setBrowserStackSessionName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import {cloneDeep}                                                              from "lodash";
 
 const logger = getLogger(`Spec: SppElementDescription`);
 
@@ -22,7 +22,7 @@ describe(`The description on an element`, (): void => {
 
     const seleniumConfig: ServerConfig = cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
-    setBrowserStackName(capabilities, `spp_element_description_spec.ts`);
+    setBrowserStackSessionName(capabilities, `spp_element_description_spec.ts`);
 
     logger.trace(`Test Started`);
 

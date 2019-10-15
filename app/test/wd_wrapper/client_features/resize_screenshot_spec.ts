@@ -2,8 +2,8 @@ import {
     Browser, RunningBrowser, BrowserScreenshotData, ServerConfig, DesiredCapabilities, ClientHelper
 } from "../../..";
 
-import {setBrowserStackName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
-import {cloneDeep}                                                       from "lodash";
+import {setBrowserStackSessionName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import {cloneDeep}                                                              from "lodash";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const sizeOf = require(`image-size`);
@@ -15,7 +15,7 @@ describe(`Resize a screenshot`, (): void => {
 
     const conf: ServerConfig = cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
-    setBrowserStackName(capabilities, `resize_screenshot_spec.ts - browser1`);
+    setBrowserStackSessionName(capabilities, `resize_screenshot_spec.ts - browser1`);
 
     beforeAll(async (): Promise<void> => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
@@ -43,7 +43,7 @@ describe(`Resize a screenshot`, (): void => {
         let browser2: Browser;
 
         const capabilities2 = cloneDeep(capabilities);
-        setBrowserStackName(capabilities2, `resize_screenshot_spec.ts - browser2`);
+        setBrowserStackSessionName(capabilities2, `resize_screenshot_spec.ts - browser2`);
 
         beforeAll(async (): Promise<void> => {
             browser2 = ClientHelper.create(conf, capabilities2);

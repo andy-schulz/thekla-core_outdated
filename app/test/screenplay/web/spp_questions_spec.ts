@@ -10,10 +10,10 @@ import {
     See,
     TheSites,
     Attribute, element, Expected, Status, all, Count, Extract, Text, Click
-}                                                                        from "../../..";
-import {configure}                                                       from "log4js";
-import {setBrowserStackName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
-import {cloneDeep}                                                       from "lodash";
+}                                                                               from "../../..";
+import {configure}                                                              from "log4js";
+import {setBrowserStackSessionName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import {cloneDeep}                                                              from "lodash";
 
 configure(`res/config/log4js.json`);
 
@@ -23,7 +23,7 @@ describe(`Using`, (): void => {
 
     const seleniumConfig: ServerConfig = cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
-    setBrowserStackName(capabilities, `spp_questions_spec.ts`);
+    setBrowserStackSessionName(capabilities, `spp_questions_spec.ts`);
 
     const testUrl = process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`;
 

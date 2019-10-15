@@ -1,12 +1,12 @@
-import {DesiredCapabilities, ServerConfig, Browser, ClientHelper}        from "../../..";
-import {setBrowserStackName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
-import {cloneDeep}                                                       from "lodash";
+import {DesiredCapabilities, ServerConfig, Browser, ClientHelper}               from "../../..";
+import {setBrowserStackSessionName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import {cloneDeep}                                                              from "lodash";
 
 describe(`Using the BrowserWdjs class`, (): void => {
 
     const conf: ServerConfig = cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
-    setBrowserStackName(capabilities, `title_spec.ts`);
+    setBrowserStackSessionName(capabilities, `title_spec.ts`);
 
     beforeAll((): void => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;

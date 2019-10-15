@@ -19,7 +19,7 @@ export interface DesiredCapabilities extends FirefoxOptions, ChromeOptions{
 
     appium?: AppiumOptions;
 
-    browserStack?: BrowserStackCapabilities;
+    "bstack:options"?: BrowserStackCapabilities;
 }
 
 //https://w3c.github.io/webdriver/#navigation
@@ -128,15 +128,19 @@ export interface ManualProxyConfig {
 
 // see https://www.browserstack.com/automate/capabilities for details
 export interface BrowserStackCapabilities {
-    user: string;
-    key: string;
+    userName: string;
+    accessKey: string;
 
-    project?: string;
-    name?: string;
+    os?: "Windows" | "OS X";
+    osVersion?: string;
+
+    projectName?: string;
+    buildName?: string;
+    sessionName?: string;
+
     local?: boolean;
     video?: boolean;
-    build?: string;
+
     networkLogs?: boolean;
-    use_w3c?: boolean;
-    selenium_version?: string;
+    seleniumVersion?: string;
 }

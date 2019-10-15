@@ -1,6 +1,6 @@
 import {Browser, By, ClientHelper, DesiredCapabilities, RunningBrowser, ServerConfig} from "../..";
 import {checkForFireFoxCyclicError}                                                   from "../0_helper/browser_bugs";
-import {setBrowserStackName, standardCapabilities, standardServerConfig}              from "../0_helper/config";
+import {setBrowserStackSessionName, standardCapabilities, standardServerConfig}       from "../0_helper/config";
 import {cloneDeep}                                                                    from "lodash";
 import {configure, getLogger}                                                         from "log4js";
 
@@ -11,7 +11,7 @@ describe(`Locating a waiter`, (): void => {
 
     const conf: ServerConfig = cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
-    setBrowserStackName(capabilities, `selector_spec.ts`);
+    setBrowserStackSessionName(capabilities, `selector_spec.ts`);
 
     let browser: Browser;
 

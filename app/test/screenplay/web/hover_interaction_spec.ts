@@ -7,15 +7,15 @@ import {
     BrowseTheWeb,
     RunningBrowser,
     Navigate, element, See, Text, Expected, Status, Hover
-}                                                                        from "../../..";
-import {setBrowserStackName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
-import {cloneDeep}                                                       from "lodash";
+}                                                                               from "../../..";
+import {setBrowserStackSessionName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import {cloneDeep}                                                              from "lodash";
 
 describe(`Hover`, (): void => {
 
     const conf: ServerConfig = cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
-    setBrowserStackName(capabilities, `Hover`);
+    setBrowserStackSessionName(capabilities, `Hover`);
 
     const testUrl = process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`;
 

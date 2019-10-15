@@ -1,9 +1,9 @@
-import {configure}                                                       from "log4js";
+import {configure}                                                              from "log4js";
 import {
     Browser, By, UntilElement, ServerConfig, DesiredCapabilities, ClientHelper
-}                                                                        from "../..";
-import {setBrowserStackName, standardCapabilities, standardServerConfig} from "../0_helper/config";
-import {cloneDeep}                                                       from "lodash";
+}                                                                               from "../..";
+import {setBrowserStackSessionName, standardCapabilities, standardServerConfig} from "../0_helper/config";
+import {cloneDeep}                                                              from "lodash";
 
 configure(`res/config/log4js.json`);
 
@@ -11,7 +11,7 @@ describe(`The Frame`, (): void => {
 
     const conf: ServerConfig = cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
-    setBrowserStackName(capabilities, `frame_spec.ts`);
+    setBrowserStackSessionName(capabilities, `frame_spec.ts`);
 
     let browser: Browser;
 

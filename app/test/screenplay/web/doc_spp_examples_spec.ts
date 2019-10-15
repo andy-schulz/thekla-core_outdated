@@ -13,10 +13,10 @@ import {
     Text,
     UntilElement,
     ServerConfig, Expected
-}                                                                        from "../../../index";
-import {getLogger}                                                       from "log4js";
-import {setBrowserStackName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
-import {cloneDeep}                                                       from "lodash";
+}                                                                               from "../../../index";
+import {getLogger}                                                              from "log4js";
+import {setBrowserStackSessionName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import {cloneDeep}                                                              from "lodash";
 
 class GooglePgo {
     // define your elements in a page object
@@ -39,7 +39,7 @@ describe(`Using Google Search to find an online calculator`, (): void => {
 
     const conf: ServerConfig = cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
-    setBrowserStackName(capabilities, `doc_spp_examples_spec.ts`);
+    setBrowserStackSessionName(capabilities, `doc_spp_examples_spec.ts`);
 
     beforeAll(() => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 40000;

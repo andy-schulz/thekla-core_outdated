@@ -1,7 +1,7 @@
-import {Browser, ClientHelper, DesiredCapabilities, ServerConfig}        from "../../..";
-import {clientRect}                                                      from "../../0_helper/browser_viewport";
-import {setBrowserStackName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
-import {cloneDeep}                                                       from "lodash";
+import {Browser, ClientHelper, DesiredCapabilities, ServerConfig}               from "../../..";
+import {clientRect}                                                             from "../../0_helper/browser_viewport";
+import {setBrowserStackSessionName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import {cloneDeep}                                                              from "lodash";
 
 interface Rect {
     bottom: number;
@@ -20,7 +20,7 @@ describe(`Using the browser object`, (): void => {
 
     const selConfig: ServerConfig = cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
-    setBrowserStackName(capabilities, `driver_functions_spec.ts`);
+    setBrowserStackSessionName(capabilities, `driver_functions_spec.ts`);
 
     const testUrl: string = process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`;
 

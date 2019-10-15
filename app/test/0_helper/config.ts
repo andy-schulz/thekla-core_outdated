@@ -29,17 +29,21 @@ export const standardCapabilities: DesiredCapabilities = {
 
 // browserstack options
 if (process.env.BROWSERSTACK === `enabled`) {
-    standardCapabilities.browserStack = {
-        user: process.env.CLOUD_USER ? process.env.CLOUD_USER : `fail`,
-        key: process.env.CLOUD_KEY ? process.env.CLOUD_KEY : `fail`,
+    standardCapabilities[`bstack:options`] = {
+        userName: process.env.CLOUD_USER ? process.env.CLOUD_USER : `fail`,
+        accessKey: process.env.CLOUD_KEY ? process.env.CLOUD_KEY : `fail`,
 
-        project: `Thekla`,
-        build: `${moment().format(`YYYY-MM-DD HH:mm:ss`)}`,
+        os: `Windows`,
+        osVersion: `10`,
+
+        projectName: `Thekla`,
+        buildName: `${moment().format(`YYYY-MM-DD HH:mm:ss`)}`,
         video: false,
+        seleniumVersion: `3.141.59`
     };
 }
 
-export const setBrowserStackName = (capabilities: DesiredCapabilities, name: string): void => {
+export const setBrowserStackSessionName = (capabilities: DesiredCapabilities, name: string): void => {
     if(process.env.BROWSERSTACK === `enabled`)
-        set(capabilities,`browserStack.name` ,name);
+        set(capabilities,`bstack:options.sessionName` ,name);
 };

@@ -9,11 +9,11 @@ import {
     ServerConfig, DesiredCapabilities
 } from "../..";
 
-import {configure}                                                       from "log4js";
-import {WebElementWdio}                                                  from "../../driver/wdio/WebElementWdio";
-import {BoundaryCheck, boundingRect}                                     from "../0_helper/browser_viewport";
-import {setBrowserStackName, standardCapabilities, standardServerConfig} from "../0_helper/config";
-import {cloneDeep}                                                       from "lodash";
+import {configure}                                                              from "log4js";
+import {WebElementWdio}                                                         from "../../driver/wdio/WebElementWdio";
+import {BoundaryCheck, boundingRect}                                            from "../0_helper/browser_viewport";
+import {setBrowserStackSessionName, standardCapabilities, standardServerConfig} from "../0_helper/config";
+import {cloneDeep}                                                              from "lodash";
 
 configure(`res/config/log4js.json`);
 
@@ -21,7 +21,7 @@ describe(`When using the Browser object`, (): void => {
 
     const conf: ServerConfig = cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
-    setBrowserStackName(capabilities, `webelement_spec.ts`);
+    setBrowserStackSessionName(capabilities, `webelement_spec.ts`);
 
     const testurl = process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`;
 
@@ -368,8 +368,6 @@ describe(`When using the Browser object`, (): void => {
             expect(await disabledButton4000.isEnabled()).toEqual(true, `the button should be enabled at first check`);
             await browser.wait(until.not((): Promise<boolean> => disabledButton4000.isEnabled()));
             expect(await disabledButton4000.isEnabled()).toEqual(false, `the button should be disabled after 5 seconds`);
-
         });
-
     });
 });

@@ -7,15 +7,15 @@ import {
     UntilElement,
     WebElementFinder,
     DesiredCapabilities, ClientHelper
-}                                                                        from "../..";
-import {setBrowserStackName, standardCapabilities, standardServerConfig} from "../0_helper/config";
-import {cloneDeep}                                                       from "lodash";
+}                                                                               from "../..";
+import {setBrowserStackSessionName, standardCapabilities, standardServerConfig} from "../0_helper/config";
+import {cloneDeep}                                                              from "lodash";
 
 describe(`Using Google Search to find an online calculator`, (): void => {
 
     const conf: ServerConfig = cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
-    setBrowserStackName(capabilities, `doc_examples_spec.ts`);
+    setBrowserStackSessionName(capabilities, `doc_examples_spec.ts`);
 
     describe(`with the WebdriverJS wrapper,`, (): void => {
         // define your elements preferably in a separate class like a page object

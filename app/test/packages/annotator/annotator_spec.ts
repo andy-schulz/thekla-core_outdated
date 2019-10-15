@@ -1,7 +1,7 @@
-import {ClientWdio}                                                       from "../../../driver/wdio/ClientWdio";
-import {Browser, DesiredCapabilities, WebElementFinder, ServerConfig, By} from "../../..";
-import {setBrowserStackName, standardCapabilities, standardServerConfig}  from "../../0_helper/config";
-import {cloneDeep}                                                                  from "lodash";
+import {ClientWdio}                                                             from "../../../driver/wdio/ClientWdio";
+import {Browser, DesiredCapabilities, WebElementFinder, ServerConfig, By}       from "../../..";
+import {setBrowserStackSessionName, standardCapabilities, standardServerConfig} from "../../0_helper/config";
+import {cloneDeep}                                                              from "lodash";
 
 describe(`The annotation`, (): void => {
 
@@ -10,7 +10,7 @@ describe(`The annotation`, (): void => {
     const conf: ServerConfig = cloneDeep(standardServerConfig);
     conf.annotateElement = true;
     const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
-    setBrowserStackName(capabilities, `annotator_spec.ts`);
+    setBrowserStackSessionName(capabilities, `annotator_spec.ts`);
 
     beforeAll((): void => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
@@ -133,7 +133,7 @@ describe(`The test search message`, function () {
     conf.displayTestMessages = true;
 
     const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
-    setBrowserStackName(capabilities, `annotator_spec.ts`);
+    setBrowserStackSessionName(capabilities, `annotator_spec.ts`);
 
     beforeAll((): void => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;

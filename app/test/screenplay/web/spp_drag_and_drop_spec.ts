@@ -11,15 +11,15 @@ import {
     By,
     element,
     See, Expected, Text, UntilElement
-}                                                                        from "../../..";
-import {standardCapabilities, standardServerConfig, setBrowserStackName} from "../../0_helper/config";
-import {cloneDeep}                                                       from "lodash"
+}                                                                               from "../../..";
+import {standardCapabilities, standardServerConfig, setBrowserStackSessionName} from "../../0_helper/config";
+import {cloneDeep}                                                              from "lodash"
 
 describe(`Drag an Element`, (): void => {
 
     const conf: ServerConfig = cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
-    setBrowserStackName(capabilities, `spp_drag_and_drop_spec.ts`);
+    setBrowserStackSessionName(capabilities, `spp_drag_and_drop_spec.ts`);
 
     let theBrowser: Browser;
     let Donnie: Actor;

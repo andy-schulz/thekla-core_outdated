@@ -1,12 +1,12 @@
 import {DesiredCapabilities, ServerConfig, Browser, ClientHelper, RunningBrowser} from "../../..";
-import {setBrowserStackName, standardCapabilities, standardServerConfig}          from "../../0_helper/config";
+import {setBrowserStackSessionName, standardCapabilities, standardServerConfig}   from "../../0_helper/config";
 import {cloneDeep}                                                                from "lodash";
 
 describe(`using the browser instance`, (): void => {
 
     const conf: ServerConfig = cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
-    setBrowserStackName(capabilities, `attach_session_spec.ts`);
+    setBrowserStackSessionName(capabilities, `attach_session_spec.ts`);
 
     if (conf.serverAddress) {
         conf.serverAddress.path = `/wd/hub/`;

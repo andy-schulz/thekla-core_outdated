@@ -7,16 +7,16 @@ import {
     BrowseTheWeb,
     RunningBrowser,
     Navigate, element, Scroll, Browser, Page
-}                                                                        from "../../../index";
-import {BoundaryCheck, boundingRect, clientRect}                         from "../../0_helper/browser_viewport";
-import {standardCapabilities, standardServerConfig, setBrowserStackName} from "../../0_helper/config";
-import {cloneDeep}                                                       from "lodash";
+}                                                                               from "../../../index";
+import {BoundaryCheck, boundingRect, clientRect}                                from "../../0_helper/browser_viewport";
+import {standardCapabilities, standardServerConfig, setBrowserStackSessionName} from "../../0_helper/config";
+import {cloneDeep}                                                              from "lodash";
 
 describe(`Scroll`, (): void => {
 
     const conf: ServerConfig = cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
-    setBrowserStackName(capabilities, `scroll_interaction_spec.ts`);
+    setBrowserStackSessionName(capabilities, `scroll_interaction_spec.ts`);
 
     const lastTableRow = element(By.css(`[data-test-id='lastTableRow']`))
         .shallWait(UntilElement.is.visible().forAsLongAs(5000))

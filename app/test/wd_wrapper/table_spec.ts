@@ -1,14 +1,14 @@
 import {
     Browser, By, ServerConfig, DesiredCapabilities, ClientHelper
-}                                                                        from "../..";
-import {setBrowserStackName, standardCapabilities, standardServerConfig} from "../0_helper/config";
-import {cloneDeep}                                                       from "lodash";
+}                                                                               from "../..";
+import {setBrowserStackSessionName, standardCapabilities, standardServerConfig} from "../0_helper/config";
+import {cloneDeep}                                                              from "lodash";
 
 describe(`a simple table`, (): void => {
 
     const conf: ServerConfig = cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
-    setBrowserStackName(capabilities, `table_spec.ts`);
+    setBrowserStackSessionName(capabilities, `table_spec.ts`);
 
     let browser: Browser;
 

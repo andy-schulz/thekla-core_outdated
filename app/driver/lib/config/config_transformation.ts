@@ -99,17 +99,11 @@ const setAppiumOptions = curry((appiumOptions: AppiumOptions | undefined, option
     return opts;
 });
 
-const setBrowserstackOptions = curry((broserstackOptions: BrowserStackCapabilities | undefined, options: Options) => {
-    if(!broserstackOptions)
-        return options;
+const setBrowserstackOptions = curry((browserstackOptions: BrowserStackCapabilities | undefined, options: Options) => {
+    if(browserstackOptions)
+        set(options, `capabilities["bstack:options"]`, browserstackOptions);
 
-    return transform(broserstackOptions, (acc: Options, value: any, key: string) => {
-        if(key === `name` || key === `project` || key === `build`) {
-            set(acc, `capabilities[${key}]`, typeof value === `boolean` ? value.toString() : value);
-            return;
-        }
-        set(acc, `capabilities["browserstack.${key}"]`, typeof value === `boolean` ? value.toString() : value)
-    }, options);
+    return options;
 });
 
 const transformCapabilities = (capabilities: DesiredCapabilities): (option: Options) => Options => {
@@ -120,7 +114,7 @@ const transformCapabilities = (capabilities: DesiredCapabilities): (option: Opti
             setChromeOptions(capabilities[`goog:chromeOptions`]),
             setProxy(capabilities.proxy),
             setAppiumOptions(capabilities.appium),
-            setBrowserstackOptions(capabilities.browserStack),
+            setBrowserstackOptions(capabilities[`bstack:options`]),
         )(options);
 
         return opts;

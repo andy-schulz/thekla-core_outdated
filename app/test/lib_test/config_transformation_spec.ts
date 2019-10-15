@@ -2,7 +2,7 @@ import {DesiredCapabilities, ServerConfig}  from "../..";
 import {transformToWdioConfig}              from "../../driver/lib/config/config_transformation";
 import Options = WebDriver.Options;
 
-fdescribe(`creating the wdio config`, (): void => {
+describe(`creating the wdio config`, (): void => {
 
     describe(`with pupulated cloud information`, function () {
 
@@ -288,39 +288,45 @@ fdescribe(`creating the wdio config`, (): void => {
 
             const capabilities: DesiredCapabilities = {
                 browserName: `firefox`,
-                browserStack: {
-                    user: `myUser`,
-                    key: `myKey`,
+                "bstack:options": {
+                    userName: `myUser`,
+                    accessKey: `myKey`,
 
-                    build: `1.2.3`,
-                    name: `myName`,
-                    project: `MyProject`,
+                    os: `Windows`,
+                    osVersion: `10`,
+
+                    buildName: `1.2.3`,
+                    sessionName: `myName`,
+                    projectName: `MyProject`,
                     video: false,
                     local: true,
                     networkLogs: true,
-                    selenium_version: `1.2.3`, // eslint-disable-line @typescript-eslint/camelcase
-                    use_w3c: true // eslint-disable-line @typescript-eslint/camelcase
+                    seleniumVersion: `1.2.3`
                 }
             };
 
             const expectedConf = {
                 capabilities: {
-                    "browserstack.user": `myUser`,
-                    "browserstack.key": `myKey`,
-
                     browserName: `firefox`,
-                    name: `myName`,
-                    project: `MyProject`,
-                    build: `1.2.3`,
-                    "browserstack.video": `false`,
-                    "browserstack.local": `true`,
-                    "browserstack.networkLogs": `true`,
+                    "bstack:options": {
+                        userName: `myUser`,
+                        accessKey: `myKey`,
 
-                    "browserstack.use_w3c": `true`,
-                    "browserstack.selenium_version": `1.2.3`,
+                        buildName: `1.2.3`,
+                        sessionName: `myName`,
+                        projectName: `MyProject`,
+
+                        os: `Windows`,
+                        osVersion: `10`,
+
+                        video: false,
+                        local: true,
+                        networkLogs: true,
+                        seleniumVersion: `1.2.3`
+                    }
                 }
             };
-
+            const opts = transformToWdioConfig(serverConfig, capabilities);
             expect(transformToWdioConfig(serverConfig, capabilities)).toEqual(expectedConf);
         });
 
@@ -339,8 +345,8 @@ fdescribe(`creating the wdio config`, (): void => {
             const expectedConf = {
                 capabilities: {
                     browserName: `firefox`,
-                    "browserstack.user": `MyUser`,
-                    "browserstack.key": `MyKey`,
+                    userName: `MyUser`,
+                    accessKey: `MyKey`,
                 }
             };
 

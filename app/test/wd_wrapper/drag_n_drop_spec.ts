@@ -1,13 +1,13 @@
-import {DesiredCapabilities, ServerConfig, Browser, ClientHelper, By, until} from "../..";
-import {setBrowserStackName, standardCapabilities, standardServerConfig}     from "../0_helper/config";
-import {cloneDeep}                                                           from "lodash";
-import {WebElementFinder}                                                    from "../..";
+import {DesiredCapabilities, ServerConfig, Browser, ClientHelper, By, until}    from "../..";
+import {setBrowserStackSessionName, standardCapabilities, standardServerConfig} from "../0_helper/config";
+import {cloneDeep}                                                              from "lodash";
+import {WebElementFinder}                                                       from "../..";
 
 describe(`drag an element`, (): void => {
 
     const conf: ServerConfig = cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
-    setBrowserStackName(capabilities, `drag_n_drop_spec.ts`);
+    setBrowserStackSessionName(capabilities, `drag_n_drop_spec.ts`);
 
     let browser: Browser;
     let dragElement0: WebElementFinder,

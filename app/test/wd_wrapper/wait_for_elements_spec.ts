@@ -1,9 +1,9 @@
 import {
     Browser, WebElementFinder, By, UntilElement, ServerConfig, DesiredCapabilities, ClientHelper
-}                                                                        from "../..";
-import {configure}                                                       from "log4js";
-import {standardCapabilities, standardServerConfig, setBrowserStackName} from "../0_helper/config";
-import {cloneDeep}                                                       from "lodash";
+}                                                                               from "../..";
+import {configure}                                                              from "log4js";
+import {standardCapabilities, standardServerConfig, setBrowserStackSessionName} from "../0_helper/config";
+import {cloneDeep}                                                              from "lodash";
 
 configure(`res/config/log4js.json`);
 
@@ -11,7 +11,7 @@ describe(`Waiting for WD Elements`, (): void => {
 
     const conf: ServerConfig = cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
-    setBrowserStackName(capabilities, `wait_for_element_spec.ts`);
+    setBrowserStackSessionName(capabilities, `wait_for_element_spec.ts`);
 
     let browser: Browser;
     let appearButton4000ShallWait: WebElementFinder;
