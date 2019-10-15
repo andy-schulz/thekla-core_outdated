@@ -126,6 +126,7 @@ export interface ManualProxyConfig {
     bypass?: string[];
 }
 
+// see https://www.browserstack.com/automate/capabilities for details
 export interface BrowserStackCapabilities {
     user: string;
     key: string;
@@ -136,4 +137,6 @@ export interface BrowserStackCapabilities {
     video?: boolean;
     build?: string;
     networkLogs?: boolean;
+    use_w3c?: boolean;
+    selenium_version?: string;
 }

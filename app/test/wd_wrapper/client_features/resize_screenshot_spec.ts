@@ -8,14 +8,14 @@ import {cloneDeep}                                                       from "l
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const sizeOf = require(`image-size`);
 
-describe(`Taking a screenshot`, (): void => {
+describe(`Resize a screenshot`, (): void => {
     let browser: Browser;
 
     const tablesPage = `${process.env.BASEURL ? process.env.BASEURL : `http://localhost:3000`}/tables`;
 
     const conf: ServerConfig = cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
-    setBrowserStackName(capabilities, `resize_screenshot_spec.ts`);
+    setBrowserStackName(capabilities, `resize_screenshot_spec.ts - browser1`);
 
     beforeAll(async (): Promise<void> => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
@@ -26,7 +26,7 @@ describe(`Taking a screenshot`, (): void => {
 
     afterAll((): Promise<void[]> => {
         return ClientHelper.cleanup();
-    }, 20000);
+    });
 
     describe(`from a single browser as base64 string`, (): void => {
         it(`should return a 5x5 png` +
@@ -42,8 +42,11 @@ describe(`Taking a screenshot`, (): void => {
     describe(`from multiple browser as base64 string`, (): void => {
         let browser2: Browser;
 
+        const capabilities2 = cloneDeep(capabilities);
+        setBrowserStackName(capabilities2, `resize_screenshot_spec.ts - browser2`);
+
         beforeAll(async (): Promise<void> => {
-            browser2 = ClientHelper.create(conf, capabilities);
+            browser2 = ClientHelper.create(conf, capabilities2);
             await browser2.window.setSize({width: 500, height: 500});
         });
 
@@ -90,7 +93,7 @@ describe(`Taking a screenshot`, (): void => {
             expect(sizeOf(imageBinary1).height).toEqual(40,
                 `Failed image resize check for ${imagesBase64[1].browserName}`);
 
-        }, 30000);
+        });
     });
 
 });

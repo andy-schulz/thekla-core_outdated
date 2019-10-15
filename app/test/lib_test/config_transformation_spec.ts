@@ -2,7 +2,7 @@ import {DesiredCapabilities, ServerConfig}  from "../..";
 import {transformToWdioConfig}              from "../../driver/lib/config/config_transformation";
 import Options = WebDriver.Options;
 
-describe(`creating the wdio config`, (): void => {
+fdescribe(`creating the wdio config`, (): void => {
 
     describe(`with pupulated cloud information`, function () {
 
@@ -297,7 +297,9 @@ describe(`creating the wdio config`, (): void => {
                     project: `MyProject`,
                     video: false,
                     local: true,
-                    networkLogs: true
+                    networkLogs: true,
+                    selenium_version: `1.2.3`, // eslint-disable-line @typescript-eslint/camelcase
+                    use_w3c: true // eslint-disable-line @typescript-eslint/camelcase
                 }
             };
 
@@ -314,6 +316,8 @@ describe(`creating the wdio config`, (): void => {
                     "browserstack.local": `true`,
                     "browserstack.networkLogs": `true`,
 
+                    "browserstack.use_w3c": `true`,
+                    "browserstack.selenium_version": `1.2.3`,
                 }
             };
 
