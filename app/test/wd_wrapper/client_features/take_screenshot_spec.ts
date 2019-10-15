@@ -16,7 +16,7 @@ describe(`Taking a screenshot`, (): void => {
 
     const conf: ServerConfig = cloneDeep(standardServerConfig);
     const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
-    setBrowserStackName(capabilities, `take_screenshot_spec.ts`);
+    setBrowserStackName(capabilities, `take_screenshot_spec.ts - browser1`);
 
     const getFilesizeInBytes = (filename: string): number => {
         return fs.statSync(filename)[`size`];
@@ -115,7 +115,7 @@ describe(`Taking a screenshot`, (): void => {
             await browser.get(frameworkTesterClockSearch);
             await browser.saveScreenshot(characterPath, filename)
                 .then((): void => {
-                    if (!(os.platform() === `darwin`)) // On MacOS all characters are allowed
+                    if (!(os.platform() === `darwin` || os.platform() === `linux`)) // On MacOS all characters are allowed
                         expect(false).toBeTruthy(`call to saveScreenshot should throw an error, but it doesnt`);
                 })
                 .catch((error: Error): void => {
@@ -127,8 +127,11 @@ describe(`Taking a screenshot`, (): void => {
     describe(`from multiple browser as base64 string`, (): void => {
         let browser2: Browser;
 
+        const capabilities2 = cloneDeep(capabilities);
+        setBrowserStackName(capabilities2, `take_screenshot_spec.ts - browser2`);
+
         beforeEach((): void => {
-            browser2 = ClientHelper.create(conf, capabilities);
+            browser2 = ClientHelper.create(conf, capabilities2);
         });
 
         afterEach((): Promise<void[]> => {
@@ -158,14 +161,17 @@ describe(`Taking a screenshot`, (): void => {
     });
 
     describe(`from multiple browser and save it to a file`, (): void => {
-        let browser2: Browser;
+        let browser3: Browser;
+
+        const capabilities3 = cloneDeep(capabilities);
+        setBrowserStackName(capabilities3, `take_screenshot_spec.ts - browser3`);
 
         beforeEach((): void => {
-            browser2 = ClientHelper.create(conf, capabilities);
+            browser3 = ClientHelper.create(conf, capabilities3);
         });
 
         afterEach((): Promise<void[]> => {
-            return ClientHelper.cleanup([browser2]);
+            return ClientHelper.cleanup([browser3]);
         });
 
         it(`and both browser are used, both data streams should be savable to a file ` +
@@ -179,7 +185,7 @@ describe(`Taking a screenshot`, (): void => {
             await Promise.all(
                 [
                     browser.get(frameworkTesterClockSearch),
-                    browser2.get(frameworkTesterClockSearch)]
+                    browser3.get(frameworkTesterClockSearch)]
             );
 
             const imagesBase64 = await ClientHelper.takeScreenshots();
