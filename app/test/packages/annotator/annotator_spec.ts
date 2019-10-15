@@ -13,7 +13,7 @@ describe(`The annotation`, (): void => {
     setBrowserStackName(capabilities, `annotator_spec.ts`);
 
     beforeAll((): void => {
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
         browser = ClientWdio.create({serverConfig: conf, capabilities: capabilities});
 
     });
@@ -121,7 +121,7 @@ describe(`The annotation`, (): void => {
             const styleAfterHighlight = await browser.executeScript(getStyle);
 
             expect(styleAfterHighlight).toBe(`color:blue;`);
-        }, 30000);
+        });
 
     });
 });
@@ -133,8 +133,10 @@ describe(`The test search message`, function () {
     conf.displayTestMessages = true;
 
     const capabilities: DesiredCapabilities = cloneDeep(standardCapabilities);
+    setBrowserStackName(capabilities, `annotator_spec.ts`);
 
     beforeAll((): void => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
         browser = ClientWdio.create({serverConfig: conf, capabilities: capabilities});
     });
 
@@ -162,6 +164,6 @@ describe(`The test search message`, function () {
                 const element = await browser.executeScript(getInnerHtml);
                 expect(element).toBe(`Trying to find 'Element' selected by: &gt;&gt;byCss: #doesNotExist&lt;&lt;`)
             }
-        }, 30000);
+        });
     });
 });
